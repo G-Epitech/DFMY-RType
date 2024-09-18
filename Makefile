@@ -6,6 +6,7 @@
 ##
 
 NAME 			= rtype
+BINARIES		= r-type_client r-type_server
 TESTS_NAME 		= rtype_tests
 BUILD_PATH 		= build
 COVERAGE_IGNORE_TARGETS = 	tests \
@@ -13,7 +14,7 @@ COVERAGE_IGNORE_TARGETS = 	tests \
 
 COVERAGE_IGNORE = $(addprefix -e , $(COVERAGE_IGNORE_TARGETS))
 
-CMAKE_FLAGS = -DCMAKE_TOOLCHAIN_FILE=/home/sdragos/vcpkg/scripts/buildsystems/vcpkg.cmake
+CMAKE_FLAGS = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_PATH)/scripts/buildsystems/vcpkg.cmake
 
 ifdef DEBUG
 	CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=Debug
@@ -33,6 +34,7 @@ clean:
 fclean:		clean
 			@rm -f $(NAME)
 			@rm -f $(TESTS_NAME)
+			@rm -f $(BINARIES)
 
 re:
 			@$(MAKE) fclean

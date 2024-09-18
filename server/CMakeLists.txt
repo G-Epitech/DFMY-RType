@@ -8,14 +8,8 @@ target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 
 add_executable(${SERVER_EXECUTABLE} main.cpp)
 
-# Vcpkg links
-find_package(fmt REQUIRED)
-target_link_libraries(${SERVER_CORE_LIB} PRIVATE fmt::fmt)
+include(dependencies.cmake)
 
-# Internal links
-target_link_libraries(${SERVER_CORE_LIB} PRIVATE network_common)
-
-# Executable Link
 target_link_libraries(${SERVER_EXECUTABLE} ${SERVER_CORE_LIB})
 
 if (COVERAGE)
