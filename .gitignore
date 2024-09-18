@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+r-type_client
+r-type_server
+
+# Clion
+.idea
+
+build
+cmake-build-debug
