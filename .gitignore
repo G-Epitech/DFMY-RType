@@ -15,6 +15,8 @@
 *.so
 *.dylib
 *.dll
+*.ilk
+*.pdb
 
 # Fortran module files
 *.mod
@@ -39,3 +41,4 @@ r-type_server
 build
 cmake-build-debug
 cmake-build-windows
+
