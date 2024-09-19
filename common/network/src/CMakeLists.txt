@@ -1,3 +1,3 @@
-target_sources(network_common PRIVATE
+target_sources(network_common PUBLIC
         network.cpp
 )

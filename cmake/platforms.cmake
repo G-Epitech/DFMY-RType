@@ -1,0 +1,5 @@
+if (WIN32)
+    set(PLATFORM_FLAGS "-GNinja -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe")
+elseif (UNIX)
+    set(PLATFORM_FLAGS "-GUnix Makefiles")
+endif ()

@@ -7,4 +7,6 @@
 
 #pragma once
 
-void network();
+#define NETWORK_COMMON_API __declspec(dllexport)
+
+NETWORK_COMMON_API void network();
