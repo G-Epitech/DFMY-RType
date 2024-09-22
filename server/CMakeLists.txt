@@ -10,11 +10,12 @@ add_executable(${SERVER_EXECUTABLE} main.cpp)
 
 include(dependencies.cmake)
 
-target_link_libraries(${SERVER_EXECUTABLE} ${SERVER_CORE_LIB})
+target_link_libraries(${SERVER_EXECUTABLE} PRIVATE ${SERVER_CORE_LIB})
 
 if (COVERAGE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    target_link_libraries(${SERVER_CORE_LIB} gcov)
+    target_link_libraries(${SERVER_CORE_LIB} PRIVATE gcov)
 endif ()
 
 add_subdirectory(src)
+add_subdirectory(tests)

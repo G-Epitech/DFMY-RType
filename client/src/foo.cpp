@@ -15,3 +15,7 @@ void foo() {
     fmt::print("Hello, {}! You are {} years old.\n", name, age);
     std::cout << "Client Core lib" << std::endl;
 }
+
+int add(int l, int r) {
+    return l + r;
+}
