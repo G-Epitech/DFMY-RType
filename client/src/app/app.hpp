@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** rtype [WSL: Ubuntu]
+** rtype
 ** File description:
 ** app
 */
@@ -62,5 +62,8 @@ namespace rtype {
 
         /// @brief The main window for the application.
         sf::RenderWindow mWindow;
+
+        /// @brief Vector example.
+        std::vector<sf::RectangleShape> mRectangles;
     };
 }
