@@ -12,5 +12,3 @@
 #else
     #define EXPORT_NETWORK_SDK_API
 #endif
-
-EXPORT_NETWORK_SDK_API void network();
