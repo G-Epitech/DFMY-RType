@@ -8,6 +8,6 @@
 #include <iostream>
 #include "network.hpp"
 
-NETWORK_COMMON_API void network() {
+EXPORT_NETWORK_SDK_API void network() {
     std::cout << "Hello i am the network lib\n";
 }
