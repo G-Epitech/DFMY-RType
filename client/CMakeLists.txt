@@ -1,4 +1,4 @@
-set(CLIENT_CORE_LIB client_core)
+set(CLIENT_CORE_LIB r-type_client_core)
 set(CLIENT_EXECUTABLE r-type_client)
 
 add_library(${CLIENT_CORE_LIB} STATIC)

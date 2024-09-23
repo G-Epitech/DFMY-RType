@@ -1,4 +1,4 @@
-set(SERVER_CORE_LIB server_core)
+set(SERVER_CORE_LIB r-type_server_core)
 set(SERVER_EXECUTABLE r-type_server)
 
 add_library(${SERVER_CORE_LIB} STATIC)

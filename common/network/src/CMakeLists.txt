@@ -1,3 +1,3 @@
-target_sources(network_common PUBLIC
+target_sources(r-type_network_common PUBLIC
         network.cpp
 )
