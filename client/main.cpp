@@ -5,11 +5,12 @@
 ** main.cpp
 */
 
-#include "src/foo.hpp"
-#include "common/network/src/network.hpp"
+#include <iostream>
+#include "app/app.hpp"
 
 int main() {
-    foo();
-    network();
+    rtype::App app;
+
+    app.run();
     return 0;
 }
