@@ -5,7 +5,6 @@
 ** main.cpp
 */
 
-#include <iostream>
 #include "app/app.hpp"
 
 int main() {
