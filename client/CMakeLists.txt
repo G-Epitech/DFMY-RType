@@ -11,11 +11,12 @@ add_executable(${CLIENT_EXECUTABLE} main.cpp)
 
 include(dependencies.cmake)
 
-target_link_libraries(${CLIENT_EXECUTABLE} ${CLIENT_CORE_LIB} sfml-graphics sfml-window sfml-system)
+target_link_libraries(${CLIENT_EXECUTABLE} PRIVATE ${CLIENT_CORE_LIB})
 
 if (COVERAGE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    target_link_libraries(${CLIENT_CORE_LIB} gcov)
+    target_link_libraries(${CLIENT_CORE_LIB} PRIVATE gcov)
 endif ()
 
 add_subdirectory(src)
+add_subdirectory(tests)
