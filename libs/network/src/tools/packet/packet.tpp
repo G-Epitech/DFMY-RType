@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** packet.hpp
+** packet.tpp
 ** File description:
 ** Packet class
 */

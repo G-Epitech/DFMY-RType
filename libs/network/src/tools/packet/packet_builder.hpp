@@ -66,6 +66,15 @@ public:
    */
   PacketBuilder &SetMessageType(std::uint8_t messageType);
 
+  /**
+   * @brief Build a packet with the given payload and the properties set
+   * @tparam T The payload type
+   * @param payload The payload
+   * @return The packet
+   */
+  template<typename T>
+  Packet<T> Build(T payload);
+
 private:
   /**
    * @brief Check if the value is valid for the bit size
@@ -75,6 +84,11 @@ private:
    */
   [[nodiscard]] static bool IsValidBitSize(unsigned value, std::uint8_t bitSize);
 
+  /**
+   * @brief Generate a new packet ID
+   */
+  std::uint32_t GeneratePacketId();
+
   /// @brief Packet header properties
   PacketHeaderProps mHeader;
   /// @brief Packet message properties
@@ -83,4 +97,8 @@ private:
   PacketOffsetProps mOffset;
   /// @brief Packet turn properties
   PacketTurnProps mTurn;
+  /// @brief Packet ID increment
+  std::uint32_t mPacketIdIncrement;
 };
+
+#include "packet_builder.tpp"

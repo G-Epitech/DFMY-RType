@@ -49,7 +49,7 @@ tools::PacketBuilder &tools::PacketBuilder::SetTurn(std::uint16_t turn) {
 
 tools::PacketBuilder &tools::PacketBuilder::SetMessageType(std::uint8_t messageType) {
   if (!IsValidBitSize(messageType, kPacketMessageTypeSize))
-    throw Exception("Invalid argument: Message type is out of range.");
+    throw Exception("Invalid argument: Message too much AGA");
 
   this->mMessage.messageType = messageType;
   return *this;
@@ -57,4 +57,15 @@ tools::PacketBuilder &tools::PacketBuilder::SetMessageType(std::uint8_t messageT
 
 bool tools::PacketBuilder::IsValidBitSize(unsigned int value, std::uint8_t bitSize) {
   return value < pow(2, bitSize);
+}
+
+std::uint32_t tools::PacketBuilder::GeneratePacketId() {
+  auto maxId = pow(2, kPacketMessageIdSize) - 1;
+  auto generatedId = this->mPacketIdIncrement;
+
+  this->mPacketIdIncrement = (this->mPacketIdIncrement + 1);
+  if (this->mPacketIdIncrement > maxId)
+    this->mPacketIdIncrement = 0;
+
+  return generatedId;
 }
