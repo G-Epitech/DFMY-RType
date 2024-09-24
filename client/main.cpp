@@ -5,11 +5,12 @@
 ** main.cpp
 */
 
-#include "src/foo.hpp"
-#include "common/network/src/network.hpp"
+#include "app/App.hpp"
+
+using namespace rtype::client;
 
 int main() {
-    foo();
-    network();
-    return 0;
+  App app;
+  app.run();
+  return 0;
 }

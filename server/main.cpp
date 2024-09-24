@@ -6,10 +6,8 @@
 */
 
 #include "src/foo.hpp"
-#include "common/network/src/network.hpp"
 
 int main() {
     foo();
-    network();
     return 0;
 }
