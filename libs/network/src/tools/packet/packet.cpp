@@ -8,7 +8,3 @@
 #include "packet.hpp"
 
 using namespace rtype::sdk::network;
-
-tools::Packet::Packet() = default;
-
-tools::Packet::~Packet() = default;
