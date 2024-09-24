@@ -9,7 +9,9 @@
 
 using namespace rtype::sdk::network;
 
-tools::PacketBuilder::PacketBuilder() = default;
+tools::PacketBuilder::PacketBuilder() {
+  this->mPacketIdIncrement = 0;
+};
 
 tools::PacketBuilder::~PacketBuilder() {
   this->Reset();
@@ -24,7 +26,6 @@ const char *tools::PacketBuilder::Exception::what() const noexcept {
 void tools::PacketBuilder::Reset() {
   mHeader = PacketHeaderProps();
   mMessage = PacketMessageProps();
-  mOffset = PacketOffsetProps();
   mTurn = PacketTurnProps();
 }
 

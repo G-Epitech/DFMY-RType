@@ -9,6 +9,7 @@
 
 #include "api.hpp"
 #include "packet.hpp"
+#include <vector>
 
 namespace rtype::sdk::network::tools {
   class EXPORT_NETWORK_SDK_API PacketBuilder;
@@ -75,6 +76,15 @@ public:
   template<typename T>
   Packet<T> Build(T payload);
 
+  /**
+   * @brief Build a multiples packets with the given payloads and the properties set
+   * @tparam T The payload type
+   * @param payloads The payloads
+   * @return The packets
+   */
+  template<typename T>
+  std::vector<Packet<T>> Build(std::vector<T> payloads);
+
 private:
   /**
    * @brief Check if the value is valid for the bit size
@@ -93,8 +103,6 @@ private:
   PacketHeaderProps mHeader;
   /// @brief Packet message properties
   PacketMessageProps mMessage;
-  /// @brief Packet offset properties
-  PacketOffsetProps mOffset;
   /// @brief Packet turn properties
   PacketTurnProps mTurn;
   /// @brief Packet ID increment
