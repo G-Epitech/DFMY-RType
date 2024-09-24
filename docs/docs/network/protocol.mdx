@@ -57,7 +57,7 @@ The header is here to give useful informations about packet structuration such a
 The message ID is use for two reason:
 
 - Developer debug and infos
-- Multi package identification (Multiple packets can have the same ID with a different offset)
+- Multi packet identification (Multiple packets can have the same ID with a different offset)
 
 The message ID have `20 bits` allocated.
 
@@ -82,7 +82,7 @@ Note that the message ID will be the same for all packets in the group.
 
 The offset have `15 bits` allocated that allow you to send a maximum of `32768` elements.
 
-The last byte is hight if the package is the last in the list.
+The last byte is hight if the packet is the last in the list.
 
 ![offset.png](./img/offset.png)
 

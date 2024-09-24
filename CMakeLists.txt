@@ -8,6 +8,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 include(cmake/platforms.cmake)
 
-add_subdirectory(common)
+add_subdirectory(libs)
 add_subdirectory(client)
 add_subdirectory(server)
