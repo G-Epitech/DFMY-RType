@@ -1,6 +1,6 @@
 add_subdirectory(props)
 
-target_sources(r-type_network_sdk PUBLIC
+target_sources(r-type_network_sdk PRIVATE
         packet.cpp
         packet.hpp
         packet.tpp
