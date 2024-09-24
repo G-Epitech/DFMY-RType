@@ -7,11 +7,13 @@
 
 #include "packet_builder.hpp"
 
+#include <valarray>
+
 using namespace rtype::sdk::network;
 
-tools::PacketBuilder::PacketBuilder() {
+tools::PacketBuilder::PacketBuilder(): mMessage() {
   this->mPacketIdIncrement = 0;
-};
+} ;
 
 tools::PacketBuilder::~PacketBuilder() {
   this->Reset();
@@ -57,12 +59,12 @@ tools::PacketBuilder &tools::PacketBuilder::SetMessageType(std::uint8_t messageT
 }
 
 bool tools::PacketBuilder::IsValidBitSize(unsigned int value, std::uint8_t bitSize) {
-  return value < pow(2, bitSize);
+  return value < std::pow(2, bitSize);
 }
 
 std::uint32_t tools::PacketBuilder::GeneratePacketId() {
-  auto maxId = pow(2, kPacketMessageIdSize) - 1;
-  auto generatedId = this->mPacketIdIncrement;
+  const auto maxId = std::pow(2, kPacketMessageIdSize) - 1;
+  const auto generatedId = this->mPacketIdIncrement;
 
   this->mPacketIdIncrement = (this->mPacketIdIncrement + 1);
   if (this->mPacketIdIncrement > maxId)
