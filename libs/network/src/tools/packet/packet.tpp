@@ -7,29 +7,44 @@
 
 #pragma once
 
+using namespace rtype::sdk::network;
+
 template<typename T>
-rtype::sdk::network::tools::Packet<T>::Packet(
-        rtype::sdk::network::tools::PacketHeaderProps header,
-        rtype::sdk::network::tools::PacketMessageProps message,
+tools::Packet<T>::Packet(
+        tools::PacketHeaderProps header,
+        tools::PacketMessageProps message,
         T payload,
-        rtype::sdk::network::tools::PacketOffsetProps offset,
-        rtype::sdk::network::tools::PacketTurnProps turn) {
+        tools::PacketOffsetProps offset,
+        tools::PacketTurnProps turn) {
   this->mHeader = header;
   this->mMessage = message;
   this->mOffset = offset;
   this->mTurn = turn;
   this->mPayload = payload;
+
+  if (!OffsetIsEnabled() && mOffset.offset > 0)
+    throw tools::Packet<T>::Exception("Offset is not enabled in the header.");
+  if (!TurnIsEnabled() && mTurn.turn > 0)
+    throw tools::Packet<T>::Exception("Turn is not enabled in the header.");
 }
 
 template<typename T>
-rtype::sdk::network::tools::Packet<T>::~Packet() = default;
+tools::Packet<T>::~Packet() = default;
 
 template<typename T>
-bool rtype::sdk::network::tools::Packet<T>::OffsetIsEnabled() const {
+bool tools::Packet<T>::OffsetIsEnabled() const {
   return this->mHeader.offsetFlag == 1;
 }
 
 template<typename T>
-bool rtype::sdk::network::tools::Packet<T>::TurnIsEnabled() const {
+bool tools::Packet<T>::TurnIsEnabled() const {
   return this->mHeader.turnFlag == 1;
+}
+
+template<typename T>
+tools::Packet<T>::Exception::Exception(std::string message) : mMessage(std::move(message)) {}
+
+template<typename T>
+const char *tools::Packet<T>::Exception::what() const noexcept {
+  return this->mMessage.c_str();
 }

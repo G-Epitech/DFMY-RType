@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <exception>
+#include <string>
 #include "api.hpp"
 #include "props/props.hpp"
 
@@ -31,6 +33,28 @@ public:
          PacketTurnProps turn = PacketTurnProps());
 
   ~Packet();
+
+  /**
+   * @brief Packet exceptions class
+   */
+  class Exception : public std::exception {
+  public:
+    /**
+     * @brief Create a new message when packet exception
+     * @param message The message
+     */
+    explicit Exception(std::string message);
+
+    /**
+     * @brief Get the exception message
+     * @return The exception message
+     */
+    [[nodiscard]] const char *what() const noexcept override;
+
+  private:
+    /// @brief The exception message
+    std::string mMessage;
+  };
 
   /**
    * @brief Check if the offset is enabled in the header
