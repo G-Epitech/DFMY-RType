@@ -5,11 +5,12 @@
 ** main.cpp
 */
 
-#include "app/app.hpp"
+#include "app/App.hpp"
+
+using namespace rtype;
 
 int main() {
-    rtype::App app;
-
-    app.run();
-    return 0;
+  App app;
+  app.run();
+  return 0;
 }

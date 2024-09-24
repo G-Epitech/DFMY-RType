@@ -14,8 +14,8 @@ include(dependencies.cmake)
 target_link_libraries(${CLIENT_EXECUTABLE} PRIVATE ${CLIENT_CORE_LIB})
 
 if (COVERAGE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    target_link_libraries(${CLIENT_CORE_LIB} PRIVATE gcov)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+  target_link_libraries(${CLIENT_CORE_LIB} PRIVATE gcov)
 endif ()
 
 add_subdirectory(src)
