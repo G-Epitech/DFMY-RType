@@ -8,7 +8,7 @@
 #pragma once
 
 #include "api.hpp"
-#include "header.hpp"
+#include "props/props.hpp"
 
 namespace rtype::sdk::network::tools {
   class EXPORT_NETWORK_SDK_API Packet;
@@ -22,4 +22,7 @@ public:
 
 private:
   PacketHeaderProps mHeader; // Packet header properties
+  PacketMessageProps mMessage; // Packet message properties
+  PacketOffsetProps mOffset; // Packet offset properties
+  PacketTurnProps mTurn; // Packet turn properties
 };
