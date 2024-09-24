@@ -62,8 +62,5 @@ namespace rtype::client {
 
     /// @brief The main window for the application.
     sf::RenderWindow mWindow;
-
-    /// @brief Vector example.
-    std::vector<sf::RectangleShape> mRectangles;
   };
 }
