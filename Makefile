@@ -21,6 +21,7 @@ TOOLCHAIN_FLAG = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg
 LINT_DIRS = client \
 			common \
 			server
+LINT_FILES = $(shell find $(LINT_DIRS) -type f -regex '.*\.\(cpp\|hpp\|cc\|cxx\)')
 
 ifdef DEBUG
 	CMAKE_FLAGS = -DCMAKE_BUILD_TYPE=Debug
@@ -28,7 +29,9 @@ else
 	CMAKE_FLAGS = -DCMAKE_BUILD_TYPE=Release
 endif
 
-all:		$(SERVER_NAME) $(CLIENT_NAME)
+all:
+		@cmake -S . -B $(BUILD_PATH) $(CMAKE_FLAGS) $(TOOLCHAIN_FLAG)
+		@cmake --build $(BUILD_PATH)
 .PHONY: all
 
 $(SERVER_NAME):
@@ -80,11 +83,15 @@ coverage-branch:
 .PHONY: coverage-branch
 
 lint:
-			@cpplint --recursive $(LINT_DIRS)
+			@cpplint --recursive --quiet $(LINT_DIRS)
 .PHONY: lint
 
 format:
-			@find $(LINT_DIRS) -name "*.cpp" -o -name "*.hpp" | xargs clang-format -i
+			@clang-format -i $(LINT_FILES)
 .PHONY: format
+
+format-check:
+			@@clang-format --dry-run -i $(LINT_FILES)
+.PHONY: format-check
 
 DEFAULT_GOAL := all

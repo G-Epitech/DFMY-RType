@@ -15,52 +15,50 @@
 
 namespace rtype::client {
 
+/**
+ * @class App
+ * @brief The main application class responsible for running the client-side application.
+ *
+ * This class provides the main entry point for the client application and contains
+ * the necessary methods to initialize and run the application.
+ */
+class App {
+ public:
   /**
-   * @class App
-   * @brief The main application class responsible for running the client-side application.
-   *
-   * This class provides the main entry point for the client application and contains
-   * the necessary methods to initialize and run the application.
+   * @brief Default constructor for the App class.
+   * Initializes a new instance of the App class.
    */
-  class App {
-  public:
+  App();
 
-    /**
-     * @brief Default constructor for the App class.
-     * Initializes a new instance of the App class.
-     */
-    App();
+  /**
+   * @brief Default destructor for the App class.
+   * Cleans up any resources used by the App class.
+   */
+  ~App() = default;
 
-    /**
-     * @brief Default destructor for the App class.
-     * Cleans up any resources used by the App class.
-     */
-    ~App() = default;
+  /**
+   * @brief Runs the client-side application.
+   * This method contains the main loop and logic to start and maintain the client application.
+   */
+  void run();
 
-    /**
-     * @brief Runs the client-side application.
-     * This method contains the main loop and logic to start and maintain the client application.
-     */
-    void run();
+ private:
+  /**
+   * @brief Processes events.
+   */
+  void processEvents();
 
-  private:
+  /**
+   * @brief Updates the application.
+   */
+  void update();
 
-    /**
-     * @brief Processes events.
-     */
-    void processEvents();
+  /**
+   * @brief Renders the application.
+   */
+  void render();
 
-    /**
-     * @brief Updates the application.
-     */
-    void update();
-
-    /**
-     * @brief Renders the application.
-     */
-    void render();
-
-    /// @brief The main window for the application.
-    sf::RenderWindow mWindow;
-  };
-}
+  /// @brief The main window for the application.
+  sf::RenderWindow mWindow;
+};
+}  // namespace rtype::client

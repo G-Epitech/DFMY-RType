@@ -8,9 +8,9 @@
 #pragma once
 
 #ifdef _WIN32
-#define NETWORK_COMMON_API __declspec(dllexport)
+  #define NETWORK_COMMON_API __declspec(dllexport)
 #else
-#define NETWORK_COMMON_API
+  #define NETWORK_COMMON_API
 #endif
 
 NETWORK_COMMON_API void network();

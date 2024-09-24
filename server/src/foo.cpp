@@ -8,6 +8,7 @@
 #include <fmt/format.h>
 
 #include <iostream>
+#include <string>
 
 void foo() {
   std::string name = "John";
@@ -17,4 +18,6 @@ void foo() {
   std::cout << "Server Core lib" << std::endl;
 }
 
-int add(int l, int r) { return l + r; }
+int add(int l, int r) {
+  return l + r;
+}
