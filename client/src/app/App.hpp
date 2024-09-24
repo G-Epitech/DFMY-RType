@@ -13,7 +13,7 @@
 
 #pragma once
 
-namespace rtype {
+namespace rtype::client {
 
   /**
    * @class App

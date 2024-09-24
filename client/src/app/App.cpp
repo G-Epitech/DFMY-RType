@@ -7,7 +7,7 @@
 
 #include "App.hpp"
 
-using namespace rtype;
+using namespace rtype::client;
 
 App::App() {
   auto videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT);

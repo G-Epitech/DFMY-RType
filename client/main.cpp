@@ -7,7 +7,7 @@
 
 #include "app/App.hpp"
 
-using namespace rtype;
+using namespace rtype::client;
 
 int main() {
   App app;
