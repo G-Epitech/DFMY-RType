@@ -5,9 +5,12 @@
 ** main.cpp
 */
 
-#include "src/foo.hpp"
+#include "app/App.hpp"
+
+using namespace rtype::client;
 
 int main() {
-    foo();
-    return 0;
+  App app;
+  app.run();
+  return 0;
 }
