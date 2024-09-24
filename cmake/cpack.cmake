@@ -25,11 +25,20 @@ if (WIN32)
 elseif (UNIX)
     set(CPACK_GENERATOR "DEB;TGZ")
 
-    set(BUILT_TARGETS r-type_server r-type_client r-type_network_sdk)
+    set(CPACK_PACKAGE_EXECUTABLES "r-type_client;R-Type Client" "r-type_server;R-Type Server")
 
-    install(TARGETS ${BUILT_TARGETS}
+    set(BUILT_BINARIES r-type_server r-type_client)
+    set(BUILT_LIBS r-type_network_sdk)
+
+    install(TARGETS ${BUILT_BINARIES}
             CONFIGURATIONS Release
-            RUNTIME_DEPENDENCIES)
+            RUNTIME_DEPENDENCIES
+            DESTINATION bin)
+
+    install(TARGETS ${BUILT_LIBS}
+            CONFIGURATIONS Release
+            DESTINATION lib)
+
 endif ()
 
 include(CPack)

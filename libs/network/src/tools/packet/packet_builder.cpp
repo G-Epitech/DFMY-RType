@@ -5,6 +5,7 @@
 ** PacketBuilder class
 */
 
+#include <complex>
 #include "packet_builder.hpp"
 
 using namespace rtype::sdk::network;
@@ -57,11 +58,11 @@ tools::PacketBuilder &tools::PacketBuilder::SetMessageType(std::uint8_t messageT
 }
 
 bool tools::PacketBuilder::IsValidBitSize(unsigned int value, std::uint8_t bitSize) {
-  return value < pow(2, bitSize);
+  return value < std::pow(2, bitSize);
 }
 
 std::uint32_t tools::PacketBuilder::GeneratePacketId() {
-  auto maxId = pow(2, kPacketMessageIdSize) - 1;
+  auto maxId = std::pow(2, kPacketMessageIdSize) - 1;
   auto generatedId = this->mPacketIdIncrement;
 
   this->mPacketIdIncrement = (this->mPacketIdIncrement + 1);
