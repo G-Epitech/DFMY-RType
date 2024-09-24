@@ -68,12 +68,47 @@ public:
    */
   [[nodiscard]] bool TurnIsEnabled() const;
 
+  /**
+   * @brief Get the packet header properties
+   * @return The packet header properties
+   */
+  [[nodiscard]] const PacketHeaderProps &GetHeader() const;
+
+  /**
+   * @brief Get the packet message properties
+   * @return The packet message properties
+   */
+  [[nodiscard]] const PacketMessageProps &GetMessage() const;
+
+  /**
+   * @brief Get the packet offset properties
+   * @return The packet offset properties
+   */
+  [[nodiscard]] const PacketOffsetProps &GetOffset() const;
+
+  /**
+   * @brief Get the packet turn properties
+   * @return The packet turn properties
+   */
+  [[nodiscard]] const PacketTurnProps &GetTurn() const;
+
+  /**
+   * @brief Get the packet payload
+   * @return The packet payload
+   */
+  [[nodiscard]] const T &GetPayload() const;
+
 private:
-  PacketHeaderProps mHeader;    // Packet header properties
-  PacketMessageProps mMessage;  // Packet message properties
-  PacketOffsetProps mOffset;    // Packet offset properties
-  PacketTurnProps mTurn;        // Packet turn properties
-  T mPayload;                   // Packet payload
+  /// @brief Packet header properties
+  PacketHeaderProps mHeader;
+  /// @brief Packet message properties
+  PacketMessageProps mMessage;
+  /// @brief Packet offset properties
+  PacketOffsetProps mOffset;
+  /// @brief Packet turn properties
+  PacketTurnProps mTurn;
+  /// @brief Packet payload
+  T mPayload;
 };
 
 #include "packet.tpp"

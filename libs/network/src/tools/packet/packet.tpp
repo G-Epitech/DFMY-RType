@@ -42,6 +42,35 @@ bool tools::Packet<T>::TurnIsEnabled() const {
 }
 
 template<typename T>
+const tools::PacketHeaderProps &tools::Packet<T>::GetHeader() const {
+  return this->mHeader;
+}
+
+template<typename T>
+const tools::PacketMessageProps &tools::Packet<T>::GetMessage() const {
+  return this->mMessage;
+}
+
+template<typename T>
+const tools::PacketOffsetProps &tools::Packet<T>::GetOffset() const {
+  if (!OffsetIsEnabled())
+    throw tools::Packet<T>::Exception("Offset is not enabled for this packet.");
+  return this->mOffset;
+}
+
+template<typename T>
+const tools::PacketTurnProps &tools::Packet<T>::GetTurn() const {
+  if (!TurnIsEnabled())
+    throw tools::Packet<T>::Exception("Turn is not enabled for this packet.");
+  return this->mTurn;
+}
+
+template<typename T>
+const T &tools::Packet<T>::GetPayload() const {
+  return this->mPayload;
+}
+
+template<typename T>
 tools::Packet<T>::Exception::Exception(std::string message) : mMessage(std::move(message)) {}
 
 template<typename T>
