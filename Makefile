@@ -19,7 +19,7 @@ COVERAGE_IGNORE = $(addprefix -e , $(COVERAGE_IGNORE_TARGETS))
 TOOLCHAIN_FLAG = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg.cmake
 
 LINT_DIRS = client \
-			common \
+			libs \
 			server
 LINT_FILES = $(shell find $(LINT_DIRS) -type f -regex '.*\.\(cpp\|hpp\|cc\|cxx\)')
 

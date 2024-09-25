@@ -13,8 +13,8 @@ constexpr std::uint8_t kPacketOffsetSize = 15;
 constexpr std::uint8_t kPacketOffsetFlagSize = 1;
 
 namespace rtype::sdk::network::tools {
-  struct PacketOffsetProps {
-    unsigned offset: kPacketOffsetSize = 0;         // 0..32767 (15 bits)
-    unsigned offsetFlag: kPacketOffsetFlagSize = 0; // 0..1 (1 bit)
-  };
-}
+struct PacketOffsetProps {
+  unsigned offset : kPacketOffsetSize = 0;          // 0..32767 (15 bits)
+  unsigned offsetFlag : kPacketOffsetFlagSize = 0;  // 0..1 (1 bit)
+};
+}  // namespace rtype::sdk::network::tools

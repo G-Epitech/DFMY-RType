@@ -11,13 +11,13 @@
 
 using namespace rtype::sdk::network;
 
-tools::PacketBuilder::PacketBuilder(): mMessage() {
+tools::PacketBuilder::PacketBuilder() : mMessage() {
   this->mPacketIdIncrement = 0;
-} ;
+}
 
 tools::PacketBuilder::~PacketBuilder() {
   this->Reset();
-};
+}
 
 tools::PacketBuilder::Exception::Exception(std::string message) : mMessage(std::move(message)) {}
 
