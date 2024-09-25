@@ -7,8 +7,6 @@
 
 #include <gtest/gtest.h>
 
-#include "src/foo.hpp"
-
 TEST(AddFunctionTest, HandlesPositiveNumbers) {
     EXPECT_EQ(5, 5);
 }

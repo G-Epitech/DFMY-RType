@@ -5,9 +5,12 @@
 ** main.cpp
 */
 
-#include "src/foo.hpp"
+#include <iostream>
+#include "src/options/options.hpp"
 
-int main() {
-  foo();
+int main(int ac, char **av) {
+  rtype::server::Options options;
+
+  options.ParseArguments(ac, av);
   return 0;
 }
