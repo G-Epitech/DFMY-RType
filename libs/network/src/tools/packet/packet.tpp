@@ -77,3 +77,79 @@ template<typename T>
 const char *tools::Packet<T>::Exception::what() const noexcept {
   return this->mMessage.c_str();
 }
+
+template<typename T>
+tools::DynamicBitset tools::Packet<T>::GetBitset() const {
+  unsigned int bitsetSize = kPacketHeaderPropsSize + kPacketMessagePropsSize;
+  if (OffsetIsEnabled())
+    bitsetSize += kPacketOffsetPropsSize;
+  if (TurnIsEnabled())
+    bitsetSize += kPacketTurnPropsSize;
+
+  bitsetSize += sizeof(this->mPayload) * 8;
+
+  DynamicBitset bitset(bitsetSize);
+  std::size_t offset = 0;
+
+  AppendHeaderToBitset(bitset, offset);
+  AppendMessageToBitset(bitset, offset);
+  AppendOffsetToBitset(bitset, offset);
+  AppendTurnToBitset(bitset, offset);
+  AppendPayloadToBitset(bitset, offset);
+
+  return bitset;
+}
+
+template<typename T>
+void tools::Packet<T>::AppendHeaderToBitset(tools::DynamicBitset &bitset, std::size_t &offset) const {
+  bitset.Append(mHeader.payloadLength, kPacketHeaderPayloadLengthSize, offset);
+  offset += kPacketHeaderPayloadLengthSize;
+
+  bitset.Append(mHeader.payloadType, kPacketHeaderPayloadTypeSize, offset);
+  offset += kPacketHeaderPayloadTypeSize;
+
+  bitset.Append(mHeader.offsetFlag, kPacketHeaderFlagSize, offset);
+  offset += kPacketHeaderFlagSize;
+
+  bitset.Append(mHeader.turnFlag, kPacketHeaderFlagSize, offset);
+  offset += kPacketHeaderFlagSize;
+}
+
+template<typename T>
+void tools::Packet<T>::AppendMessageToBitset(tools::DynamicBitset &bitset, std::size_t &offset) const {
+  bitset.Append(mMessage.messageId, kPacketMessageIdSize, offset);
+  offset += kPacketMessageIdSize;
+
+  bitset.Append(mMessage.messageType, kPacketMessageTypeSize, offset);
+  offset += kPacketMessageTypeSize;
+
+  offset += kPacketMessageVoidSize;
+}
+
+template<typename T>
+void tools::Packet<T>::AppendOffsetToBitset(tools::DynamicBitset &bitset, std::size_t &offset) const {
+  if (!OffsetIsEnabled())
+    return;
+
+  bitset.Append(mOffset.offset, kPacketOffsetSize, offset);
+  offset += kPacketOffsetSize;
+
+  bitset.Append(mOffset.offsetFlag, kPacketOffsetSize, offset);
+  offset += kPacketOffsetFlagSize;
+}
+
+template<typename T>
+void tools::Packet<T>::AppendTurnToBitset(tools::DynamicBitset &bitset, std::size_t &offset) const {
+  if (!TurnIsEnabled())
+    return;
+
+  bitset.Append(mTurn.turn, kPacketTurnSize, offset);
+  offset += kPacketTurnSize;
+}
+
+template<typename T>
+void tools::Packet<T>::AppendPayloadToBitset(tools::DynamicBitset &bitset, std::size_t &offset) const {
+  for (std::size_t i = 0; i < sizeof(this->mPayload) * 8; i++) {
+    bitset.Set(offset + i, (mPayload >> i) & 1);
+  }
+}

@@ -35,6 +35,12 @@ std::size_t tools::DynamicBitset::GetSize() const {
   return mSize;
 }
 
+void tools::DynamicBitset::Append(unsigned int value, std::size_t size, std::size_t offset) {
+  for (std::size_t i = 0; i < size; i++) {
+    Set(offset + i, (value >> (size - 1 - i)) & 1);
+  }
+}
+
 std::ostream &operator<<(std::ostream &os, const rtype::sdk::network::tools::DynamicBitset &bitset) {
   for (std::size_t i = 0; i < bitset.GetSize(); i++) {
     if (i % 8 == 0)

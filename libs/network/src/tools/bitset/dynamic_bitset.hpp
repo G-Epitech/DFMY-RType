@@ -34,6 +34,14 @@ public:
   void Set(std::size_t index, bool value);
 
   /**
+   * @brief Append multiple bits in the bitset
+   * @param value The value to append
+   * @param size The size of the value (in bits)
+   * @param offset The offset to append the value
+   */
+  void Append(unsigned value, std::size_t size, std::size_t offset);
+
+  /**
    * @brief Get a bit in the bitset
    * @param index The index of the bit to get
    * @return The value of the bit
