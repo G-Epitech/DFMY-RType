@@ -9,17 +9,18 @@
 
 #include <exception>
 #include <string>
+
 #include "api.hpp"
 #include "props/props.hpp"
 
 namespace rtype::sdk::network::tools {
-  template<typename T>
-  class EXPORT_NETWORK_SDK_API Packet;
+template <typename T>
+class EXPORT_NETWORK_SDK_API Packet;
 }
 
-template<typename T>
+template <typename T>
 class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
-public:
+ public:
   /**
    * @brief Construct a new Packet object
    * @param header Header properties
@@ -29,8 +30,7 @@ public:
    * @param turn Turn properties (default: empty)
    */
   Packet(PacketHeaderProps header, PacketMessageProps message, T payload,
-         PacketOffsetProps offset = PacketOffsetProps(),
-         PacketTurnProps turn = PacketTurnProps());
+         PacketOffsetProps offset = PacketOffsetProps(), PacketTurnProps turn = PacketTurnProps());
 
   ~Packet();
 
@@ -38,7 +38,7 @@ public:
    * @brief Packet exceptions class
    */
   class Exception : public std::exception {
-  public:
+   public:
     /**
      * @brief Create a new message when packet exception
      * @param message The message
@@ -51,7 +51,7 @@ public:
      */
     [[nodiscard]] const char *what() const noexcept override;
 
-  private:
+   private:
     /// @brief The exception message
     std::string mMessage;
   };
@@ -98,7 +98,7 @@ public:
    */
   [[nodiscard]] const T &GetPayload() const;
 
-private:
+ private:
   /// @brief Packet header properties
   PacketHeaderProps mHeader;
   /// @brief Packet message properties

@@ -7,16 +7,17 @@
 
 #pragma once
 
-#include "api.hpp"
-#include "packet.hpp"
 #include <vector>
 
+#include "api.hpp"
+#include "packet.hpp"
+
 namespace rtype::sdk::network::tools {
-  class EXPORT_NETWORK_SDK_API PacketBuilder;
+class EXPORT_NETWORK_SDK_API PacketBuilder;
 }
 
 class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
-public:
+ public:
   PacketBuilder();
 
   ~PacketBuilder();
@@ -25,7 +26,7 @@ public:
    * @brief Packet builder exceptions class
    */
   class Exception : public std::exception {
-  public:
+   public:
     /**
      * @brief Create a new message when packet builder exception
      * @param message The message
@@ -38,7 +39,7 @@ public:
      */
     [[nodiscard]] const char *what() const noexcept override;
 
-  private:
+   private:
     /// @brief The exception message
     std::string mMessage;
   };
@@ -73,7 +74,7 @@ public:
    * @param payload The payload
    * @return The packet
    */
-  template<typename T>
+  template <typename T>
   Packet<T> Build(T payload);
 
   /**
@@ -82,10 +83,10 @@ public:
    * @param payloads The payloads
    * @return The packets
    */
-  template<typename T>
+  template <typename T>
   std::vector<Packet<T>> Build(std::vector<T> payloads);
 
-private:
+ private:
   /**
    * @brief Check if the value is valid for the bit size
    * @param value The value to check
