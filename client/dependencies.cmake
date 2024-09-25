@@ -1,5 +1,5 @@
 # External dependencies
-find_package(fmt REQUIRED)
+find_package(fmt REQUIRED QUIET)
 target_link_libraries(${CLIENT_CORE_LIB} PRIVATE fmt::fmt)
 find_package(SFML REQUIRED COMPONENTS graphics system window CONFIG)
 target_link_libraries(${CLIENT_CORE_LIB} PUBLIC sfml-graphics sfml-window sfml-system)

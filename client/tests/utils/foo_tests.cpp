@@ -8,5 +8,5 @@
 #include <gtest/gtest.h>
 
 TEST(AddFunctionTest, HandlesPositiveNumbers) {
-  EXPECT_EQ(5, 5);
+  EXPECT_EQ(2, 2);
 }
