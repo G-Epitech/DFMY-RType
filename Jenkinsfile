@@ -5,7 +5,7 @@ pipeline {
     }
 
     environment {
-        RTYPE_BINARIES_LIST = 'r-type_server r-type_client'
+        RTYPE_BINARIES_LIST = 'server/r-type_server client/r-type_client'
     }
 
     stages {
@@ -34,14 +34,14 @@ pipeline {
                             }
                             steps {
                                 script {
-                                    sh 'cmake -B build --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release'
-                                    sh 'cmake --build build'
-                                    dir('build') {
+                                    sh 'cmake --preset=unix:release'
+                                    sh 'cmake --build build/unix/release'
+                                    dir('build/unix/release') {
                                         def binaries = env.RTYPE_BINARIES_LIST.split(' ')
                                         for (binary in binaries) {
                                             if (!fileExists(binary)) {
                                                 error "Binary ${binary} not found"
-                                            } else if (!isExecutable(binary)) {
+                                            } else if (sh(script: "test -x ${binary}", returnStatus: true) != 0) {
                                                 error "Binary ${binary} is not executable"
                                             }
                                         }
