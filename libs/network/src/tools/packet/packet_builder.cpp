@@ -5,7 +5,6 @@
 ** PacketBuilder class
 */
 
-#include <complex>
 #include "packet_builder.hpp"
 
 #include <valarray>
