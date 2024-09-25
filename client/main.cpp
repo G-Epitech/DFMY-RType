@@ -5,7 +5,7 @@
 ** main.cpp
 */
 
-#include "app/App.hpp"
+#include "app/app.hpp"
 
 using namespace rtype::client;
 

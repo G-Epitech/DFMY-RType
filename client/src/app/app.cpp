@@ -5,7 +5,7 @@
 ** app
 */
 
-#include "App.hpp"
+#include "app.hpp"
 
 using namespace rtype::client;
 
