@@ -11,3 +11,4 @@ using namespace rtype::server::cli;
 
 OptionsHandlerLobby::OptionsHandlerLobby() {}
 OptionsHandlerLobby::~OptionsHandlerLobby() {}
+void OptionsHandlerLobby::Parse(int ac, char **av) {}

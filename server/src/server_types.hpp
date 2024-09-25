@@ -8,5 +8,5 @@
 #pragma once
 
 namespace rtype::server {
-enum ServerType { kMain = 1, kGame = 2 };
+enum ServerType { kAllocator = 1, kLobby = 2 };
 }  // namespace rtype::server

@@ -9,26 +9,42 @@
 
 #include <iostream>
 
-using namespace rtype::server;
+using namespace rtype::server::cli;
 
 Options::Options() : mVariablesMap(), mDescription("Allowed options") {
+  Setup();
 }
 
-void Options::ParseArguments(int ac, char **av) {
-
-  AddOptions();
-  po::store(po::parse_command_line(ac, av, mDescription), mVariablesMap);
-  po::notify(mVariablesMap);
+void Options::Parse(int ac, char **av) {
+  po::positional_options_description p;
+  p.add("type", 1);
+  po::store(po::command_line_parser(ac, av).options(mDescription).positional(p).run(),
+            mVariablesMap);
 
   if (mVariablesMap.count("help")) {
     std::cout << mDescription << "\n";
+    return;
   }
-  if (mVariablesMap.count("type")) {
-    std::cout << mVariablesMap["type"].as<ServerType>() << ".\n";
+  try {
+    po::notify(mVariablesMap);
+    if (mVariablesMap.count("type")) {
+      std::cout << mVariablesMap["type"].as<ServerType>() << ".\n";
+    }
+  } catch (const po::error &e) {
+    std::cerr << "Error: " << e.what() << "\n";
   }
 }
 
-void Options::AddOptions() noexcept {
+void Options::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
-      "type", po::value<ServerType>(), "The type of the server");
+      "type", po::value<ServerType>()->required(), "type of the server (main or lobby)");
+}
+
+void Options::AssignOptionsHandler(rtype::server::ServerType serverType) noexcept {
+  switch (serverType) {
+    case kLobby:
+      mOptionHandler = std::make_unique<OptionsHandlerLobby>();
+    default:
+      mOptionHandler = std::make_unique<OptionsHandlerAllocator>();
+  };
 }

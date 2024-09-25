@@ -2,16 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** options_handler_game.hpp
+** options_handler_interface.hpp
 */
 
 #pragma once
 
 namespace rtype::server::cli {
-
-class OptionsHandlerLobby {
+class IOptionsHandler {
  public:
-  OptionsHandlerLobby();
-  ~OptionsHandlerLobby();
+  virtual void Parse(int ac, char **av) = 0;
 };
 }  // namespace rtype::server::cli
