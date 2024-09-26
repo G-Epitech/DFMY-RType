@@ -9,23 +9,25 @@
 
 #include <cstddef>
 
+#include "api.hpp"
+
 namespace rtype::sdk::ECS {
 
 /**
  * @brief Entity class
  * This class is used to represent an entity in the ECS system
  */
-class Entity {
+EXPORT_ECS_SDK_API class Entity {
  public:
   /**
    * @brief Default constructor
    */
-  ~Entity() = default;
+  EXPORT_ECS_SDK_API ~Entity();
 
   /**
    * @brief Operator size_t
    */
-  explicit operator std::size_t() const;
+  EXPORT_ECS_SDK_API explicit operator std::size_t() const;
 
  private:
   /// @brief Entity id
@@ -36,7 +38,7 @@ class Entity {
    * Even if this constructor is private, the registry class can access it
    * @param idx Entity id
    */
-  explicit Entity(std::size_t idx);
+  EXPORT_ECS_SDK_API explicit Entity(std::size_t idx);
 
   friend class registry;
 };
