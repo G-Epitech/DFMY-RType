@@ -7,71 +7,152 @@
 
 #pragma once
 
-#include <vector>
 #include <cstddef>
 #include <optional>
+#include <vector>
 
 namespace rtype {
-  template<typename Component>
-  class sparse_array {
-  public :
-    using value_type = std::optional<Component>;
-    using reference_type = value_type &;
-    using const_reference_type = value_type const &;
-    using container_t = std::vector<value_type>;
-    using size_type = typename container_t::size_type;
-    using iterator = typename container_t::iterator;
-    using const_iterator = typename container_t::const_iterator;
 
-  public :
-    sparse_array();
+/**
+ * @brief Sparse array class
+ * This class is used to represent a sparse array
+ * @tparam Component Component type
+ */
+template <typename Component>
+class sparse_array {
+ public:
+  /// @brief Type aliases
+  using value_type = std::optional<Component>;
 
-    sparse_array(sparse_array const &);
+  /// @brief Reference type
+  using reference_type = value_type &;
 
-    sparse_array(sparse_array &&) noexcept;
+  /// @brief Const reference type
+  using const_reference_type = value_type const &;
 
-    ~sparse_array();
+  /// @brief Container type
+  using container_t = std::vector<value_type>;
 
-    sparse_array &operator=(sparse_array const &);
+  /// @brief Size type
+  using size_type = typename container_t::size_type;
 
-    sparse_array &operator=(sparse_array &&) noexcept;
+  /// @brief Iterator type
+  using iterator = typename container_t::iterator;
 
-    reference_type operator[](size_t idx);
+  /// @brief Const iterator type
+  using const_iterator = typename container_t::const_iterator;
 
-    const_reference_type operator[](size_t idx) const;
+ public:
+  /**
+   * @brief Default constructor
+   */
+  sparse_array();
 
-    iterator begin();
+  /**
+   * @brief Duplicate constructor
+   */
+  sparse_array(sparse_array const &);
 
-    const_iterator begin() const;
+  /**
+   * @brief Move constructor
+   */
+  sparse_array(sparse_array &&) noexcept;
 
-    const_iterator cbegin() const;
+  /**
+   * @brief Destructor
+   */
+  ~sparse_array();
 
-    iterator end();
+  /**
+   * @brief Copy assignment operator
+   */
+  sparse_array &operator=(sparse_array const &);
 
-    const_iterator end() const;
+  /**
+   * @brief Move assignment operator
+   */
+  sparse_array &operator=(sparse_array &&) noexcept;
 
-    const_iterator cend() const;
+  /**
+   * @brief Operator []
+   */
+  reference_type operator[](size_t idx);
 
-    size_type size() const;
+  /**
+   * @brief Operator [] const
+   */
+  const_reference_type operator[](size_t idx) const;
 
-    reference_type insert_at(size_type pos, Component const &);
+  /**
+   * @brief Begin iterator
+   */
+  iterator begin();
 
-    reference_type insert_at(size_type pos, Component &&);
+  /**
+   * @brief Begin iterator const
+   */
+  const_iterator begin() const;
 
-    template<class... Params>
-    reference_type emplace_at(size_type pos, Params &&...);
+  /**
+   * @brief Begin iterator const
+   */
+  const_iterator cbegin() const;
 
-    void erase(size_type pos);
+  /**
+   * @brief End iterator
+   */
+  iterator end();
 
-    size_type get_index(value_type const &) const;
+  /**
+   * @brief End iterator const
+   */
+  const_iterator end() const;
 
-    void resize(size_type new_size);
+  /**
+   * @brief End iterator const
+   */
+  const_iterator cend() const;
 
-    void shrink_to_fit();
+  /**
+   * @brief Get size
+   */
+  size_type size() const;
 
-  private :
-    container_t _data;
-  };
-} // rtype
+  /**
+   * @brief Insert at a specific position on a const component
+   */
+  reference_type insert_at(size_type pos, Component const &);
+
+  /**
+   * @brief Insert at a specific position on a component
+   */
+  reference_type insert_at(size_type pos, Component &&);
+
+  /**
+   * @brief Emplace at a specific position
+   */
+  template <class... Params>
+  reference_type emplace_at(size_type pos, Params &&...);
+
+  /**
+   * @brief Erase a component at a specific position
+   */
+  void erase(size_type pos);
+
+  /**
+   * @brief Get index of a component
+   */
+  size_type get_index(value_type const &) const;
+
+  /**
+   * @brief Resize the sparse array
+   */
+  void resize(size_type new_size);
+
+ private:
+  /// @brief data storage
+  container_t _data;
+};
+}  // namespace rtype
 
 #include "spare_array.tpp"
