@@ -1,0 +1,166 @@
+---
+sidebar_position: 2
+---
+
+# 🧩 ECS SDK
+
+The ECS SDK is a collection of tools with a useful API that allows you to create and manage entities, components, and systems.
+
+## Usage
+
+The registry is the main class of the ECS SDK. It is used to create entities, components, and systems.
+
+:::info
+The ECS SDK is available in the `rtype::sdk::ECS` namespace.
+:::
+
+Let's see how to use the ECS SDK with a simple example.
+
+First, include the necessary headers:
+
+```cpp
+#include <libs/ECS/src/registry.hpp>
+````
+
+Then, we are going to declare some components in order to use them later:
+
+```cpp
+struct position {
+  float x;
+  float y;
+};
+
+struct velocity {
+  float vx;
+  float vy;
+};
+
+struct drawable {
+  bool hidden;
+};
+
+struct controllable {
+  bool up;
+  bool down;
+  bool left;
+  bool right;
+};
+```
+
+Now, we can create a registry, register the components, and create an entity:
+
+```cpp
+rtype::sdk::ECS::registry registry;
+
+registry.register_component<position>();
+registry.register_component<velocity>();
+registry.register_component<drawable>();
+registry.register_component<controllable>();
+
+auto entity = registry.spawn_entity();
+```
+
+An entity was created, but it doesn't have any components yet. Let's add some components to the entity:
+
+```cpp
+registry.add_component<position>(entity, {10.0f, 20.0f});
+registry.add_component<velocity>(entity, {1.0f, 2.0f});
+registry.add_component<drawable>(entity, {false});
+registry.add_component<controllable>(entity, {false, false, false, false});
+```
+
+Now, we can create a system that will display the position and velocity of the entity:
+
+```cpp
+
+void logging_system(rtype::sdk::ECS::registry& r, const rtype::sdk::ECS::tools::sparse_array<position>& positions,
+                    const rtype::sdk::ECS::tools::sparse_array<velocity>& velocities) {
+  for (size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
+    if (positions[i] && velocities[i]) {
+      const auto& [x, y] = positions[i].value();
+      const auto& [vx, vy] = velocities[i].value();
+      std::cerr << i << ": Position = { " << x << ", " << y << " }, Velocity = { " << vx << ", "
+                << vy << " }\n";
+    }
+  }
+}
+
+// Add the system to the registry with the components it will use
+registry.add_system<position, velocity>(logging_system);
+```
+
+Finally, we can run the system:
+
+```cpp
+registry.run_systems();
+```
+
+The output will be:
+
+```
+0: Position = { 10, 20 }, Velocity = { 1, 2 }
+```
+
+---
+
+Here is the complete example:
+
+```cpp
+#include <libs/ECS/src/registry.hpp>
+
+struct position {
+  float x;
+  float y;
+};
+
+struct velocity {
+  float vx;
+  float vy;
+};
+
+struct drawable {
+  bool hidden;
+};
+
+struct controllable {
+  bool up;
+  bool down;
+  bool left;
+  bool right;
+};
+
+void logging_system(rtype::sdk::ECS::registry& r,
+                    const rtype::sdk::ECS::tools::sparse_array<position>& positions,
+                    const rtype::sdk::ECS::tools::sparse_array<velocity>& velocities) {
+  for (size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
+    if (positions[i] && velocities[i]) {
+      const auto& [x, y] = positions[i].value();
+      const auto& [vx, vy] = velocities[i].value();
+      std::cerr << i << ": Position = { " << x << ", " << y << " }, Velocity = { " << vx << ", "
+                << vy << " }\n";
+    }
+  }
+}
+
+int main() {
+  rtype::sdk::ECS::registry registry;
+
+  registry.register_component<position>();
+  registry.register_component<velocity>();
+  registry.register_component<drawable>();
+  registry.register_component<controllable>();
+
+  auto entity = registry.spawn_entity();
+
+  registry.add_component<position>(entity, {10.0f, 20.0f});
+  registry.add_component<velocity>(entity, {1.0f, 2.0f});
+  registry.add_component<drawable>(entity, {false});
+  registry.add_component<controllable>(entity, {false, false, false, false});
+
+  registry.add_system<position, velocity>(logging_system);
+
+  registry.run_systems();
+
+  return 0;
+}
+```
