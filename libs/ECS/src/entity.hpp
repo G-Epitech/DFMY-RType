@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace rtype {
+namespace rtype::sdk::ECS {
 
 /**
  * @brief Entity class
@@ -40,4 +40,4 @@ class Entity {
 
   friend class registry;
 };
-}  // namespace rtype
+}  // namespace rtype::sdk::ECS

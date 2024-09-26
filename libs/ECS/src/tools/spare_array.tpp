@@ -7,6 +7,8 @@
 
 #pragma once
 
+using namespace rtype::sdk::ECS::tools;
+
 template <typename Component>
 sparse_array<Component>::sparse_array() = default;
 
@@ -116,7 +118,7 @@ void sparse_array<Component>::erase(size_type pos) {
 template <typename Component>
 typename sparse_array<Component>::size_type sparse_array<Component>::get_index(
     value_type const &component) const {
-  for (size_type i = 0; i < _data.size(); i++) {
+  for (auto i = 0; i < _data.size(); i++) {
     if (_data[i] == component)
       return i;
   }
@@ -126,20 +128,6 @@ typename sparse_array<Component>::size_type sparse_array<Component>::get_index(
 template <typename Component>
 void sparse_array<Component>::resize(size_type new_size) {
   if (new_size > _data.size()) {
-    _data.resize(new_size);
-  }
-}
-
-template <typename Component>
-void sparse_array<Component>::shrink_to_fit() {
-  size_t new_size = 0;
-  for (size_t i = 0; i < _data.size(); ++i) {
-    if (_data[i].has_value()) {
-      new_size = i + 1;
-    }
-  }
-
-  if (new_size < _data.size()) {
     _data.resize(new_size);
   }
 }

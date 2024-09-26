@@ -7,7 +7,7 @@
 
 #include "entity.hpp"
 
-using namespace rtype;
+using namespace rtype::sdk::ECS;
 
 Entity::Entity(const std::size_t idx) : _id{idx} {}
 

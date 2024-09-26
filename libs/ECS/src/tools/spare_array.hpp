@@ -11,7 +11,7 @@
 #include <optional>
 #include <vector>
 
-namespace rtype {
+namespace rtype::sdk::ECS::tools {
 
 /**
  * @brief Sparse array class
@@ -153,6 +153,6 @@ class sparse_array {
   /// @brief data storage
   container_t _data;
 };
-}  // namespace rtype
+}  // namespace rtype::sdk::ECS::tools
 
 #include "spare_array.tpp"
