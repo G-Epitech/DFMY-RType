@@ -4,7 +4,7 @@ BINARIES=[
 ]
 TESTS=[
     'client': 'r-type_client_tests',
-    'server': 'r_type_server_tests'
+    'server': 'r-type_server_tests'
 ]
 
 pipeline {
@@ -27,8 +27,7 @@ pipeline {
                     branch 'main'
                 }
             }
-
-            parallel {
+            stages {
                 stage ('Linux environment') {
                     agent {
                         dockerfile {
@@ -37,14 +36,14 @@ pipeline {
                         }
                     }
                     stages {
-                        stage ('Generate build files') {
+                         stage ('Generate build files') {
                             steps {
                                 script {
-                                    sh 'cmake --preset=unix:release'
+                                    sh 'cmake --preset=unix:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$PWD/bin'
                                 }
                             }
                         }
-                        stage ('Build') {
+                        stage ('Projects') {
                             matrix {
                                 axes {
                                     axis {
@@ -52,25 +51,28 @@ pipeline {
                                         values 'client', 'server'
                                     }
                                 }
-                            }
-                            steps {
-                                dir('build/unix/release') {
-                                    stages {
-                                        stage('Building "${BINARIES[env.TARGET_KEY]}"') {
-                                            steps {
-                                                sh 'cmake --build . --target ${BINARIES[env.TARGET_KEY]} -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$PWD/bin'
-                                            }
-                                        }
-                                        stage('Looking for "${BINARIES[env.TARGET_KEY]}"') {
-                                            steps {
-                                                script {
-                                                    if (!fileExists("bin/${BINARIES[env.TARGET_KEY]}")) {
-                                                        error "Binary ${BINARIES[env.TARGET_KEY]} not found"
-                                                    } else if (sh(script: "test -x bin/${BINARIES[env.TARGET_KEY]}", returnStatus: true) != 0) {
-                                                        error "Binary ${BINARIES[env.TARGET_KEY]} is not executable"
-                                                    }
+                                environment {
+                                    TARGET_BINARY = "${BINARIES[TARGET_KEY]}"
+                                    TARGET_TEST = "${TESTS[TARGET_KEY]}"
+                                }
+                                stages {
+                                    stage ('Build') {
+                                        steps {
+                                            sh 'cmake --build build/unix/release --target ${TARGET_BINARY}'
+                                            script {
+                                                if (!fileExists("bin/${env.TARGET_BINARY}")) {
+                                                    error "Binary ${env.TARGET_BINARY} not found"
+                                                } else if (sh(script: "test -x bin/${TARGET_BINARY}", returnStatus: true) != 0) {
+                                                    error "Binary ${env.TARGET_BINARY} is not executable"
                                                 }
                                             }
+                                        }
+                                    }
+
+                                    stage ('Tests') {
+                                        steps {
+                                            sh 'cmake --build build/unix/release --target ${TARGET_TEST}'
+                                            sh './bin/${TARGET_TEST}'
                                         }
                                     }
                                 }
