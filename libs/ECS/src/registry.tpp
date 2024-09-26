@@ -46,7 +46,7 @@ typename sparse_array<Component>::reference_type registry::add_component(Entity 
   auto &components = get_components<Component>();
   const auto size = components.size();
 
-  if (size <= to) {
+  if (size <= to._id) {
     components.resize(static_cast<size_t>(to) + 1);
   }
   return components.emplace_at(static_cast<size_t>(to), std::forward<Component>(c));
