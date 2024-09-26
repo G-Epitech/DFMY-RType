@@ -13,7 +13,7 @@ namespace rtype::server::cli {
 class OptionsHandlerAllocator : public OptionsHandlerAbstract {
  public:
   OptionsHandlerAllocator();
-  ~OptionsHandlerAllocator();
+  ~OptionsHandlerAllocator() override;
 
   void Parse(int ac, char **av) override;
 };

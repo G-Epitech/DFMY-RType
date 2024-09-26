@@ -10,6 +10,8 @@
 namespace rtype::server::cli {
 class IOptionsHandler {
  public:
+  virtual ~IOptionsHandler() = default;
+
   virtual void Parse(int ac, char **av) = 0;
 };
 }  // namespace rtype::server::cli

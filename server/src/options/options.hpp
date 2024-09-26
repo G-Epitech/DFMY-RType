@@ -9,7 +9,6 @@
 
 #include <boost/program_options.hpp>
 
-#include "args/option_arg_server_type.hpp"
 #include "handlers/option_handlers.hpp"
 #include "src/server_types.hpp"
 
@@ -18,19 +17,17 @@ namespace po = boost::program_options;
 namespace rtype::server::cli {
 class Options {
  public:
-  Options();
+  Options() = default;
   ~Options() = default;
 
   void Parse(int ac, char **av);
 
  private:
-  void Setup() noexcept;
+  static void Usage() noexcept;
 
-  void AssignOptionsHandler(ServerType serverType) noexcept;
+  void AssignOptionsHandler(const std::string &serverTypeArg) noexcept;
 
  private:
-  po::variables_map mVariablesMap;
-  po::options_description mDescription;
-  std::unique_ptr<IOptionsHandler> mOptionHandler;
+  std::unique_ptr<IOptionsHandler> mOptionsHandler;
 };
 }  // namespace rtype::server::cli
