@@ -1,8 +1,8 @@
-BINARIES=[
+BINARIES = [
     'client': 'r-type_client',
     'server': 'r-type_server'
 ]
-TESTS=[
+TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
@@ -14,21 +14,21 @@ pipeline {
     }
 
     stages {
-        stage ('Checkout') {
+        stage('Checkout') {
             steps {
                 cleanWs()
                 checkout scm
             }
         }
 
-        stage ('Pull request') {
+        stage('Pull request') {
             when {
                 not {
                     branch 'main'
                 }
             }
             stages {
-                stage ('Linux environment') {
+                /*stage('Linux environment') {
                     agent {
                         dockerfile {
                             filename 'ci/unix.dockerfile'
@@ -36,14 +36,14 @@ pipeline {
                         }
                     }
                     stages {
-                         stage ('Generate build files') {
+                        stage('Generate build files') {
                             steps {
                                 script {
                                     sh 'cmake --preset=unix:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$PWD/bin'
                                 }
                             }
                         }
-                        stage ('Projects') {
+                        stage('Projects') {
                             matrix {
                                 axes {
                                     axis {
@@ -56,7 +56,7 @@ pipeline {
                                     TARGET_TEST = "${TESTS[TARGET_KEY]}"
                                 }
                                 stages {
-                                    stage ('Build') {
+                                    stage('Build') {
                                         steps {
                                             sh 'cmake --build build/unix/release --target ${TARGET_BINARY}'
                                             script {
@@ -69,7 +69,7 @@ pipeline {
                                         }
                                     }
 
-                                    stage ('Tests') {
+                                    stage('Tests') {
                                         steps {
                                             sh 'cmake --build build/unix/release --target ${TARGET_TEST}'
                                             sh './bin/${TARGET_TEST}'
@@ -79,20 +79,29 @@ pipeline {
                             }
                         }
                     }
-                }
-                stage ('Windows environment') {
+                } */
+
+                stage('Windows environment') {
                     agent {
                         label 'windows'
                     }
                     stages {
-                         stage ('Generate build files') {
+                        stage('Checkout') {
+                            steps {
+                                cleanWs()
+                                checkout scm
+                            }
+                        }
+
+                        stage('Generate build files') {
                             steps {
                                 script {
                                     bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$PWD/bin"'
                                 }
                             }
                         }
-                        stage ('Projects') {
+
+                        stage('Projects') {
                             matrix {
                                 axes {
                                     axis {
@@ -105,7 +114,7 @@ pipeline {
                                     TARGET_TEST = "${TESTS[TARGET_KEY]}"
                                 }
                                 stages {
-                                    stage ('Build') {
+                                    stage('Build') {
                                         steps {
                                             bat 'cmake --build build/windows/release --target ${TARGET_BINARY}'
                                             script {
@@ -116,7 +125,7 @@ pipeline {
                                         }
                                     }
 
-                                    stage ('Tests') {
+                                    stage('Tests') {
                                         steps {
                                             bat 'cmake --build build/windows/release --target ${TARGET_TEST}'
                                             bat './bin/${TARGET_TEST}.exe'
