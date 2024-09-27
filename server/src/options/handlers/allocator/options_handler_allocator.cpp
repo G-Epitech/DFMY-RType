@@ -10,6 +10,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "server/src/env/env.hpp"
+
 using namespace rtype::server::cli;
 
 OptionsHandlerAllocator::OptionsHandlerAllocator() : OptionsHandlerAbstract() {
@@ -24,14 +26,14 @@ void OptionsHandlerAllocator::Parse(int ac, char **av) {
     return;
   }
   po::notify(mVariablesMap);
-  const auto &configPath = mVariablesMap["config"].as<std::string>();
-  if (!std::filesystem::exists(configPath)) {
-    throw std::runtime_error("Configuration file doesn't exist\n");
-  }
-  std::cout << "Config file path: " << configPath << "\n";
+  Env env;
+  const auto &envPath = mVariablesMap["env"].as<std::string>();
+  env.Load(envPath);
 }
 
 void OptionsHandlerAllocator::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
-      "config", po::value<std::string>()->required(), "allocator server configuration file");
+      "env", po::value<std::string>()->required(), "allocator server env file");
 }
+
+void OptionsHandlerAllocator::LoadEnvFile() {}

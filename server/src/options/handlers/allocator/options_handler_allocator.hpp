@@ -18,5 +18,7 @@ class OptionsHandlerAllocator : public OptionsHandlerAbstract {
 
  private:
   void Setup() noexcept;
+
+  void LoadEnvFile();
 };
 }  // namespace rtype::server::cli

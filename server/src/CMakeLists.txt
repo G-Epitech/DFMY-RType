@@ -4,3 +4,4 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
 )
 
 add_subdirectory(options)
+add_subdirectory(env)
