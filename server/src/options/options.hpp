@@ -17,17 +17,15 @@ namespace po = boost::program_options;
 namespace rtype::server::cli {
 class Options {
  public:
-  Options() = default;
-  ~Options() = default;
+  Options() = delete;
+  ~Options() = delete;
 
-  void Parse(int ac, char **av);
+  static void Parse(int ac, char **av);
 
  private:
   static void Usage() noexcept;
 
-  void AssignOptionsHandler(const std::string &serverTypeArg) noexcept;
-
- private:
-  std::unique_ptr<IOptionsHandler> mOptionsHandler;
+  static std::unique_ptr<IOptionsHandler> AssignOptionsHandler(
+      const std::string &serverTypeArg) noexcept;
 };
 }  // namespace rtype::server::cli

@@ -17,7 +17,7 @@ namespace rtype::server::cli {
 class OptionsHandlerAbstract : public IOptionsHandler {
  public:
   OptionsHandlerAbstract();
-  ~OptionsHandlerAbstract() = default;
+  ~OptionsHandlerAbstract() override = default;
 
  protected:
   po::variables_map mVariablesMap;

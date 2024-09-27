@@ -24,8 +24,8 @@ void Options::Parse(int ac, char **av) {
     return;
   }
   try {
-    AssignOptionsHandler(firstArg);
-    mOptionsHandler->Parse(ac - 2, av + 2);
+    const auto &optionsHandler = AssignOptionsHandler(firstArg);
+    optionsHandler->Parse(ac, av);
   } catch (const po::error &e) {
     std::cerr << "Error: " << e.what() << "\n";
   }
@@ -34,15 +34,14 @@ void Options::Usage() noexcept {
   std::cout << "Help message\n";
 }
 
-void Options::AssignOptionsHandler(const std::string &typeArg) noexcept {
+std::unique_ptr<IOptionsHandler> Options::AssignOptionsHandler(
+    const std::string &typeArg) noexcept {
   const auto &type = StringToServerType(typeArg);
 
   switch (type) {
     case kLobby:
-      mOptionsHandler = std::make_unique<OptionsHandlerLobby>();
-      return;
+      return std::make_unique<OptionsHandlerLobby>();
     default:
-      mOptionsHandler = std::make_unique<OptionsHandlerAllocator>();
-      return;
+      return std::make_unique<OptionsHandlerAllocator>();
   };
 }

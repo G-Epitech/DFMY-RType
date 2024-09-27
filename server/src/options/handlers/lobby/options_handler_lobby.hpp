@@ -11,11 +11,15 @@
 
 namespace rtype::server::cli {
 
+const std::size_t kDefaultTicks = 60;
+
 class OptionsHandlerLobby : public OptionsHandlerAbstract {
  public:
   OptionsHandlerLobby();
-  ~OptionsHandlerLobby();
 
   void Parse(int ac, char **av) override;
+
+ private:
+  void Setup() noexcept;
 };
 }  // namespace rtype::server::cli

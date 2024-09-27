@@ -5,11 +5,14 @@
 ** main.cpp
 */
 
+#include <iostream>
 #include "src/options/options.hpp"
 
 int main(int ac, char **av) {
-  rtype::server::cli::Options options;
-
-  options.Parse(ac, av);
+  try {
+    rtype::server::cli::Options::Parse(ac, av);
+  } catch (std::exception &exception) {
+    std::cerr << exception.what();
+  }
   return 0;
 }
