@@ -80,7 +80,7 @@ pipeline {
                         }
                     }
                 }
-                /* stage ('Windows environment') {
+                stage ('Windows environment') {
                     agent {
                         label 'windows'
                     }
@@ -88,7 +88,7 @@ pipeline {
                          stage ('Generate build files') {
                             steps {
                                 script {
-                                    sh 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$PWD/bin'
+                                    bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$PWD/bin"'
                                 }
                             }
                         }
@@ -107,12 +107,10 @@ pipeline {
                                 stages {
                                     stage ('Build') {
                                         steps {
-                                            sh 'cmake --build build/unix/release --target ${TARGET_BINARY}'
+                                            bat 'cmake --build build/windows/release --target ${TARGET_BINARY}'
                                             script {
-                                                if (!fileExists("bin/${env.TARGET_BINARY}")) {
-                                                    error "Binary ${env.TARGET_BINARY} not found"
-                                                } else if (sh(script: "test -x bin/${TARGET_BINARY}", returnStatus: true) != 0) {
-                                                    error "Binary ${env.TARGET_BINARY} is not executable"
+                                                if (!fileExists("bin/${env.TARGET_BINARY}.exe")) {
+                                                    error "Binary ${env.TARGET_BINARY}.exe not found"
                                                 }
                                             }
                                         }
@@ -120,15 +118,15 @@ pipeline {
 
                                     stage ('Tests') {
                                         steps {
-                                            sh 'cmake --build build/unix/release --target ${TARGET_TEST}'
-                                            sh './bin/${TARGET_TEST}'
+                                            bat 'cmake --build build/windows/release --target ${TARGET_TEST}'
+                                            bat './bin/${TARGET_TEST}.exe'
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                } */
+                }
             }
         }
     }
