@@ -7,4 +7,6 @@ target_sources(r-type_network_sdk PRIVATE
         packet_builder.cpp
         packet_builder.hpp
         packet_builder.tpp
+        packet_utils.cpp
+        packet_utils.hpp
 )

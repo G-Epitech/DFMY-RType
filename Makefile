@@ -60,7 +60,7 @@ re:
 			@$(MAKE) all
 .PHONY: re
 
-tests_run: tests_run_server tests_run_client
+tests_run: tests_run_server tests_run_client tests_run_network_sdk
 .PHONY: tests_run
 
 tests_run_server:
@@ -79,6 +79,7 @@ tests_run_network_sdk:
 			@cmake -S . -B $(BUILD_PATH) -DCOVERAGE=ON $(TOOLCHAIN_FLAG)
 			@cmake --build $(BUILD_PATH) --target $(TESTS_NETWORK_SDK_NAME)
 			@./$(TESTS_NETWORK_SDK_NAME) --gtest_brief=1
+.PHONY: tests_run_network_sdk
 
 coverage:
 			@gcovr $(COVERAGE_IGNORE)
