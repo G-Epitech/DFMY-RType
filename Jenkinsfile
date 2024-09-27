@@ -86,7 +86,7 @@ pipeline {
                         label 'windows'
                     }
                     stages {
-/*                         stage('Checkout') {
+                         stage('Checkout') {
                             steps {
                                 cleanWs()
                                 checkout scm
@@ -99,7 +99,7 @@ pipeline {
                                     bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$PWD/bin"'
                                 }
                             }
-                        } */
+                        }
 
                         stage('Projects') {
                             matrix {
@@ -116,22 +116,21 @@ pipeline {
                                 stages {
                                     stage('Build') {
                                         steps {
-                                            bat 'echo $TARGET_BINARY'
-                                            /* bat 'cmake --build build/windows/release --target "$TARGET_BINARY"'
+                                            bat 'cmake --build build/windows/release --target %TARGET_BINARY%'
                                             script {
                                                 if (!fileExists("bin/${env.TARGET_BINARY}.exe")) {
                                                     error "Binary ${env.TARGET_BINARY}.exe not found"
                                                 }
-                                            } */
+                                            }
                                         }
                                     }
 
-                                    /* stage('Tests') {
+                                    stage('Tests') {
                                         steps {
-                                            bat 'cmake --build build/windows/release --target "$TARGET_BINARY"'
-                                            bat './bin/"$TARGET_BINARY".exe'
+                                            bat 'cmake --build build/windows/release --target %TARGET_TEST%'
+                                            bat './bin/%TARGET_TEST%.exe'
                                         }
-                                    } */
+                                    }
                                 }
                             }
                         }
