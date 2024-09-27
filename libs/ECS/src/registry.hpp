@@ -22,7 +22,7 @@ namespace rtype::sdk::ECS {
  * @brief Registry class
  * This class is used to store all the entities and components
  */
-EXPORT_ECS_SDK_API class registry {
+EXPORT_ECS_SDK_API class Registry {
  public:
   /**
    * @brief Register a component
@@ -74,7 +74,8 @@ EXPORT_ECS_SDK_API class registry {
    * @param c Component to add
    */
   template <typename Component>
-  EXPORT_ECS_SDK_API typename SparseArray<Component>::reference_type AddComponent(Entity const &to, Component &&c);
+  EXPORT_ECS_SDK_API typename SparseArray<Component>::reference_type AddComponent(Entity const &to,
+                                                                                  Component &&c);
 
   /**
    * @brief Emplace a component to an entity
@@ -84,8 +85,8 @@ EXPORT_ECS_SDK_API class registry {
    * @param p Parameters of the component
    */
   template <typename Component, typename... Params>
-  EXPORT_ECS_SDK_API typename SparseArray<Component>::reference_type EmplaceComponent(Entity const &to,
-                                                                     Params &&...p);
+  EXPORT_ECS_SDK_API typename SparseArray<Component>::reference_type EmplaceComponent(
+      Entity const &to, Params &&...p);
 
   /**
    * @brief Remove a component from an entity
@@ -123,7 +124,7 @@ EXPORT_ECS_SDK_API class registry {
   std::list<Entity> free_ids_;
 
   /// @brief remove functions used to remove components
-  std::vector<std::function<void(registry &, const Entity &)>> remove_functions_;
+  std::vector<std::function<void(Registry &, const Entity &)>> remove_functions_;
 };
 }  // namespace rtype::sdk::ECS
 

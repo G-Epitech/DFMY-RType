@@ -10,12 +10,12 @@
 using namespace rtype::sdk::ECS;
 
 template <typename Component>
-SparseArray<Component> &registry::RegisterComponent() {
+SparseArray<Component> &Registry::RegisterComponent() {
   const auto type_idx = std::type_index(typeid(Component));
 
   components_arrays_[type_idx] = SparseArray<Component>();
 
-  remove_functions_.push_back([](registry &reg, const Entity &e) {
+  remove_functions_.push_back([](Registry &reg, const Entity &e) {
     auto &component_array = reg.GetComponents<Component>();
     auto index = static_cast<size_t>(e);
     if (index < component_array.Size()) {
@@ -27,21 +27,21 @@ SparseArray<Component> &registry::RegisterComponent() {
 }
 
 template <typename Component>
-SparseArray<Component> &registry::GetComponents() {
+SparseArray<Component> &Registry::GetComponents() {
   const auto type_idx = std::type_index(typeid(Component));
 
   return std::any_cast<SparseArray<Component> &>(components_arrays_.at(type_idx));
 }
 
 template <typename Component>
-const SparseArray<Component> &registry::GetComponents() const {
+const SparseArray<Component> &Registry::GetComponents() const {
   const auto type_idx = std::type_index(typeid(Component));
 
   return std::any_cast<const SparseArray<Component> &>(components_arrays_.at(type_idx));
 }
 
 template <typename Component>
-typename SparseArray<Component>::reference_type registry::AddComponent(Entity const &to,
+typename SparseArray<Component>::reference_type Registry::AddComponent(Entity const &to,
                                                                        Component &&c) {
   auto &components = GetComponents<Component>();
   const auto size = components.Size();
@@ -53,7 +53,7 @@ typename SparseArray<Component>::reference_type registry::AddComponent(Entity co
 }
 
 template <typename Component, typename... Params>
-typename SparseArray<Component>::reference_type registry::EmplaceComponent(Entity const &to,
+typename SparseArray<Component>::reference_type Registry::EmplaceComponent(Entity const &to,
                                                                            Params &&...p) {
   auto &components = GetComponents<Component>();
 
@@ -61,14 +61,14 @@ typename SparseArray<Component>::reference_type registry::EmplaceComponent(Entit
 }
 
 template <typename Component>
-void registry::RemoveComponent(Entity const &from) {
+void Registry::RemoveComponent(Entity const &from) {
   auto &components = GetComponents<Component>();
 
   components.erase(static_cast<size_t>(from));
 }
 
 template <class... Components, typename Function>
-void registry::AddSystem(Function &&f) {
+void Registry::AddSystem(Function &&f) {
   systems_.push_back(
       [this, f = std::forward<Function>(f)]() { f(*this, GetComponents<Components>()...); });
 }

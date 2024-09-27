@@ -40,6 +40,6 @@ EXPORT_ECS_SDK_API class Entity {
    */
   EXPORT_ECS_SDK_API explicit Entity(std::size_t idx);
 
-  friend class registry;
+  friend class Registry;
 };
 }  // namespace rtype::sdk::ECS
