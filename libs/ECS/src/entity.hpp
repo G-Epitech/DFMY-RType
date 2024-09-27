@@ -31,7 +31,7 @@ EXPORT_ECS_SDK_API class Entity {
 
  private:
   /// @brief Entity id
-  const std::size_t _id;
+  const std::size_t id_;
 
   /**
    * @brief Private constructor

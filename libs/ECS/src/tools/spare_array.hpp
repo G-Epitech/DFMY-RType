@@ -19,7 +19,7 @@ namespace rtype::sdk::ECS::tools {
  * @tparam Component Component type
  */
 template <typename Component>
-EXPORT_ECS_SDK_API class sparse_array {
+EXPORT_ECS_SDK_API class SparseArray {
  public:
   /// @brief Type aliases
   using value_type = std::optional<Component>;
@@ -46,32 +46,32 @@ EXPORT_ECS_SDK_API class sparse_array {
   /**
    * @brief Default constructor
    */
-  EXPORT_ECS_SDK_API sparse_array();
+  EXPORT_ECS_SDK_API SparseArray();
 
   /**
    * @brief Duplicate constructor
    */
-  EXPORT_ECS_SDK_API sparse_array(sparse_array const &);
+  EXPORT_ECS_SDK_API SparseArray(SparseArray const &);
 
   /**
    * @brief Move constructor
    */
-  EXPORT_ECS_SDK_API sparse_array(sparse_array &&) noexcept;
+  EXPORT_ECS_SDK_API SparseArray(SparseArray &&) noexcept;
 
   /**
    * @brief Destructor
    */
-  EXPORT_ECS_SDK_API ~sparse_array();
+  EXPORT_ECS_SDK_API ~SparseArray();
 
   /**
    * @brief Copy assignment operator
    */
-  EXPORT_ECS_SDK_API sparse_array &operator=(sparse_array const &);
+  EXPORT_ECS_SDK_API SparseArray &operator=(SparseArray const &);
 
   /**
    * @brief Move assignment operator
    */
-  EXPORT_ECS_SDK_API sparse_array &operator=(sparse_array &&) noexcept;
+  EXPORT_ECS_SDK_API SparseArray &operator=(SparseArray &&) noexcept;
 
   /**
    * @brief Operator []
@@ -86,72 +86,72 @@ EXPORT_ECS_SDK_API class sparse_array {
   /**
    * @brief Begin iterator
    */
-  EXPORT_ECS_SDK_API iterator begin();
+  EXPORT_ECS_SDK_API iterator Begin();
 
   /**
    * @brief Begin iterator const
    */
-  EXPORT_ECS_SDK_API const_iterator begin() const;
+  EXPORT_ECS_SDK_API const_iterator Begin() const;
 
   /**
    * @brief Begin iterator const
    */
-  EXPORT_ECS_SDK_API const_iterator cbegin() const;
+  EXPORT_ECS_SDK_API const_iterator Cbegin() const;
 
   /**
    * @brief End iterator
    */
-  EXPORT_ECS_SDK_API iterator end();
+  EXPORT_ECS_SDK_API iterator End();
 
   /**
    * @brief End iterator const
    */
-  EXPORT_ECS_SDK_API const_iterator end() const;
+  EXPORT_ECS_SDK_API const_iterator End() const;
 
   /**
    * @brief End iterator const
    */
-  EXPORT_ECS_SDK_API const_iterator cend() const;
+  EXPORT_ECS_SDK_API const_iterator Cend() const;
 
   /**
    * @brief Get size
    */
-  EXPORT_ECS_SDK_API size_type size() const;
+  EXPORT_ECS_SDK_API size_type Size() const;
 
   /**
    * @brief Insert at a specific position on a const component
    */
-  EXPORT_ECS_SDK_API reference_type insert_at(size_type pos, Component const &);
+  EXPORT_ECS_SDK_API reference_type InsertAt(size_type pos, Component const &);
 
   /**
    * @brief Insert at a specific position on a component
    */
-  EXPORT_ECS_SDK_API reference_type insert_at(size_type pos, Component &&);
+  EXPORT_ECS_SDK_API reference_type InsertAt(size_type pos, Component &&);
 
   /**
    * @brief Emplace at a specific position
    */
   template <class... Params>
-  EXPORT_ECS_SDK_API reference_type emplace_at(size_type pos, Params &&...);
+  EXPORT_ECS_SDK_API reference_type EmplaceAt(size_type pos, Params &&...);
 
   /**
    * @brief Erase a component at a specific position
    */
-  EXPORT_ECS_SDK_API void erase(size_type pos);
+  EXPORT_ECS_SDK_API void Erase(size_type pos);
 
   /**
    * @brief Get index of a component
    */
-  EXPORT_ECS_SDK_API size_type get_index(value_type const &) const;
+  EXPORT_ECS_SDK_API size_type GetIndex(value_type const &) const;
 
   /**
    * @brief Resize the sparse array
    */
-  EXPORT_ECS_SDK_API void resize(size_type new_size);
+  EXPORT_ECS_SDK_API void Resize(size_type new_size);
 
  private:
   /// @brief data storage
-  container_t _data;
+  container_t data_;
 };
 }  // namespace rtype::sdk::ECS::tools
 

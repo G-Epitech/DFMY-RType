@@ -11,31 +11,31 @@
 
 using namespace rtype::sdk::ECS;
 
-Entity registry::spawn_entity() {
-  if (!mfree_ids.empty()) {
-    const Entity new_entity = mfree_ids.front();
-    mfree_ids.pop_front();
+Entity registry::SpawnEntity() {
+  if (!free_ids_.empty()) {
+    const Entity new_entity = free_ids_.front();
+    free_ids_.pop_front();
     return new_entity;
   }
-  return Entity(mcurrent_max_entity_id++);
+  return Entity(current_max_entity_id_++);
 }
 
-Entity registry::entity_from_index(const std::size_t idx) const {
-  if (idx >= mcurrent_max_entity_id) {
+Entity registry::EntityFromIndex(const std::size_t idx) const {
+  if (idx >= current_max_entity_id_) {
     throw std::out_of_range("entity_from_index: Index is out of range.");
   }
   return Entity(idx);
 }
 
-void registry::kill_entity(Entity const &e) {
-  mfree_ids.push_back(e);
-  for (auto &remove_function : mremove_functions) {
+void registry::KillEntity(Entity const &e) {
+  free_ids_.push_back(e);
+  for (auto &remove_function : remove_functions_) {
     remove_function(*this, e);
   }
 }
 
-void registry::run_systems() {
-  for (auto &system : msystems) {
+void registry::RunSystems() {
+  for (auto &system : systems_) {
     system();
   }
 }

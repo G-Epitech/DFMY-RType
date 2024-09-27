@@ -57,7 +57,7 @@ registry.register_component<velocity>();
 registry.register_component<drawable>();
 registry.register_component<controllable>();
 
-auto entity = registry.spawn_entity();
+auto entity = registry.SpawnEntity();
 ```
 
 An entity was created, but it doesn't have any components yet. Let's add some components to the entity:
@@ -150,7 +150,7 @@ int main() {
   registry.register_component<drawable>();
   registry.register_component<controllable>();
 
-  auto entity = registry.spawn_entity();
+  auto entity = registry.SpawnEntity();
 
   registry.add_component<position>(entity, {10.0f, 20.0f});
   registry.add_component<velocity>(entity, {1.0f, 2.0f});
