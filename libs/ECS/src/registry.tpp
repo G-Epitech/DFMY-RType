@@ -16,9 +16,9 @@ SparseArray<Component> &registry::RegisterComponent() {
   components_arrays_[type_idx] = SparseArray<Component>();
 
   remove_functions_.push_back([](registry &reg, const Entity &e) {
-    auto &component_array = reg.get_components<Component>();
+    auto &component_array = reg.GetComponents<Component>();
     auto index = static_cast<size_t>(e);
-    if (index < component_array.size()) {
+    if (index < component_array.Size()) {
       component_array[index] = std::nullopt;
     }
   });
@@ -42,27 +42,27 @@ const SparseArray<Component> &registry::GetComponents() const {
 
 template <typename Component>
 typename SparseArray<Component>::reference_type registry::AddComponent(Entity const &to,
-                                                                         Component &&c) {
-  auto &components = get_components<Component>();
-  const auto size = components.size();
+                                                                       Component &&c) {
+  auto &components = GetComponents<Component>();
+  const auto size = components.Size();
 
   if (size <= to.id_) {
-    components.resize(static_cast<size_t>(to) + 1);
+    components.Resize(static_cast<size_t>(to) + 1);
   }
-  return components.emplace_at(static_cast<size_t>(to), std::forward<Component>(c));
+  return components.EmplaceAt(static_cast<size_t>(to), std::forward<Component>(c));
 }
 
 template <typename Component, typename... Params>
 typename SparseArray<Component>::reference_type registry::EmplaceComponent(Entity const &to,
-                                                                             Params &&...p) {
-  auto &components = get_components<Component>();
+                                                                           Params &&...p) {
+  auto &components = GetComponents<Component>();
 
-  return components.emplace_at(static_cast<size_t>(to), std::forward<Params>(p)...);
+  return components.EmplaceAt(static_cast<size_t>(to), std::forward<Params>(p)...);
 }
 
 template <typename Component>
 void registry::RemoveComponent(Entity const &from) {
-  auto &components = get_components<Component>();
+  auto &components = GetComponents<Component>();
 
   components.erase(static_cast<size_t>(from));
 }
@@ -70,5 +70,5 @@ void registry::RemoveComponent(Entity const &from) {
 template <class... Components, typename Function>
 void registry::AddSystem(Function &&f) {
   systems_.push_back(
-      [this, f = std::forward<Function>(f)]() { f(*this, get_components<Components>()...); });
+      [this, f = std::forward<Function>(f)]() { f(*this, GetComponents<Components>()...); });
 }

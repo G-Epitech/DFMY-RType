@@ -106,6 +106,7 @@ The output will be:
 Here is the complete example:
 
 ```cpp
+#include <iostream>
 #include <libs/ECS/src/registry.hpp>
 
 struct position {
@@ -130,9 +131,9 @@ struct controllable {
 };
 
 void logging_system(rtype::sdk::ECS::registry& r,
-                    const rtype::sdk::ECS::tools::sparse_array<position>& positions,
-                    const rtype::sdk::ECS::tools::sparse_array<velocity>& velocities) {
-  for (size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
+                    const rtype::sdk::ECS::tools::SparseArray<position>& positions,
+                    const rtype::sdk::ECS::tools::SparseArray<velocity>& velocities) {
+  for (size_t i = 0; i < positions.Size() && i < velocities.Size(); ++i) {
     if (positions[i] && velocities[i]) {
       const auto& [x, y] = positions[i].value();
       const auto& [vx, vy] = velocities[i].value();
@@ -145,21 +146,21 @@ void logging_system(rtype::sdk::ECS::registry& r,
 int main() {
   rtype::sdk::ECS::registry registry;
 
-  registry.register_component<position>();
-  registry.register_component<velocity>();
-  registry.register_component<drawable>();
-  registry.register_component<controllable>();
+  registry.RegisterComponent<position>();
+  registry.RegisterComponent<velocity>();
+  registry.RegisterComponent<drawable>();
+  registry.RegisterComponent<controllable>();
 
   auto entity = registry.SpawnEntity();
 
-  registry.add_component<position>(entity, {10.0f, 20.0f});
-  registry.add_component<velocity>(entity, {1.0f, 2.0f});
-  registry.add_component<drawable>(entity, {false});
-  registry.add_component<controllable>(entity, {false, false, false, false});
+  registry.AddComponent<position>(entity, {10.0f, 20.0f});
+  registry.AddComponent<velocity>(entity, {1.0f, 2.0f});
+  registry.AddComponent<drawable>(entity, {false});
+  registry.AddComponent<controllable>(entity, {false, false, false, false});
 
-  registry.add_system<position, velocity>(logging_system);
+  registry.AddSystem<position, velocity>(logging_system);
 
-  registry.run_systems();
+  registry.RunSystems();
 
   return 0;
 }
