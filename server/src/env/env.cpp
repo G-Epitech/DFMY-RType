@@ -13,6 +13,10 @@
 
 using namespace rtype::server;
 
+Env::Env(const std::string& envPath) {
+    Load(envPath);
+}
+
 Env::EnvMap Env::Load(const std::string& envPath) {
   if (!std::filesystem::exists(envPath)) {
     throw std::runtime_error("Env file not found\n");
@@ -55,4 +59,3 @@ std::any Env::ParseValueType(const std::string& envValue) {
   }
   return {envValue};
 }
-

@@ -15,19 +15,30 @@ OptionsHandlerLobby::OptionsHandlerLobby() : OptionsHandlerAbstract() {
   Setup();
 }
 
-void OptionsHandlerLobby::Parse(int ac, char **av) {
+void OptionsHandlerLobby::Setup() noexcept {
+  mDescription.add_options()("help", "produce help message")(
+      "name", po::value<std::string>()->default_value(""), "name of the lobby")(
+      "port", po::value<std::size_t>()->required(), "port of the server")(
+      "ticks", po::value<std::size_t>()->default_value(kDefaultTicks),
+      "number of ticks for the game");
+}
+
+CliResult OptionsHandlerLobby::Parse(int ac, char **av) {
   po::store(po::parse_command_line(ac, av, mDescription), mVariablesMap);
 
   if (mVariablesMap.count("help")) {
     std::cout << mDescription << "\n";
-    return;
+    return std::nullopt;
   }
   po::notify(mVariablesMap);
+  return BuildCtx();
 }
 
-void OptionsHandlerLobby::Setup() noexcept {
-  mDescription.add_options()("help", "produce help message")(
-      "ticks", po::value<std::size_t>()->default_value(kDefaultTicks),
-      "number of ticks for the game")("name", po::value<std::string>()->default_value(""),
-                                      "name of the lobby");
+rtype::server::BaseContext OptionsHandlerLobby::BuildCtx() {
+  std::string name = mVariablesMap["name"].as<std::string>();
+  std::size_t port = mVariablesMap["port"].as<std::size_t>();
+  std::size_t ticks = mVariablesMap["ticks"].as<std::size_t>();
+  auto props = LobbyCtxProps(ticks);
+
+  return {name, port, kLobby, props};
 }

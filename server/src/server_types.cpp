@@ -7,7 +7,6 @@
 
 #include "server_types.hpp"
 
-#include <iostream>
 #include <stdexcept>
 
 namespace rtype::server {

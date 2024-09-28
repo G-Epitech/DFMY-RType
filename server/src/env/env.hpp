@@ -16,15 +16,15 @@ class Env {
   typedef std::unordered_map<std::string, std::any> EnvMap;
 
  public:
-  Env() = default;
+  explicit Env(const std::string& envPath);
   ~Env() = default;
 
-  EnvMap Load(const std::string& configPath);
-
   template <class T>
-  T Get(const std::string &key);
+  T Get(const std::string& key);
 
  private:
+  EnvMap Load(const std::string& configPath);
+
   EnvMap ParseFile(std::ifstream& file);
 
   static std::any ParseValueType(const std::string& envValue);
@@ -33,6 +33,6 @@ class Env {
   EnvMap mEnv;
 };
 
-}  // namespace rtype::server::cli
+}  // namespace rtype::server
 
 #include "env.tpp"

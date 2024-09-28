@@ -11,25 +11,26 @@
 
 using namespace rtype::server::cli;
 
-void Options::Parse(int ac, char **av) {
+CliResult Options::Parse(int ac, char **av) {
   if (ac < 2) {
-    std::cerr << "Error: Server type argument is required." << std::endl;
-    return;
+    throw std::runtime_error("Error: Server type argument is required.");
   }
 
   const std::string firstArg = av[1];
 
   if (firstArg == "--help") {
     Usage();
-    return;
+    return std::nullopt;
   }
   try {
     const auto &optionsHandler = AssignOptionsHandler(firstArg);
-    optionsHandler->Parse(ac, av);
+    return optionsHandler->Parse(ac, av);
   } catch (const po::error &e) {
     std::cerr << "Error: " << e.what() << "\n";
   }
+  return std::nullopt;
 }
+
 void Options::Usage() noexcept {
   std::cout << "Help message\n";
 }

@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "server/src/options/handlers/abstract/options_handler_abstract.hpp"
+#include "src/context.hpp"
+#include "src/options/handlers/abstract/options_handler_abstract.hpp"
 
 namespace rtype::server::cli {
 
@@ -17,9 +18,11 @@ class OptionsHandlerLobby : public OptionsHandlerAbstract {
  public:
   OptionsHandlerLobby();
 
-  void Parse(int ac, char **av) override;
+  CliResult Parse(int ac, char **av) override;
 
  private:
   void Setup() noexcept;
+
+  BaseContext BuildCtx();
 };
 }  // namespace rtype::server::cli

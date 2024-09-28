@@ -7,11 +7,18 @@
 
 #pragma once
 
+#include <optional>
+
+#include "server/src/context.hpp"
+
 namespace rtype::server::cli {
+
+using CliResult = std::optional<BaseContext>;
+
 class IOptionsHandler {
  public:
   virtual ~IOptionsHandler() = default;
 
-  virtual void Parse(int ac, char **av) = 0;
+  virtual CliResult Parse(int ac, char **av) = 0;
 };
 }  // namespace rtype::server::cli

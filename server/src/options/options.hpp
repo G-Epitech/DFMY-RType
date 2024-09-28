@@ -20,7 +20,7 @@ class Options {
   Options() = delete;
   ~Options() = delete;
 
-  static void Parse(int ac, char **av);
+  static CliResult Parse(int ac, char **av);
 
  private:
   static void Usage() noexcept;
