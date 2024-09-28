@@ -10,7 +10,7 @@
 #include <string>
 
 namespace rtype::server {
-enum ServerType { kAllocator = 1, kLobby = 2 };
+enum ServerType { kDirector = 1, kLobby = 2 };
 
 ServerType StringToServerType(const std::string &str);
 

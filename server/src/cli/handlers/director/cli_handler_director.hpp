@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "src/apps/allocator/props.hpp"
+#include "src/apps/director/props.hpp"
 #include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {
-class CliHandlerAllocator : public CliHandlerAbstract {
+class CliHandlerDirector : public CliHandlerAbstract {
  public:
-  CliHandlerAllocator();
+  CliHandlerDirector();
 
   CliResult Run(int ac, char **av) override;
 

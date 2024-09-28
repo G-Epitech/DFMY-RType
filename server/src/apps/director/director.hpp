@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** allocator.hpp
+** director.hpp
 */
 
 #pragma once
@@ -15,10 +15,10 @@
 
 namespace rtype::server {
 
-class Allocator final : public IServer {
+class Director final : public IServer {
  public:
-  explicit Allocator(const BaseContext &ctx);
-  ~Allocator() override = default;
+  explicit Director(const BaseContext &ctx);
+  ~Director() override = default;
 
   int Run() override;
 
@@ -27,7 +27,7 @@ class Allocator final : public IServer {
     std::string name;  // Name of the server context
     std::size_t port;  // Port number
     ServerType type;   // Server type
-    AllocatorCtxProps props;
+    DirectorCtxProps props;
   };
 
  private:

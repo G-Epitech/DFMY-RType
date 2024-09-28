@@ -1,5 +1,5 @@
 target_sources(${SERVER_CORE_LIB} PRIVATE
-        allocator.hpp
-        allocator.cpp
+        director.hpp
+        director.cpp
         props.hpp
 )

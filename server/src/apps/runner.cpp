@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "src/apps/allocator/allocator.hpp"
+#include "src/apps/director/director.hpp"
 #include "src/apps/lobby/lobby.hpp"
 #include "src/cli/cli.hpp"
 
@@ -21,10 +21,11 @@ int Runner::StartApp(int ac, char **av) {
   try {
     cliResult = rtype::server::Cli::Run(ac, av);
     if (!cliResult.has_value()) {
-      return 0;
+      return EXIT_SUCCESS;
     }
   } catch (std::exception &exception) {
     std::cerr << exception.what();
+    return EXIT_FAILURE;
   }
   const auto &server = InitializeServer(cliResult);
   return server->Run();
@@ -33,8 +34,8 @@ int Runner::StartApp(int ac, char **av) {
 std::unique_ptr<IServer> Runner::InitializeServer(CliResult cliResult) {
   const auto &ctx = cliResult.value();
 
-  if (ctx.type == rtype::server::kAllocator) {
-    return std::make_unique<rtype::server::Allocator>(ctx);
+  if (ctx.type == rtype::server::kDirector) {
+    return std::make_unique<rtype::server::Director>(ctx);
   }
   return std::make_unique<rtype::server::Lobby>(ctx);
 }

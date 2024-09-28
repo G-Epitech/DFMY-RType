@@ -42,6 +42,6 @@ CliHandler Cli::GetHandler(const std::string &typeArg) noexcept {
     case kLobby:
       return std::make_unique<CliHandlerLobby>();
     default:
-      return std::make_unique<CliHandlerAllocator>();
+      return std::make_unique<CliHandlerDirector>();
   };
 }

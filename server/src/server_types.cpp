@@ -11,8 +11,8 @@
 
 namespace rtype::server {
 ServerType StringToServerType(const std::string &str) {
-  if (str == "allocator") {
-    return rtype::server::ServerType::kAllocator;
+  if (str == "director") {
+    return rtype::server::ServerType::kDirector;
   }
   if (str == "lobby") {
     return rtype::server::ServerType::kLobby;

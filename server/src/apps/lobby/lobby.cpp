@@ -23,5 +23,5 @@ int Lobby::Run() {
   std::cout << mCtx.port << std::endl;
   std::cout << mCtx.type << std::endl;
   std::cout << mCtx.props.ticks << std::endl;
-  return 0;
+  return EXIT_SUCCESS;
 }
