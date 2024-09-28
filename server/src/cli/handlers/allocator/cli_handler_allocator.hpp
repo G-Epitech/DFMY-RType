@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "src/allocator/props.hpp"
+#include "src/apps/allocator/props.hpp"
 #include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {

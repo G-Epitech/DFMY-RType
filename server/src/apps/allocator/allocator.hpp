@@ -10,14 +10,17 @@
 #include <cstddef>
 
 #include "props.hpp"
-#include "src/context.hpp"
+#include "src/apps/context.hpp"
+#include "src/apps/server_interface.hpp"
 
 namespace rtype::server {
 
-class Allocator {
+class Allocator final : public IServer {
  public:
   explicit Allocator(const BaseContext &ctx);
-  ~Allocator() = default;
+  ~Allocator() override = default;
+
+  int Run() override;
 
  private:
   struct Context {

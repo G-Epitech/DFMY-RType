@@ -10,13 +10,16 @@
 #include <cstddef>
 
 #include "props.hpp"
-#include "src/context.hpp"
+#include "src/apps/context.hpp"
+#include "src/apps/server_interface.hpp"
 
 namespace rtype::server {
-class Lobby {
+class Lobby final : public IServer {
  public:
   explicit Lobby(const BaseContext& ctx);
-  ~Lobby() = default;
+  ~Lobby() override = default;
+
+  int Run() override;
 
  private:
   struct Context {

@@ -13,7 +13,7 @@
 
 #include "allocator/props.hpp"
 #include "lobby/props.hpp"
-#include "server_types.hpp"
+#include "src/server_types.hpp"
 
 namespace rtype::server {
 

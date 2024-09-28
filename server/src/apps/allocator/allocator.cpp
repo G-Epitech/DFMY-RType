@@ -2,22 +2,27 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** lobby.cpp
+** allocator.cpp
 */
 
-#include "lobby.hpp"
+#include "allocator.hpp"
 
 #include <iostream>
 
 using namespace rtype::server;
 
-Lobby::Lobby(const BaseContext& ctx) : mCtx() {
+Allocator::Allocator(const BaseContext& ctx) : mCtx() {
   mCtx = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,
-          .props = std::get<LobbyCtxProps>(ctx.props)};
+          .props = std::get<AllocatorCtxProps>(ctx.props)};
+}
+
+int Allocator::Run() {
   std::cout << mCtx.name << std::endl;
   std::cout << mCtx.port << std::endl;
   std::cout << mCtx.type << std::endl;
   std::cout << mCtx.props.ticks << std::endl;
+  std::cout << mCtx.props.maxGames << std::endl;
+  return 0;
 }

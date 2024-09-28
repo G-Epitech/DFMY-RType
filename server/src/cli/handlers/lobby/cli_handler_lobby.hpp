@@ -8,7 +8,7 @@
 #pragma once
 
 #include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
-#include "src/context.hpp"
+#include "src/apps/context.hpp"
 
 namespace rtype::server {
 
