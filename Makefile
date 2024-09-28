@@ -9,6 +9,7 @@ SERVER_NAME 		= r-type_server
 CLIENT_NAME			= r-type_client
 TESTS_SERVER_NAME 	= r-type_server_tests
 TESTS_CLIENT_NAME 	= r-type_client_tests
+TESTS_NETWORK_SDK_NAME = r-type_network_sdk_tests
 BUILD_PATH 			= build
 
 COVERAGE_IGNORE_TARGETS = 	tests \
@@ -50,7 +51,7 @@ clean:
 
 fclean:		clean
 			@rm -f $(NAME)
-			@rm -f $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME)
+			@rm -f $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_NETWORK_SDK_NAME)
 			@rm -f $(SERVER_NAME) $(CLIENT_NAME)
 .PHONY: fclean
 
@@ -73,6 +74,11 @@ tests_run_client:
 			@cmake --build $(BUILD_PATH) --target $(TESTS_CLIENT_NAME)
 			@./$(TESTS_CLIENT_NAME) --gtest_brief=1
 .PHONY: tests_run_client
+
+tests_run_network_sdk:
+			@cmake -S . -B $(BUILD_PATH) -DCOVERAGE=ON $(TOOLCHAIN_FLAG)
+			@cmake --build $(BUILD_PATH) --target $(TESTS_NETWORK_SDK_NAME)
+			@./$(TESTS_NETWORK_SDK_NAME) --gtest_brief=1
 
 coverage:
 			@gcovr $(COVERAGE_IGNORE)

@@ -11,6 +11,7 @@
 
 constexpr std::uint8_t kPacketOffsetSize = 15;
 constexpr std::uint8_t kPacketOffsetFlagSize = 1;
+constexpr std::uint8_t kPacketOffsetPropsSize = kPacketOffsetSize + kPacketOffsetFlagSize;
 
 namespace rtype::sdk::network::tools {
 struct PacketOffsetProps {

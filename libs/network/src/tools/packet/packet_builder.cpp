@@ -19,10 +19,13 @@ tools::PacketBuilder::~PacketBuilder() {
   this->Reset();
 }
 
-tools::PacketBuilder::Exception::Exception(std::string message) : mMessage(std::move(message)) {}
+tools::PacketBuilder::Exception::Exception(std::string message) {
+  this->mMessage = std::move(message);
+  this->mMessage = "PacketBuilder exception: " + this->mMessage;
+}
 
 const char *tools::PacketBuilder::Exception::what() const noexcept {
-  return ("PacketBuilder exception: " + mMessage).c_str();
+  return this->mMessage.c_str();
 }
 
 void tools::PacketBuilder::Reset() {
