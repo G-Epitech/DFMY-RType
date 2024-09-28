@@ -11,14 +11,14 @@
 
 #include "server/src/context.hpp"
 
-namespace rtype::server::cli {
+namespace rtype::server {
 
 using CliResult = std::optional<BaseContext>;
 
-class IOptionsHandler {
+class ICliHandler {
  public:
-  virtual ~IOptionsHandler() = default;
+  virtual ~ICliHandler() = default;
 
-  virtual CliResult Parse(int ac, char **av) = 0;
+  virtual CliResult Run(int ac, char **av) = 0;
 };
-}  // namespace rtype::server::cli
+}  // namespace rtype::server

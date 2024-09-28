@@ -5,25 +5,25 @@
 ** options_handler_manager.cpp
 */
 
-#include "options_handler_allocator.hpp"
+#include "cli_handler_allocator.hpp"
 
 #include <filesystem>
 #include <iostream>
 
 #include "server/src/env/env.hpp"
 
-using namespace rtype::server::cli;
+using namespace rtype::server;
 
-OptionsHandlerAllocator::OptionsHandlerAllocator() : OptionsHandlerAbstract() {
+CliHandlerAllocator::CliHandlerAllocator() : CliHandlerAbstract() {
   Setup();
 }
 
-void OptionsHandlerAllocator::Setup() noexcept {
+void CliHandlerAllocator::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
       "env", po::value<std::string>()->required(), "allocator server env file");
 }
 
-CliResult OptionsHandlerAllocator::Parse(int ac, char **av) {
+CliResult CliHandlerAllocator::Run(int ac, char **av) {
   po::store(po::parse_command_line(ac, av, mDescription), mVariablesMap);
 
   if (mVariablesMap.count("help")) {
@@ -34,7 +34,7 @@ CliResult OptionsHandlerAllocator::Parse(int ac, char **av) {
   return BuildCtx();
 }
 
-rtype::server::BaseContext OptionsHandlerAllocator::BuildCtx() {
+rtype::server::BaseContext CliHandlerAllocator::BuildCtx() {
   const auto &envPath = mVariablesMap["env"].as<std::string>();
   Env env(envPath);
 

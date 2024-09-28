@@ -5,17 +5,17 @@
 ** options_handler_game.cpp
 */
 
-#include "options_handler_lobby.hpp"
+#include "cli_handler_lobby.hpp"
 
 #include <iostream>
 
-using namespace rtype::server::cli;
+using namespace rtype::server;
 
-OptionsHandlerLobby::OptionsHandlerLobby() : OptionsHandlerAbstract() {
+CliHandlerLobby::CliHandlerLobby() : CliHandlerAbstract() {
   Setup();
 }
 
-void OptionsHandlerLobby::Setup() noexcept {
+void CliHandlerLobby::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
       "name", po::value<std::string>()->default_value(""), "name of the lobby")(
       "port", po::value<std::size_t>()->required(), "port of the server")(
@@ -23,7 +23,7 @@ void OptionsHandlerLobby::Setup() noexcept {
       "number of ticks for the game");
 }
 
-CliResult OptionsHandlerLobby::Parse(int ac, char **av) {
+CliResult CliHandlerLobby::Run(int ac, char **av) {
   po::store(po::parse_command_line(ac, av, mDescription), mVariablesMap);
 
   if (mVariablesMap.count("help")) {
@@ -34,7 +34,7 @@ CliResult OptionsHandlerLobby::Parse(int ac, char **av) {
   return BuildCtx();
 }
 
-rtype::server::BaseContext OptionsHandlerLobby::BuildCtx() {
+rtype::server::BaseContext CliHandlerLobby::BuildCtx() {
   std::string name = mVariablesMap["name"].as<std::string>();
   std::size_t port = mVariablesMap["port"].as<std::size_t>();
   std::size_t ticks = mVariablesMap["ticks"].as<std::size_t>();

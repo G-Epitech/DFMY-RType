@@ -6,7 +6,7 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
 
 include_directories()
 
-add_subdirectory(options)
+add_subdirectory(cli)
 add_subdirectory(env)
 add_subdirectory(lobby)
 add_subdirectory(allocator)

@@ -7,18 +7,18 @@
 
 #pragma once
 
+#include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
 #include "src/context.hpp"
-#include "src/options/handlers/abstract/options_handler_abstract.hpp"
 
-namespace rtype::server::cli {
+namespace rtype::server {
 
 const std::size_t kDefaultTicks = 60;
 
-class OptionsHandlerLobby : public OptionsHandlerAbstract {
+class CliHandlerLobby : public CliHandlerAbstract {
  public:
-  OptionsHandlerLobby();
+  CliHandlerLobby();
 
-  CliResult Parse(int ac, char **av) override;
+  CliResult Run(int ac, char **av) override;
 
  private:
   void Setup() noexcept;

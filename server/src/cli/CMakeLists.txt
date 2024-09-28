@@ -1,6 +1,6 @@
 target_sources(${SERVER_CORE_LIB} PRIVATE
-        options.cpp
-        options.hpp
+        cli.cpp
+        cli.hpp
 )
 
 add_subdirectory(handlers)

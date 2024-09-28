@@ -8,13 +8,14 @@
 #include <iostream>
 
 #include "src/allocator/allocator.hpp"
+#include "src/cli/cli.hpp"
+#include "src/cli/handlers/cli_handler_interface.hpp"
 #include "src/lobby/lobby.hpp"
-#include "src/options/options.hpp"
 
 int main(int ac, char **av) {
-  rtype::server::cli::CliResult cliResult;
+  rtype::server::CliResult cliResult;
   try {
-    cliResult = rtype::server::cli::Options::Parse(ac, av);
+    cliResult = rtype::server::Cli::Run(ac, av);
   } catch (std::exception &exception) {
     std::cerr << exception.what();
   }

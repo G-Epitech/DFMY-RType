@@ -5,13 +5,13 @@
 ** options.cpp
 */
 
-#include "options.hpp"
+#include "cli.hpp"
 
 #include <iostream>
 
-using namespace rtype::server::cli;
+using namespace rtype::server;
 
-CliResult Options::Parse(int ac, char **av) {
+CliResult Cli::Run(int ac, char **av) {
   if (ac < 2) {
     throw std::runtime_error("Error: Server type argument is required.");
   }
@@ -23,26 +23,25 @@ CliResult Options::Parse(int ac, char **av) {
     return std::nullopt;
   }
   try {
-    const auto &optionsHandler = AssignOptionsHandler(firstArg);
-    return optionsHandler->Parse(ac, av);
+    const auto &optionsHandler = GetHandler(firstArg);
+    return optionsHandler->Run(ac, av);
   } catch (const po::error &e) {
     std::cerr << "Error: " << e.what() << "\n";
   }
   return std::nullopt;
 }
 
-void Options::Usage() noexcept {
+void Cli::Usage() noexcept {
   std::cout << "Help message\n";
 }
 
-std::unique_ptr<IOptionsHandler> Options::AssignOptionsHandler(
-    const std::string &typeArg) noexcept {
+CliHandler Cli::GetHandler(const std::string &typeArg) noexcept {
   const auto &type = StringToServerType(typeArg);
 
   switch (type) {
     case kLobby:
-      return std::make_unique<OptionsHandlerLobby>();
+      return std::make_unique<CliHandlerLobby>();
     default:
-      return std::make_unique<OptionsHandlerAllocator>();
+      return std::make_unique<CliHandlerAllocator>();
   };
 }

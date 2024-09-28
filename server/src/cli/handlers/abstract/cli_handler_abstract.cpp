@@ -5,9 +5,9 @@
 ** options_handler_abstract.cpp
 */
 
-#include "options_handler_abstract.hpp"
+#include "cli_handler_abstract.hpp"
 
-using namespace rtype::server::cli;
+using namespace rtype::server;
 
-OptionsHandlerAbstract::OptionsHandlerAbstract()
+CliHandlerAbstract::CliHandlerAbstract()
     : mVariablesMap(), mDescription("Allowed options") {}

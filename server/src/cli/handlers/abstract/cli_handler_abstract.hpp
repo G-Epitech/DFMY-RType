@@ -9,15 +9,15 @@
 
 #include <boost/program_options.hpp>
 
-#include "server/src/options/handlers/options_handler_interface.hpp"
+#include "src/cli/handlers/cli_handler_interface.hpp"
 
 namespace po = boost::program_options;
 
-namespace rtype::server::cli {
-class OptionsHandlerAbstract : public IOptionsHandler {
+namespace rtype::server {
+class CliHandlerAbstract : public ICliHandler {
  public:
-  OptionsHandlerAbstract();
-  ~OptionsHandlerAbstract() override = default;
+  CliHandlerAbstract();
+  ~CliHandlerAbstract() override = default;
 
  protected:
   po::variables_map mVariablesMap;
