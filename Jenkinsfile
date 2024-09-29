@@ -10,32 +10,22 @@ TESTS = [
 
 pipeline {
     agent any
-    options {
-        skipDefaultCheckout(true)
-    }
-
     stages {
-        stage('Checkout') {
-            steps {
-                cleanWs()
-                checkout scm
-            }
-        }
-
         stage('Pull request') {
             when {
                 not {
                     branch 'main'
                 }
             }
-            stages {
-                /*stage('Linux environment') {
+            parallel {
+                stage('Linux environment') {
                     agent {
                         dockerfile {
                             filename 'ci/unix.dockerfile'
                             reuseNode true
                         }
                     }
+
                     stages {
                         stage('Generate build files') {
                             steps {
@@ -44,50 +34,43 @@ pipeline {
                                 }
                             }
                         }
+
                         stage('Projects') {
-                            matrix {
-                                axes {
-                                    axis {
-                                        name 'TARGET_KEY'
-                                        values 'client', 'server'
-                                    }
-                                }
-                                environment {
-                                    TARGET_BINARY = "${BINARIES[TARGET_KEY]}"
-                                    TARGET_TEST = "${TESTS[TARGET_KEY]}"
-                                }
-                                stages {
-                                    stage('Build') {
-                                        steps {
-                                            sh 'cmake --build build/unix/release --target ${TARGET_BINARY}'
+                            steps {
+                                script {
+                                    for (project in PROJECTS) {
+                                        def TARGET_BINARY = BINARIES[project]
+                                        def TARGET_TEST = TESTS[project]
+
+                                        stage ("Build ${project}") {
+                                            sh "cmake --build build/unix/release --target ${TARGET_BINARY}"
                                             script {
-                                                if (!fileExists("bin/${env.TARGET_BINARY}")) {
-                                                    error "Binary ${env.TARGET_BINARY} not found"
+                                                if (!fileExists("bin/${TARGET_BINARY}")) {
+                                                    error "Binary ${TARGET_BINARY} not found"
                                                 } else if (sh(script: "test -x bin/${TARGET_BINARY}", returnStatus: true) != 0) {
-                                                    error "Binary ${env.TARGET_BINARY} is not executable"
+                                                    error "Binary ${TARGET_BINARY} is not executable"
                                                 }
                                             }
                                         }
-                                    }
 
-                                    stage('Tests') {
-                                        steps {
-                                            sh 'cmake --build build/unix/release --target ${TARGET_TEST}'
-                                            sh './bin/${TARGET_TEST}'
+                                        stage ("Tests ${project}") {
+                                            sh "cmake --build build/unix/release --target ${TARGET_TEST}"
+                                            sh "./bin/${TARGET_TEST}"
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                } */
+                }
 
                 stage('Windows environment') {
                     agent {
                         label 'windows'
                     }
+
                     stages {
-                         stage('Checkout') {
+                        stage('Checkout') {
                             steps {
                                 checkout scm
                             }
