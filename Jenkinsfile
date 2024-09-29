@@ -1,3 +1,4 @@
+PROJECTS = ['client', 'server']
 BINARIES = [
     'client': 'r-type_client',
     'server': 'r-type_server'
@@ -88,7 +89,6 @@ pipeline {
                     stages {
                          stage('Checkout') {
                             steps {
-                                cleanWs()
                                 checkout scm
                             }
                         }
@@ -96,39 +96,30 @@ pipeline {
                         stage('Generate build files') {
                             steps {
                                 script {
-                                    bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$PWD/bin"'
+                                    bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="%cd%\\bin"'
                                 }
                             }
                         }
 
                         stage('Projects') {
-                            matrix {
-                                axes {
-                                    axis {
-                                        name 'TARGET_KEY'
-                                        values 'client', 'server'
-                                    }
-                                }
-                                environment {
-                                    TARGET_BINARY = "${BINARIES[TARGET_KEY]}"
-                                    TARGET_TEST = "${TESTS[TARGET_KEY]}"
-                                }
-                                stages {
-                                    stage('Build') {
-                                        steps {
-                                            bat 'cmake --build build/windows/release --target %TARGET_BINARY%'
+                            steps {
+                                script {
+                                    for (project in PROJECTS) {
+                                        def TARGET_BINARY = BINARIES[project]
+                                        def TARGET_TEST = TESTS[project]
+
+                                        stage ("Build ${project}") {
+                                            bat "cmake --build build/windows/release --target ${TARGET_BINARY}"
                                             script {
-                                                if (!fileExists("bin/${env.TARGET_BINARY}.exe")) {
-                                                    error "Binary ${env.TARGET_BINARY}.exe not found"
+                                                if (fileExists("/bin/${TARGET_BINARY}.exe")) {
+                                                    error "Binary ${TARGET_BINARY}.exe not found"
                                                 }
                                             }
                                         }
-                                    }
 
-                                    stage('Tests') {
-                                        steps {
-                                            bat 'cmake --build build/windows/release --target %TARGET_TEST%'
-                                            bat './bin/%TARGET_TEST%.exe'
+                                        stage ("Tests ${project}") {
+                                            bat "cmake --build build/windows/release --target ${TARGET_TEST}"
+                                            bat "bin\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
