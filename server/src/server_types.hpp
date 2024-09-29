@@ -10,8 +10,15 @@
 #include <string>
 
 namespace rtype::server {
+/**
+ * Server type enum
+ */
 enum ServerType { kUnknown = 0, kDirector = 1, kLobby = 2 };
 
+/**
+ * Convert string to ServerType
+ * @param str string to convert
+ * @return ServerType
+ */
 ServerType StringToServerType(const std::string &str);
-
 }  // namespace rtype::server

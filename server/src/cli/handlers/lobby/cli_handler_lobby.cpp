@@ -17,7 +17,7 @@ CliHandlerLobby::CliHandlerLobby() : CliHandlerAbstract() {
 
 void CliHandlerLobby::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
-      "name", po::value<std::string>()->default_value(""), "name of the lobby")(
+      "name", po::value<std::string>()->default_value(kDefaultName), "name of the lobby")(
       "port", po::value<std::size_t>()->required(), "port of the server")(
       "ticks", po::value<std::size_t>()->default_value(kDefaultTicks),
       "number of ticks for the game");

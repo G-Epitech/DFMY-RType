@@ -17,7 +17,7 @@ Env::Env(const std::string& envPath) {
   Load(envPath);
 }
 
-Env::EnvMap Env::Load(const std::string& envPath) {
+void Env::Load(const std::string& envPath) {
   if (!std::filesystem::exists(envPath)) {
     throw std::runtime_error("Env file not found\n");
   }
@@ -26,7 +26,7 @@ Env::EnvMap Env::Load(const std::string& envPath) {
   return ParseFile(file);
 }
 
-Env::EnvMap Env::ParseFile(std::ifstream& file) {
+void Env::ParseFile(std::ifstream& file) {
   std::string line;
   std::size_t pos;
 
@@ -39,7 +39,6 @@ Env::EnvMap Env::ParseFile(std::ifstream& file) {
     std::string value = line.substr(pos + 1);
     mEnv[key] = ParseValueType(value);
   }
-  return mEnv;
 }
 
 std::any Env::ParseValueType(const std::string& envValue) {

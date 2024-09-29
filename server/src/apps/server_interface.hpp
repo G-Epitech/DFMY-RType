@@ -12,6 +12,10 @@ class IServer {
  public:
   virtual ~IServer() = default;
 
+  /**
+   * Run the server
+   * @return The server exit code
+   */
   virtual int Run() = 0;
 };
 }  // namespace rtype::server
