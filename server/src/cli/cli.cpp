@@ -25,8 +25,8 @@ CliResult Cli::Run(int ac, char **av) {
   try {
     const auto &optionsHandler = GetHandler(firstArg);
     return optionsHandler->Run(ac, av);
-  } catch (const po::error &e) {
-    std::cerr << "Error: " << e.what() << "\n";
+  } catch (const std::invalid_argument &e) {
+    std::cerr << "CLI Error: " << e.what() << "\n";
   }
   return std::nullopt;
 }
@@ -35,13 +35,15 @@ void Cli::Usage() noexcept {
   std::cout << "Help message\n";
 }
 
-CliHandler Cli::GetHandler(const std::string &typeArg) noexcept {
+CliHandler Cli::GetHandler(const std::string &typeArg) {
   const auto &type = StringToServerType(typeArg);
 
   switch (type) {
     case kLobby:
       return std::make_unique<CliHandlerLobby>();
-    default:
+    case kDirector:
       return std::make_unique<CliHandlerDirector>();
+    default:
+      throw std::invalid_argument("Unkown server type: '" + typeArg + "'");
   };
 }

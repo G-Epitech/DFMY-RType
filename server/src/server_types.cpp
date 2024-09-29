@@ -17,6 +17,6 @@ ServerType StringToServerType(const std::string &str) {
   if (str == "lobby") {
     return rtype::server::ServerType::kLobby;
   }
-  throw std::invalid_argument("Invalid ServerType string: " + str);
+  return rtype::server::ServerType::kUnknown;
 }
 }  // namespace rtype::server

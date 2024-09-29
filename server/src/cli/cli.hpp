@@ -28,6 +28,6 @@ class Cli {
  private:
   static void Usage() noexcept;
 
-  static CliHandler GetHandler(const std::string &serverTypeArg) noexcept;
+  static CliHandler GetHandler(const std::string &serverTypeArg);
 };
 }  // namespace rtype::server
