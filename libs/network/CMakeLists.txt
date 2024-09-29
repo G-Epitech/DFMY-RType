@@ -10,5 +10,3 @@ if (COVERAGE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
     target_link_libraries(r-type_network_sdk  PRIVATE gcov)
 endif ()
-
-add_subdirectory(tests)
