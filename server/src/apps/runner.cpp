@@ -24,7 +24,7 @@ int Runner::StartApp(int ac, char **av) {
       return EXIT_SUCCESS;
     }
   } catch (std::exception &exception) {
-    std::cerr << exception.what();
+    std::cerr << "CLI Error: " << exception.what() << std::endl;
     return EXIT_FAILURE;
   }
   const auto &server = InitializeServer(cliResult);

@@ -22,17 +22,18 @@ CliResult Cli::Run(int ac, char **av) {
     Usage();
     return std::nullopt;
   }
-  try {
-    const auto &optionsHandler = GetHandler(firstArg);
-    return optionsHandler->Run(ac, av);
-  } catch (const std::invalid_argument &e) {
-    std::cerr << "CLI Error: " << e.what() << "\n";
-  }
-  return std::nullopt;
+  const auto &optionsHandler = GetHandler(firstArg);
+  return optionsHandler->Run(ac, av);
 }
 
 void Cli::Usage() noexcept {
-  std::cout << "Help message\n";
+  std::cout << "R-Type server CLI\n";
+  std::cout << "Description: each server type has its own --help menu\n\n";
+  std::cout << "Usage:\n";
+  std::cout << "\t./r-type_server [server_type] ...(type specific arguments)\n";
+  std::cout << "Available server types:\n";
+  std::cout << "\tdirector\tthe server that orchestrates the whole infrastructure\n";
+  std::cout << "\tlobby   \tgame server that's created by the director for auto-scaling\n";
 }
 
 CliHandler Cli::GetHandler(const std::string &typeArg) {
