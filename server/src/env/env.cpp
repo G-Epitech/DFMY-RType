@@ -14,7 +14,7 @@
 using namespace rtype::server;
 
 Env::Env(const std::string& envPath) {
-    Load(envPath);
+  Load(envPath);
 }
 
 Env::EnvMap Env::Load(const std::string& envPath) {
@@ -48,7 +48,7 @@ std::any Env::ParseValueType(const std::string& envValue) {
   }
 
   char* end;
-  long intValue = std::strtol(envValue.c_str(), &end, 10);
+  int intValue = std::strtol(envValue.c_str(), &end, 10);
   if (*end == '\0') {
     return intValue;
   }

@@ -15,13 +15,13 @@
 #include "tools/bitset/dynamic_bitset.hpp"
 
 namespace rtype::sdk::network::tools {
-  template<typename T>
-  class EXPORT_NETWORK_SDK_API Packet;
+template <typename T>
+class EXPORT_NETWORK_SDK_API Packet;
 }
 
-template<typename T>
+template <typename T>
 class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
-public:
+ public:
   /**
    * @brief Construct a new Packet object
    * @param header Header properties
@@ -39,7 +39,7 @@ public:
    * @brief Packet exceptions class
    */
   class Exception : public std::exception {
-  public:
+   public:
     /**
      * @brief Create a new message when packet exception
      * @param message The message
@@ -52,7 +52,7 @@ public:
      */
     [[nodiscard]] const char *what() const noexcept override;
 
-  private:
+   private:
     /// @brief The exception message
     std::string mMessage;
   };
@@ -105,40 +105,40 @@ public:
    */
   [[nodiscard]] DynamicBitset GetBitset() const;
 
-private:
+ private:
   /**
    * @brief Append the packet header to a bitset
    * @param bitset The bitset to append the header
    * @param offset The offset to append the header
-  */
+   */
   void AppendHeaderToBitset(DynamicBitset &bitset, std::size_t &offset) const;
 
   /**
    * @brief Append the packet message to a bitset
    * @param bitset The bitset to append the message
    * @param offset The offset to append the message
-  */
+   */
   void AppendMessageToBitset(DynamicBitset &bitset, std::size_t &offset) const;
 
   /**
    * @brief Append the packet offset to a bitset
    * @param bitset The bitset to append the offset
    * @param offset The offset to append the offset
-  */
+   */
   void AppendOffsetToBitset(DynamicBitset &bitset, std::size_t &offset) const;
 
   /**
    * @brief Append the packet turn to a bitset
    * @param bitset The bitset to append the turn
    * @param offset The offset to append the turn
-  */
+   */
   void AppendTurnToBitset(DynamicBitset &bitset, std::size_t &offset) const;
 
   /**
    * @brief Append the packet payload to a bitset
    * @param bitset The bitset to append the payload
    * @param offset The offset to append the payload
-  */
+   */
   void AppendPayloadToBitset(DynamicBitset &bitset, std::size_t &offset) const;
 
   /// @brief Packet header properties

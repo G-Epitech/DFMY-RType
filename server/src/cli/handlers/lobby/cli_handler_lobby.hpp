@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
 #include "src/apps/context.hpp"
+#include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {
 
@@ -25,4 +25,4 @@ class CliHandlerLobby : public CliHandlerAbstract {
 
   BaseContext BuildCtx();
 };
-}  // namespace rtype::server::cli
+}  // namespace rtype::server

@@ -46,5 +46,5 @@ CliHandler Cli::GetHandler(const std::string &typeArg) {
       return std::make_unique<CliHandlerDirector>();
     default:
       throw std::invalid_argument("Unkown server type: '" + typeArg + "'");
-  };
+  }
 }

@@ -23,5 +23,4 @@ class CliHandlerAbstract : public ICliHandler {
   po::variables_map mVariablesMap;
   po::options_description mDescription;
 };
-
-}  // namespace rtype::server::cli
+}  // namespace rtype::server

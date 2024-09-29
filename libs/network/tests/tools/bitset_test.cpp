@@ -6,6 +6,7 @@
 */
 
 #include <gtest/gtest.h>
+
 #include "tools/packet/packet_builder.hpp"
 
 using namespace rtype::sdk::network;
@@ -20,17 +21,17 @@ TEST(BitsetTest, ConvertSimplePacketToBitset) {
   tools::Packet packet = packetBuilder.Build<char>(payload);
   tools::DynamicBitset bitset = packet.GetBitset();
 
-  EXPECT_EQ(bitset.GetSize(), 7 * 8); // header(2), message(4), payload(1)
+  EXPECT_EQ(bitset.GetSize(), 7 * 8);  // header(2), message(4), payload(1)
 
-  EXPECT_EQ(bitset.Get(0), 0); // Start header payload length
-  EXPECT_EQ(bitset.Get(9), 1); // End header payload length
+  EXPECT_EQ(bitset.Get(0), 0);  // Start header payload length
+  EXPECT_EQ(bitset.Get(9), 1);  // End header payload length
 
-  EXPECT_EQ(bitset.Get(10), 0); // Start header payload type
-  EXPECT_EQ(bitset.Get(13), 1); // End header payload type
+  EXPECT_EQ(bitset.Get(10), 0);  // Start header payload type
+  EXPECT_EQ(bitset.Get(13), 1);  // End header payload type
 
-  EXPECT_EQ(bitset.Get(14), 0); // Offset flag
-  EXPECT_EQ(bitset.Get(15), 0); // Turn flag
+  EXPECT_EQ(bitset.Get(14), 0);  // Offset flag
+  EXPECT_EQ(bitset.Get(15), 0);  // Turn flag
 
-  EXPECT_EQ(bitset.Get(36), 0); // Start message type
-  EXPECT_EQ(bitset.Get(41), 1); // End message type
+  EXPECT_EQ(bitset.Get(36), 0);  // Start message type
+  EXPECT_EQ(bitset.Get(41), 1);  // End message type
 }

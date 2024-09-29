@@ -9,5 +9,4 @@
 
 using namespace rtype::server;
 
-CliHandlerAbstract::CliHandlerAbstract()
-    : mVariablesMap(), mDescription("Allowed options") {}
+CliHandlerAbstract::CliHandlerAbstract() : mVariablesMap(), mDescription("Allowed options") {}
