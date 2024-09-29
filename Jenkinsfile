@@ -11,12 +11,35 @@ TESTS = [
 pipeline {
     agent any
     stages {
-        stage('Pull request') {
-            when {
-                not {
-                    branch 'main'
+        stage ('Check style') {
+            parallel {
+
+                stage ('Lint') {
+                    agent {
+                        dockerfile {
+                            filename 'ci/style.dockerfile'
+                        }
+                    }
+
+                    steps {
+                        sh 'make lint'
+                    }
+                }
+
+                stage ('Format') {
+                    agent {
+                        dockerfile {
+                            filename 'ci/style.dockerfile'
+                        }
+                    }
+                    steps {
+                        sh 'make format-check'
+                    }
                 }
             }
+        }
+
+        stage ('Build and tests') {
             parallel {
                 stage('Linux environment') {
                     agent {
