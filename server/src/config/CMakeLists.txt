@@ -1,4 +1,4 @@
 target_sources(${SERVER_CORE_LIB} PRIVATE
-        env.cpp
-        env.hpp
+        config.cpp
+        config.hpp
 )

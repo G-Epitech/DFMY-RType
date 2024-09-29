@@ -10,7 +10,7 @@
 #include <filesystem>
 #include <iostream>
 
-#include "server/src/env/env.hpp"
+#include "server/src/config/config.hpp"
 
 using namespace rtype::server;
 
@@ -20,7 +20,7 @@ CliHandlerDirector::CliHandlerDirector() : CliHandlerAbstract() {
 
 void CliHandlerDirector::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
-      "env", po::value<std::string>()->required(), "director server env file");
+      "config", po::value<std::string>()->required(), "director server config file");
 }
 
 CliResult CliHandlerDirector::Run(int ac, char **av) {
@@ -35,13 +35,13 @@ CliResult CliHandlerDirector::Run(int ac, char **av) {
 }
 
 rtype::server::BaseContext CliHandlerDirector::BuildCtx() {
-  const auto &envPath = mVariablesMap["env"].as<std::string>();
-  Env env(envPath);
+  const auto &configPath = mVariablesMap["config"].as<std::string>();
+  Config config(configPath);
 
-  auto name = env.Get<std::string>("NAME");
-  std::size_t port = static_cast<std::size_t>(env.Get<int>("PORT"));
-  std::size_t maxGames = static_cast<std::size_t>(env.Get<int>("MAX_GAMES"));
-  std::size_t ticks = static_cast<std::size_t>(env.Get<int>("TICKS"));
+  auto name = config.Get<std::string>("NAME");
+  std::size_t port = static_cast<std::size_t>(config.Get<int>("PORT"));
+  std::size_t maxGames = static_cast<std::size_t>(config.Get<int>("MAX_GAMES"));
+  std::size_t ticks = static_cast<std::size_t>(config.Get<int>("TICKS"));
   DirectorCtxProps props = DirectorCtxProps(maxGames, ticks);
 
   return {name, port, kDirector, props};
