@@ -16,7 +16,7 @@ TEST(PacketUtilsTest, ExportMessageTypeFromBitset) {
 
   builder.SetMessageType(43);
   tools::Packet<char> packet = builder.Build('c');
-  tools::DynamicBitset bitset = packet.GetBitset();
+  auto bitset = packet.GetBitset();
 
   unsigned messageType = tools::PacketUtils::ExportMessageTypeFromBitset(bitset);
   EXPECT_EQ(messageType, 43);
