@@ -16,15 +16,15 @@ tools::Packet<T>::Packet(
         T payload,
         tools::PacketOffsetProps offset,
         tools::PacketTurnProps turn) {
-  this->mHeader = header;
-  this->mMessage = message;
-  this->mOffset = offset;
-  this->mTurn = turn;
-  this->mPayload = payload;
+  this->header_ = header;
+  this->message_ = message;
+  this->offset_ = offset;
+  this->turn_ = turn;
+  this->payload_ = payload;
 
-  if (!OffsetIsEnabled() && mOffset.offset > 0)
+  if (!OffsetIsEnabled() && offset_.offset > 0)
     throw tools::Packet<T>::Exception("Offset is not enabled in the header.");
-  if (!TurnIsEnabled() && mTurn.turn > 0)
+  if (!TurnIsEnabled() && turn_.turn > 0)
     throw tools::Packet<T>::Exception("Turn is not enabled in the header.");
 }
 
@@ -33,41 +33,41 @@ tools::Packet<T>::~Packet() = default;
 
 template<typename T>
 bool tools::Packet<T>::OffsetIsEnabled() const {
-  return this->mHeader.offsetFlag == 1;
+  return this->header_.offsetFlag == 1;
 }
 
 template<typename T>
 bool tools::Packet<T>::TurnIsEnabled() const {
-  return this->mHeader.turnFlag == 1;
+  return this->header_.turnFlag == 1;
 }
 
 template<typename T>
 const tools::PacketHeaderProps &tools::Packet<T>::GetHeader() const {
-  return this->mHeader;
+  return this->header_;
 }
 
 template<typename T>
 const tools::PacketMessageProps &tools::Packet<T>::GetMessage() const {
-  return this->mMessage;
+  return this->message_;
 }
 
 template<typename T>
 const tools::PacketOffsetProps &tools::Packet<T>::GetOffset() const {
   if (!OffsetIsEnabled())
     throw tools::Packet<T>::Exception("Offset is not enabled for this packet.");
-  return this->mOffset;
+  return this->offset_;
 }
 
 template<typename T>
 const tools::PacketTurnProps &tools::Packet<T>::GetTurn() const {
   if (!TurnIsEnabled())
     throw tools::Packet<T>::Exception("Turn is not enabled for this packet.");
-  return this->mTurn;
+  return this->turn_;
 }
 
 template<typename T>
 const T &tools::Packet<T>::GetPayload() const {
-  return this->mPayload;
+  return this->payload_;
 }
 
 template<typename T>
@@ -86,7 +86,7 @@ std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() const {
   if (TurnIsEnabled())
     bitsetSize += kPacketTurnPropsSize;
 
-  bitsetSize += sizeof(this->mPayload) * 8;
+  bitsetSize += sizeof(this->payload_) * 8;
 
   std::shared_ptr<dynamic_bitset> bitset = std::make_shared<dynamic_bitset>(bitsetSize);
   std::size_t offset = 0;
@@ -102,25 +102,25 @@ std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() const {
 
 template<typename T>
 void tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset>& bitset, std::size_t *offset) const {
-  bitset->Append(mHeader.payloadLength, kPacketHeaderPayloadLengthSize, *offset);
+  bitset->Append(header_.payloadLength, kPacketHeaderPayloadLengthSize, *offset);
   *offset += kPacketHeaderPayloadLengthSize;
 
-  bitset->Append(mHeader.payloadType, kPacketHeaderPayloadTypeSize, *offset);
+  bitset->Append(header_.payloadType, kPacketHeaderPayloadTypeSize, *offset);
   *offset += kPacketHeaderPayloadTypeSize;
 
-  bitset->Append(mHeader.offsetFlag, kPacketHeaderFlagSize, *offset);
+  bitset->Append(header_.offsetFlag, kPacketHeaderFlagSize, *offset);
   *offset += kPacketHeaderFlagSize;
 
-  bitset->Append(mHeader.turnFlag, kPacketHeaderFlagSize, *offset);
+  bitset->Append(header_.turnFlag, kPacketHeaderFlagSize, *offset);
   *offset += kPacketHeaderFlagSize;
 }
 
 template<typename T>
 void tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitset>& bitset, std::size_t *offset) const {
-  bitset->Append(mMessage.messageId, kPacketMessageIdSize, *offset);
+  bitset->Append(message_.messageId, kPacketMessageIdSize, *offset);
   *offset += kPacketMessageIdSize;
 
-  bitset->Append(mMessage.messageType, kPacketMessageTypeSize, *offset);
+  bitset->Append(message_.messageType, kPacketMessageTypeSize, *offset);
   *offset += kPacketMessageTypeSize;
 
   *offset += kPacketMessageVoidSize;
@@ -131,10 +131,10 @@ void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset
   if (!OffsetIsEnabled())
     return;
 
-  bitset->Append(mOffset.offset, kPacketOffsetSize, *offset);
+  bitset->Append(offset_.offset, kPacketOffsetSize, *offset);
   *offset += kPacketOffsetSize;
 
-  bitset->Append(mOffset.offsetFlag, kPacketOffsetSize, *offset);
+  bitset->Append(offset_.offsetFlag, kPacketOffsetSize, *offset);
   *offset += kPacketOffsetFlagSize;
 }
 
@@ -143,13 +143,13 @@ void tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset>&
   if (!TurnIsEnabled())
     return;
 
-  bitset->Append(mTurn.turn, kPacketTurnSize, *offset);
+  bitset->Append(turn_.turn, kPacketTurnSize, *offset);
   *offset += kPacketTurnSize;
 }
 
 template<typename T>
 void tools::Packet<T>::AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset>& bitset, const std::size_t *offset) const {
-  for (std::size_t i = 0; i < sizeof(this->mPayload) * 8; i++) {
-    bitset->Set(*offset + i, (mPayload >> i) & 1);
+  for (std::size_t i = 0; i < sizeof(this->payload_) * 8; i++) {
+    bitset->Set(*offset + i, (payload_ >> i) & 1);
   }
 }

@@ -65,9 +65,9 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::dynamic_bitset {
 
  private:
   /// @brief The size of the bitset (in bits)
-  std::size_t mSize;
+  std::size_t size_;
   /// @brief The bitset
-  std::vector<std::uint8_t> mBitset;
+  std::vector<std::uint8_t> bitset_;
 };
 
 EXPORT_NETWORK_SDK_API std::ostream &operator<<(

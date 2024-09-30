@@ -111,13 +111,13 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
   std::uint32_t GeneratePacketId();
 
   /// @brief Packet header properties
-  PacketHeaderProps mHeader;
+  PacketHeaderProps header_;
   /// @brief Packet message properties
-  PacketMessageProps mMessage;
+  PacketMessageProps message_;
   /// @brief Packet turn properties
-  PacketTurnProps mTurn;
+  PacketTurnProps turn_;
   /// @brief Packet ID increment
-  std::uint32_t mPacketIdIncrement;
+  std::uint32_t packetIdIncrement_;
 };
 
 #include "packet_builder.tpp"

@@ -147,15 +147,15 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
                              const std::size_t *offset) const;
 
   /// @brief Packet header properties
-  PacketHeaderProps mHeader;
+  PacketHeaderProps header_;
   /// @brief Packet message properties
-  PacketMessageProps mMessage;
+  PacketMessageProps message_;
   /// @brief Packet offset properties
-  PacketOffsetProps mOffset;
+  PacketOffsetProps offset_;
   /// @brief Packet turn properties
-  PacketTurnProps mTurn;
+  PacketTurnProps turn_;
   /// @brief Packet payload
-  T mPayload;
+  T payload_;
 };
 
 #include "packet.tpp"

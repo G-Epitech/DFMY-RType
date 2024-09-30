@@ -14,11 +14,11 @@ tools::Packet<T> tools::PacketBuilder::Build(T payload) {
   if (!IsValidBitSize(sizeof(payload), kPacketHeaderPayloadLengthSize))
     throw Exception("Invalid structure: Payload length is too big.");
 
-  this->mHeader.offsetFlag = false;
-  this->mHeader.payloadLength = sizeof(payload);
-  this->mMessage.messageId = GeneratePacketId();
+  this->header_.offsetFlag = false;
+  this->header_.payloadLength = sizeof(payload);
+  this->message_.messageId = GeneratePacketId();
 
-  auto packet = Packet<T>(this->mHeader, this->mMessage, payload, PacketOffsetProps(), this->mTurn);
+  auto packet = Packet<T>(this->header_, this->message_, payload, PacketOffsetProps(), this->turn_);
 
   this->Reset();
   return packet;
@@ -33,9 +33,9 @@ std::vector<tools::Packet<T>> tools::PacketBuilder::Build(std::vector<T> payload
   if (!IsValidBitSize(sizeof(payloads[0]), kPacketHeaderPayloadLengthSize))
     throw Exception("Invalid structure: Payload length is too big.");
 
-  this->mHeader.offsetFlag = true;
-  this->mHeader.payloadLength = sizeof(payloads[0]);
-  this->mMessage.messageId = GeneratePacketId();
+  this->header_.offsetFlag = true;
+  this->header_.payloadLength = sizeof(payloads[0]);
+  this->message_.messageId = GeneratePacketId();
 
   auto packets = std::vector<Packet < T>>
   ();
@@ -48,7 +48,7 @@ std::vector<tools::Packet<T>> tools::PacketBuilder::Build(std::vector<T> payload
     if (offsetProps.offset == payloads.size() - 1)
       offsetProps.offsetFlag = true;
 
-    packets.push_back(Packet<T>(this->mHeader, this->mMessage, payload, offsetProps, this->mTurn));
+    packets.push_back(Packet<T>(this->header_, this->message_, payload, offsetProps, this->turn_));
     offsetProps.offset++;
   }
 
