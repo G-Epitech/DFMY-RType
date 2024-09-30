@@ -52,7 +52,7 @@ class EXPORT_ECS_SDK_API Registry {
    * @brief Spawn an entity
    * @return Entity
    */
-  Entity SpawnEntity();
+  EXPORT_ECS_SDK_API Entity SpawnEntity();
 
   /**
    * @brief Get an entity from an index
@@ -100,9 +100,10 @@ class EXPORT_ECS_SDK_API Registry {
    * @tparam Components Components to add
    * @tparam Function Function to add
    * @param f Function to add
+   * @param extraParams Extraparams the given function can have
    */
-  template <class... Components, typename Function>
-  void AddSystem(Function &&f);
+  template <class... Components, typename Function, typename... ExtraParams>
+  void AddSystem(Function &&f, ExtraParams &&...extraParams);
 
   /**
    * @brief Run all the systems
