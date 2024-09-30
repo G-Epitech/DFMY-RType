@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "src/app/master/props.hpp"
-#include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
+#include "app/master/props.hpp"
+#include "cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {
-class CliHandlerMaster : public CliHandlerAbstract {
+class CliHandlerMaster : public ACliHandler {
  public:
   /**
    * @brief Construct a new CliHandlerMaster object and setup the cli options

@@ -11,17 +11,17 @@
 
 using namespace rtype::server;
 
-Lobby::Lobby(const BaseContext& ctx) : mCtx() {
-  mCtx = {.name = ctx.name,
+Lobby::Lobby(const BaseContext& ctx) : ctx_() {
+  ctx_ = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,
           .props = std::get<LobbyCtxProps>(ctx.props)};
 }
 
 int Lobby::Run() {
-  std::cout << mCtx.name << std::endl;
-  std::cout << mCtx.port << std::endl;
-  std::cout << mCtx.type << std::endl;
-  std::cout << mCtx.props.ticks << std::endl;
+  std::cout << ctx_.name << std::endl;
+  std::cout << ctx_.port << std::endl;
+  std::cout << ctx_.type << std::endl;
+  std::cout << ctx_.props.ticks << std::endl;
   return EXIT_SUCCESS;
 }

@@ -9,12 +9,12 @@
 
 #include <any>
 #include <string>
-#include <unordered_map>
+#include <map>
 
 namespace rtype::server {
 class Config {
   /// @brief Map of config variables
-  typedef std::unordered_map<std::string, std::any> ConfigMap;
+  typedef std::map<std::string, std::any> ConfigMap;
 
  public:
   /**
@@ -56,7 +56,7 @@ class Config {
 
  private:
   /// @brief Map of config variables
-  ConfigMap mConfig;
+  ConfigMap configMap_;
 };
 }  // namespace rtype::server
 

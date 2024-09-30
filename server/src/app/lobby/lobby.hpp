@@ -10,8 +10,8 @@
 #include <cstddef>
 
 #include "props.hpp"
-#include "src/app/context.hpp"
-#include "src/app/server_interface.hpp"
+#include "app/context.hpp"
+#include "app/server_interface.hpp"
 
 namespace rtype::server {
 class Lobby final : public IServer {
@@ -41,6 +41,6 @@ class Lobby final : public IServer {
 
  private:
   /// @brief Lobby server context
-  Context mCtx;
+  Context ctx_;
 };
 }  // namespace rtype::server

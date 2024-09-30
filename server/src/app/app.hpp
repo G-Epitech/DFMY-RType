@@ -2,21 +2,21 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** runner.hpp
+** app.hpp
 */
 
 #pragma once
 
 #include <memory>
 
+#include "cli/handlers/cli_handlers.hpp"
 #include "server_interface.hpp"
-#include "src/cli/handlers/cli_handlers.hpp"
 
 namespace rtype::server {
 class App {
  public:
-  App() = delete;
-  ~App() = delete;
+  App() = default;
+  ~App() = default;
 
   /**
    * Start application using cli arguments
@@ -24,7 +24,7 @@ class App {
    * @param av command line arguments
    * @return status code
    */
-  static int Run(int ac, char **av);
+  int Run(int ac, char **av);
 
  private:
   /**
@@ -32,6 +32,18 @@ class App {
    * @param cliResult cli result containing BaseContext needed for server
    * @return server instance
    */
-  static std::unique_ptr<IServer> InitializeServer(CliResult cliResult);
+  void InitializeServerInstance();
+
+  /**
+   * Parse cli arguments
+   * @param ac number of arguments
+   * @param av command line arguments
+   * @return status code
+   */
+  int Cli(int ac, char **av);
+
+ private:
+  CliResult cliResult_;
+  std::unique_ptr<IServer> server_;
 };
 }  // namespace rtype::server

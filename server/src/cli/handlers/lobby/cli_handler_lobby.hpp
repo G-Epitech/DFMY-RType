@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "src/app/context.hpp"
-#include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
+#include "app/context.hpp"
+#include "cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {
 /// @brief Default server name
@@ -17,7 +17,7 @@ const char kDefaultName[] = "R-Type Lobby";
 /// @brief Default number of ticks per second
 const std::size_t kDefaultTicks = 60;
 
-class CliHandlerLobby : public CliHandlerAbstract {
+class CliHandlerLobby : public ACliHandler {
  public:
   /**
    * @brief Construct a new CliHandlerLobby object and setup the cli options

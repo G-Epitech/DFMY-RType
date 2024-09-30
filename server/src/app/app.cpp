@@ -2,40 +2,46 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** runner.cpp
+** app.cpp
 */
 
 #include "app.hpp"
 
 #include <iostream>
 
-#include "src/app/lobby/lobby.hpp"
-#include "src/app/master/master.hpp"
-#include "src/cli/cli.hpp"
+#include "app/lobby/lobby.hpp"
+#include "app/master/master.hpp"
+#include "cli/cli.hpp"
 
 using namespace rtype::server;
 
 int App::Run(int ac, char **av) {
-  rtype::server::CliResult cliResult;
+  int status = Cli(ac, av);
 
+  if (!cliResult_.has_value()) {
+    return status;
+  }
+  InitializeServerInstance();
+  return server_->Run();
+}
+
+void App::InitializeServerInstance() {
+  const auto &ctx = cliResult_.value();
+
+  if (ctx.type == kMaster) {
+    server_ = std::make_unique<Master>(ctx);
+  }
+  if (ctx.type == kLobby) {
+    server_ = std::make_unique<Lobby>(ctx);
+  }
+}
+
+int App::Cli(int ac, char **av) {
   try {
-    cliResult = rtype::server::Cli::Run(ac, av);
-    if (!cliResult.has_value()) {
-      return EXIT_SUCCESS;
-    }
+    cliResult_ = Cli::Run(ac, av);
   } catch (std::exception &exception) {
     std::cerr << "CLI Error: " << exception.what() << std::endl;
     return EXIT_FAILURE;
   }
-  const auto &server = InitializeServer(cliResult);
-  return server->Run();
-}
-
-std::unique_ptr<IServer> App::InitializeServer(CliResult cliResult) {
-  const auto &ctx = cliResult.value();
-
-  if (ctx.type == rtype::server::kMaster) {
-    return std::make_unique<rtype::server::Master>(ctx);
-  }
-  return std::make_unique<rtype::server::Lobby>(ctx);
+  return EXIT_SUCCESS;
 }

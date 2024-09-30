@@ -13,7 +13,7 @@
 
 #include "master/props.hpp"
 #include "lobby/props.hpp"
-#include "src/server_types.hpp"
+#include "server_types.hpp"
 
 namespace rtype::server {
 /// @brief Context properties variant

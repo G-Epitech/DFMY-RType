@@ -5,6 +5,7 @@ add_library(${SERVER_CORE_LIB} STATIC)
 
 target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
+target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 add_executable(${SERVER_EXECUTABLE} main.cpp)
 

@@ -10,7 +10,7 @@
 #include <boost/program_options.hpp>
 
 #include "handlers/cli_handlers.hpp"
-#include "src/server_types.hpp"
+#include "server_types.hpp"
 
 namespace po = boost::program_options;
 

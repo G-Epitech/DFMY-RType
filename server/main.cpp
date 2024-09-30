@@ -5,8 +5,12 @@
 ** main.cpp
 */
 
-#include "src/app/app.hpp"
+#include "app/app.hpp"
+
+using namespace rtype::server;
 
 int main(int ac, char **av) {
-  return rtype::server::App::Run(ac, av);
+  App app;
+
+  return app.Run(ac, av);
 }

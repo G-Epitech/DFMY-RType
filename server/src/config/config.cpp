@@ -37,7 +37,7 @@ void Config::ParseFile(std::ifstream& file) {
     }
     std::string key = line.substr(0, pos);
     std::string value = line.substr(pos + 1);
-    mConfig[key] = ParseValueType(value);
+    configMap_[key] = ParseValueType(value);
   }
 }
 

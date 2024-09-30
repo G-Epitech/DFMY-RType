@@ -20,9 +20,9 @@ struct MasterCtxProps {
    * @param maxGames maximum number of games the master can create
    * @param ticks number of ticks for the game loop for each game
    */
-  MasterCtxProps(std::size_t maxGames, std::size_t ticks) : maxGames(maxGames), ticks(ticks) {}
+  MasterCtxProps(std::size_t maxGames, std::size_t ticks);
 
   /// @brief Construct a new MasterCtxProps object with default values
-  MasterCtxProps() : maxGames(0), ticks(0) {}
+  MasterCtxProps();
 };
 }  // namespace rtype::server

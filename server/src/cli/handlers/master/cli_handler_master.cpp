@@ -10,32 +10,32 @@
 #include <filesystem>
 #include <iostream>
 
-#include "server/src/config/config.hpp"
+#include "config/config.hpp"
 
 using namespace rtype::server;
 
-CliHandlerMaster::CliHandlerMaster() : CliHandlerAbstract() {
+CliHandlerMaster::CliHandlerMaster() : ACliHandler() {
   Setup();
 }
 
 void CliHandlerMaster::Setup() noexcept {
-  mDescription.add_options()("help", "produce help message")(
+  optDescription_.add_options()("help", "produce help message")(
       "config", po::value<std::string>()->required(), "master server config file");
 }
 
 CliResult CliHandlerMaster::Run(int ac, char **av) {
-  po::store(po::parse_command_line(ac, av, mDescription), mVariablesMap);
+  po::store(po::parse_command_line(ac, av, optDescription_), variablesMap_);
 
-  if (mVariablesMap.count("help")) {
-    std::cout << mDescription << "\n";
+  if (variablesMap_.count("help")) {
+    std::cout << optDescription_ << "\n";
     return std::nullopt;
   }
-  po::notify(mVariablesMap);
+  po::notify(variablesMap_);
   return BuildCtx();
 }
 
 rtype::server::BaseContext CliHandlerMaster::BuildCtx() {
-  const auto &configPath = mVariablesMap["config"].as<std::string>();
+  const auto &configPath = variablesMap_["config"].as<std::string>();
   Config config(configPath);
 
   auto name = config.Get<std::string>("NAME");
