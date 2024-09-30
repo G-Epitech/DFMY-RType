@@ -17,7 +17,7 @@ namespace rtype::sdk::ECS {
  * @brief Entity class
  * This class is used to represent an entity in the ECS system
  */
-EXPORT_ECS_SDK_API class Entity {
+class EXPORT_ECS_SDK_API Entity {
  public:
   /**
    * @brief Default constructor

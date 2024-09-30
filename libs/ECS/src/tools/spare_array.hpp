@@ -19,7 +19,7 @@ namespace rtype::sdk::ECS::tools {
  * @tparam Component Component type
  */
 template <typename Component>
-EXPORT_ECS_SDK_API class sparse_array {
+class EXPORT_ECS_SDK_API sparse_array {
  public:
   /// @brief Type aliases
   using value_type = std::optional<Component>;

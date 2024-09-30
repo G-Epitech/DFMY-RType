@@ -22,7 +22,7 @@ namespace rtype::sdk::ECS {
  * @brief Registry class
  * This class is used to store all the entities and components
  */
-EXPORT_ECS_SDK_API class Registry {
+class EXPORT_ECS_SDK_API Registry {
  public:
   /**
    * @brief Register a component
