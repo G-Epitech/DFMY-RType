@@ -32,7 +32,6 @@ struct BaseContext {
    * @param type Server type
    * @param props Server type-specific properties
    */
-  BaseContext(std::string name, std::size_t port, ServerType type, CtxProps props)
-      : name(std::move(name)), port(port), type(type), props(props) {}
+  BaseContext(std::string name, std::size_t port, ServerType type, CtxProps props);
 };
 }  // namespace rtype::server

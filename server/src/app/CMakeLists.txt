@@ -3,6 +3,7 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
         app.hpp
         server_interface.hpp
         context.hpp
+        context.cpp
 )
 
 add_subdirectory(master)
