@@ -67,6 +67,6 @@ void Registry::RemoveComponent(Entity const &from) {
 }
 
 template <typename System, typename... ExtraParams>
-EXPORT_ECS_SDK_API void Registry::AddSystem(ExtraParams &&...extraParams) {
+void Registry::AddSystem(ExtraParams &&...extraParams) {
   systems_.push_back(std::make_unique<System>(std::forward<ExtraParams>(extraParams)...));
 }
