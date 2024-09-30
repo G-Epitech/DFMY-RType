@@ -102,7 +102,7 @@ class EXPORT_ECS_SDK_API Registry {
    * @param extraParams Extraparams the given function can have
    */
   template <typename System, typename... ExtraParams>
-  EXPORT_ECS_SDK_API void AddSystem(ExtraParams &&...extraParams);
+  void AddSystem(ExtraParams &&...extraParams);
 
   /**
    * @brief Run all the systems
