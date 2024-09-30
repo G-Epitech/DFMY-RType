@@ -73,20 +73,23 @@ Now, we can create a system that will display the position and velocity of the e
 
 ```cpp
 
-void logging_system(rtype::sdk::ECS::registry& r, const rtype::sdk::ECS::tools::sparse_array<position>& positions,
-                    const rtype::sdk::ECS::tools::sparse_array<velocity>& velocities) {
-  for (size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
-    if (positions[i] && velocities[i]) {
-      const auto& [x, y] = positions[i].value();
-      const auto& [vx, vy] = velocities[i].value();
-      std::cerr << i << ": Position = { " << x << ", " << y << " }, Velocity = { " << vx << ", "
-                << vy << " }\n";
-    }
+class LoggingSystem final : public ASystem<position, velocity> {
+ public:
+  explicit LoggingSystem(const int nb) {
+    std::cout << nb << std::endl;
   }
-}
 
-// Add the system to the registry with the components it will use
-registry.add_system<position, velocity>(logging_system);
+  void Run(Registry* r, SparseArray<position>& positions,
+           SparseArray<velocity>& velocities) override {
+    for (size_t i = 0; i < positions.Size(); ++i) {
+      const auto& [x, y] = positions[i].value();
+      std::cout << i << ": Position = { " << x << ", " << y << " }" << std::endl;
+    }
+    const auto e = r->SpawnEntity();
+    r->AddComponent(e, position{10.0f, 20.0f});
+  }
+};
+
 ```
 
 Finally, we can run the system:
@@ -95,18 +98,11 @@ Finally, we can run the system:
 registry.run_systems();
 ```
 
-The output will be:
-
-```
-0: Position = { 10, 20 }, Velocity = { 1, 2 }
-```
-
----
-
 Here is the complete example:
 
 ```cpp
 #include <iostream>
+#include <libs/ECS/src/abstracts/system.hpp>
 #include <libs/ECS/src/registry.hpp>
 
 struct position {
@@ -130,18 +126,22 @@ struct controllable {
   bool right;
 };
 
-void logging_system(rtype::sdk::ECS::registry& r,
-                    const rtype::sdk::ECS::tools::SparseArray<position>& positions,
-                    const rtype::sdk::ECS::tools::SparseArray<velocity>& velocities) {
-  for (size_t i = 0; i < positions.Size() && i < velocities.Size(); ++i) {
-    if (positions[i] && velocities[i]) {
-      const auto& [x, y] = positions[i].value();
-      const auto& [vx, vy] = velocities[i].value();
-      std::cerr << i << ": Position = { " << x << ", " << y << " }, Velocity = { " << vx << ", "
-                << vy << " }\n";
-    }
+class LoggingSystem final : public ASystem<position, velocity> {
+ public:
+  explicit LoggingSystem(const int nb) {
+    std::cout << nb << std::endl;
   }
-}
+
+  void Run(Registry* r, SparseArray<position>& positions,
+           SparseArray<velocity>& velocities) override {
+    for (size_t i = 0; i < positions.Size(); ++i) {
+      const auto& [x, y] = positions[i].value();
+      std::cout << i << ": Position = { " << x << ", " << y << " }" << std::endl;
+    }
+    const auto e = r->SpawnEntity();
+    r->AddComponent(e, position{10.0f, 20.0f});
+  }
+};
 
 int main() {
   rtype::sdk::ECS::Registry registry;
@@ -151,14 +151,14 @@ int main() {
   registry.RegisterComponent<drawable>();
   registry.RegisterComponent<controllable>();
 
-  auto entity = registry.SpawnEntity();
+  const auto entity = registry.SpawnEntity();
 
   registry.AddComponent<position>(entity, {10.0f, 20.0f});
   registry.AddComponent<velocity>(entity, {1.0f, 2.0f});
   registry.AddComponent<drawable>(entity, {false});
   registry.AddComponent<controllable>(entity, {false, false, false, false});
 
-  registry.AddSystem<position, velocity>(logging_system);
+  registry.AddSystem<LoggingSystem>(4);
 
   registry.RunSystems();
 
