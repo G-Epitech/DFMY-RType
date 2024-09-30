@@ -22,7 +22,7 @@ TOOLCHAIN_FLAG = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg
 LINT_DIRS = client/src \
 			libs/network/src \
 			server/src
-LINT_FILES = $(shell find $(LINT_DIRS) -type f -regex '.*\.\(cpp\|hpp\|cc\|cxx\)')
+LINT_FILES = $(shell find $(LINT_DIRS) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.cc' -o -name '*.cxx' \))
 
 ifdef DEBUG
 	CMAKE_FLAGS = -DCMAKE_BUILD_TYPE=Debug
