@@ -40,10 +40,10 @@ class App {
    * @param av command line arguments
    * @return status code
    */
-  int Cli(int ac, char **av);
+  int ParseArguments(int ac, char **av);
 
  private:
-  /// @brief Cli result
+  /// @brief ParseArguments result
   CliResult cliResult_;
   /// @brief Server instance
   std::unique_ptr<IServer> server_;

@@ -16,7 +16,7 @@
 using namespace rtype::server;
 
 int App::Run(int ac, char **av) {
-  int status = Cli(ac, av);
+  int status = ParseArguments(ac, av);
 
   if (!cliResult_.has_value()) {
     return status;
@@ -28,15 +28,19 @@ int App::Run(int ac, char **av) {
 void App::InitializeServerInstance() {
   const auto &ctx = cliResult_.value();
 
-  if (ctx.type == kMaster) {
-    server_ = std::make_unique<Master>(ctx);
-  }
-  if (ctx.type == kLobby) {
-    server_ = std::make_unique<Lobby>(ctx);
+  switch (ctx.type) {
+    case kMaster:
+      server_ = std::make_unique<Master>(ctx);
+      break;
+    case kLobby:
+      server_ = std::make_unique<Lobby>(ctx);
+      break;
+    default:
+      throw std::runtime_error("Invalid server type");
   }
 }
 
-int App::Cli(int ac, char **av) {
+int App::ParseArguments(int ac, char **av) {
   try {
     cliResult_ = Cli::Run(ac, av);
   } catch (std::exception &exception) {
