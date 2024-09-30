@@ -66,10 +66,7 @@ void Registry::RemoveComponent(Entity const &from) {
   components.erase(static_cast<size_t>(from));
 }
 
-template <class... Components, typename Function, typename... ExtraParams>
-EXPORT_ECS_SDK_API void Registry::AddSystem(Function &&f, ExtraParams &&...extraParams) {
-  systems_.push_back(
-      [this, f = std::forward<Function>(f), ...extraParams = std::forward<ExtraParams>(extraParams)]() mutable {
-          f(*this, GetComponents<Components>()..., extraParams...);
-      });
+template <typename System, typename... ExtraParams>
+EXPORT_ECS_SDK_API void Registry::AddSystem(ExtraParams &&...extraParams) {
+  systems_.push_back(std::make_unique<System>(std::forward<ExtraParams>(extraParams)...));
 }

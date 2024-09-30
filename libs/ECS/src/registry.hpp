@@ -11,9 +11,11 @@
 #include <functional>
 #include <map>
 #include <stack>
+#include <memory>
 #include <typeindex>
 
 #include "entity.hpp"
+#include "interfaces/system.hpp"
 #include "tools/spare_array.hpp"
 
 namespace rtype::sdk::ECS {
@@ -97,13 +99,10 @@ class EXPORT_ECS_SDK_API Registry {
 
   /**
    * @brief Add a system
-   * @tparam Components Components to add
-   * @tparam Function Function to add
-   * @param f Function to add
    * @param extraParams Extraparams the given function can have
    */
-  template <class... Components, typename Function, typename... ExtraParams>
-  void AddSystem(Function &&f, ExtraParams &&...extraParams);
+  template <typename System, typename... ExtraParams>
+  EXPORT_ECS_SDK_API void AddSystem(ExtraParams &&...extraParams);
 
   /**
    * @brief Run all the systems
@@ -112,7 +111,10 @@ class EXPORT_ECS_SDK_API Registry {
 
  private:
   /// @brief systems stored
-  std::vector<std::function<void()>> systems_;
+  /*std::vector<std::function<void()>> systems_;*/
+
+  /// @brief systems interfaces stored
+  std::vector<std::unique_ptr<ISystem>> systems_;
 
   /// @brief Components stored with their type
   std::map<std::type_index, std::any> componentsArrays_;
