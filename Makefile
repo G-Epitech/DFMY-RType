@@ -19,9 +19,9 @@ COVERAGE_IGNORE = $(addprefix -e , $(COVERAGE_IGNORE_TARGETS))
 
 TOOLCHAIN_FLAG = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg.cmake
 
-LINT_DIRS = client \
-			libs \
-			server
+LINT_DIRS = client/src \
+			libs/network/src \
+			server/src
 LINT_FILES = $(shell find $(LINT_DIRS) -type f -regex '.*\.\(cpp\|hpp\|cc\|cxx\)')
 
 ifdef DEBUG
@@ -90,7 +90,7 @@ coverage-branch:
 .PHONY: coverage-branch
 
 lint:
-			@cpplint --recursive --quiet $(LINT_DIRS)
+			@cpplint --recursive $(LINT_DIRS)
 .PHONY: lint
 
 format:

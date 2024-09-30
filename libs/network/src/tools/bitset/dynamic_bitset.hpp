@@ -7,17 +7,18 @@
 
 #pragma once
 
-#include <vector>
-#include <iostream>
 #include <cstdint>
+#include <iostream>
+#include <vector>
+
 #include "api.hpp"
 
 namespace rtype::sdk::network::tools {
-  class EXPORT_NETWORK_SDK_API dynamic_bitset;
+class EXPORT_NETWORK_SDK_API dynamic_bitset;
 }
 
 class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::dynamic_bitset {
-public:
+ public:
   /**
    * @brief Construct a new Dynamic Bitset object
    * @param size The size of the bitset (in bits)
@@ -61,11 +62,13 @@ public:
    * @return The size of the bitset (in bits)
    */
   [[nodiscard]] std::size_t GetSize() const;
-private:
+
+ private:
   /// @brief The size of the bitset (in bits)
   std::size_t mSize;
   /// @brief The bitset
   std::vector<std::uint8_t> mBitset;
 };
 
-EXPORT_NETWORK_SDK_API std::ostream &operator<<(std::ostream &os, const rtype::sdk::network::tools::dynamic_bitset &bitset);
+EXPORT_NETWORK_SDK_API std::ostream &operator<<(
+    std::ostream &os, const rtype::sdk::network::tools::dynamic_bitset &bitset);

@@ -1,3 +1,3 @@
-target_sources(${ClIENT_TESTS} PRIVATE
+target_sources(${CLIENT_TESTS} PRIVATE
   foo_tests.cpp
 )
