@@ -123,7 +123,7 @@ class EXPORT_ECS_SDK_API Registry {
   size_t currentMaxEntityId_ = 0;
 
   /// @brief Free ids available for entities
-  std::stack<Entity> freeIds_;
+  std::stack<std::size_t> freeIds_;
 
   /// @brief remove functions used to remove components
   using component_destroyer = std::function<void(Registry &, Entity const &)>;
