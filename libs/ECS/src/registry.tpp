@@ -68,5 +68,5 @@ void Registry::RemoveComponent(Entity const &from) {
 
 template <typename System, typename... ExtraParams>
 void Registry::AddSystem(ExtraParams &&...extraParams) {
-  systems_.push_back(std::make_unique<System>(std::forward<ExtraParams>(extraParams)...));
+  systems_.push_back(std::make_shared<System>(std::forward<ExtraParams>(extraParams)...));
 }
