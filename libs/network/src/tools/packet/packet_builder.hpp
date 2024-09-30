@@ -86,6 +86,16 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
   template <typename T>
   std::vector<Packet<T>> Build(std::vector<T> payloads);
 
+  /**
+   * @brief Build a packet from a bitset
+   * @warning All intern properties is ignored
+   * @tparam T The payload type
+   * @param bitset The bitset
+   * @return The packet
+   */
+  template<typename T>
+  Packet<T> Build(const dynamic_bitset &bitset);
+
  private:
   /**
    * @brief Check if the value is valid for the bit size

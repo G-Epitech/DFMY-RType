@@ -54,3 +54,9 @@ std::vector<tools::Packet<T>> tools::PacketBuilder::Build(std::vector<T> payload
 
   return packets;
 }
+
+template<typename T>
+tools::Packet<T> tools::PacketBuilder::Build(const tools::dynamic_bitset &bitset) {
+  if (bitset.GetSize() < kPacketHeaderPropsSize + kPacketMessagePropsSize)
+    throw Exception("Protocol error: Bitset is too small.");
+}

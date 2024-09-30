@@ -21,7 +21,7 @@ public:
    * @param bitset The bitset (Compressed packet)
    * @return The message type
    */
-  [[nodiscard]] static unsigned ExportMessageTypeFromBitset(const std::shared_ptr<DynamicBitset> &bitset);
+  [[nodiscard]] static unsigned ExportMessageTypeFromBitset(const std::shared_ptr<dynamic_bitset> &bitset);
 
 private:
   PacketUtils() = default;
