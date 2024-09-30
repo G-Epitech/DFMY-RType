@@ -22,7 +22,7 @@ class ISystem {
    * @brief Run the system
    * @param r The registry
    */
-  virtual void operator()(Registry& r) = 0;
+  virtual void operator()(Registry *r) = 0;
 };
 
 }  // namespace rtype::sdk::ECS

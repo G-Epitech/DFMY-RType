@@ -111,9 +111,6 @@ class EXPORT_ECS_SDK_API Registry {
 
  private:
   /// @brief systems stored
-  /*std::vector<std::function<void()>> systems_;*/
-
-  /// @brief systems interfaces stored
   std::vector<std::unique_ptr<ISystem>> systems_;
 
   /// @brief Components stored with their type
