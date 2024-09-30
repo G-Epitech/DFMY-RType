@@ -42,6 +42,4 @@ r-type_network_sdk_tests
 .idea
 
 build
-cmake-build-debug
-cmake-build-windows
-
+cmake-build-*

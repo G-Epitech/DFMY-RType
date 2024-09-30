@@ -41,7 +41,8 @@ void tools::DynamicBitset::Append(unsigned int value, std::size_t size, std::siz
   }
 }
 
-std::ostream &operator<<(std::ostream &os, const rtype::sdk::network::tools::DynamicBitset &bitset) {
+std::ostream &operator<<(std::ostream &os,
+                         const rtype::sdk::network::tools::DynamicBitset &bitset) {
   for (std::size_t i = 0; i < bitset.GetSize(); i++) {
     if (i % 8 == 0)
       os << ".";
