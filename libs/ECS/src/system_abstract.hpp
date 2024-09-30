@@ -18,7 +18,7 @@ namespace rtype::sdk::ECS {
 template <class... Components>
 class EXPORT_ECS_SDK_API ASystem : public ISystem {
  public:
-  void operator()(Registry *r) override { Run(r, r->GetComponents<Components>()...); }
+  void operator()(Registry *r) override;
 
   /**
    * @brief Run the system
@@ -28,3 +28,5 @@ class EXPORT_ECS_SDK_API ASystem : public ISystem {
   virtual void Run(Registry *r, sparse_array<Components> &...components) = 0;
 };
 }  // namespace rtype::sdk::ECS
+
+#include "system_abstract.tpp"
