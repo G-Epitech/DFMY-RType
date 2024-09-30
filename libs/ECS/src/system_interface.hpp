@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "api.hpp"
+
 namespace rtype::sdk::ECS {
 
 class Registry;

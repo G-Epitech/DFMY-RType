@@ -54,7 +54,7 @@ class EXPORT_ECS_SDK_API Registry {
    * @brief Spawn an entity
    * @return Entity
    */
-  EXPORT_ECS_SDK_API Entity SpawnEntity();
+  Entity SpawnEntity();
 
   /**
    * @brief Get an entity from an index
