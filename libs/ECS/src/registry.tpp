@@ -28,11 +28,17 @@ sparse_array<Component> &Registry::RegisterComponent() {
 
 template <typename Component>
 sparse_array<Component> &Registry::GetComponents() {
+  if (!componentsArrays_.contains(typeid(Component))) {
+    throw std::runtime_error("Component not registered");
+  }
   return std::any_cast<sparse_array<Component> &>(componentsArrays_[typeid(Component)]);
 }
 
 template <typename Component>
 const sparse_array<Component> &Registry::GetComponents() const {
+  if (!componentsArrays_.contains(typeid(Component))) {
+    throw std::runtime_error("Component not registered");
+  }
   return std::any_cast<sparse_array<Component> &>(componentsArrays_.at(typeid(Component)));
 }
 
@@ -44,9 +50,6 @@ typename sparse_array<Component>::reference_type Registry::AddComponent(Entity c
 
   if (size <= to.id_) {
     components.resize(static_cast<size_t>(to) + 1);
-  }
-  if (maxComponentsLength_ < size) {
-    maxComponentsLength_ = size;
   }
   return components.emplaceAt(static_cast<size_t>(to), std::forward<Component>(c));
 }

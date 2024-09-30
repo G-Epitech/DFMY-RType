@@ -116,9 +116,6 @@ class EXPORT_ECS_SDK_API Registry {
   /// @brief Components stored with their type
   std::map<std::type_index, std::any> componentsArrays_;
 
-  /// @brief Max components length
-  size_t maxComponentsLength_ = 0;
-
   /// @brief Current Max entity id
   size_t currentMaxEntityId_ = 0;
 

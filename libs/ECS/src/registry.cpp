@@ -21,7 +21,7 @@ Entity Registry::SpawnEntity() {
 }
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
-  if (idx >= currentMaxEntityId_ || maxComponentsLength_ <= idx) {
+  if (idx >= currentMaxEntityId_) {
     throw std::out_of_range("entity_from_index: Index is out of range.");
   }
   return Entity(idx);
