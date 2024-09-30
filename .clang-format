@@ -1,8 +1,8 @@
 BasedOnStyle: Google
+Language: Cpp
+Standard: c++20
 
-DeriveLineEnding: false
-UseCRLF: false
-
+LineEnding: LF
 IndentPPDirectives: BeforeHash
 
 ColumnLimit: 100
