@@ -10,12 +10,12 @@
 #include <any>
 #include <functional>
 #include <map>
-#include <stack>
 #include <memory>
+#include <stack>
 #include <typeindex>
 
 #include "entity.hpp"
-#include "interfaces/system.hpp"
+#include "system_interface.hpp"
 #include "tools/spare_array.hpp"
 
 namespace rtype::sdk::ECS {

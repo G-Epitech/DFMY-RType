@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../registry.hpp"
+#include "registry.hpp"
 
 namespace rtype::sdk::ECS {
 
@@ -25,6 +25,6 @@ class ASystem : public ISystem {
    * @param r The registry
    * @param components The components
    */
-  virtual void Run(Registry *r, SparseArray<Components> &...components) = 0;
+  virtual void Run(Registry *r, sparse_array<Components> &...components) = 0;
 };
 }  // namespace rtype::sdk::ECS
