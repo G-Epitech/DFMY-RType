@@ -5,5 +5,5 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
         context.hpp
 )
 
-add_subdirectory(director)
+add_subdirectory(master)
 add_subdirectory(lobby)

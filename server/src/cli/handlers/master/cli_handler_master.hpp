@@ -7,19 +7,19 @@
 
 #pragma once
 
-#include "src/apps/director/props.hpp"
+#include "src/apps/master/props.hpp"
 #include "src/cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {
-class CliHandlerDirector : public CliHandlerAbstract {
+class CliHandlerMaster : public CliHandlerAbstract {
  public:
   /**
-   * @brief Construct a new CliHandlerDirector object and setup the cli options
+   * @brief Construct a new CliHandlerMaster object and setup the cli options
    */
-  CliHandlerDirector();
+  CliHandlerMaster();
 
   /**
-   * Run the director server cli
+   * Run the master server cli
    * @param ac number of arguments
    * @param av command line arguments
    * @return CliResult containing the server type and the server context

@@ -13,7 +13,7 @@ namespace rtype::server {
 /**
  * Server type enum
  */
-enum ServerType { kUnknown = 0, kDirector = 1, kLobby = 2 };
+enum ServerType { kUnknown = 0, kMaster = 1, kLobby = 2 };
 
 /**
  * Convert string to ServerType

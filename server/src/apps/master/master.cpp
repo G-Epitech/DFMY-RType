@@ -2,23 +2,23 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** director.cpp
+** master.cpp
 */
 
-#include "director.hpp"
+#include "master.hpp"
 
 #include <iostream>
 
 using namespace rtype::server;
 
-Director::Director(const BaseContext& ctx) : mCtx() {
+Master::Master(const BaseContext& ctx) : mCtx() {
   mCtx = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,
-          .props = std::get<DirectorCtxProps>(ctx.props)};
+          .props = std::get<MasterCtxProps>(ctx.props)};
 }
 
-int Director::Run() {
+int Master::Run() {
   std::cout << mCtx.name << std::endl;
   std::cout << mCtx.port << std::endl;
   std::cout << mCtx.type << std::endl;

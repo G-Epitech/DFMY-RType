@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "src/apps/director/director.hpp"
+#include "src/apps/master/master.hpp"
 #include "src/apps/lobby/lobby.hpp"
 #include "src/cli/cli.hpp"
 
@@ -34,8 +34,8 @@ int Runner::StartApp(int ac, char **av) {
 std::unique_ptr<IServer> Runner::InitializeServer(CliResult cliResult) {
   const auto &ctx = cliResult.value();
 
-  if (ctx.type == rtype::server::kDirector) {
-    return std::make_unique<rtype::server::Director>(ctx);
+  if (ctx.type == rtype::server::kMaster) {
+    return std::make_unique<rtype::server::Master>(ctx);
   }
   return std::make_unique<rtype::server::Lobby>(ctx);
 }

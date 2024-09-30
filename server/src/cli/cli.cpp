@@ -32,8 +32,8 @@ void Cli::Usage() noexcept {
   std::cout << "Usage:\n";
   std::cout << "\t./r-type_server [server_type] ...(type specific arguments)\n";
   std::cout << "Available server types:\n";
-  std::cout << "\tdirector\tthe server that orchestrates the whole infrastructure\n";
-  std::cout << "\tlobby   \tgame server that's created by the director for auto-scaling\n";
+  std::cout << "\tmaster  \tthe server that orchestrates the whole infrastructure\n";
+  std::cout << "\tlobby   \tgame server that's created by the master for auto-scaling\n";
 }
 
 CliHandler Cli::GetHandler(const std::string &typeArg) {
@@ -42,8 +42,8 @@ CliHandler Cli::GetHandler(const std::string &typeArg) {
   switch (type) {
     case kLobby:
       return std::make_unique<CliHandlerLobby>();
-    case kDirector:
-      return std::make_unique<CliHandlerDirector>();
+    case kMaster:
+      return std::make_unique<CliHandlerMaster>();
     default:
       throw std::invalid_argument("Unkown server type: '" + typeArg + "'");
   }

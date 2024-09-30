@@ -8,5 +8,5 @@
 #pragma once
 
 #include "cli_handler_interface.hpp"
-#include "src/cli/handlers/director/cli_handler_director.hpp"
+#include "src/cli/handlers/master/cli_handler_master.hpp"
 #include "src/cli/handlers/lobby/cli_handler_lobby.hpp"

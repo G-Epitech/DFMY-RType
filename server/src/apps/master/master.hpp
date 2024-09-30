@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** director.hpp
+** master.hpp
 */
 
 #pragma once
@@ -15,33 +15,33 @@
 
 namespace rtype::server {
 
-class Director final : public IServer {
+class Master final : public IServer {
  public:
   /**
-   * @brief Construct a new Director object
+   * @brief Construct a new Master object
    * @param ctx The server context
    */
-  explicit Director(const BaseContext &ctx);
+  explicit Master(const BaseContext &ctx);
 
-  ~Director() override = default;
+  ~Master() override = default;
 
   /**
-   * Run the director server
+   * Run the master server
    * @return The server exit code
    */
   int Run() override;
 
  private:
-  /// @brief Director server context
+  /// @brief Master server context
   struct Context {
     std::string name;        // Name of the server context
     std::size_t port;        // Port number
     ServerType type;         // Server type
-    DirectorCtxProps props;  // Server type-specific properties
+    MasterCtxProps props;  // Server type-specific properties
   };
 
  private:
-  /// @brief Director server context
+  /// @brief Master server context
   Context mCtx;
 };
 }  // namespace rtype::server

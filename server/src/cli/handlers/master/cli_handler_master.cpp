@@ -5,7 +5,7 @@
 ** options_handler_manager.cpp
 */
 
-#include "cli_handler_director.hpp"
+#include "cli_handler_master.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -14,16 +14,16 @@
 
 using namespace rtype::server;
 
-CliHandlerDirector::CliHandlerDirector() : CliHandlerAbstract() {
+CliHandlerMaster::CliHandlerMaster() : CliHandlerAbstract() {
   Setup();
 }
 
-void CliHandlerDirector::Setup() noexcept {
+void CliHandlerMaster::Setup() noexcept {
   mDescription.add_options()("help", "produce help message")(
-      "config", po::value<std::string>()->required(), "director server config file");
+      "config", po::value<std::string>()->required(), "master server config file");
 }
 
-CliResult CliHandlerDirector::Run(int ac, char **av) {
+CliResult CliHandlerMaster::Run(int ac, char **av) {
   po::store(po::parse_command_line(ac, av, mDescription), mVariablesMap);
 
   if (mVariablesMap.count("help")) {
@@ -34,7 +34,7 @@ CliResult CliHandlerDirector::Run(int ac, char **av) {
   return BuildCtx();
 }
 
-rtype::server::BaseContext CliHandlerDirector::BuildCtx() {
+rtype::server::BaseContext CliHandlerMaster::BuildCtx() {
   const auto &configPath = mVariablesMap["config"].as<std::string>();
   Config config(configPath);
 
@@ -42,7 +42,7 @@ rtype::server::BaseContext CliHandlerDirector::BuildCtx() {
   std::size_t port = static_cast<std::size_t>(config.Get<int>("PORT"));
   std::size_t maxGames = static_cast<std::size_t>(config.Get<int>("MAX_GAMES"));
   std::size_t ticks = static_cast<std::size_t>(config.Get<int>("TICKS"));
-  DirectorCtxProps props = DirectorCtxProps(maxGames, ticks);
+  MasterCtxProps props = MasterCtxProps(maxGames, ticks);
 
-  return {name, port, kDirector, props};
+  return {name, port, kMaster, props};
 }

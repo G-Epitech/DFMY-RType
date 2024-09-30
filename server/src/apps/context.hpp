@@ -11,13 +11,13 @@
 #include <utility>
 #include <variant>
 
-#include "director/props.hpp"
+#include "master/props.hpp"
 #include "lobby/props.hpp"
 #include "src/server_types.hpp"
 
 namespace rtype::server {
 /// @brief Context properties variant
-using CtxProps = std::variant<LobbyCtxProps, DirectorCtxProps>;
+using CtxProps = std::variant<LobbyCtxProps, MasterCtxProps>;
 
 struct BaseContext {
   std::string name;  // Name of the server
