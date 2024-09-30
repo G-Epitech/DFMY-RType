@@ -14,7 +14,7 @@ class Registry;
 /**
  *  @brief Interface for a system
  */
-class ISystem {
+class EXPORT_ECS_SDK_API ISystem {
  public:
   virtual ~ISystem() = default;
 

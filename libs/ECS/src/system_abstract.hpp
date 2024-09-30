@@ -16,7 +16,7 @@ namespace rtype::sdk::ECS {
  * @tparam Components Components to use in the system
  */
 template <class... Components>
-class ASystem : public ISystem {
+class EXPORT_ECS_SDK_API ASystem : public ISystem {
  public:
   void operator()(Registry *r) override { Run(r, r->GetComponents<Components>()...); }
 
