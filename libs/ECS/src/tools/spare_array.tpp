@@ -10,78 +10,78 @@
 using namespace rtype::sdk::ECS::tools;
 
 template <typename Component>
-SparseArray<Component>::SparseArray() = default;
+sparse_array<Component>::sparse_array() = default;
 
 template <typename Component>
-SparseArray<Component>::SparseArray(SparseArray const &other) {
+sparse_array<Component>::sparse_array(sparse_array const &other) {
   data_ = other.data_;
 }
 
 template <typename Component>
-SparseArray<Component>::SparseArray(SparseArray &&other) noexcept {
+sparse_array<Component>::sparse_array(sparse_array &&other) noexcept {
   data_ = std::move(other.data_);
 }
 
 template <typename Component>
-SparseArray<Component>::~SparseArray() = default;
+sparse_array<Component>::~sparse_array() = default;
 
 template <typename Component>
-SparseArray<Component> &SparseArray<Component>::operator=(SparseArray const &other) = default;
+sparse_array<Component> &sparse_array<Component>::operator=(sparse_array const &other) = default;
 
 template <typename Component>
-SparseArray<Component> &SparseArray<Component>::operator=(SparseArray &&other) noexcept {
+sparse_array<Component> &sparse_array<Component>::operator=(sparse_array &&other) noexcept {
   data_ = std::move(other.data_);
   return *this;
 }
 
 template <typename Component>
-typename SparseArray<Component>::reference_type SparseArray<Component>::operator[](size_t idx) {
+typename sparse_array<Component>::reference_type sparse_array<Component>::operator[](size_t idx) {
   return data_[idx];
 }
 
 template <typename Component>
-typename SparseArray<Component>::const_reference_type SparseArray<Component>::operator[](
+typename sparse_array<Component>::const_reference_type sparse_array<Component>::operator[](
     size_t idx) const {
   return data_[idx];
 }
 
 template <typename Component>
-typename SparseArray<Component>::iterator SparseArray<Component>::Begin() {
+typename sparse_array<Component>::iterator sparse_array<Component>::begin() {
   return data_.begin();
 }
 
 template <typename Component>
-typename SparseArray<Component>::const_iterator SparseArray<Component>::Begin() const {
+typename sparse_array<Component>::const_iterator sparse_array<Component>::begin() const {
   return data_.begin();
 }
 
 template <typename Component>
-typename SparseArray<Component>::const_iterator SparseArray<Component>::Cbegin() const {
+typename sparse_array<Component>::const_iterator sparse_array<Component>::cbegin() const {
   return data_.cbegin();
 }
 
 template <typename Component>
-typename SparseArray<Component>::iterator SparseArray<Component>::End() {
+typename sparse_array<Component>::iterator sparse_array<Component>::end() {
   return data_.end();
 }
 
 template <typename Component>
-typename SparseArray<Component>::const_iterator SparseArray<Component>::End() const {
+typename sparse_array<Component>::const_iterator sparse_array<Component>::end() const {
   return data_.end();
 }
 
 template <typename Component>
-typename SparseArray<Component>::const_iterator SparseArray<Component>::Cend() const {
+typename sparse_array<Component>::const_iterator sparse_array<Component>::cend() const {
   return data_.cend();
 }
 
 template <typename Component>
-typename SparseArray<Component>::size_type SparseArray<Component>::Size() const {
+typename sparse_array<Component>::size_type sparse_array<Component>::size() const {
   return data_.size();
 }
 
 template <typename Component>
-typename SparseArray<Component>::reference_type SparseArray<Component>::InsertAt(
+typename sparse_array<Component>::reference_type sparse_array<Component>::insertAt(
     size_type pos, Component const &component) {
   this->Erase(pos);
   data_.insert(data_.begin() + pos, component);
@@ -89,7 +89,7 @@ typename SparseArray<Component>::reference_type SparseArray<Component>::InsertAt
 }
 
 template <typename Component>
-typename SparseArray<Component>::reference_type SparseArray<Component>::InsertAt(
+typename sparse_array<Component>::reference_type sparse_array<Component>::insertAt(
     size_type pos, Component &&component) {
   data_.insert(data_.begin() + pos, std::move(component));
   return data_[pos];
@@ -97,7 +97,7 @@ typename SparseArray<Component>::reference_type SparseArray<Component>::InsertAt
 
 template <typename Component>
 template <class... Params>
-typename SparseArray<Component>::reference_type SparseArray<Component>::EmplaceAt(
+typename sparse_array<Component>::reference_type sparse_array<Component>::emplaceAt(
     size_type pos, Params &&...params) {
   using Allocator = typename std::vector<Component>::allocator_type;
   std::allocator<Component> allocator = data_.get_allocator();
@@ -111,12 +111,12 @@ typename SparseArray<Component>::reference_type SparseArray<Component>::EmplaceA
 }
 
 template <typename Component>
-void SparseArray<Component>::Erase(size_type pos) {
+void sparse_array<Component>::erase(size_type pos) {
   data_.erase(data_.begin() + pos);
 }
 
 template <typename Component>
-typename SparseArray<Component>::size_type SparseArray<Component>::GetIndex(
+typename sparse_array<Component>::size_type sparse_array<Component>::getIndex(
     value_type const &component) const {
   for (auto i = 0; i < data_.size(); i++) {
     if (data_[i] == component)
@@ -126,7 +126,7 @@ typename SparseArray<Component>::size_type SparseArray<Component>::GetIndex(
 }
 
 template <typename Component>
-void SparseArray<Component>::Resize(size_type new_size) {
+void sparse_array<Component>::resize(size_type new_size) {
   if (new_size > data_.size()) {
     data_.resize(new_size);
   }

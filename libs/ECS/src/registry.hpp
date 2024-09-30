@@ -9,8 +9,8 @@
 
 #include <any>
 #include <functional>
-#include <list>
 #include <map>
+#include <stack>
 #include <typeindex>
 
 #include "entity.hpp"
@@ -30,7 +30,7 @@ EXPORT_ECS_SDK_API class Registry {
    * @return sparse_array<Component>&
    */
   template <class Component>
-  EXPORT_ECS_SDK_API SparseArray<Component> &RegisterComponent();
+  sparse_array<Component> &registerComponent();
 
   /**
    * @brief Get the components
@@ -38,7 +38,7 @@ EXPORT_ECS_SDK_API class Registry {
    * @return sparse_array<Component>&
    */
   template <class Component>
-  EXPORT_ECS_SDK_API SparseArray<Component> &GetComponents();
+  sparse_array<Component> &getComponents();
 
   /**
    * @brief Get the components
@@ -46,26 +46,26 @@ EXPORT_ECS_SDK_API class Registry {
    * @return const sparse_array<Component>&
    */
   template <class Component>
-  EXPORT_ECS_SDK_API SparseArray<Component> const &GetComponents() const;
+  sparse_array<Component> const &getComponents() const;
 
   /**
    * @brief Spawn an entity
    * @return Entity
    */
-  EXPORT_ECS_SDK_API Entity SpawnEntity();
+  Entity spawnEntity();
 
   /**
    * @brief Get an entity from an index
    * @param idx Index of the entity
    * @return Entity
    */
-  [[nodiscard]] EXPORT_ECS_SDK_API Entity EntityFromIndex(std::size_t idx) const;
+  [[nodiscard]] EXPORT_ECS_SDK_API Entity entityFromIndex(std::size_t idx) const;
 
   /**
    * @brief Kill an entity
    * @param e Entity to kill
    */
-  EXPORT_ECS_SDK_API void KillEntity(Entity const &e);
+  void killEntity(Entity const &e);
 
   /**
    * @brief Add a component to an entity
@@ -74,8 +74,7 @@ EXPORT_ECS_SDK_API class Registry {
    * @param c Component to add
    */
   template <typename Component>
-  EXPORT_ECS_SDK_API typename SparseArray<Component>::reference_type AddComponent(Entity const &to,
-                                                                                  Component &&c);
+  typename sparse_array<Component>::reference_type addComponent(Entity const &to, Component &&c);
 
   /**
    * @brief Emplace a component to an entity
@@ -85,8 +84,8 @@ EXPORT_ECS_SDK_API class Registry {
    * @param p Parameters of the component
    */
   template <typename Component, typename... Params>
-  EXPORT_ECS_SDK_API typename SparseArray<Component>::reference_type EmplaceComponent(
-      Entity const &to, Params &&...p);
+  typename sparse_array<Component>::reference_type emplaceComponent(Entity const &to,
+                                                                    Params &&...p);
 
   /**
    * @brief Remove a component from an entity
@@ -94,7 +93,7 @@ EXPORT_ECS_SDK_API class Registry {
    * @param from Entity to remove the component from
    */
   template <typename Component>
-  EXPORT_ECS_SDK_API void RemoveComponent(Entity const &from);
+  void removeComponent(Entity const &from);
 
   /**
    * @brief Add a system
@@ -103,12 +102,12 @@ EXPORT_ECS_SDK_API class Registry {
    * @param f Function to add
    */
   template <class... Components, typename Function>
-  EXPORT_ECS_SDK_API void AddSystem(Function &&f);
+  void addSystem(Function &&f);
 
   /**
    * @brief Run all the systems
    */
-  EXPORT_ECS_SDK_API void RunSystems();
+  void runSystems();
 
  private:
   /// @brief systems stored
@@ -117,14 +116,18 @@ EXPORT_ECS_SDK_API class Registry {
   /// @brief Components stored with their type
   std::map<std::type_index, std::any> components_arrays_;
 
+  /// @brief Max components length
+  size_t max_components_length_ = 0;
+
   /// @brief Current Max entity id
   size_t current_max_entity_id_ = 0;
 
   /// @brief Free ids available for entities
-  std::list<Entity> free_ids_;
+  std::stack<Entity> free_ids_;
 
   /// @brief remove functions used to remove components
-  std::vector<std::function<void(Registry &, const Entity &)>> remove_functions_;
+  using component_destroyer = std::function<void(Registry &, Entity const &)>;
+  std::map<std::type_index, component_destroyer> remove_functions_;
 };
 }  // namespace rtype::sdk::ECS
 
