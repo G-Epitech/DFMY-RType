@@ -22,12 +22,12 @@ EXPORT_ECS_SDK_API class Entity {
   /**
    * @brief Default constructor
    */
-  EXPORT_ECS_SDK_API ~Entity();
+  ~Entity();
 
   /**
    * @brief Operator size_t
    */
-  EXPORT_ECS_SDK_API explicit operator std::size_t() const;
+  explicit operator std::size_t() const;
 
  private:
   /// @brief Entity id
@@ -38,7 +38,7 @@ EXPORT_ECS_SDK_API class Entity {
    * Even if this constructor is private, the registry class can access it
    * @param idx Entity id
    */
-  EXPORT_ECS_SDK_API explicit Entity(std::size_t idx);
+  explicit Entity(std::size_t idx);
 
   friend class Registry;
 };
