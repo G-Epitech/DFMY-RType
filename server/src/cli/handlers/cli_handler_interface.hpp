@@ -9,7 +9,7 @@
 
 #include <optional>
 
-#include "src/apps/context.hpp"
+#include "src/app/context.hpp"
 
 namespace rtype::server {
 /// @brief CliResult alias

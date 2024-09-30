@@ -5,17 +5,17 @@
 ** runner.cpp
 */
 
-#include "runner.hpp"
+#include "app.hpp"
 
 #include <iostream>
 
-#include "src/apps/master/master.hpp"
-#include "src/apps/lobby/lobby.hpp"
+#include "src/app/lobby/lobby.hpp"
+#include "src/app/master/master.hpp"
 #include "src/cli/cli.hpp"
 
 using namespace rtype::server;
 
-int Runner::StartApp(int ac, char **av) {
+int App::Run(int ac, char **av) {
   rtype::server::CliResult cliResult;
 
   try {
@@ -31,7 +31,7 @@ int Runner::StartApp(int ac, char **av) {
   return server->Run();
 }
 
-std::unique_ptr<IServer> Runner::InitializeServer(CliResult cliResult) {
+std::unique_ptr<IServer> App::InitializeServer(CliResult cliResult) {
   const auto &ctx = cliResult.value();
 
   if (ctx.type == rtype::server::kMaster) {

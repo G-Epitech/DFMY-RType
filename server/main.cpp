@@ -5,8 +5,8 @@
 ** main.cpp
 */
 
-#include "src/apps/runner.hpp"
+#include "src/app/app.hpp"
 
 int main(int ac, char **av) {
-  return rtype::server::Runner::StartApp(ac, av);
+  return rtype::server::App::Run(ac, av);
 }

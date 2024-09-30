@@ -1,6 +1,6 @@
 target_sources(${SERVER_CORE_LIB} PRIVATE
-        runner.cpp
-        runner.hpp
+        app.cpp
+        app.hpp
         server_interface.hpp
         context.hpp
 )

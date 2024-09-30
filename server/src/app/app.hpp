@@ -13,10 +13,10 @@
 #include "src/cli/handlers/cli_handlers.hpp"
 
 namespace rtype::server {
-class Runner {
+class App {
  public:
-  Runner() = delete;
-  ~Runner() = delete;
+  App() = delete;
+  ~App() = delete;
 
   /**
    * Start application using cli arguments
@@ -24,7 +24,7 @@ class Runner {
    * @param av command line arguments
    * @return status code
    */
-  static int StartApp(int ac, char **av);
+  static int Run(int ac, char **av);
 
  private:
   /**

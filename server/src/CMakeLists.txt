@@ -7,4 +7,4 @@ include_directories()
 
 add_subdirectory(cli)
 add_subdirectory(config)
-add_subdirectory(apps)
+add_subdirectory(app)

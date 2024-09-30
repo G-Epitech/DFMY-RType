@@ -10,8 +10,8 @@
 #include <cstddef>
 
 #include "props.hpp"
-#include "src/apps/context.hpp"
-#include "src/apps/server_interface.hpp"
+#include "src/app/context.hpp"
+#include "src/app/server_interface.hpp"
 
 namespace rtype::server {
 class Lobby final : public IServer {
