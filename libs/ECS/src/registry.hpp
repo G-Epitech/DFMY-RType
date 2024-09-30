@@ -59,7 +59,7 @@ EXPORT_ECS_SDK_API class Registry {
    * @param idx Index of the entity
    * @return Entity
    */
-  [[nodiscard]] EXPORT_ECS_SDK_API Entity EntityFromIndex(std::size_t idx) const;
+  [[nodiscard]] Entity EntityFromIndex(std::size_t idx) const;
 
   /**
    * @brief Kill an entity
