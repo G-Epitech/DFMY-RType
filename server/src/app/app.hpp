@@ -43,7 +43,9 @@ class App {
   int Cli(int ac, char **av);
 
  private:
+  /// @brief Cli result
   CliResult cliResult_;
+  /// @brief Server instance
   std::unique_ptr<IServer> server_;
 };
 }  // namespace rtype::server
