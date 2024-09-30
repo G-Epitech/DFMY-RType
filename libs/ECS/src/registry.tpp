@@ -11,64 +11,63 @@
 using namespace rtype::sdk::ECS;
 
 template <typename Component>
-sparse_array<Component> &Registry::registerComponent() {
+sparse_array<Component> &Registry::RegisterComponent() {
   const auto type_idx = std::type_index(typeid(Component));
 
-  auto [it, inserted] =
-      components_arrays_.try_emplace(typeid(Component), sparse_array<Component>());
+  auto [it, inserted] = componentsArrays_.try_emplace(typeid(Component), sparse_array<Component>());
 
   if (!inserted) {
     return std::any_cast<sparse_array<Component> &>(it->second);
   }
 
-  remove_functions_[type_idx] =
-      ([](Registry &reg, const Entity &e) { reg.removeComponent<Component>(e); });
+  removeFunctions_[type_idx] =
+      ([](Registry &reg, const Entity &e) { reg.RemoveComponent<Component>(e); });
 
-  return std::any_cast<sparse_array<Component> &>(components_arrays_[type_idx]);
+  return std::any_cast<sparse_array<Component> &>(componentsArrays_[type_idx]);
 }
 
 template <typename Component>
-sparse_array<Component> &Registry::getComponents() {
-  return std::any_cast<sparse_array<Component> &>(components_arrays_[typeid(Component)]);
+sparse_array<Component> &Registry::GetComponents() {
+  return std::any_cast<sparse_array<Component> &>(componentsArrays_[typeid(Component)]);
 }
 
 template <typename Component>
-const sparse_array<Component> &Registry::getComponents() const {
-  return std::any_cast<sparse_array<Component> &>(components_arrays_.at(typeid(Component)));
+const sparse_array<Component> &Registry::GetComponents() const {
+  return std::any_cast<sparse_array<Component> &>(componentsArrays_.at(typeid(Component)));
 }
 
 template <typename Component>
-typename sparse_array<Component>::reference_type Registry::addComponent(Entity const &to,
+typename sparse_array<Component>::reference_type Registry::AddComponent(Entity const &to,
                                                                         Component &&c) {
-  auto &components = getComponents<Component>();
+  auto &components = GetComponents<Component>();
   const auto size = components.size();
 
   if (size <= to.id_) {
     components.resize(static_cast<size_t>(to) + 1);
   }
-  if (max_components_length_ < size) {
-    max_components_length_ = size;
+  if (maxComponentsLength_ < size) {
+    maxComponentsLength_ = size;
   }
   return components.emplaceAt(static_cast<size_t>(to), std::forward<Component>(c));
 }
 
 template <typename Component, typename... Params>
-typename sparse_array<Component>::reference_type Registry::emplaceComponent(Entity const &to,
+typename sparse_array<Component>::reference_type Registry::EmplaceComponent(Entity const &to,
                                                                             Params &&...p) {
-  auto &components = getComponents<Component>();
+  auto &components = GetComponents<Component>();
 
   return components.emplaceAt(static_cast<size_t>(to), std::forward<Params>(p)...);
 }
 
 template <typename Component>
-void Registry::removeComponent(Entity const &from) {
-  auto &components = getComponents<Component>();
+void Registry::RemoveComponent(Entity const &from) {
+  auto &components = GetComponents<Component>();
 
   components.erase(static_cast<size_t>(from));
 }
 
 template <class... Components, typename Function>
-void Registry::addSystem(Function &&f) {
+void Registry::AddSystem(Function &&f) {
   systems_.push_back(
-      [this, f = std::forward<Function>(f)]() { f(*this, getComponents<Components>()...); });
+      [this, f = std::forward<Function>(f)]() { f(*this, GetComponents<Components>()...); });
 }
