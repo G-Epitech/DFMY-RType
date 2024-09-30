@@ -93,7 +93,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
    * @param bitset The bitset
    * @return The packet
    */
-  template<typename T>
+  template <typename T>
   Packet<T> Build(const dynamic_bitset &bitset);
 
  private:

@@ -6,12 +6,13 @@
 */
 
 #include "packet_utils.hpp"
+
 #include "packet.hpp"
 
 using namespace rtype::sdk::network;
 
 unsigned tools::PacketUtils::ExportMessageTypeFromBitset(
-        const std::shared_ptr<dynamic_bitset> &bitset) {
+    const std::shared_ptr<dynamic_bitset> &bitset) {
   unsigned messageType = 0;
   std::size_t startRange = kPacketHeaderPropsSize + kPacketMessageIdSize;
 

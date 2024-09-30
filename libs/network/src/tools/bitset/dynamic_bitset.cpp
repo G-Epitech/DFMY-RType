@@ -41,13 +41,15 @@ void tools::dynamic_bitset::Append(unsigned int value, std::size_t size, std::si
   }
 }
 
-void tools::dynamic_bitset::FillFromRange(std::size_t start, std::size_t end, unsigned int &value) const {
+void tools::dynamic_bitset::FillFromRange(std::size_t start, std::size_t end,
+                                          unsigned int &value) const {
   for (std::size_t i = start; i < end; i++) {
     value = (value << 1) | Get(i);
   }
 }
 
-std::ostream &operator<<(std::ostream &os, const rtype::sdk::network::tools::dynamic_bitset &bitset) {
+std::ostream &operator<<(std::ostream &os,
+                         const rtype::sdk::network::tools::dynamic_bitset &bitset) {
   for (std::size_t i = 0; i < bitset.GetSize(); i++) {
     if (i % 8 == 0)
       os << ".";
