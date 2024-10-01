@@ -5,8 +5,9 @@
 ** packet_test class
 */
 
-#include <gtest/gtest.h>
 #include "tools/packet/packet.hpp"
+
+#include <gtest/gtest.h>
 
 using namespace rtype::sdk::network;
 

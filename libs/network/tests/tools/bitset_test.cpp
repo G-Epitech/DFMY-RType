@@ -6,6 +6,7 @@
 */
 
 #include <gtest/gtest.h>
+
 #include "tools/packet/packet_builder.hpp"
 
 using namespace rtype::sdk::network;

@@ -25,7 +25,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
   /**
    * @brief Packet builder exceptions class
    */
-  class Exception : public std::exception {
+  class EXPORT_NETWORK_SDK_API Exception : public std::exception {
    public:
     /**
      * @brief Create a new message when packet builder exception
