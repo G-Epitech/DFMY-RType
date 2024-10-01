@@ -152,6 +152,6 @@ TEST(RegisterTests, EntityFromIndex) {
 }
 
 TEST(RegisterTests, EntityFromIndexOutOfRange) {
-  Registry registry;
-  ASSERT_THROW(registry.EntityFromIndex(0), std::out_of_range);
+  const Registry registry;
+  ASSERT_THROW(registry.EntityFromIndex(0), Registry::Exception);
 }

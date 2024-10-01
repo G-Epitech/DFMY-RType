@@ -109,6 +109,24 @@ class EXPORT_ECS_SDK_API Registry {
    */
   void RunSystems();
 
+  class EXPORT_ECS_SDK_API Exception final : public std::exception {
+   public:
+    /**
+     * @brief Create a new message when Registry exception
+     * @param message The message
+     */
+    explicit Exception(std::string message);
+
+    /**
+     * @brief Get the exception message
+     * @return The exception message
+     */
+    [[nodiscard]] const char *what() const noexcept override;
+
+   private:
+    const std::string message_;
+  };
+
  private:
   /// @brief systems stored
   std::vector<std::shared_ptr<ISystem>> systems_;

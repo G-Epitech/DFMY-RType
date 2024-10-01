@@ -22,7 +22,7 @@ Entity Registry::SpawnEntity() {
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
   if (idx >= currentMaxEntityId_) {
-    throw std::out_of_range("entity_from_index: Index is out of range.");
+    throw Exception("entity_from_index: Index is out of range.");
   }
   return Entity(idx);
 }
@@ -38,4 +38,10 @@ void Registry::RunSystems() {
   for (const auto &system : systems_) {
     (*system)(this);
   }
+}
+
+Registry::Exception::Exception(std::string message) : message_(std::move(message)) {}
+
+const char *Registry::Exception::what() const noexcept {
+  return message_.c_str();
 }

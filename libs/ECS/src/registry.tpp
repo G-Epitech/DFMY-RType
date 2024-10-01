@@ -29,7 +29,7 @@ sparse_array<Component> &Registry::RegisterComponent() {
 template <typename Component>
 sparse_array<Component> &Registry::GetComponents() {
   if (!componentsArrays_.contains(typeid(Component))) {
-    throw std::runtime_error("Component not registered");
+    throw Exception("Component not registered");
   }
   return std::any_cast<sparse_array<Component> &>(componentsArrays_[typeid(Component)]);
 }
@@ -37,7 +37,7 @@ sparse_array<Component> &Registry::GetComponents() {
 template <typename Component>
 const sparse_array<Component> &Registry::GetComponents() const {
   if (!componentsArrays_.contains(typeid(Component))) {
-    throw std::runtime_error("Component not registered");
+    throw Exception("Component not registered");
   }
   return std::any_cast<sparse_array<Component> &>(componentsArrays_.at(typeid(Component)));
 }
