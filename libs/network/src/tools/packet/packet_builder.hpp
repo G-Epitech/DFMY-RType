@@ -94,7 +94,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
    * @return The packet
    */
   template <typename T>
-  Packet<T> Build(const dynamic_bitset &bitset);
+  Packet<T> Build(const std::shared_ptr<tools::dynamic_bitset> &bitset);
 
  private:
   /**
@@ -104,6 +104,45 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
    * @return True if the value is valid, false otherwise
    */
   [[nodiscard]] static bool IsValidBitSize(unsigned value, std::uint8_t bitSize);
+
+  /**
+   * @brief Set the header properties from a bitset
+   * @param bitset The bitset
+   * @param offset The offset to read the bitset
+   */
+  void SetHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset);
+
+  /**
+   * @brief Set the message properties from a bitset
+   * @param bitset The bitset
+   * @param offset The offset to read the bitset
+   */
+  void SetMessageFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset);
+
+  /**
+   * @brief Set the offset properties from a bitset
+   * @param bitset The bitset
+   * @param offset The offset to read the bitset
+   * @param offsetProps The offset properties to fill
+   */
+  static void FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset, PacketOffsetProps *offsetProps);
+
+  /**
+   * @brief Set the turn properties from a bitset
+   * @param bitset The bitset
+   * @param offset The offset to read the bitset
+   */
+  void SetTurnFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset);
+
+  /**
+   * @brief Fill a payload from a bitset
+   * @tparam T Payload type
+   * @param bitset The bitset
+   * @param offset The offset to read the bitset
+   * @param payload The payload to fill
+   */
+  template <typename T>
+  void FillPayloadFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset, T *payload);
 
   /**
    * @brief Generate a new packet ID

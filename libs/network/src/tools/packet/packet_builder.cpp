@@ -12,6 +12,7 @@
 using namespace rtype::sdk::network;
 
 tools::PacketBuilder::PacketBuilder() : message_() {
+  this->Reset();
   this->packetIdIncrement_ = 0;
 }
 
@@ -74,4 +75,58 @@ std::uint32_t tools::PacketBuilder::GeneratePacketId() {
     this->packetIdIncrement_ = 0;
 
   return generatedId;
+}
+
+void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+  unsigned int payloadLength = 0;
+  unsigned int payloadType = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderPayloadLengthSize, payloadLength);
+  *offset += kPacketHeaderPayloadLengthSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderPayloadTypeSize, payloadType);
+  *offset += kPacketHeaderPayloadTypeSize;
+
+  this->header_.payloadLength = payloadLength;
+  this->header_.payloadType = payloadType;
+}
+
+void tools::PacketBuilder::SetMessageFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+  unsigned int messageId = 0;
+  unsigned int messageType = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketMessageIdSize, messageId);
+  *offset += kPacketMessageIdSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketMessageTypeSize, messageType);
+  *offset += kPacketMessageTypeSize;
+
+  *offset += kPacketMessageVoidSize;
+
+  this->message_.messageId = messageId;
+  this->message_.messageType = messageType;
+}
+
+void tools::PacketBuilder::FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset,
+                                                PacketOffsetProps *offsetProps) {
+  unsigned int offsetProp = 0;
+  unsigned int offsetFlag = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketOffsetSize, offsetProp);
+  *offset += kPacketOffsetSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketOffsetFlagSize, offsetFlag);
+  *offset += kPacketOffsetFlagSize;
+
+  offsetProps->offset = offsetProp;
+  offsetProps->offsetFlag = offsetFlag;
+}
+
+void tools::PacketBuilder::SetTurnFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+  unsigned int turn = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketTurnSize, turn);
+  *offset += kPacketTurnSize;
+
+  this->turn_.turn = turn;
 }
