@@ -83,7 +83,7 @@ typename sparse_array<Component>::size_type sparse_array<Component>::size() cons
 template <typename Component>
 typename sparse_array<Component>::reference_type sparse_array<Component>::insertAt(
     size_type pos, Component const &component) {
-  this->Erase(pos);
+  this->erase(pos);
   data_.insert(data_.begin() + pos, component);
   return data_[pos];
 }
@@ -112,7 +112,10 @@ typename sparse_array<Component>::reference_type sparse_array<Component>::emplac
 
 template <typename Component>
 void sparse_array<Component>::erase(size_type pos) {
-  data_.erase(data_.begin() + pos);
+  if (pos >= data_.size()) {
+    return;
+  }
+  data_[pos] = std::nullopt;
 }
 
 template <typename Component>

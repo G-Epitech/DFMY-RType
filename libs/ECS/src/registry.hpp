@@ -10,10 +10,13 @@
 #include <any>
 #include <functional>
 #include <map>
+#include <memory>
 #include <stack>
+#include <string>
 #include <typeindex>
 
 #include "entity.hpp"
+#include "system_interface.hpp"
 #include "tools/spare_array.hpp"
 
 namespace rtype::sdk::ECS {
@@ -97,27 +100,40 @@ class EXPORT_ECS_SDK_API Registry {
 
   /**
    * @brief Add a system
-   * @tparam Components Components to add
-   * @tparam Function Function to add
-   * @param f Function to add
+   * @param extraParams Extraparams the given function can have
    */
-  template <class... Components, typename Function>
-  void AddSystem(Function &&f);
+  template <typename System, typename... ExtraParams>
+  void AddSystem(ExtraParams &&...extraParams);
 
   /**
    * @brief Run all the systems
    */
   void RunSystems();
 
+  class EXPORT_ECS_SDK_API Exception final : public std::exception {
+   public:
+    /**
+     * @brief Create a new message when Registry exception
+     * @param message The message
+     */
+    explicit Exception(std::string message);
+
+    /**
+     * @brief Get the exception message
+     * @return The exception message
+     */
+    [[nodiscard]] const char *what() const noexcept override;
+
+   private:
+    const std::string message_;
+  };
+
  private:
   /// @brief systems stored
-  std::vector<std::function<void()>> systems_;
+  std::vector<std::shared_ptr<ISystem>> systems_;
 
   /// @brief Components stored with their type
   std::map<std::type_index, std::any> componentsArrays_;
-
-  /// @brief Max components length
-  size_t maxComponentsLength_ = 0;
 
   /// @brief Current Max entity id
   size_t currentMaxEntityId_ = 0;

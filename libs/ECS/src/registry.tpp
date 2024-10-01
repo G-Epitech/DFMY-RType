@@ -28,14 +28,23 @@ sparse_array<Component> &Registry::RegisterComponent() {
 
 template <typename Component>
 sparse_array<Component> &Registry::GetComponents() {
-  return std::any_cast<sparse_array<Component> &>(componentsArrays_[typeid(Component)]);
+  try {
+    auto &components = componentsArrays_.at(typeid(Component));
+    return std::any_cast<sparse_array<Component> &>(components);
+  } catch (std::out_of_range &e) {
+    throw Exception("Component not registered");
+  }
 }
 
 template <typename Component>
 const sparse_array<Component> &Registry::GetComponents() const {
-  return std::any_cast<sparse_array<Component> &>(componentsArrays_.at(typeid(Component)));
+  try {
+    auto &components = componentsArrays_.at(typeid(Component));
+    return std::any_cast<const sparse_array<Component> &>(components);
+  } catch (std::out_of_range &e) {
+    throw Exception("Component not registered");
+  }
 }
-
 template <typename Component>
 typename sparse_array<Component>::reference_type Registry::AddComponent(Entity const &to,
                                                                         Component &&c) {
@@ -44,9 +53,6 @@ typename sparse_array<Component>::reference_type Registry::AddComponent(Entity c
 
   if (size <= to.id_) {
     components.resize(static_cast<size_t>(to) + 1);
-  }
-  if (maxComponentsLength_ < size) {
-    maxComponentsLength_ = size;
   }
   return components.emplaceAt(static_cast<size_t>(to), std::forward<Component>(c));
 }
@@ -66,8 +72,7 @@ void Registry::RemoveComponent(Entity const &from) {
   components.erase(static_cast<size_t>(from));
 }
 
-template <class... Components, typename Function>
-void Registry::AddSystem(Function &&f) {
-  systems_.push_back(
-      [this, f = std::forward<Function>(f)]() { f(*this, GetComponents<Components>()...); });
+template <typename System, typename... ExtraParams>
+void Registry::AddSystem(ExtraParams &&...extraParams) {
+  systems_.push_back(std::make_shared<System>(std::forward<ExtraParams>(extraParams)...));
 }

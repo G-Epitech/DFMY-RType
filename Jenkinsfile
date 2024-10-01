@@ -7,15 +7,20 @@ BINARIES_TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
-LIBS = ['network-sdk']
+LIBS = ['network-sdk', 'ECS-sdk']
 LIBS_TARGETS = [
     'network-sdk': [
         'target': 'r-type_network_sdk',
         'type': 'shared'
+    ],
+    'ECS-sdk': [
+        'target': 'r-type_ECS_sdk',
+        'type': 'shared'
     ]
 ]
 LIBS_TESTS = [
-    'network-sdk': 'r-type_network_sdk_tests'
+    'network-sdk': 'r-type_network_sdk_tests',
+    'ECS-sdk': 'r-type_ECS_sdk_tests'
 ]
 
 pipeline {

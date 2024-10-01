@@ -7,4 +7,7 @@ target_sources(r-type_ECS_sdk PRIVATE
         registry.hpp
         registry.tpp
         registry.cpp
+        system_abstract.hpp
+        system_abstract.tpp
+        system_interface.hpp
 )

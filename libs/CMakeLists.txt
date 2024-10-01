@@ -1,2 +1,2 @@
-add_subdirectory(ECS)
 add_subdirectory(network)
+add_subdirectory(ECS)
