@@ -28,20 +28,23 @@ sparse_array<Component> &Registry::RegisterComponent() {
 
 template <typename Component>
 sparse_array<Component> &Registry::GetComponents() {
-  if (!componentsArrays_.contains(typeid(Component))) {
+  try {
+    auto &components = componentsArrays_.at(typeid(Component));
+    return std::any_cast<sparse_array<Component> &>(components);
+  } catch (std::out_of_range &e) {
     throw Exception("Component not registered");
   }
-  return std::any_cast<sparse_array<Component> &>(componentsArrays_[typeid(Component)]);
 }
 
 template <typename Component>
 const sparse_array<Component> &Registry::GetComponents() const {
-  if (!componentsArrays_.contains(typeid(Component))) {
+  try {
+    auto &components = componentsArrays_.at(typeid(Component));
+    return std::any_cast<const sparse_array<Component> &>(components);
+  } catch (std::out_of_range &e) {
     throw Exception("Component not registered");
   }
-  return std::any_cast<sparse_array<Component> &>(componentsArrays_.at(typeid(Component)));
 }
-
 template <typename Component>
 typename sparse_array<Component>::reference_type Registry::AddComponent(Entity const &to,
                                                                         Component &&c) {
