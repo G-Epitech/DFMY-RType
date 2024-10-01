@@ -2,7 +2,7 @@
   "name": "rtype",
   "version": "1.0.0",
   "dependencies": [
-    "fmt",
+    "boost-program-options",
     "gtest",
     "sfml"
   ]

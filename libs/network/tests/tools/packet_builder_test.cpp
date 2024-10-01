@@ -5,8 +5,9 @@
 ** packet_builder_test class
 */
 
-#include <gtest/gtest.h>
 #include "tools/packet/packet_builder.hpp"
+
+#include <gtest/gtest.h>
 
 using namespace rtype::sdk::network;
 
@@ -48,14 +49,15 @@ TEST(PacketBuilderTest, MultiPacketCreation) {
   tools::PacketBuilder packetBuilder;
   std::vector<std::uint8_t> payloads = {1, 2, 3, 4, 5};
 
-  std::vector<tools::Packet<std::uint8_t>> packets = packetBuilder
-          .SetPayloadType(tools::PayloadType::kUint8)
+  std::vector<tools::Packet<std::uint8_t>> packets =
+      packetBuilder.SetPayloadType(tools::PayloadType::kUint8)
           .SetMessageType(3)
           .Build<std::uint8_t>(payloads);
 
   EXPECT_EQ(packets.size(), payloads.size());
   for (size_t i = 0; i < payloads.size(); i++) {
-    EXPECT_EQ(packets[i].GetHeader().payloadType, static_cast<unsigned>(tools::PayloadType::kUint8));
+    EXPECT_EQ(packets[i].GetHeader().payloadType,
+              static_cast<unsigned>(tools::PayloadType::kUint8));
     EXPECT_EQ(packets[i].GetMessage().messageType, 3);
     EXPECT_EQ(packets[i].GetPayload(), payloads[i]);
 

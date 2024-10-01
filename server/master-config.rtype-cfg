@@ -1,0 +1,4 @@
+NAME='jedusor'
+PORT=3000
+TICKS=60
+MAX_GAMES=5

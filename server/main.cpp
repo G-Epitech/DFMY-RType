@@ -5,9 +5,12 @@
 ** main.cpp
 */
 
-#include "src/foo.hpp"
+#include "app/app.hpp"
 
-int main() {
-  foo();
-  return 0;
+using namespace rtype::server;
+
+int main(int ac, char **av) {
+  App app;
+
+  return app.Run(ac, av);
 }
