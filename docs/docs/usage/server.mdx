@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Server Usage
 Welcome to the **R-Type server CLI** documentation. Each server type has its own CLI options.
-This document provides detailed instructions on how to use the CLI for the **director** server.
+This document provides detailed instructions on how to use the CLI for the **master** server.
 
 ## General Usage
 The R-Type server CLI can be invoked with the following format:
@@ -14,32 +14,32 @@ The R-Type server CLI can be invoked with the following format:
 
 ### Available Server Types
 
-- **Director**: The director server is responsible for managing the game sessions and routing messages between clients and game servers.
+- **Master**: The master server is responsible for managing the game sessions and routing messages between clients and game servers.
 - **Lobby**: The game server is responsible for managing the game logic and state for a single game session.
 
 Each server type has its own set of arguments and options, accessible via the ``--help`` flag.
 
-## Director Server CLI
+## Master Server CLI
 
-The ``director`` server is responsible for managing the infrastructure,
-including spawning and scaling lobby servers. Below is the detailed usage guide for the director server.
+The ``master`` server is responsible for managing the infrastructure,
+including spawning and scaling lobby servers. Below is the detailed usage guide for the master server.
 
 ### Usage
 ```bash
-./r-type_server director [options]
+./r-type_server master [options]
 ```
 
 ### Available Options
-| Option     | Argument   | Description                                 |
-|------------|------------|---------------------------------------------|
-| `--help`   | None       | Produces the help message for the director. |
-| `--env`    | `<file>`   | Path to the director's environment file.    |
+| Option     | Argument | Description                               |
+|------------|----------|-------------------------------------------|
+| `--help`   | None     | Produces the help message for the master. |
+| `--config` | `<file>` | Path to the master's configuration file.  |
 
 ### Environment File
-The ``--env`` option allows you to specify a configuration file that defines
-key parameters for the director server. This environment file must follow the format outlined below.
+The ``--config`` option allows you to specify a configuration file that defines
+key parameters for the master server. This environment file must follow the format outlined below.
 
-#### Sample Environment File
+#### Sample Configuration File
 ```dotenv
 NAME='jedusor'
 PORT=3000
@@ -47,20 +47,20 @@ TICKS=60
 MAX_GAMES=5
 ```
 
-#### Environment Variables
-| Variable    | Description                                                                  |
-|-------------|------------------------------------------------------------------------------|
-| `NAME`      | The name of the director server.                                             |
-| `PORT`      | The port on which the director server runs.                                  |
-| `TICKS`     | The tick rate (in milliseconds) for each game lobby managed by the director. |
-| `MAX_GAMES` | The maximum number of games (lobby servers) that the director can spawn.     |
+#### Configuration Variables
+| Variable    | Description                                                                |
+|-------------|----------------------------------------------------------------------------|
+| `NAME`      | The name of the master server.                                             |
+| `PORT`      | The port on which the master server runs.                                  |
+| `TICKS`     | The tick rate (in milliseconds) for each game lobby managed by the master. |
+| `MAX_GAMES` | The maximum number of games (lobby servers) that the master can spawn.     |
 
 #### Example Usage
-Here is an example of how you might use the **``director``** server:
+Here is an example of how you might use the **``master``** server:
 
 
 ```bash
-./r-type_server director --env director.env
+./r-type_server master --config master.env
 ```
 
 #### Further Help
