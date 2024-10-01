@@ -20,7 +20,9 @@ struct LobbyCtxProps {
    */
   explicit LobbyCtxProps(std::size_t ticks);
 
-  /// @brief Construct a new LobbyCtxProps object with default values
+  /**
+   * @brief Construct a new LobbyCtxProps object with default values
+   */
   LobbyCtxProps();
 };
 }  // namespace rtype::server

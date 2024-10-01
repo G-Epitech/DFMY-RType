@@ -8,8 +8,8 @@
 #pragma once
 
 #include <any>
-#include <string>
 #include <map>
+#include <string>
 
 namespace rtype::server {
 class Config {
@@ -52,7 +52,7 @@ class Config {
    * @param configValue The string to parse
    * @return The parsed value with the correct type
    */
-  static std::any ParseValueType(const std::string& configValue);
+  [[nodiscard]] static std::any ParseValueType(const std::string& configValue);
 
  private:
   /// @brief Map of config variables

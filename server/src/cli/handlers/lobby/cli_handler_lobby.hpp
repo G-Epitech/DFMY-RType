@@ -30,7 +30,7 @@ class CliHandlerLobby : public ACliHandler {
    * @param av command line arguments
    * @return CliResult containing the server type and the server context
    */
-  CliResult Run(int ac, char **av) override;
+  [[nodiscard]] CliResult Run(int ac, char **av) override;
 
  private:
   /**
@@ -42,6 +42,6 @@ class CliHandlerLobby : public ACliHandler {
    * @brief Build the server context from cli options
    * @return The server context
    */
-  BaseContext BuildCtx();
+  [[nodiscard]] BaseContext BuildCtx();
 };
 }  // namespace rtype::server

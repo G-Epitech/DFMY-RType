@@ -11,8 +11,8 @@
 #include <utility>
 #include <variant>
 
-#include "master/props.hpp"
 #include "lobby/props.hpp"
+#include "master/props.hpp"
 #include "server_types.hpp"
 
 namespace rtype::server {
@@ -20,10 +20,14 @@ namespace rtype::server {
 using CtxProps = std::variant<LobbyCtxProps, MasterCtxProps>;
 
 struct BaseContext {
-  std::string name;  // Name of the server
-  std::size_t port;  // Port number of the server
-  ServerType type;   // Server type
-  CtxProps props;    // Server type-specific properties
+  /// @brief Name of the server
+  std::string name;
+  /// @brief Port number of the server
+  std::size_t port;
+  /// @brief Server type
+  ServerType type;
+  /// @brief Server type-specific properties
+  CtxProps props;
 
   /**
    * @brief Construct a new BaseContext object

@@ -9,9 +9,9 @@
 
 #include <cstddef>
 
-#include "props.hpp"
 #include "app/context.hpp"
 #include "app/server_interface.hpp"
+#include "props.hpp"
 
 namespace rtype::server {
 class Lobby final : public IServer {
@@ -33,10 +33,14 @@ class Lobby final : public IServer {
  private:
   /// @brief Lobby server context
   struct Context {
-    std::string name;     // Name of the server
-    std::size_t port;     // Port number of the server
-    ServerType type;      // Server type
-    LobbyCtxProps props;  // Server type-specific properties
+    /// @brief Name of the server
+    std::string name;
+    /// @brief Port number of the server
+    std::size_t port;
+    /// @brief Server type
+    ServerType type;
+    /// @brief Server type-specific properties
+    LobbyCtxProps props;
   };
 
  private:

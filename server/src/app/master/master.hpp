@@ -9,9 +9,9 @@
 
 #include <cstddef>
 
-#include "props.hpp"
 #include "app/context.hpp"
 #include "app/server_interface.hpp"
+#include "props.hpp"
 
 namespace rtype::server {
 
@@ -34,10 +34,14 @@ class Master final : public IServer {
  private:
   /// @brief Master server context
   struct Context {
-    std::string name;        // Name of the server context
-    std::size_t port;        // Port number
-    ServerType type;         // Server type
-    MasterCtxProps props;  // Server type-specific properties
+    /// @brief Name of the server
+    std::string name;
+    /// @brief Port number of the server
+    std::size_t port;
+    /// @brief Server type
+    ServerType type;
+    /// @brief Server type-specific properties
+    MasterCtxProps props;
   };
 
  private:
