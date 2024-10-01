@@ -7,17 +7,30 @@
 
 #include "app.hpp"
 
+#include "my_scene.hpp"
+#include "scenes/scenes_manager.hpp"
+
 using namespace rtype::client;
 
 App::App() {
   const auto videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT);
 
-  mWindow.create(videoMode, APP_WINDOW_TITLE);
-  mWindow.setFramerateLimit(60);
+  window_ = std::make_shared<sf::RenderWindow>(videoMode, APP_WINDOW_TITLE);
+  window_->setFramerateLimit(60);
+
+  scenesManager_ = std::make_shared<ScenesManager>(globalContext_);
+
+  globalContext_ = {
+      .window = window_,
+      .scenesManager = scenesManager_,
+  };
+
+  scenesManager_->RegisterScene<MyScene>();
 }
 
-void App::run() {
-  while (mWindow.isOpen()) {
+void App::Run() {
+  scenesManager_->GoToScene<MyScene>();
+  while (window_->isOpen()) {
     processEvents();
     update();
     render();
@@ -25,11 +38,11 @@ void App::run() {
 }
 
 void App::processEvents() {
-  sf::Event event;
+  sf::Event event{};
 
-  while (mWindow.pollEvent(event)) {
+  while (window_->pollEvent(event)) {
     if (event.type == sf::Event::Closed) {
-      mWindow.close();
+      window_->close();
     }
   }
 }
@@ -37,7 +50,7 @@ void App::processEvents() {
 void App::update() {}
 
 void App::render() {
-  mWindow.clear();
+  window_->clear();
 
-  mWindow.display();
+  window_->display();
 }

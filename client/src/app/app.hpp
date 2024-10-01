@@ -7,6 +7,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "context/global_context.hpp"
+#include "scenes/scenes_manager.hpp"
+
 #define APP_WINDOW_WIDTH 800
 #define APP_WINDOW_HEIGHT 600
 #define APP_WINDOW_TITLE "R-Type"
@@ -20,7 +23,7 @@ namespace rtype::client {
  * @brief The main application class responsible for running the client-side application.
  *
  * This class provides the main entry point for the client application and contains
- * the necessary methods to initialize and run the application.
+ * the necessary methods to initialize and Run the application.
  */
 class App {
  public:
@@ -40,7 +43,7 @@ class App {
    * @brief Runs the client-side application.
    * This method contains the main loop and logic to start and maintain the client application.
    */
-  void run();
+  void Run();
 
  private:
   /**
@@ -59,6 +62,12 @@ class App {
   void render();
 
   /// @brief The main window for the application.
-  sf::RenderWindow mWindow;
+  std::shared_ptr<sf::RenderWindow> window_;
+
+  /// @brief The scenes manager for the application.
+  ScenesManager::Ptr scenesManager_;
+
+  /// @brief The global context for the application.
+  GlobalContext globalContext_;
 };
 }  // namespace rtype::client

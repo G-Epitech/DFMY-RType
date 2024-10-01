@@ -101,7 +101,7 @@ coverage-branch:
 .PHONY: coverage-branch
 
 lint:
-			@cpplint --recursive $(LINT_DIRS)
+			@cpplint --recursive --quiet $(LINT_DIRS)
 .PHONY: lint
 
 format:
