@@ -33,7 +33,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /// @brief The render window to display the entities.
   std::shared_ptr<sf::RenderWindow> window_;
 
-  /// @brief This Sprite is a utils that avoid us to recreate a new rectangle each time we want to
+  /// @brief This Sprite is a utils that avoid us to recreate a new sprite each time we want to
   /// display a new entity.
   sf::Sprite sprite_;
 };
