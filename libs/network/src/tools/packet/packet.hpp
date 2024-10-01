@@ -104,7 +104,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @brief Get the packet payload as a bitset (compressed packet)
    * @return The packet payload as a bitset
    */
-  [[nodiscard]] std::shared_ptr<dynamic_bitset> GetBitset() const;
+  [[nodiscard]] std::shared_ptr<dynamic_bitset> GetBitset();
 
  private:
   /**
@@ -144,7 +144,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @param offset The offset to append the payload
    */
   void AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset,
-                             const std::size_t *offset) const;
+                              std::size_t *offset);
 
   /// @brief Packet header properties
   PacketHeaderProps header_;

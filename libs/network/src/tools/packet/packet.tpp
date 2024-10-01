@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 using namespace rtype::sdk::network;
 
 template<typename T>
@@ -79,7 +81,7 @@ const char *tools::Packet<T>::Exception::what() const noexcept {
 }
 
 template<typename T>
-std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() const {
+std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() {
   unsigned int bitsetSize = kPacketHeaderPropsSize + kPacketMessagePropsSize;
   if (OffsetIsEnabled())
     bitsetSize += kPacketOffsetPropsSize;
@@ -101,7 +103,7 @@ std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() const {
 }
 
 template<typename T>
-void tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset>& bitset, std::size_t *offset) const {
+void tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   bitset->Append(header_.payloadLength, kPacketHeaderPayloadLengthSize, *offset);
   *offset += kPacketHeaderPayloadLengthSize;
 
@@ -116,7 +118,7 @@ void tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset
 }
 
 template<typename T>
-void tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitset>& bitset, std::size_t *offset) const {
+void tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   bitset->Append(message_.messageId, kPacketMessageIdSize, *offset);
   *offset += kPacketMessageIdSize;
 
@@ -127,7 +129,7 @@ void tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitse
 }
 
 template<typename T>
-void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset>& bitset, std::size_t *offset) const {
+void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   if (!OffsetIsEnabled())
     return;
 
@@ -139,7 +141,7 @@ void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset
 }
 
 template<typename T>
-void tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset>& bitset, std::size_t *offset) const {
+void tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   if (!TurnIsEnabled())
     return;
 
@@ -148,8 +150,12 @@ void tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset>&
 }
 
 template<typename T>
-void tools::Packet<T>::AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset>& bitset, const std::size_t *offset) const {
-  for (std::size_t i = 0; i < sizeof(this->payload_) * 8; i++) {
-    bitset->Set(*offset + i, (payload_ >> i) & 1);
+void tools::Packet<T>::AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+  auto *payloadMemory = reinterpret_cast<char *>(&payload_);
+
+  for (std::size_t i = 0; i < sizeof(payload_); i++) {
+    unsigned byte = static_cast<unsigned char>(payloadMemory[i]);
+    bitset->Append(byte, 8, *offset);
+    *offset += 8;
   }
 }
