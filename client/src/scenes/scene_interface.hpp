@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <chrono>
+
 #include "context/global_context.hpp"
 
 namespace rtype::client {
@@ -30,9 +32,37 @@ class IScene {
   virtual ~IScene() = default;
 
   /**
-   * @brief Run the scene
+   * @brief Called when the scene is created
    */
-  virtual void Run() = 0;
+  virtual void OnCreate() = 0;
+
+  /**
+   * @brief Called when the scene is destroyed
+   */
+  virtual void OnDestroy() = 0;
+
+  /**
+   * @brief Called when the scene is activated.
+   * This is called when the becomes the current scene.
+   */
+  virtual void OnActivate() = 0;
+
+  /**
+   * @brief Called when the scene is deactivated.
+   * This is called when the scene is no longer the current scene.
+   */
+  virtual void OnDeactivate() = 0;
+
+  /**
+   * @brief Update the scene
+   * @param delta_time Time since the last update
+   */
+  virtual void Update(std::chrono::nanoseconds delta_time) = 0;
+
+  /**
+   * @brief Draw the scene
+   */
+  virtual void Draw() = 0;
 };
 
 /**

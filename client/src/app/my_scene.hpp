@@ -15,7 +15,7 @@ class MyScene : public IScene {
   MyScene();
   ~MyScene() override = default;
 
-  void Run() override;
+  void Draw() override;
 
  protected:
   void InjectGlobalContext(GlobalContext::Ptr globalContext) override;

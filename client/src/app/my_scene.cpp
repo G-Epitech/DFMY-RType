@@ -20,6 +20,6 @@ void MyScene::InjectGlobalContext(GlobalContext::Ptr globalContext) {
   _globalContext = std::move(globalContext);
 }
 
-void MyScene::Run() {
-  std::cout << "MyScene is running" << std::endl;
+void MyScene::Draw() {
+  std::cout << "MyScene::Draw" << std::endl;
 }

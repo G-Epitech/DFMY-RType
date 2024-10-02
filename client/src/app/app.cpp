@@ -29,7 +29,6 @@ App::App() {
 }
 
 void App::Run() {
-  scenesManager_->GoToScene<MyScene>();
   while (window_->isOpen()) {
     processEvents();
     update();

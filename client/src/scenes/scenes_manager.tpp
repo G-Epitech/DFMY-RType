@@ -28,5 +28,5 @@ void ScenesManager::GoToScene() {
     scene = scenesMap_[scene_type] = std::make_shared<T>();
   if (!scene)
     throw Exception("Failed to go to scene: " + std::string(scene_type.name()) + ".");
-  scene->Run();
+  scene->Draw();
 }
