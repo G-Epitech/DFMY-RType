@@ -5,11 +5,13 @@
 ** drawable_system.cpp
 */
 
-#include "drawable_system.hpp"
+#include "drawable.hpp"
+
+#include <utility>
 
 using namespace rtype::client::systems;
 
-DrawableSystem::DrawableSystem(const std::shared_ptr<sf::RenderWindow>& window) : window_(window) {}
+DrawableSystem::DrawableSystem(std::shared_ptr<sf::RenderWindow> window) : window_(std::move(window)) {}
 
 void DrawableSystem::Run(Registry* r, sparse_array<components::Drawable>& drawables,
                          sparse_array<components::Position>& positions) {

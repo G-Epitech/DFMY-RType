@@ -9,8 +9,8 @@
 
 #include <libs/ECS/src/system_abstract.hpp>
 
-#include "components/drawable_component.hpp"
-#include "components/position_component.hpp"
+#include "components/drawable.hpp"
+#include "components/position.hpp"
 
 using namespace rtype::sdk::ECS;
 
@@ -24,7 +24,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /**
    * @brief Default constructor of a Drawable System
    */
-  explicit DrawableSystem(const std::shared_ptr<sf::RenderWindow>& window);
+  explicit DrawableSystem(std::shared_ptr<sf::RenderWindow> window);
 
   void Run(Registry* r, sparse_array<components::Drawable>& drawables,
            sparse_array<components::Position>& positions) override;
