@@ -8,7 +8,7 @@
 #pragma once
 
 #ifdef _WIN32
-  #define EXPORT_GAME_SDK_API __declspec(dllexport)
+  #define EXPORT_GAME_STATS_SDK_API __declspec(dllexport)
 #else
-  #define EXPORT_GAME_SDK_API
+  #define EXPORT_GAME_STATS_SDK_API
 #endif
