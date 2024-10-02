@@ -132,7 +132,7 @@ class LoggingSystem final : public ASystem<position, velocity> {
     std::cout << nb << std::endl;
   }
 
-  void Run(Registry* r, sparse_array<position>& positions,
+  void Run(std::shared_ptr<Registry> r, sparse_array<position>& positions,
            sparse_array<velocity>& velocities) override {
     for (size_t i = 0; i < positions.size(); ++i) {
       const auto& [x, y] = positions[i].value();
@@ -144,23 +144,23 @@ class LoggingSystem final : public ASystem<position, velocity> {
 };
 
 int main() {
-  rtype::sdk::ECS::Registry registry;
+  auto registry = rtype::sdk::ECS::Registry::create();
 
-  registry.RegisterComponent<position>();
-  registry.RegisterComponent<velocity>();
-  registry.RegisterComponent<drawable>();
-  registry.RegisterComponent<controllable>();
+  registry->RegisterComponent<position>();
+  registry->RegisterComponent<velocity>();
+  registry->RegisterComponent<drawable>();
+  registry->RegisterComponent<controllable>();
 
-  const auto entity = registry.SpawnEntity();
+  const auto entity = registry->SpawnEntity();
 
-  registry.AddComponent<position>(entity, {10.0f, 20.0f});
-  registry.AddComponent<velocity>(entity, {1.0f, 2.0f});
-  registry.AddComponent<drawable>(entity, {false});
-  registry.AddComponent<controllable>(entity, {false, false, false, false});
+  registry->AddComponent<position>(entity, {10.0f, 20.0f});
+  registry->AddComponent<velocity>(entity, {1.0f, 2.0f});
+  registry->AddComponent<drawable>(entity, {false});
+  registry->AddComponent<controllable>(entity, {false, false, false, false});
 
-  registry.AddSystem<LoggingSystem>(4);
+  registry->AddSystem<LoggingSystem>(4);
 
-  registry.RunSystems();
+  registry->RunSystems();
 
   return 0;
 }
