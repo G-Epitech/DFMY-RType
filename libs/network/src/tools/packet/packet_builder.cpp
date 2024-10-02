@@ -80,12 +80,20 @@ std::uint32_t tools::PacketBuilder::GeneratePacketId() {
 void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
   unsigned int payloadLength = 0;
   unsigned int payloadType = 0;
+  unsigned int offsetFlag = 0;
+  unsigned int turnFlag = 0;
 
   bitset->FillFromRange(*offset, *offset + kPacketHeaderPayloadLengthSize, payloadLength);
   *offset += kPacketHeaderPayloadLengthSize;
 
   bitset->FillFromRange(*offset, *offset + kPacketHeaderPayloadTypeSize, payloadType);
   *offset += kPacketHeaderPayloadTypeSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderFlagSize, offsetFlag);
+  *offset += kPacketHeaderFlagSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderFlagSize, turnFlag);
+  *offset += kPacketHeaderFlagSize;
 
   this->header_.payloadLength = payloadLength;
   this->header_.payloadType = payloadType;

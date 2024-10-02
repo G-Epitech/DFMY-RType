@@ -155,6 +155,7 @@ void tools::Packet<T>::AppendPayloadToBitset(const std::shared_ptr<dynamic_bitse
 
   for (std::size_t i = 0; i < sizeof(payload_); i++) {
     unsigned byte = static_cast<unsigned char>(payloadMemory[i]);
+
     bitset->Append(byte, 8, *offset);
     *offset += 8;
   }

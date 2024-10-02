@@ -84,9 +84,17 @@ void tools::PacketBuilder::FillPayloadFromBitset(const std::shared_ptr<dynamic_b
   if (sizeof(T) != this->header_.payloadLength)
     throw Exception("Invalid structure: Payload is not the same size as the header.");
 
-  for (std::size_t i = 0; i < sizeof(T) * 8; i++) {
-    unsigned int bit = bitset->Get(*offset);
-    *payload |= (bit << i);
-    *offset += 1;
+  auto* payloadMemory = reinterpret_cast<char *>(payload);
+
+  for (std::size_t i = 0; i < sizeof(T); i++) {
+    unsigned byte = 0;
+
+    for (std::size_t j = 0; j < 8; j++) {
+      unsigned bit = bitset->Get(*offset);
+      byte |= (bit << (7 - j));
+      *offset += 1;
+    }
+
+    payloadMemory[i] = static_cast<char>(byte);
   }
 }
