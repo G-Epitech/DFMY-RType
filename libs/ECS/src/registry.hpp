@@ -25,8 +25,27 @@ namespace rtype::sdk::ECS {
  * @brief Registry class
  * This class is used to store all the entities and components
  */
-class EXPORT_ECS_SDK_API Registry {
+class EXPORT_ECS_SDK_API Registry : public std::enable_shared_from_this<Registry> {
+ private:
+  struct Private {
+    explicit Private() = default;
+  };
+
  public:
+  explicit Registry(Private);
+
+  /**
+   * @brief Create a new registry.
+   * @return std::shared_ptr<Registry>
+   */
+  static std::shared_ptr<Registry> create();
+
+  /**
+   * @brief Get the shared pointer of this registry.
+   * @return std::shared_ptr<Registry>
+   */
+  std::shared_ptr<Registry> GetShared();
+
   /**
    * @brief Register a component
    * @tparam Component Component to register
@@ -127,6 +146,8 @@ class EXPORT_ECS_SDK_API Registry {
    private:
     const std::string message_;
   };
+
+  typedef std::shared_ptr<Registry> Ptr;
 
  private:
   /// @brief systems stored

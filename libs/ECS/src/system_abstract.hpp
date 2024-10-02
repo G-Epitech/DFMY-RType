@@ -18,14 +18,14 @@ namespace rtype::sdk::ECS {
 template <class... Components>
 class EXPORT_ECS_SDK_API ASystem : public ISystem {
  public:
-  void operator()(Registry *r) override;
+  void operator()(std::shared_ptr<Registry> r) override;
 
   /**
    * @brief Run the system
    * @param r The registry
    * @param components The components
    */
-  virtual void Run(Registry *r, sparse_array<Components> &...components) = 0;
+  virtual void Run(std::shared_ptr<Registry> r, sparse_array<Components> &...components) = 0;
 };
 }  // namespace rtype::sdk::ECS
 

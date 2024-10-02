@@ -12,6 +12,6 @@
 using namespace rtype::sdk::ECS;
 
 template <class... Components>
-void ASystem<Components...>::operator()(Registry *r) {
+void ASystem<Components...>::operator()(std::shared_ptr<Registry> r) {
   Run(r, r->GetComponents<Components>()...);
 }
