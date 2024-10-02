@@ -20,8 +20,22 @@ if (WIN32)
             $<TARGET_RUNTIME_DLLS:r-type_server>
     )
 
-    install(TARGETS r-type_client r-type_server DESTINATION .)
+    install(TARGETS r-type_client
+            CONFIGURATIONS Release
+            DESTINATION .)
+
+    file(GLOB CLIENT_DLLS "${CMAKE_BINARY_DIR}/client/*.dll")
+    install(FILES ${CLIENT_DLLS} DESTINATION .)
+
+    install(TARGETS r-type_server
+            CONFIGURATIONS Release
+            DESTINATION .)
+
+    file(GLOB SERVER_DLLS "${CMAKE_BINARY_DIR}/server/*.dll")
+    install(FILES ${SERVER_DLLS} DESTINATION .)
+
     install(FILES ${DEPENDENCIES} DESTINATION .)
+
 elseif (UNIX)
     set(CPACK_GENERATOR "DEB;TGZ")
 
