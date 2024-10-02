@@ -125,7 +125,8 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
    * @param offset The offset to read the bitset
    * @param offsetProps The offset properties to fill
    */
-  static void FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset, PacketOffsetProps *offsetProps);
+  static void FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                   std::size_t *offset, PacketOffsetProps *offsetProps);
 
   /**
    * @brief Set the turn properties from a bitset
@@ -142,7 +143,8 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::PacketBuilder {
    * @param payload The payload to fill
    */
   template <typename T>
-  void FillPayloadFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset, T *payload);
+  void FillPayloadFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset,
+                             T *payload);
 
   /**
    * @brief Generate a new packet ID

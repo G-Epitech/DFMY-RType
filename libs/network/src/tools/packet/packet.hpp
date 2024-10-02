@@ -143,8 +143,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @param bitset The bitset to append the payload
    * @param offset The offset to append the payload
    */
-  void AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset,
-                              std::size_t *offset);
+  void AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset);
 
   /// @brief Packet header properties
   PacketHeaderProps header_;

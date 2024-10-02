@@ -77,7 +77,8 @@ std::uint32_t tools::PacketBuilder::GeneratePacketId() {
   return generatedId;
 }
 
-void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                               std::size_t *offset) {
   unsigned int payloadLength = 0;
   unsigned int payloadType = 0;
   unsigned int offsetFlag = 0;
@@ -99,7 +100,8 @@ void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bit
   this->header_.payloadType = payloadType;
 }
 
-void tools::PacketBuilder::SetMessageFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+void tools::PacketBuilder::SetMessageFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                                std::size_t *offset) {
   unsigned int messageId = 0;
   unsigned int messageType = 0;
 
@@ -115,7 +117,8 @@ void tools::PacketBuilder::SetMessageFromBitset(const std::shared_ptr<dynamic_bi
   this->message_.messageType = messageType;
 }
 
-void tools::PacketBuilder::FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset,
+void tools::PacketBuilder::FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                                std::size_t *offset,
                                                 PacketOffsetProps *offsetProps) {
   unsigned int offsetProp = 0;
   unsigned int offsetFlag = 0;
@@ -130,7 +133,8 @@ void tools::PacketBuilder::FillOffsetFromBitset(const std::shared_ptr<dynamic_bi
   offsetProps->offsetFlag = offsetFlag;
 }
 
-void tools::PacketBuilder::SetTurnFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+void tools::PacketBuilder::SetTurnFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                             std::size_t *offset) {
   unsigned int turn = 0;
 
   bitset->FillFromRange(*offset, *offset + kPacketTurnSize, turn);
