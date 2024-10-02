@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** dynamic_bitset.hpp
 ** File description:
-** DynamicBitset class
+** dynamic_bitset class
 */
 
 #pragma once
@@ -14,18 +14,18 @@
 #include "api.hpp"
 
 namespace rtype::sdk::network::tools {
-class EXPORT_NETWORK_SDK_API DynamicBitset;
+class EXPORT_NETWORK_SDK_API dynamic_bitset;
 }
 
-class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::DynamicBitset {
+class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::dynamic_bitset {
  public:
   /**
    * @brief Construct a new Dynamic Bitset object
    * @param size The size of the bitset (in bits)
    */
-  explicit DynamicBitset(std::size_t size);
+  explicit dynamic_bitset(std::size_t size);
 
-  ~DynamicBitset();
+  ~dynamic_bitset();
 
   /**
    * @brief Set a bit in the bitset
@@ -50,6 +50,14 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::DynamicBitset {
   [[nodiscard]] bool Get(std::size_t index) const;
 
   /**
+   * @brief Fill value from bitset range
+   * @param start The start of the range
+   * @param end The end of the range
+   * @param value The value to fill
+   */
+  void FillFromRange(std::size_t start, std::size_t end, unsigned *value) const;
+
+  /**
    * @brief Get the size of the bitset
    * @return The size of the bitset (in bits)
    */
@@ -57,10 +65,10 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::DynamicBitset {
 
  private:
   /// @brief The size of the bitset (in bits)
-  std::size_t mSize;
+  std::size_t size_;
   /// @brief The bitset
-  std::vector<std::uint8_t> mBitset;
+  std::vector<std::uint8_t> bitset_;
 };
 
 EXPORT_NETWORK_SDK_API std::ostream &operator<<(
-    std::ostream &os, const rtype::sdk::network::tools::DynamicBitset &bitset);
+    std::ostream &os, const rtype::sdk::network::tools::dynamic_bitset &bitset);

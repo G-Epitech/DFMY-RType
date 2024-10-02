@@ -11,4 +11,4 @@ target_link_libraries(r-type_network_sdk_tests PRIVATE
     r-type_network_sdk
 )
 
-add_subdirectory(utils)
+add_subdirectory(tools)

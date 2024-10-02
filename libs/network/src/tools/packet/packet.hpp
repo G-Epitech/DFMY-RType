@@ -104,7 +104,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @brief Get the packet payload as a bitset (compressed packet)
    * @return The packet payload as a bitset
    */
-  [[nodiscard]] std::shared_ptr<DynamicBitset> GetBitset() const;
+  [[nodiscard]] std::shared_ptr<dynamic_bitset> GetBitset();
 
  private:
   /**
@@ -112,7 +112,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @param bitset The bitset to append the header
    * @param offset The offset to append the header
    */
-  void AppendHeaderToBitset(const std::shared_ptr<DynamicBitset> &bitset,
+  void AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset> &bitset,
                             std::size_t *offset) const;
 
   /**
@@ -120,7 +120,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @param bitset The bitset to append the message
    * @param offset The offset to append the message
    */
-  void AppendMessageToBitset(const std::shared_ptr<DynamicBitset> &bitset,
+  void AppendMessageToBitset(const std::shared_ptr<dynamic_bitset> &bitset,
                              std::size_t *offset) const;
 
   /**
@@ -128,7 +128,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @param bitset The bitset to append the offset
    * @param offset The offset to append the offset
    */
-  void AppendOffsetToBitset(const std::shared_ptr<DynamicBitset> &bitset,
+  void AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset> &bitset,
                             std::size_t *offset) const;
 
   /**
@@ -136,26 +136,25 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::Packet {
    * @param bitset The bitset to append the turn
    * @param offset The offset to append the turn
    */
-  void AppendTurnToBitset(const std::shared_ptr<DynamicBitset> &bitset, std::size_t *offset) const;
+  void AppendTurnToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const;
 
   /**
    * @brief Append the packet payload to a bitset
    * @param bitset The bitset to append the payload
    * @param offset The offset to append the payload
    */
-  void AppendPayloadToBitset(const std::shared_ptr<DynamicBitset> &bitset,
-                             const std::size_t *offset) const;
+  void AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset);
 
   /// @brief Packet header properties
-  PacketHeaderProps mHeader;
+  PacketHeaderProps header_;
   /// @brief Packet message properties
-  PacketMessageProps mMessage;
+  PacketMessageProps message_;
   /// @brief Packet offset properties
-  PacketOffsetProps mOffset;
+  PacketOffsetProps offset_;
   /// @brief Packet turn properties
-  PacketTurnProps mTurn;
+  PacketTurnProps turn_;
   /// @brief Packet payload
-  T mPayload;
+  T payload_;
 };
 
 #include "packet.tpp"

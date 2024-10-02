@@ -11,8 +11,9 @@
 
 using namespace rtype::sdk::network;
 
-tools::PacketBuilder::PacketBuilder() : mMessage() {
-  this->mPacketIdIncrement = 0;
+tools::PacketBuilder::PacketBuilder() : message_() {
+  this->Reset();
+  this->packetIdIncrement_ = 0;
 }
 
 tools::PacketBuilder::~PacketBuilder() {
@@ -29,9 +30,9 @@ const char *tools::PacketBuilder::Exception::what() const noexcept {
 }
 
 void tools::PacketBuilder::Reset() {
-  mHeader = PacketHeaderProps();
-  mMessage = PacketMessageProps();
-  mTurn = PacketTurnProps();
+  header_ = PacketHeaderProps();
+  message_ = PacketMessageProps();
+  turn_ = PacketTurnProps();
 }
 
 tools::PacketBuilder &tools::PacketBuilder::SetPayloadType(tools::PayloadType payloadType) {
@@ -40,7 +41,7 @@ tools::PacketBuilder &tools::PacketBuilder::SetPayloadType(tools::PayloadType pa
   if (!IsValidBitSize(castType, kPacketHeaderPayloadTypeSize))
     throw Exception("Invalid argument: Payload type is out of range.");
 
-  this->mHeader.payloadType = castType;
+  this->header_.payloadType = castType;
   return *this;
 }
 
@@ -48,8 +49,8 @@ tools::PacketBuilder &tools::PacketBuilder::SetTurn(std::uint16_t turn) {
   if (!IsValidBitSize(turn, kPacketTurnSize))
     throw Exception("Invalid argument: Turn is out of range.");
 
-  this->mTurn.turn = turn;
-  this->mHeader.turnFlag = 1;
+  this->turn_.turn = turn;
+  this->header_.turnFlag = 1;
   return *this;
 }
 
@@ -57,7 +58,7 @@ tools::PacketBuilder &tools::PacketBuilder::SetMessageType(std::uint8_t messageT
   if (!IsValidBitSize(messageType, kPacketMessageTypeSize))
     throw Exception("Invalid argument: Message too much AGA");
 
-  this->mMessage.messageType = messageType;
+  this->message_.messageType = messageType;
   return *this;
 }
 
@@ -67,11 +68,77 @@ bool tools::PacketBuilder::IsValidBitSize(unsigned int value, std::uint8_t bitSi
 
 std::uint32_t tools::PacketBuilder::GeneratePacketId() {
   const auto maxId = std::pow(2, kPacketMessageIdSize) - 1;
-  const auto generatedId = this->mPacketIdIncrement;
+  const auto generatedId = this->packetIdIncrement_;
 
-  this->mPacketIdIncrement = (this->mPacketIdIncrement + 1);
-  if (this->mPacketIdIncrement > maxId)
-    this->mPacketIdIncrement = 0;
+  this->packetIdIncrement_ = (this->packetIdIncrement_ + 1);
+  if (this->packetIdIncrement_ > maxId)
+    this->packetIdIncrement_ = 0;
 
   return generatedId;
+}
+
+void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                               std::size_t *offset) {
+  unsigned int payloadLength = 0;
+  unsigned int payloadType = 0;
+  unsigned int offsetFlag = 0;
+  unsigned int turnFlag = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderPayloadLengthSize, &payloadLength);
+  *offset += kPacketHeaderPayloadLengthSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderPayloadTypeSize, &payloadType);
+  *offset += kPacketHeaderPayloadTypeSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderFlagSize, &offsetFlag);
+  *offset += kPacketHeaderFlagSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketHeaderFlagSize, &turnFlag);
+  *offset += kPacketHeaderFlagSize;
+
+  this->header_.payloadLength = payloadLength;
+  this->header_.payloadType = payloadType;
+}
+
+void tools::PacketBuilder::SetMessageFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                                std::size_t *offset) {
+  unsigned int messageId = 0;
+  unsigned int messageType = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketMessageIdSize, &messageId);
+  *offset += kPacketMessageIdSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketMessageTypeSize, &messageType);
+  *offset += kPacketMessageTypeSize;
+
+  *offset += kPacketMessageVoidSize;
+
+  this->message_.messageId = messageId;
+  this->message_.messageType = messageType;
+}
+
+void tools::PacketBuilder::FillOffsetFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                                std::size_t *offset,
+                                                PacketOffsetProps *offsetProps) {
+  unsigned int offsetProp = 0;
+  unsigned int offsetFlag = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketOffsetSize, &offsetProp);
+  *offset += kPacketOffsetSize;
+
+  bitset->FillFromRange(*offset, *offset + kPacketOffsetFlagSize, &offsetFlag);
+  *offset += kPacketOffsetFlagSize;
+
+  offsetProps->offset = offsetProp;
+  offsetProps->offsetFlag = offsetFlag;
+}
+
+void tools::PacketBuilder::SetTurnFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
+                                             std::size_t *offset) {
+  unsigned int turn = 0;
+
+  bitset->FillFromRange(*offset, *offset + kPacketTurnSize, &turn);
+  *offset += kPacketTurnSize;
+
+  this->turn_.turn = turn;
 }
