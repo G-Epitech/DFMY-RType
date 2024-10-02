@@ -7,13 +7,28 @@
 
 #include "registry.hpp"
 
-#include <stdexcept>
-
 using namespace rtype::sdk::ECS;
+
+Registry::Registry(Private) {}
+
+std::shared_ptr<Registry> Registry::create() {
+  return std::make_shared<Registry>(Private());
+}
+
+std::shared_ptr<Registry> Registry::GetShared() {
+  return shared_from_this();
+}
+
+void Registry::RunSystems() {
+  const auto pt = GetShared();
+  for (const auto &system : systems_) {
+    (*system)(pt);
+  }
+}
 
 Entity Registry::SpawnEntity() {
   if (!freeIds_.empty()) {
-    auto id = freeIds_.top();
+    const auto id = freeIds_.top();
     freeIds_.pop();
     return Entity(id);
   }
@@ -31,12 +46,6 @@ void Registry::KillEntity(Entity const &e) {
   freeIds_.push(static_cast<std::size_t>(e));
   for (auto &remove_function : removeFunctions_) {
     remove_function.second(*this, e);
-  }
-}
-
-void Registry::RunSystems() {
-  for (const auto &system : systems_) {
-    (*system)(this);
   }
 }
 

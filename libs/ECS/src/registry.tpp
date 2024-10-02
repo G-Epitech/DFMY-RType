@@ -31,7 +31,7 @@ sparse_array<Component> &Registry::GetComponents() {
   try {
     auto &components = componentsArrays_.at(typeid(Component));
     return std::any_cast<sparse_array<Component> &>(components);
-  } catch (std::out_of_range &e) {
+  } catch (std::out_of_range &) {
     throw Exception("Component not registered");
   }
 }
@@ -41,7 +41,7 @@ const sparse_array<Component> &Registry::GetComponents() const {
   try {
     auto &components = componentsArrays_.at(typeid(Component));
     return std::any_cast<const sparse_array<Component> &>(components);
-  } catch (std::out_of_range &e) {
+  } catch (std::out_of_range &) {
     throw Exception("Component not registered");
   }
 }

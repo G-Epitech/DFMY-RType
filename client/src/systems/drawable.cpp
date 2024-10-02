@@ -11,9 +11,10 @@
 
 using namespace rtype::client::systems;
 
-DrawableSystem::DrawableSystem(std::shared_ptr<sf::RenderWindow> window) : window_(std::move(window)) {}
+DrawableSystem::DrawableSystem(std::shared_ptr<sf::RenderWindow> window)
+    : window_(std::move(window)) {}
 
-void DrawableSystem::Run(Registry* r, sparse_array<components::Drawable>& drawables,
+void DrawableSystem::Run(std::shared_ptr<Registry> r, sparse_array<components::Drawable>& drawables,
                          sparse_array<components::Position>& positions) {
   window_->clear();
   for (size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {

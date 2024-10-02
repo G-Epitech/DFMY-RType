@@ -26,7 +26,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    */
   explicit DrawableSystem(std::shared_ptr<sf::RenderWindow> window);
 
-  void Run(Registry* r, sparse_array<components::Drawable>& drawables,
+  void Run(std::shared_ptr<Registry> r, sparse_array<components::Drawable>& drawables,
            sparse_array<components::Position>& positions) override;
 
  private:

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** registry.cpp
+** registry->cpp
 */
 
 #include "registry.hpp"
@@ -12,46 +12,46 @@
 using namespace rtype::sdk::ECS;
 
 TEST(RegistryTests, CreateEmptyRegistry) {
-  Registry registry;
+  auto registry = Registry::create();
 }
 
 TEST(RegistryTests, SpawnEntity) {
-  Registry registry;
-  const auto entity = registry.SpawnEntity();
+  auto registry = Registry::create();
+  const auto entity = registry->SpawnEntity();
   const auto id = static_cast<std::size_t>(entity);
   ASSERT_EQ(id, 0);
 }
 
 TEST(RegistryTests, AddComponent) {
-  Registry registry;
-  registry.RegisterComponent<int>();
-  const auto entity = registry.SpawnEntity();
-  registry.AddComponent<int>(entity, 42);
-  auto component = registry.GetComponents<int>();
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  const auto entity = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  auto component = registry->GetComponents<int>();
   const auto &value = component[static_cast<std::size_t>(entity)];
   ASSERT_EQ(value, 42);
 }
 
 TEST(RegistryTests, RemoveComponent) {
-  Registry registry;
-  registry.RegisterComponent<int>();
-  const auto entity = registry.SpawnEntity();
-  registry.AddComponent<int>(entity, 42);
-  registry.RemoveComponent<int>(entity);
-  auto component = registry.GetComponents<int>();
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  const auto entity = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->RemoveComponent<int>(entity);
+  auto component = registry->GetComponents<int>();
   const auto &value = component[static_cast<std::size_t>(entity)];
   ASSERT_EQ(value, std::nullopt);
 }
 
 TEST(RegistryTests, AddMultipleComponents) {
-  Registry registry;
-  registry.RegisterComponent<int>();
-  registry.RegisterComponent<float>();
-  const auto entity = registry.SpawnEntity();
-  registry.AddComponent<int>(entity, 42);
-  registry.AddComponent<float>(entity, 42.0f);
-  auto intComponent = registry.GetComponents<int>();
-  auto floatComponent = registry.GetComponents<float>();
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  registry->RegisterComponent<float>();
+  const auto entity = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->AddComponent<float>(entity, 42.0f);
+  auto intComponent = registry->GetComponents<int>();
+  auto floatComponent = registry->GetComponents<float>();
   const auto &intValue = intComponent[static_cast<std::size_t>(entity)];
   const auto &floatValue = floatComponent[static_cast<std::size_t>(entity)];
   ASSERT_EQ(intValue, 42);
@@ -59,42 +59,42 @@ TEST(RegistryTests, AddMultipleComponents) {
 }
 
 TEST(RegistryTests, AddMultipleEntities) {
-  Registry registry;
-  registry.RegisterComponent<int>();
-  const auto entity = registry.SpawnEntity();
-  const auto entity2 = registry.SpawnEntity();
-  const auto entity3 = registry.SpawnEntity();
-  const auto entity4 = registry.SpawnEntity();
-  registry.AddComponent<int>(entity, 42);
-  registry.AddComponent<int>(entity2, 43);
-  registry.AddComponent<int>(entity3, 44);
-  registry.AddComponent<int>(entity4, 45);
-  registry.RemoveComponent<int>(entity);
-  auto component = registry.GetComponents<int>();
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  const auto entity = registry->SpawnEntity();
+  const auto entity2 = registry->SpawnEntity();
+  const auto entity3 = registry->SpawnEntity();
+  const auto entity4 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->AddComponent<int>(entity2, 43);
+  registry->AddComponent<int>(entity3, 44);
+  registry->AddComponent<int>(entity4, 45);
+  registry->RemoveComponent<int>(entity);
+  auto component = registry->GetComponents<int>();
   const auto &value = component[static_cast<std::size_t>(entity)];
   ASSERT_EQ(value, std::nullopt);
 }
 
 TEST(RegistryTests, AddMultipleEntitiesMultipleComponents) {
-  Registry registry;
-  registry.RegisterComponent<int>();
-  registry.RegisterComponent<float>();
-  const auto entity = registry.SpawnEntity();
-  const auto entity2 = registry.SpawnEntity();
-  const auto entity3 = registry.SpawnEntity();
-  const auto entity4 = registry.SpawnEntity();
-  registry.AddComponent<int>(entity, 42);
-  registry.AddComponent<float>(entity, 42.0f);
-  registry.AddComponent<int>(entity2, 43);
-  registry.AddComponent<float>(entity2, 43.0f);
-  registry.AddComponent<int>(entity3, 44);
-  registry.AddComponent<float>(entity3, 44.0f);
-  registry.AddComponent<int>(entity4, 45);
-  registry.AddComponent<float>(entity4, 45.0f);
-  registry.RemoveComponent<int>(entity);
-  registry.RemoveComponent<float>(entity);
-  auto intComponent = registry.GetComponents<int>();
-  auto floatComponent = registry.GetComponents<float>();
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  registry->RegisterComponent<float>();
+  const auto entity = registry->SpawnEntity();
+  const auto entity2 = registry->SpawnEntity();
+  const auto entity3 = registry->SpawnEntity();
+  const auto entity4 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->AddComponent<float>(entity, 42.0f);
+  registry->AddComponent<int>(entity2, 43);
+  registry->AddComponent<float>(entity2, 43.0f);
+  registry->AddComponent<int>(entity3, 44);
+  registry->AddComponent<float>(entity3, 44.0f);
+  registry->AddComponent<int>(entity4, 45);
+  registry->AddComponent<float>(entity4, 45.0f);
+  registry->RemoveComponent<int>(entity);
+  registry->RemoveComponent<float>(entity);
+  auto intComponent = registry->GetComponents<int>();
+  auto floatComponent = registry->GetComponents<float>();
   const auto &intValue = intComponent[static_cast<std::size_t>(entity)];
   const auto &floatValue = floatComponent[static_cast<std::size_t>(entity)];
   ASSERT_EQ(intValue, std::nullopt);
@@ -102,27 +102,27 @@ TEST(RegistryTests, AddMultipleEntitiesMultipleComponents) {
 }
 
 TEST(RegistryTests, AddMultipleEntitiesAndRemoveSomeAndCreateNewOnes) {
-  Registry registry;
-  registry.RegisterComponent<int>();
-  const auto entity = registry.SpawnEntity();
-  const auto entity2 = registry.SpawnEntity();
-  const auto entity3 = registry.SpawnEntity();
-  const auto entity4 = registry.SpawnEntity();
-  registry.AddComponent<int>(entity, 42);
-  registry.AddComponent<int>(entity2, 43);
-  registry.AddComponent<int>(entity3, 44);
-  registry.AddComponent<int>(entity4, 45);
-  registry.KillEntity(entity);
-  registry.KillEntity(entity4);
-  const auto entity5 = registry.SpawnEntity();
-  const auto entity6 = registry.SpawnEntity();
-  const auto entity7 = registry.SpawnEntity();
-  const auto entity8 = registry.SpawnEntity();
-  registry.AddComponent<int>(entity5, 46);
-  registry.AddComponent<int>(entity6, 47);
-  registry.AddComponent<int>(entity7, 48);
-  registry.AddComponent<int>(entity8, 49);
-  auto component = registry.GetComponents<int>();
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  const auto entity = registry->SpawnEntity();
+  const auto entity2 = registry->SpawnEntity();
+  const auto entity3 = registry->SpawnEntity();
+  const auto entity4 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->AddComponent<int>(entity2, 43);
+  registry->AddComponent<int>(entity3, 44);
+  registry->AddComponent<int>(entity4, 45);
+  registry->KillEntity(entity);
+  registry->KillEntity(entity4);
+  const auto entity5 = registry->SpawnEntity();
+  const auto entity6 = registry->SpawnEntity();
+  const auto entity7 = registry->SpawnEntity();
+  const auto entity8 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity5, 46);
+  registry->AddComponent<int>(entity6, 47);
+  registry->AddComponent<int>(entity7, 48);
+  registry->AddComponent<int>(entity8, 49);
+  auto component = registry->GetComponents<int>();
   const auto &value = component[static_cast<std::size_t>(entity)];
   const auto &value2 = component[static_cast<std::size_t>(entity2)];
   const auto &value3 = component[static_cast<std::size_t>(entity3)];
@@ -134,16 +134,16 @@ TEST(RegistryTests, AddMultipleEntitiesAndRemoveSomeAndCreateNewOnes) {
 }
 
 TEST(RegisterTests, EntityFromIndex) {
-  Registry registry;
-  const auto entity = registry.SpawnEntity();
-  const auto entity2 = registry.SpawnEntity();
-  const auto entity3 = registry.SpawnEntity();
-  const auto entity4 = registry.SpawnEntity();
+  auto registry = Registry::create();
+  const auto entity = registry->SpawnEntity();
+  const auto entity2 = registry->SpawnEntity();
+  const auto entity3 = registry->SpawnEntity();
+  const auto entity4 = registry->SpawnEntity();
 
-  const auto entityFromIndex = registry.EntityFromIndex(0);
-  const auto entityFromIndex2 = registry.EntityFromIndex(1);
-  const auto entityFromIndex3 = registry.EntityFromIndex(2);
-  const auto entityFromIndex4 = registry.EntityFromIndex(3);
+  const auto entityFromIndex = registry->EntityFromIndex(0);
+  const auto entityFromIndex2 = registry->EntityFromIndex(1);
+  const auto entityFromIndex3 = registry->EntityFromIndex(2);
+  const auto entityFromIndex4 = registry->EntityFromIndex(3);
 
   ASSERT_EQ(static_cast<std::size_t>(entity), static_cast<std::size_t>(entityFromIndex));
   ASSERT_EQ(static_cast<std::size_t>(entity2), static_cast<std::size_t>(entityFromIndex2));
@@ -152,6 +152,6 @@ TEST(RegisterTests, EntityFromIndex) {
 }
 
 TEST(RegisterTests, EntityFromIndexOutOfRange) {
-  const Registry registry;
-  ASSERT_THROW(registry.EntityFromIndex(0), Registry::Exception);
+  const auto registry = Registry::create();
+  ASSERT_THROW(registry->EntityFromIndex(0), Registry::Exception);
 }

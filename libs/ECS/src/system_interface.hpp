@@ -24,7 +24,7 @@ class EXPORT_ECS_SDK_API ISystem {
    * @brief Run the system
    * @param r The registry
    */
-  virtual void operator()(Registry *r) = 0;
+  virtual void operator()(std::shared_ptr<Registry> r) = 0;
 };
 
 }  // namespace rtype::sdk::ECS
