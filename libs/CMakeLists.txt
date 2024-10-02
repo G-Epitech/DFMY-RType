@@ -1,5 +1,5 @@
 add_subdirectory(abra)
 add_subdirectory(ECS)
-add_subdirectory(game_core)
+add_subdirectory(game)
 add_subdirectory(api_common)
 add_subdirectory(utils)

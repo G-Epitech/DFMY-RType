@@ -9,11 +9,11 @@
 
 #include <cstddef>
 
-#include "libs/game_core/src/api.hpp"
+#include "libs/game/src/api.hpp"
 
-namespace rtype::sdk::game_core::stats {
+namespace rtype::sdk::game::stats {
 /// @brief Pata enemy stats
-struct EXPORT_GAME_CORE_SDK_API Pata {
+struct EXPORT_GAME_SDK_API Pata {
   /// @brief Damage dealt by the enemy
   static std::size_t damage;
   /// @brief Fire rate of the enemy (projectiles per second)
@@ -25,4 +25,4 @@ struct EXPORT_GAME_CORE_SDK_API Pata {
   /// @brief Speed of the enemy
   static float speed;
 };
-};  // namespace rtype::sdk::game_core::stats
+};  // namespace rtype::sdk::game::stats

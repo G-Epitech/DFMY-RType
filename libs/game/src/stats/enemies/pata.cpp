@@ -7,7 +7,7 @@
 
 #include "pata.hpp"
 
-using namespace rtype::sdk::game_core::stats;
+using namespace rtype::sdk::game::stats;
 
 std::size_t Pata::damage = 10;
 std::size_t Pata::fireRate = 5;

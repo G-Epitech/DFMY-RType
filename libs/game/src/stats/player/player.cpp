@@ -7,7 +7,7 @@
 
 #include "player.hpp"
 
-using namespace rtype::sdk::game_core::stats;
+using namespace rtype::sdk::game::stats;
 
 float Player::baseSpeed = 10;
 std::size_t Player::baseMaxHp = 100;
