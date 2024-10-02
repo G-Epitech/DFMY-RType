@@ -17,6 +17,9 @@ namespace rtype::client {
 
 class ScenesManager {
  private:
+  /**
+   * @brief Map of scenes
+   */
   using ScenesMap = std::map<std::type_index, IScene::Ptr>;
 
   // Map of scenes
@@ -26,6 +29,25 @@ class ScenesManager {
    * @brief Global context of the app
    */
   const GlobalContext &context_;
+
+  /**
+   * @brief Current scene
+   */
+  IScene::Ptr currentScene_ = nullptr;
+
+  /**
+   * @brief Switch to a scene
+   * @param new_scene New scene to switch to
+   */
+  void SwitchToScene(IScene::Ptr new_scene);
+
+  /**
+   * @brief Create a scene of a specific type
+   * @tparam T Scene type to create
+   * @return Created scene
+   */
+  template <SceneType T>
+  IScene::Ptr CreateScene();
 
  public:
   /**
@@ -51,6 +73,23 @@ class ScenesManager {
    */
   template <SceneType T>
   void GoToScene();
+
+  /**
+   * @brief Update the current scene
+   * @param delta_time Delta time
+   */
+  void Update(utils::DeltaTime delta_time);
+
+  /**
+   * @brief Draw the current scene
+   */
+  void Draw();
+
+  /**
+   * @brief Get the current scene
+   * @return Current scene
+   */
+  inline IScene::Ptr CurrentScene() noexcept { return currentScene_; }
 
  public:
   /**

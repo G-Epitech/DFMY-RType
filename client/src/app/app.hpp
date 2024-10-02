@@ -9,6 +9,7 @@
 
 #include "context/global_context.hpp"
 #include "scenes/scenes_manager.hpp"
+#include "utils/timer.hpp"
 
 #define APP_WINDOW_WIDTH 800
 #define APP_WINDOW_HEIGHT 600
@@ -49,17 +50,17 @@ class App {
   /**
    * @brief Processes events.
    */
-  void processEvents();
+  void ProcessEvents();
 
   /**
    * @brief Updates the application.
    */
-  void update();
+  void Update(utils::DeltaTime delta_time);
 
   /**
    * @brief Renders the application.
    */
-  void render();
+  void Render();
 
   /// @brief The main window for the application.
   std::shared_ptr<sf::RenderWindow> window_;
@@ -69,5 +70,8 @@ class App {
 
   /// @brief The global context for the application.
   GlobalContext globalContext_;
+
+  /// @brief App timer
+  utils::Timer timer_;
 };
 }  // namespace rtype::client

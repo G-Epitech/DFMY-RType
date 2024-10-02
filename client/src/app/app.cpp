@@ -8,6 +8,7 @@
 #include "app.hpp"
 
 #include "my_scene.hpp"
+#include "my_scene_2.hpp"
 #include "scenes/scenes_manager.hpp"
 
 using namespace rtype::client;
@@ -19,24 +20,25 @@ App::App() {
   window_->setFramerateLimit(60);
 
   scenesManager_ = std::make_shared<ScenesManager>(globalContext_);
-
-  globalContext_ = {
-      .window = window_,
-      .scenesManager = scenesManager_,
-  };
-
   scenesManager_->RegisterScene<MyScene>();
+  scenesManager_->RegisterScene<MyScene2>();
+  scenesManager_->GoToScene<MyScene>();
+
+  globalContext_.window = window_;
+  globalContext_.scenesManager = scenesManager_;
 }
 
 void App::Run() {
   while (window_->isOpen()) {
-    processEvents();
-    update();
-    render();
+    timer_.tick();
+
+    ProcessEvents();
+    Update(timer_.GetElapsedTime());
+    Render();
   }
 }
 
-void App::processEvents() {
+void App::ProcessEvents() {
   sf::Event event{};
 
   while (window_->pollEvent(event)) {
@@ -46,10 +48,12 @@ void App::processEvents() {
   }
 }
 
-void App::update() {}
+void App::Update(utils::DeltaTime delta_time) {
+  scenesManager_->Update(delta_time);
+}
 
-void App::render() {
+void App::Render() {
   window_->clear();
-
+  scenesManager_->Draw();
   window_->display();
 }

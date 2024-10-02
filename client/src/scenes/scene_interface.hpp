@@ -10,17 +10,12 @@
 #include <chrono>
 
 #include "context/global_context.hpp"
+#include "utils/time.hpp"
 
 namespace rtype::client {
 class IScene {
  protected:
   friend class ScenesManager;
-
-  /**
-   * @brief Inject the global context into the scene
-   * @param ctx Context to inject
-   */
-  virtual void InjectGlobalContext(GlobalContext::Ptr context) = 0;
 
  public:
   // Pointer type
@@ -57,7 +52,7 @@ class IScene {
    * @brief Update the scene
    * @param delta_time Time since the last update
    */
-  virtual void Update(std::chrono::nanoseconds delta_time) = 0;
+  virtual void Update(utils::DeltaTime delta_time) = 0;
 
   /**
    * @brief Draw the scene

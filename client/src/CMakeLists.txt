@@ -1,3 +1,4 @@
+add_subdirectory(utils)
 add_subdirectory(context)
 add_subdirectory(scenes)
 add_subdirectory(app)
