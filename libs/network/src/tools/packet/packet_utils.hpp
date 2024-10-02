@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "api.hpp"
 #include "tools/bitset/dynamic_bitset.hpp"
 
