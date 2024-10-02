@@ -35,3 +35,32 @@ TEST(BitsetTest, ConvertSimplePacketToBitset) {
   EXPECT_EQ(bitset->Get(36), 0); // Start message type
   EXPECT_EQ(bitset->Get(41), 1); // End message type
 }
+
+TEST(BitsetTest, ConvertBitsetToPacket) {
+  tools::PacketBuilder packetBuilder;
+  struct payloadStruct {
+    std::uint8_t a;
+    std::uint16_t b;
+    std::uint32_t c;
+  } payload = {1, 2, 3};
+
+  packetBuilder.SetPayloadType(tools::PayloadType::kCustom);
+  packetBuilder.SetMessageType(42);
+
+  tools::Packet packet = packetBuilder.Build<payloadStruct>(payload);
+  auto bitset = packet.GetBitset();
+
+  tools::Packet convertedPacket = packetBuilder.Build<payloadStruct>(bitset);
+
+  EXPECT_EQ(convertedPacket.GetHeader().payloadType, static_cast<unsigned>(tools::PayloadType::kCustom));
+  EXPECT_EQ(convertedPacket.GetHeader().payloadLength, sizeof(payload));
+  EXPECT_EQ(convertedPacket.GetHeader().offsetFlag, 0);
+  EXPECT_EQ(convertedPacket.GetHeader().turnFlag, 0);
+
+  EXPECT_EQ(convertedPacket.GetMessage().messageType, 42);
+
+  auto convertedPayload = convertedPacket.GetPayload();
+  EXPECT_EQ(convertedPayload.a, payload.a);
+  EXPECT_EQ(convertedPayload.b, payload.b);
+  EXPECT_EQ(convertedPayload.c, payload.c);
+}
