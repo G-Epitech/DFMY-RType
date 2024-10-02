@@ -9,7 +9,7 @@ SERVER_NAME 		= r-type_server
 CLIENT_NAME			= r-type_client
 TESTS_SERVER_NAME 	= r-type_server_tests
 TESTS_CLIENT_NAME 	= r-type_client_tests
-TESTS_NETWORK_SDK_NAME = abra_tests
+TESTS_ABRA_NAME 	= abra_tests
 TESTS_ECS_SDK_NAME 	= r-type_ECS_sdk_tests
 BUILD_PATH 			= $(shell pwd)/build
 
@@ -21,7 +21,7 @@ COVERAGE_IGNORE = $(addprefix -e , $(COVERAGE_IGNORE_TARGETS))
 TOOLCHAIN_FLAG = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg.cmake
 
 LINT_DIRS = client/src \
-			libs/network/src \
+			libs/abra/src \
 			server/src
 LINT_FILES = $(shell find $(LINT_DIRS) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.cc' -o -name '*.cxx' \))
 
@@ -52,7 +52,7 @@ clean:
 
 fclean:		clean
 			@rm -f $(NAME)
-			@rm -f $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_NETWORK_SDK_NAME) $(TESTS_ECS_SDK_NAME)
+			@rm -f $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_ECS_SDK_NAME)
 			@rm -f $(SERVER_NAME) $(CLIENT_NAME)
 .PHONY: fclean
 
@@ -65,10 +65,10 @@ generate_tests:
 		@cmake -B $(BUILD_PATH) -DCOVERAGE=ON $(TOOLCHAIN_FLAG) -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(BUILD_PATH)
 
 tests_run: generate_tests
-	@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_NETWORK_SDK_NAME) $(TESTS_ECS_SDK_NAME)
+	@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_ECS_SDK_NAME)
 	@$(BUILD_PATH)/$(TESTS_CLIENT_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_SERVER_NAME) --gtest_brief=1
-	@$(BUILD_PATH)/$(TESTS_NETWORK_SDK_NAME) --gtest_brief=1
+	@$(BUILD_PATH)/$(TESTS_ABRA_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_ECS_SDK_NAME) --gtest_brief=1
 .PHONY: tests_run
 
@@ -82,10 +82,10 @@ tests_run_client:
 		@$(BUILD_PATH)/$(TESTS_CLIENT_NAME) --gtest_brief=1
 .PHONY: tests_run_client
 
-tests_run_network_sdk:
-		@cmake --build $(BUILD_PATH) --target $(TESTS_NETWORK_SDK_NAME)
-		@$(BUILD_PATH)/$(TESTS_NETWORK_SDK_NAME) --gtest_brief=1
-.PHONY: tests_run_network_sdk
+tests_run_abra:
+		@cmake --build $(BUILD_PATH) --target $(TESTS_ABRA_NAME)
+		@$(BUILD_PATH)/$(TESTS_ABRA_NAME) --gtest_brief=1
+.PHONY: tests_run_abra
 
 tests_run_ECS_sdk:
 		@cmake --build $(BUILD_PATH) --target $(TESTS_ECS_SDK_NAME)
