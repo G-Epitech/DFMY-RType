@@ -10,4 +10,4 @@
 using namespace rtype::sdk::game_core::stats;
 
 float Player::baseSpeed = 10;
-std::size_t Player::maxHp = 100;
+std::size_t Player::baseMaxHp = 100;
