@@ -9,7 +9,7 @@ SERVER_NAME 		= r-type_server
 CLIENT_NAME			= r-type_client
 TESTS_SERVER_NAME 	= r-type_server_tests
 TESTS_CLIENT_NAME 	= r-type_client_tests
-TESTS_NETWORK_SDK_NAME = r-type_network_sdk_tests
+TESTS_NETWORK_SDK_NAME = abra_tests
 TESTS_ECS_SDK_NAME 	= r-type_ECS_sdk_tests
 BUILD_PATH 			= $(shell pwd)/build
 
