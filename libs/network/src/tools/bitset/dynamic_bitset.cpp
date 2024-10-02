@@ -42,9 +42,9 @@ void tools::dynamic_bitset::Append(unsigned int value, std::size_t size, std::si
 }
 
 void tools::dynamic_bitset::FillFromRange(std::size_t start, std::size_t end,
-                                          unsigned int &value) const {
+                                          unsigned int *value) const {
   for (std::size_t i = start; i < end; i++) {
-    value = (value << 1) | Get(i);
+    *value = (*value << 1) | Get(i);
   }
 }
 

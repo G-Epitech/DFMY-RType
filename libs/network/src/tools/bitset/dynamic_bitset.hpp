@@ -55,7 +55,7 @@ class EXPORT_NETWORK_SDK_API rtype::sdk::network::tools::dynamic_bitset {
    * @param end The end of the range
    * @param value The value to fill
    */
-  void FillFromRange(std::size_t start, std::size_t end, unsigned &value) const;
+  void FillFromRange(std::size_t start, std::size_t end, unsigned *value) const;
 
   /**
    * @brief Get the size of the bitset

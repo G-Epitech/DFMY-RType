@@ -16,6 +16,6 @@ unsigned tools::PacketUtils::ExportMessageTypeFromBitset(
   unsigned messageType = 0;
   std::size_t startRange = kPacketHeaderPropsSize + kPacketMessageIdSize;
 
-  bitset->FillFromRange(startRange, startRange + kPacketMessageTypeSize, messageType);
+  bitset->FillFromRange(startRange, startRange + kPacketMessageTypeSize, &messageType);
   return messageType;
 }
