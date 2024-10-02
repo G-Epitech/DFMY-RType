@@ -79,9 +79,9 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketBuilder {
   std::unique_ptr<tools::Packet<T>> Build(T payload);
 
   /**
-   * @brief Build a multiples packets with the given payloads and the properties set
+   * @brief Build a multiples packets with the given payload and the properties set
    * @tparam T The payload type
-   * @param payloads The payloads
+   * @param payloads The payload
    * @return The packets
    */
   template <typename T>

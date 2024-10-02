@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** damage.hpp
+** newHp.hpp
 */
 
 #pragma once
@@ -11,11 +11,11 @@
 
 #include "libs/api_common/src/api.hpp"
 
-namespace rtype::sdk::api_common {
+namespace rtype::sdk::api_common::payload {
 struct EXPORT_API_COMMON_SDK_API DamageDealt {
   std::size_t entityId;
-  std::size_t damage;
+  std::size_t newHp;
 
-  DamageDealt(std::size_t entityId, std::size_t damage);
+  DamageDealt(std::size_t entityId, std::size_t newHp);
 };
 }  // namespace rtype::sdk::api_common

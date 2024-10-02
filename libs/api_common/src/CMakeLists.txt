@@ -1,5 +1,5 @@
-target_sources(r-type_api_common_sdk PRIVATE
+target_sources(${SDK_API_COMMON} PRIVATE
         api.hpp
-        damage/damage.cpp
-        damage/damage.hpp
 )
+
+add_subdirectory(payload)
