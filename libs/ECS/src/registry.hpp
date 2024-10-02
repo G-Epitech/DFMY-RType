@@ -147,6 +147,8 @@ class EXPORT_ECS_SDK_API Registry : public std::enable_shared_from_this<Registry
     const std::string message_;
   };
 
+  typedef std::shared_ptr<Registry> Ptr;
+
  private:
   /// @brief systems stored
   std::vector<std::shared_ptr<ISystem>> systems_;
