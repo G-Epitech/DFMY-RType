@@ -28,7 +28,7 @@ elseif (UNIX)
     set(CPACK_PACKAGE_EXECUTABLES "r-type_client;R-Type Client" "r-type_server;R-Type Server")
 
     set(BUILT_BINARIES r-type_server r-type_client)
-    set(BUILT_LIBS r-type_network_sdk)
+    set(BUILT_LIBS abra)
 
     install(TARGETS ${BUILT_BINARIES}
             CONFIGURATIONS Release

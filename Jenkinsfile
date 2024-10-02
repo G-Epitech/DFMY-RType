@@ -7,10 +7,10 @@ BINARIES_TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
-LIBS = ['network-sdk', 'ECS-sdk']
+LIBS = ['abra', 'ECS-sdk']
 LIBS_TARGETS = [
-    'network-sdk': [
-        'target': 'r-type_network_sdk',
+    'abra': [
+        'target': 'abra',
         'type': 'shared'
     ],
     'ECS-sdk': [
@@ -19,7 +19,7 @@ LIBS_TARGETS = [
     ]
 ]
 LIBS_TESTS = [
-    'network-sdk': 'r-type_network_sdk_tests',
+    'abra': 'abra_tests',
     'ECS-sdk': 'r-type_ECS_sdk_tests'
 ]
 

@@ -36,7 +36,7 @@ r-type_client
 r-type_server
 r-type_client_tests
 r-type_server_tests
-r-type_network_sdk_tests
+abra_tests
 
 # Clion
 .idea
