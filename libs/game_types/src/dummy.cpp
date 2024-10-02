@@ -5,6 +5,8 @@
 ** dummy.cpp
 */
 
-int dummy() {
+#include "api.hpp"
+
+EXPORT_GAME_TYPES_SDK_API int dummy() {
   return 0;
 }

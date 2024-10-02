@@ -20,7 +20,7 @@ struct EXPORT_GAME_STATS_SDK_API Pata {
   static std::size_t fireRate;
   /// @brief Speed of the enemy's projectiles
   static float projectileSpeed;
-  /// @brief Maximum health points of the enemy
+  /// @brief Maximum health_update points of the enemy
   static std::size_t maxHp;
   /// @brief Speed of the enemy
   static float speed;

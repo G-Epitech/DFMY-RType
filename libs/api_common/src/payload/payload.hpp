@@ -7,5 +7,5 @@
 
 #pragma once
 
-#include "damage/damage.hpp"
-#include "movement/movement.hpp"
+#include "game/payload_game.hpp"
+#include "type.hpp"
