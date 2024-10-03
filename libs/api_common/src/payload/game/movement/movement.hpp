@@ -18,7 +18,7 @@ namespace rtype::sdk::api_common::payload {
 /// @brief Movement payload
 struct EXPORT_API_COMMON_SDK_API Movement {
   /// @brief The entity id
-  std::size_t entityId{0};
+  std::size_t entityId;
   /// @brief The new position
   utils::types::vector_2f newPosition;
 

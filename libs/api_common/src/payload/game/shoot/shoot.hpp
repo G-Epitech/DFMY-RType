@@ -15,7 +15,7 @@ namespace rtype::sdk::api_common::payload {
 /// @brief Shoot payload
 struct EXPORT_API_COMMON_SDK_API Shoot {
   /// @brief Entity id
-  std::size_t entityId{0};
+  std::size_t entityId;
 
   /**
    * @brief Construct a new Shoot object

@@ -19,7 +19,7 @@ namespace rtype::sdk::api_common::payload {
 /// @brief Payload for enemy spawn
 struct EXPORT_API_COMMON_SDK_API EnemySpawn {
   /// @brief The entity id of the enemy
-  std::size_t entityId{0};
+  std::size_t entityId;
   /// @brief The position of the enemy
   utils::types::vector_2f position;
   /// @brief The type of the enemy

@@ -9,5 +9,5 @@
 
 using namespace rtype::sdk::game::stats;
 
-float Player::baseSpeed = 10;
-std::size_t Player::baseMaxHp = 100;
+float Player::speed = 10;
+std::size_t Player::maxHp = 100;
