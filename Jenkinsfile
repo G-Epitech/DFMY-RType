@@ -227,18 +227,26 @@ pipeline {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                       createGitHubRelease (
-                                          credentialId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
-                                          repository: 'G-Epitech/DFMY-RType',
-                                          tag: 'v0.0.0',
-                                          draft: true,
-                                          name: 'TEST',
-                                          commitish: 'main'
-                                      )
+                                        def response = sh(script: """
+                                            curl -X POST -H "Content-Type: application/json" ^
+                                                 -H "Authorization: Bearer ${GITHUB_ACCESS_TOKEN}" ^
+                                                 -d '{ "tag_name": "v0.0.0", \
+                                                       "name": "Release v0.0.0", \
+                                                       "body": "Description of the release.", \
+                                                       "draft": false, \
+                                                       "prerelease": false }' ^
+                                                 https://api.github.com/repos/G-Epitech/DFMY-RType/releases
+                                        """, returnStdout: true)
+
+                                        def jsonResponse = readJSON(text: response)
+                                        def releaseId = jsonResponse.id
+
+                                        echo releaseId
                                     }
                                 }
                             }
                         }
+
 
 
                     }
