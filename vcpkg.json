@@ -2,6 +2,8 @@
   "name": "rtype",
   "version": "1.0.0",
   "dependencies": [
+    "boost-system",
+    "boost-asio",
     "boost-program-options",
     "gtest",
     "sfml"
