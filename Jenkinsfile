@@ -181,6 +181,7 @@ pipeline {
             agent any
             steps {
                 script {
+                    sh 'git tag'
                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                       usernameVariable: 'GITHUB_APP',
                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
