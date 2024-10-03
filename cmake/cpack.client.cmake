@@ -21,7 +21,6 @@ if (INSTALL_CLIENT)
         set(CPACK_GENERATOR "ZIP;NSIS")
         set(DEPENDENCIES
                 $<TARGET_RUNTIME_DLLS:r-type_client>
-                $<TARGET_RUNTIME_DLLS:r-type_server>
         )
 
         install(TARGETS r-type_client
