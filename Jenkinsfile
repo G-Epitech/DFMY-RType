@@ -7,26 +7,26 @@ BINARIES_TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
-LIBS = ['abra', 'ECS-sdk']
+LIBS = ['abra', 'ECS']
 LIBS_TARGETS = [
     'abra': [
         'target': 'abra',
         'type': 'shared'
     ],
-    'ECS-sdk': [
+    'ECS': [
         'target': 'r-type_ECS_sdk',
         'type': 'shared'
     ]
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
-    'ECS-sdk': 'r-type_ECS_sdk_tests'
+    'ECS': 'r-type_ECS_sdk_tests'
 ]
 
 pipeline {
     agent any
     stages {
-         /*stage ('Check style') {
+        stage ('Check style') {
             parallel {
 
                 stage ('Lint') {
@@ -127,7 +127,7 @@ pipeline {
                         stage('Generate build files') {
                             steps {
                                 script {
-                                    bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="%cd%\\bin"'
+                                    bat 'cmake --preset=windows:release'
                                 }
                             }
                         }
@@ -142,9 +142,9 @@ pipeline {
 
                                         stage ("Build and test ${lib}") {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_LIB}"
-                                            fileExists("bin/${TARGET_LIB}.${TARGET_LIB_EXT}")
+                                            fileExists("build/windows/release/libs/${lib}/${TARGET_LIB}.${TARGET_LIB_EXT}")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "bin\\${TARGET_TEST}.exe"
+                                            bat "build\\windows\\release\\libs\\${lib}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
@@ -160,9 +160,9 @@ pipeline {
 
                                         stage ("Build and test ${binary}") {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_BINARY}"
-                                            fileExists("bin/${TARGET_BINARY}.exe")
+                                            fileExists("build/windows/release/bin/${binary}/${TARGET_BINARY}.exe")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "bin\\${TARGET_TEST}.exe"
+                                            bat "build\\windows\\release\\bin\\${binary}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
@@ -171,7 +171,7 @@ pipeline {
                     }
                 }
             }
-        } */
+        }
 
         stage ('Create Release') {
             when {
@@ -239,6 +239,14 @@ pipeline {
                         stage('Echo Version') {
                             steps {
                                 echo "Version: $VERSION"
+                            }
+                        }
+
+                        stage('Generate Client') {
+                            steps {
+                                script {
+                                    bat 'cmmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF'
+                                }
                             }
                         }
                      }
