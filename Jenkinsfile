@@ -192,9 +192,10 @@ pipeline {
                 } */
 
                 stage('Windows environment') {
-                    agent {
+                    agent any
+                    /* agent {
                         label 'windows'
-                    }
+                    } */
 
                     stages {
 /*                         stage('Generate build files') {
