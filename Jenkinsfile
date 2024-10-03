@@ -174,7 +174,6 @@ pipeline {
         } */
 
         stage ('Publish') {
-            agent any
             input {
                 message "What is the new version ?"
                 ok "Submit"
