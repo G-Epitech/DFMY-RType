@@ -26,7 +26,8 @@ LIBS_TESTS = [
 pipeline {
     agent none
     environment {
-        NEW_RELEASE = false
+        NEW_RELEASE = false,
+        TAG = ''
     }
     stages {
 /*         stage ('Check style') {
@@ -194,16 +195,20 @@ pipeline {
 
                         def tags = sh(script: 'git tag', returnStdout: true).trim().tokenize()
                         echo "Tags: ${tags}"
-                        def latestTag = tags[-1]
-                        echo "latestTag: ${latestTag}"
-
-                        def existingTags = releases.collect { it.tag_name }
-                        echo "ExistingTags: ${existingTags}"
-                        if (!existingTags.contains(latestTag)) {
-                            env.NEW_RELEASE = true
-                            echo "Creating release for new tag: ${latestTag}"
+                        if (tags.isEmpty()) {
+                            echo "No tags found in the repository."
                         } else {
-                            echo "No new release needed for tag: ${latestTag}"
+                            def latestTag = tags[-1]
+                            echo "latestTag: ${latestTag}"
+
+                            def existingTags = releases.collect { it.tag_name }
+                            echo "ExistingTags: ${existingTags}"
+                            if (!existingTags.contains(latestTag)) {
+                                env.NEW_RELEASE = true
+                                echo "Creating release for new tag: ${latestTag}"
+                            } else {
+                                echo "No new release needed for tag: ${latestTag}"
+                            }
                         }
                     }
                 }
