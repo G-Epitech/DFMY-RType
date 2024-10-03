@@ -25,9 +25,7 @@ class EXPORT_NETWORK_SDK_API abra::client::InterfaceClient {
     ERROR,
   };
 
-  InterfaceClient() = delete;
-
-  ~InterfaceClient() = delete;
+  InterfaceClient() = default;
 
   /**
    * @brief Listen the server and handle the incoming data
@@ -40,6 +38,6 @@ class EXPORT_NETWORK_SDK_API abra::client::InterfaceClient {
    */
   [[nodiscard]] virtual const std::queue<ServerMessage> &getQueue() const = 0;
 
- private:
+ protected:
   std::queue<ServerMessage> queue_;
 };
