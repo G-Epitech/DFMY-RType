@@ -144,7 +144,7 @@ pipeline {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_LIB}"
                                             fileExists("build/windows/release/libs/${lib}/${TARGET_LIB}.${TARGET_LIB_EXT}")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "xcopy 'build\\windows\\release\\libs\\${lib}\\*.dll' 'build\\windows\\release\\libs\\${lib}\\tests' /Y"
+                                            bat "xcopy build\\windows\\release\\libs\\${lib}\\*.dll build\\windows\\release\\libs\\${lib}\\tests /Y"
                                             bat "build\\windows\\release\\libs\\${lib}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
@@ -163,6 +163,7 @@ pipeline {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_BINARY}"
                                             fileExists("build/windows/release/bin/${binary}/${TARGET_BINARY}.exe")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
+                                            bat "xcopy build\\windows\\release\\${binary}\\*.dll build\\windows\\release\\${binary}\\tests /Y"
                                             bat "build\\windows\\release\\bin\\${binary}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
