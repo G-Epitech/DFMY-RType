@@ -227,7 +227,7 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                        createGitHubRelease {
-                                          credentialsId: '${GITHUB_ACCESS_TOKEN}',
+                                          credentialsId: GITHUB_ACCESS_TOKEN,
                                           repository: 'G-Epitech/DFMY-RType',
                                           tag: 'v0.0.0',
                                           draft: true,
