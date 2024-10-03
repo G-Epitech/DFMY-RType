@@ -144,7 +144,7 @@ pipeline {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_LIB}"
                                             fileExists("build/windows/release/libs/${lib}/${TARGET_LIB}.${TARGET_LIB_EXT}")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "build\\windows\\release\\libs\\${lib}\\${TARGET_TEST}.exe"
+                                            bat "build\\windows\\release\\libs\\${lib}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
@@ -162,7 +162,7 @@ pipeline {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_BINARY}"
                                             fileExists("build/windows/release/${binary}/${TARGET_BINARY}.exe")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "build\\windows\\release\\${binary}\\${TARGET_TEST}.exe"
+                                            bat "build\\windows\\release\\${binary}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
@@ -194,12 +194,12 @@ pipeline {
                             steps {
                                 script {
                                     stage('Client') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON'
+                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF'
                                         bat 'cmake --build build/windows/release --config release --target r-type_client'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
                                     stage('Server') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_SERVER=ON'
+                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON'
                                         bat 'cmake --build build/windows/release --config release --target r-type_server'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
