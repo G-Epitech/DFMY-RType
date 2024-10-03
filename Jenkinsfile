@@ -230,7 +230,11 @@ pipeline {
                      }
 
                      stages {
-
+                        stage('Echo') {
+                            steps {
+                                echo 'Hello, Windows!'
+                            }
+                        }
                      }
                 }
             }
