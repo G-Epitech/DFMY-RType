@@ -144,7 +144,7 @@ pipeline {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_LIB}"
                                             fileExists("build/windows/release/libs/${lib}/${TARGET_LIB}.${TARGET_LIB_EXT}")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "Copy-Item -Path "build\windows\release\libs\${lib}\*.dll" -Destination "build\windows\release\libs\${lib}\tests" -Recurse"
+                                            bat "Copy-Item -Path 'build\\windows\\release\\libs\\${lib}\\*.dll' -Destination 'build\\windows\\release\\libs\\${lib}\\tests' -Recurse"
                                             bat "build\\windows\\release\\libs\\${lib}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
