@@ -209,7 +209,7 @@ pipeline {
                             echo "Release created successfully"
                         } else {
                             error "Failed to create release, it may already exist"
-                            currentBuild.result = 'ABORTED'
+                            currentBuild.result = 'SUCCESS'
                         }
                     }
                 }
@@ -220,7 +220,7 @@ pipeline {
             when {
                 allOf {
                     buildingTag()
-                    branch 'main'
+                    /* branch 'main' */
                 }
             }
             parallel {
@@ -230,9 +230,9 @@ pipeline {
                      }
 
                      stages {
-                        stage('Echo') {
+                        stage('Echo Version') {
                             steps {
-                                echo 'Hello, Windows!'
+                                echo "Version: $VERSION"
                             }
                         }
                      }
