@@ -175,8 +175,10 @@ pipeline {
 
         stage ('Publish') {
             when {
-                buildingTag()
-                /* branch 'main' */
+                allOf {
+                    buildingTag()
+                    branch 'main'
+                }
             }
             parallel {
                 stage ('Create Release') {
@@ -197,11 +199,12 @@ pipeline {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                                        echo "Tag: $VERSION"
                                         def response = sh(script: """
                                             curl -X POST -H "Content-Type: application/json" \
                                                  -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                                 -d '{ "tag_name": "$TAG", \
-                                                       "name": "Release $TAG", \
+                                                 -d '{ "tag_name": "$VERSION", \
+                                                       "name": "Release $VERSION", \
                                                        "body": "Description of the release.", \
                                                        "draft": false, \
                                                        "prerelease": false }' \
@@ -222,70 +225,44 @@ pipeline {
                                 }
                             }
                         }
-                    }
-                }
 
+                        stage ('Upload') {
+                            parallel {
+                                stage('Windows environment') {
+                                    agent any
+                                    /* agent {
+                                        label 'windows'
+                                    } */
 
-                stage('Windows environment') {
-                    agent any
-                    /* agent {
-                        label 'windows'
-                    } */
+                                    stages {
+                                         /*stage('Generate build files') {
+                                            steps {
+                                                script {
+                                                    stage('Client') {
+                                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF -U CMAKE_RUNTIME_OUTPUT_DIRECTORY'
+                                                        bat 'cmake --build build/windows/release --config release --target r-type_client'
+                                                        bat 'cd build/windows/release && cpack -C release'
+                                                    }
+                                                    stage('Server') {
+                                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON -U CMAKE_RUNTIME_OUTPUT_DIRECTORY'
+                                                        bat 'cmake --build build/windows/release --config release --target r-type_server'
+                                                        bat 'cd build/windows/release && cpack -C release'
+                                                    }
+                                                }
+                                            }
+                                        } */
 
-                    stages {
-/*                         stage('Generate build files') {
-                            steps {
-                                script {
-                                    stage('Client') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF -U CMAKE_RUNTIME_OUTPUT_DIRECTORY'
-                                        bat 'cmake --build build/windows/release --config release --target r-type_client'
-                                        bat 'cd build/windows/release && cpack -C release'
+                                        stage('echo') {
+                                            steps {
+                                                echo 'Windows environment'
+                                            }
+                                        }
                                     }
-                                    stage('Server') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON -U CMAKE_RUNTIME_OUTPUT_DIRECTORY'
-                                        bat 'cmake --build build/windows/release --config release --target r-type_server'
-                                        bat 'cd build/windows/release && cpack -C release'
-                                    }
-                                }
-                            }
-                        } */
 
-                        stage('Version') {
-                            steps {
-                                echo "NEW VERSION IS $VERSION"
-                            }
-                        }
-
-                        stage('Create Release') {
-                            steps {
-                                script {
-                                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
-                                                                      usernameVariable: 'GITHUB_APP',
-                                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                        def response = sh(script: """
-                                            curl -X POST -H "Content-Type: application/json" \
-                                                 -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                                 -d '{ "tag_name": "v0.0.0", \
-                                                       "name": "Release v0.0.0", \
-                                                       "body": "Description of the release.", \
-                                                       "draft": false, \
-                                                       "prerelease": false }' \
-                                                 https://api.github.com/repos/G-Epitech/DFMY-RType/releases
-                                        """, returnStdout: true)
-
-                                        def jsonResponse = readJSON(text: response)
-                                        def releaseId = jsonResponse.id
-
-                                        echo "Release ID: ${releaseId}"
-                                    }
-                                }
+                                 }
                             }
                         }
-
-
-
                     }
-
                 }
             }
         }
