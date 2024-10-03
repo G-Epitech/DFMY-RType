@@ -26,7 +26,7 @@ LIBS_TESTS = [
 pipeline {
     agent any
     stages {
-/*         stage ('Check style') {
+         /*stage ('Check style') {
             parallel {
 
                 stage ('Lint') {
@@ -224,16 +224,16 @@ pipeline {
                 }
             }
             parallel {
-               stage ('Windows Environment') {
-                    agent {
-                        label 'windows'
-                    }
+                stage ('Windows Environment') {
+                     agent {
+                         label 'windows'
+                     }
 
-                    stages {
+                     stages {
 
-                    }
+                     }
+                }
             }
         }
-
     }
 }
