@@ -20,7 +20,7 @@ LIBS_TARGETS = [
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
-    'ECS-sdk': 'r-type_ECS_sdk_tests'
+    'ECS': 'r-type_ECS_sdk_tests'
 ]
 
 pipeline {
