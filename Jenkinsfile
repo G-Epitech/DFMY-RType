@@ -24,11 +24,7 @@ LIBS_TESTS = [
 ]
 
 pipeline {
-    agent none
-    environment {
-        NEW_RELEASE = false
-        TAG = ''
-    }
+    agent any
     stages {
 /*         stage ('Check style') {
             parallel {
@@ -177,60 +173,58 @@ pipeline {
             }
         } */
 
-        stage ('Check new Publish') {
-            agent any
-            steps {
-                script {
-                    sh 'git tag'
-                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
-                                                      usernameVariable: 'GITHUB_APP',
-                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                        def response = sh(script: """
-                            curl -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                 -H "Accept: application/vnd.github.v3+json" \
-                                 https://api.github.com/repos/G-Epitech/DFMY-RType/releases
-                        """, returnStdout: true)
+        stage ('Publish') {
+            when {
+                buildingTag()
+                /* branch 'main' */
+            }
+            parallel {
+                stage ('Create Release') {
+                    agent any
+                    stages {
+                        stage('Version') {
+                            steps {
+                                script {
+                                    VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                                    echo "NEW VERSION IS $VERSION"
+                                }
+                            }
+                        }
 
-                        def releases = readJSON(text: response)
-                        echo "Releases: ${releases}"
+                        stage('Create Release') {
+                            steps {
+                                script {
+                                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
+                                                                      usernameVariable: 'GITHUB_APP',
+                                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                                        def response = sh(script: """
+                                            curl -X POST -H "Content-Type: application/json" \
+                                                 -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                                 -d '{ "tag_name": "$TAG", \
+                                                       "name": "Release $TAG", \
+                                                       "body": "Description of the release.", \
+                                                       "draft": false, \
+                                                       "prerelease": false }' \
+                                                 https://api.github.com/repos/G-Epitech/DFMY-RType/releases
+                                        """, returnStdout: true)
 
-                        sh 'git tag'
+                                        def jsonResponse = readJSON(text: response)
+                                        def releaseId = jsonResponse.id
 
-                        def tags = sh(script: 'git tag', returnStdout: true).trim().tokenize()
-                        echo "Tags: ${tags}"
-                        if (tags.isEmpty()) {
-                            echo "No tags found in the repository."
-                        } else {
-                            def latestTag = tags[-1]
-                            echo "latestTag: ${latestTag}"
-
-                            def existingTags = releases.collect { it.tag_name }
-                            echo "ExistingTags: ${existingTags}"
-                            if (!existingTags.contains(latestTag)) {
-                                env.NEW_RELEASE = true
-                                echo "Creating release for new tag: ${latestTag}"
-                            } else {
-                                echo "No new release needed for tag: ${latestTag}"
+                                        echo "Release ID: ${releaseId}"
+                                        if (releaseId) {
+                                            echo "Release created successfully"
+                                        } else {
+                                            error "Failed to create release, it may already exist"
+                                            currentBuild.result = 'ABORTED'
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
 
-        stage ('Publish') {
-            when {
-                expression { env.NEW_RELEASE == 'true' }
-            }
-            parallel {
-/*                 stage('Linux environment') {
-                    agent {
-                        dockerfile {
-                            filename 'ci/unix.dockerfile'
-                            reuseNode true
-                        }
-                    }
-                } */
 
                 stage('Windows environment') {
                     agent any
@@ -291,6 +285,7 @@ pipeline {
 
 
                     }
+
                 }
             }
         }
