@@ -132,24 +132,6 @@ pipeline {
                             }
                         }
 
-                        stage('Project binaries') {
-                            steps {
-                                script {
-                                    for (binary in BINARIES) {
-                                        def TARGET_BINARY = BINARIES_TARGETS[binary]
-                                        def TARGET_TEST = BINARIES_TESTS[binary]
-
-                                        stage ("Build and test ${binary}") {
-                                            bat "cmake --build build/windows/release --target ${TARGET_BINARY}"
-                                            fileExists("bin/${TARGET_BINARY}.exe")
-                                            bat "cmake --build build/windows/release --target ${TARGET_TEST}"
-                                            bat "bin\\${TARGET_TEST}.exe"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
                         stage('Project libraries') {
                             steps {
                                 script {
@@ -159,9 +141,27 @@ pipeline {
                                         def TARGET_TEST = LIBS_TESTS[lib]
 
                                         stage ("Build and test ${lib}") {
-                                            bat "cmake --build build/windows/release --target ${TARGET_LIB}"
+                                            bat "cmake --build build/windows/release --config release --target ${TARGET_LIB}"
                                             fileExists("bin/${TARGET_LIB}.${TARGET_LIB_EXT}")
-                                            bat "cmake --build build/windows/release --target ${TARGET_TEST}"
+                                            bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
+                                            bat "bin\\${TARGET_TEST}.exe"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        stage('Project binaries') {
+                            steps {
+                                script {
+                                    for (binary in BINARIES) {
+                                        def TARGET_BINARY = BINARIES_TARGETS[binary]
+                                        def TARGET_TEST = BINARIES_TESTS[binary]
+
+                                        stage ("Build and test ${binary}") {
+                                            bat "cmake --build build/windows/release --config release --target ${TARGET_BINARY}"
+                                            fileExists("bin/${TARGET_BINARY}.exe")
+                                            bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
                                             bat "bin\\${TARGET_TEST}.exe"
                                         }
                                     }
