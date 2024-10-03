@@ -26,7 +26,7 @@ LIBS_TESTS = [
 pipeline {
     agent none
     environment {
-        NEW_RELEASE = false,
+        NEW_RELEASE = false
         TAG = ''
     }
     stages {
