@@ -1,4 +1,6 @@
 target_sources(abra PRIVATE
-        client.cpp
-        client.hpp
+        interface_client.cpp
+        interface_client.hpp
 )
+
+add_subdirectory(props)

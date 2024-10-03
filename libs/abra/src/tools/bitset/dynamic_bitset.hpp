@@ -70,5 +70,5 @@ class EXPORT_NETWORK_SDK_API abra::tools::dynamic_bitset {
   std::vector<std::uint8_t> bitset_;
 };
 
-EXPORT_NETWORK_SDK_API std::ostream &operator<<(
-    std::ostream &os, const abra::tools::dynamic_bitset &bitset);
+EXPORT_NETWORK_SDK_API std::ostream &operator<<(std::ostream &os,
+                                                const abra::tools::dynamic_bitset &bitset);

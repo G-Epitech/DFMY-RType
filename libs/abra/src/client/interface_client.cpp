@@ -5,7 +5,6 @@
 ** Client class
 */
 
-#include "client.hpp"
+#include "interface_client.hpp"
 
-namespace abra {
-} // abra
+using namespace abra::client;
