@@ -230,7 +230,7 @@ pipeline {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                        sh '''
+                                        bat '''
                                         curl -H "Content-Type: application/json" \
                                              -H "Accept: application/vnd.github.antiope-preview+json" \
                                              -H "authorization: Bearer ${GITHUB_ACCESS_TOKEN}" \
