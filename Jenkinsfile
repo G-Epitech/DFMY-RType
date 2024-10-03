@@ -226,13 +226,13 @@ pipeline {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                       createGitHubRelease {
+                                       createGitHubRelease (
                                           credentialId: '${GITHUB_ACCESS_TOKEN}',
                                           repository: 'G-Epitech/DFMY-RType',
                                           tag: 'v0.0.0',
                                           draft: true,
                                           name: 'TEST'
-                                      }
+                                      )
                                     }
                                 }
                             }
