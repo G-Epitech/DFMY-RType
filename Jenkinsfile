@@ -7,20 +7,20 @@ BINARIES_TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
-LIBS = ['abra', 'ECS']
+LIBS = ['abra', 'ECS-sdk']
 LIBS_TARGETS = [
     'abra': [
         'target': 'abra',
         'type': 'shared'
     ],
-    'ECS': [
+    'ECS-sdk': [
         'target': 'r-type_ECS_sdk',
         'type': 'shared'
     ]
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
-    'ECS': 'r-type_ECS_sdk_tests'
+    'ECS-sdk': 'r-type_ECS_sdk_tests'
 ]
 
 pipeline {
@@ -127,7 +127,7 @@ pipeline {
                         stage('Generate build files') {
                             steps {
                                 script {
-                                    bat 'cmake --preset=windows:release'
+                                    bat 'cmake --preset=windows:release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="%cd%\\bin"'
                                 }
                             }
                         }
@@ -142,9 +142,9 @@ pipeline {
 
                                         stage ("Build and test ${lib}") {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_LIB}"
-                                            fileExists("build/windows/release/libs/${lib}/${TARGET_LIB}.${TARGET_LIB_EXT}")
+                                            fileExists("bin/${TARGET_LIB}.${TARGET_LIB_EXT}")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "build\\windows\\release\\libs\\${lib}\\tests\\${TARGET_TEST}.exe"
+                                            bat "bin\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
@@ -160,9 +160,9 @@ pipeline {
 
                                         stage ("Build and test ${binary}") {
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_BINARY}"
-                                            fileExists("build/windows/release/${binary}/${TARGET_BINARY}.exe")
+                                            fileExists("bin/${TARGET_BINARY}.exe")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
-                                            bat "build\\windows\\release\\${binary}\\tests\\${TARGET_TEST}.exe"
+                                            bat "bin\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
@@ -194,12 +194,12 @@ pipeline {
                             steps {
                                 script {
                                     stage('Client') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF'
+                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF -U DCMAKE_RUNTIME_OUTPUT_DIRECTORY'
                                         bat 'cmake --build build/windows/release --config release --target r-type_client'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
                                     stage('Server') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON'
+                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON -U DCMAKE_RUNTIME_OUTPUT_DIRECTORY'
                                         bat 'cmake --build build/windows/release --config release --target r-type_server'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
