@@ -231,7 +231,8 @@ pipeline {
                                           repository: 'G-Epitech/DFMY-RType',
                                           tag: 'v0.0.0',
                                           draft: true,
-                                          name: 'TEST'
+                                          name: 'TEST',
+                                          commitish: 'main'
                                       )
                                     }
                                 }
