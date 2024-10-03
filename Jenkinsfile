@@ -194,13 +194,13 @@ pipeline {
                             steps {
                                 script {
                                     stage('Client') {
-                                        bat 'rmdir /S /Q build'
+                                        /* bat 'rmdir /S /Q build' */
                                         bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON'
                                         bat 'cmake --build build/windows/release --config release --target r-type_client'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
                                     stage('Server') {
-                                        bat 'rmdir /S /Q build'
+                                        /* bat 'rmdir /S /Q build' */
                                         bat 'cmake --preset=windows:release -DINSTALL_SERVER=ON'
                                         bat 'cmake --build build/windows/release --config release --target r-type_server'
                                         bat 'cd build/windows/release && cpack -C release'
