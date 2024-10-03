@@ -24,9 +24,9 @@ LIBS_TESTS = [
 ]
 
 pipeline {
-    agent any
+    agent none
     stages {
-        stage ('Check style') {
+/*         stage ('Check style') {
             parallel {
 
                 stage ('Lint') {
@@ -171,9 +171,17 @@ pipeline {
                     }
                 }
             }
-        }
+        } */
 
         stage ('Publish') {
+            agent any
+            input {
+                message "What is the new version ?"
+                ok "Submit"
+                parameters {
+                    string(defaultValue: '1', name: 'VERSION', trim: true)
+                }
+            }
             parallel {
 /*                 stage('Linux environment') {
                     agent {
@@ -190,7 +198,7 @@ pipeline {
                     }
 
                     stages {
-                        stage('Generate build files') {
+/*                         stage('Generate build files') {
                             steps {
                                 script {
                                     stage('Client') {
@@ -205,7 +213,15 @@ pipeline {
                                     }
                                 }
                             }
+                        } */
+
+                        stage('Version') {
+                            steps {
+                                echo "NEW VERSION IS $VERSION"
+                            }
                         }
+
+
                     }
                 }
             }
