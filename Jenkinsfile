@@ -25,6 +25,9 @@ LIBS_TESTS = [
 
 pipeline {
     agent none
+    environment {
+        NEW_RELEASE = false
+    }
     stages {
 /*         stage ('Check style') {
             parallel {
@@ -173,13 +176,42 @@ pipeline {
             }
         } */
 
-        stage ('Publish') {
-            input {
-                message "What is the new version ?"
-                ok "Submit"
-                parameters {
-                    string(defaultValue: '1', name: 'VERSION', trim: true)
+        stage ('Check new Publish') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
+                                                      usernameVariable: 'GITHUB_APP',
+                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                        def response = sh(script: """
+                            curl -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                 -H "Accept: application/vnd.github.v3+json" \
+                                 https://api.github.com/repos/G-Epitech/DFMY-RType/releases
+                        """, returnStdout: true)
+
+                        def releases = readJSON(text: response)
+                        echo "Releases: ${releases}"
+
+                        def tags = sh(script: 'git tag', returnStdout: true).trim().tokenize()
+                        echo "Tags: ${tags}"
+                        def latestTag = tags[-1]
+                        echo "latestTag: ${latestTag}"
+
+                        def existingTags = releases.collect { it.tag_name }
+                        echo "ExistingTags: ${existingTags}"
+                        if (!existingTags.contains(latestTag)) {
+                            env.NEW_RELEASE = true
+                            echo "Creating release for new tag: ${latestTag}"
+                        } else {
+                            echo "No new release needed for tag: ${latestTag}"
+                        }
+                    }
                 }
+            }
+        }
+
+        stage ('Publish') {
+            when {
+                expression { env.NEW_RELEASE == 'true' }
             }
             parallel {
 /*                 stage('Linux environment') {
