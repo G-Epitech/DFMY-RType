@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "interface_client.hpp"
 
 namespace abra::client {
@@ -35,7 +37,7 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
    * @return The status of the message
    */
   template <typename T>
-  SendMessageStatus send(tools::Packet<T> *packet);
+  SendMessageStatus send(const std::unique_ptr<tools::Packet<T>> &packet);
 
  private:
   boost::asio::io_service ios_;

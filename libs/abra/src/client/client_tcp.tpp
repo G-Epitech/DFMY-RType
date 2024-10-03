@@ -10,7 +10,7 @@
 using namespace abra::client;
 
 template<typename T>
-SendMessageStatus ClientTCP::send(tools::Packet<T> *packet) {
+SendMessageStatus ClientTCP::send(const std::unique_ptr<tools::Packet<T>> &packet) {
   auto bitset = packet->GetBitset();
   auto vector = bitset->GetVector();
 
