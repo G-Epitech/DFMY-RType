@@ -193,6 +193,8 @@ pipeline {
                         def releases = readJSON(text: response)
                         echo "Releases: ${releases}"
 
+                        sh 'git tag'
+
                         def tags = sh(script: 'git tag', returnStdout: true).trim().tokenize()
                         echo "Tags: ${tags}"
                         if (tags.isEmpty()) {
