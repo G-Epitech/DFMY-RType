@@ -228,20 +228,20 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                         def response = sh(script: """
-                                            curl -X POST -H "Content-Type: application/json" ^
-                                                 -H "Authorization: Bearer ${GITHUB_ACCESS_TOKEN}" ^
+                                            curl -X POST -H "Content-Type: application/json" \
+                                                 -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
                                                  -d '{ "tag_name": "v0.0.0", \
                                                        "name": "Release v0.0.0", \
                                                        "body": "Description of the release.", \
                                                        "draft": false, \
-                                                       "prerelease": false }' ^
+                                                       "prerelease": false }' \
                                                  https://api.github.com/repos/G-Epitech/DFMY-RType/releases
                                         """, returnStdout: true)
 
                                         def jsonResponse = readJSON(text: response)
                                         def releaseId = jsonResponse.id
 
-                                        echo releaseId
+                                        echo "Release ID: ${releaseId}"
                                     }
                                 }
                             }
