@@ -29,7 +29,17 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
    */
   void listen() override;
 
+  /**
+   * @brief Send a message to the server
+   * @param packet The packet to send
+   * @return The status of the message
+   */
+  template <typename T>
+  SendMessageStatus send(tools::Packet<T> *packet);
+
  private:
   boost::asio::io_service ios_;
   boost::asio::ip::tcp::socket socket_;
 };
+
+#include "client_tcp.tpp"

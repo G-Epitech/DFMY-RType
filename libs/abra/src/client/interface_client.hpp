@@ -20,11 +20,6 @@ class EXPORT_NETWORK_SDK_API InterfaceClient;
 
 class EXPORT_NETWORK_SDK_API abra::client::InterfaceClient {
  public:
-  enum class SendMessageStatus {
-    SUCCESS,
-    ERROR,
-  };
-
   InterfaceClient() = default;
 
   /**

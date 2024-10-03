@@ -12,6 +12,11 @@
 #include "tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::client {
+enum class SendMessageStatus {
+  SUCCESS,
+  ERROR,
+};
+
 struct ServerMessage {
   unsigned int messageId;
   unsigned int messageType;
