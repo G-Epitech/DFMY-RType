@@ -164,7 +164,7 @@ pipeline {
                                             fileExists("build/windows/release/bin/${binary}/${TARGET_BINARY}.exe")
                                             bat "cmake --build build/windows/release --config release --target ${TARGET_TEST}"
                                             bat "xcopy build\\windows\\release\\${binary}\\*.dll build\\windows\\release\\${binary}\\tests /Y"
-                                            bat "build\\windows\\release\\bin\\${binary}\\tests\\${TARGET_TEST}.exe"
+                                            bat "build\\windows\\release\\${binary}\\tests\\${TARGET_TEST}.exe"
                                         }
                                     }
                                 }
