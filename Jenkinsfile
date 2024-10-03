@@ -194,12 +194,12 @@ pipeline {
                             steps {
                                 script {
                                     stage('Client') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF -U DCMAKE_RUNTIME_OUTPUT_DIRECTORY'
+                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF -U CMAKE_RUNTIME_OUTPUT_DIRECTORY'
                                         bat 'cmake --build build/windows/release --config release --target r-type_client'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
                                     stage('Server') {
-                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON -U DCMAKE_RUNTIME_OUTPUT_DIRECTORY'
+                                        bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON -U CMAKE_RUNTIME_OUTPUT_DIRECTORY'
                                         bat 'cmake --build build/windows/release --config release --target r-type_server'
                                         bat 'cd build/windows/release && cpack -C release'
                                     }
