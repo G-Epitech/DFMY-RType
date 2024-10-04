@@ -233,36 +233,10 @@ pipeline {
                     }
 
                     stages {
-                        stage('Checkout') {
-                            steps {
-                                checkout scm
-                            }
-                        }
-
                         stage('Echo Version') {
                             steps {
                                 echo "Version: $VERSION"
                                 echo "Release ID: $RELEASE_ID"
-                            }
-                        }
-
-                        stage('Generate Client') {
-                            steps {
-                                script {
-                                    bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF'
-                                    bat 'cmake --build build/windows/release --config release --target r-type_client'
-                                    bat 'cd build/windows/release && cpack -C release'
-                                }
-                            }
-                        }
-
-                        stage('Generate Server') {
-                            steps {
-                                script {
-                                    bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON'
-                                    bat 'cmake --build build/windows/release --config release --target r-type_server'
-                                    bat 'cd build/windows/release && cpack -C release'
-                                }
                             }
                         }
 
@@ -272,7 +246,7 @@ pipeline {
                                     for (binary in BINARIES) {
                                         def TARGET_BINARY = BINARIES_TARGETS[binary]
 
-                                        stage ("Generate installer for ${binary}") {
+                                        stage ("${binary}") {
                                             bat "cmake --preset=windows:release:${binary}"
                                             bat "cmake --build build/windows/release --config release --target r-type_${binary}"
                                             bat "cd build/windows/release && cpack -C release"
@@ -289,8 +263,22 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                         echo "Uploading"
-                                        bat "curl -X POST -H \"Authorization: token \$GITHUB_ACCESS_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" -H \"Content-Type: application/zip\" --data-binary @build/windows/release/R-Type-${VERSION}-client.zip https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=R-Type-${VERSION}-client.zip"
-                                        bat "curl -X POST -H \"Authorization: token \$GITHUB_ACCESS_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" -H \"Content-Type: application/zip\" --data-binary @build/windows/release/R-Type-${VERSION}-server.zip https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=R-Type-${VERSION}-server.zip"
+                                        bat """
+                                            curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                                 -H "Accept: application/vnd.github+json" \
+                                                 -H "X-GitHub-Api-Version: 2022-11-28" \
+                                                 -H "Content-Type: application/octet-stream" \
+                                                 --data-binary "@build/windows/release/r-type_client-${VERSION}-client.zip" \
+                                                 "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=r-type_client-${VERSION}-client.zip"
+                                        """
+                                        bat """
+                                            curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                                 -H "Accept: application/vnd.github+json" \
+                                                 -H "X-GitHub-Api-Version: 2022-11-28" \
+                                                 -H "Content-Type: application/octet-stream" \
+                                                 --data-binary "@build/windows/release/r-type_server-${VERSION}-server.zip" \
+                                                 "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=r-type_server-${VERSION}-server.zip"
+                                        """
                                     }
                                 }
                             }
