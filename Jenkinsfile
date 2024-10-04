@@ -213,6 +213,7 @@ pipeline {
                         if (releaseId) {
                             echo "Release created successfully"
                             RELEASE_ID = releaseId
+                            ACCESS_TOKEN = GITHUB_ACCESS_TOKEN
                         } else {
                             error "Failed to create release, it may already exist"
                             currentBuild.result = 'SUCCESS'
@@ -262,28 +263,23 @@ pipeline {
                         stage('Upload artifacts') {
                             steps {
                                 script {
-                                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
-                                                                      usernameVariable: 'GITHUB_APP',
-                                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                        for (binary in BINARIES) {
-                                            def filename = "R-Type-${binary}-${VERSION}.zip"
-                                            echo "Uploading ${filename}"
-                                            def response = bat(script: """
-                                                curl -L \
-                                                    -X POST \
-                                                    -H "Accept: application/vnd.github+json" \
-                                                    -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                                    -H "X-GitHub-Api-Version: 2022-11-28" \
-                                                    -H "Content-Type: application/octet-stream" \
-                                                    "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
-                                                    --data-binary "@build/windows/release/${filename}"
-                                            """, returnStdout: true)
-                                            echo "Response: ${response}"
-                                            def jsonResponse = readJSON(text: response)
-                                            echo "Upload URL: ${jsonResponse.url}"
-                                            def status = jsonResponse.state
-                                            echo "Upload status: ${status}"
-                                        }
+                                    for (binary in BINARIES) {
+                                        def filename = "R-Type-${binary}-${VERSION}.zip"
+                                        echo "Uploading ${filename}"
+                                        def response = bat(script: """
+                                            curl -L \
+                                                -X POST \
+                                                -H "Accept: application/vnd.github+json" \
+                                                -H "Authorization: Bearer \$ACCESS_TOKEN" \
+                                                -H "Content-Type: application/octet-stream" \
+                                                "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
+                                                --data-binary "@build/windows/release/${filename}"
+                                        """, returnStdout: true)
+                                        echo "Response: ${response}"
+                                        def jsonResponse = readJSON(text: response)
+                                        echo "Upload URL: ${jsonResponse.url}"
+                                        def status = jsonResponse.state
+                                        echo "Upload status: ${status}"
                                     }
                                 }
                             }
