@@ -215,7 +215,7 @@ pipeline {
                             RELEASE_ID = releaseId
                             ACCESS_TOKEN = GITHUB_ACCESS_TOKEN
                         } else {
-                            error "Failed to create release, it may already exist"
+                            echo "Failed to create release, it may already exist"
                             currentBuild.result = 'SUCCESS'
                         }
                     }
@@ -227,6 +227,9 @@ pipeline {
             when {
                 allOf {
                     buildingTag()
+                    /*expression {
+                        RELEASE_ID != null
+                    }*/
                     /* branch 'main' */
                 }
             }
