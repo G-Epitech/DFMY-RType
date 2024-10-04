@@ -65,7 +65,7 @@ pipeline {
                         dockerfile {
                             filename 'ci/unix.dockerfile'
                             reuseNode true
-                            args '-v vcpkg_archives:/root/.cache/vcpkg/archives'
+                            args '-v /var/jenkins_home/vcpkg_cache:/root/.cache/vcpkg/archives'
                         }
                     }
 
@@ -232,7 +232,7 @@ pipeline {
                         dockerfile {
                             filename 'ci/unix.dockerfile'
                             reuseNode true
-                            args '-v vcpkg_archives:/root/.cache/vcpkg/archives'
+                            args '-v /var/jenkins_home/vcpkg_cache:/root/.cache/vcpkg/archives'
                         }
                     }
 
