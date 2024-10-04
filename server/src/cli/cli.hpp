@@ -16,7 +16,7 @@ namespace po = boost::program_options;
 
 namespace rtype::server {
 /// @brief CliHandler interface wrapper
-using CliHandler = std::unique_ptr<ICliHandler>;
+using CliHandler = std::unique_ptr<InterfaceCliHandler>;
 
 class Cli {
  public:

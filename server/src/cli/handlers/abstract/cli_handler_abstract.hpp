@@ -14,14 +14,14 @@
 namespace po = boost::program_options;
 
 namespace rtype::server {
-class ACliHandler : public ICliHandler {
+class AbstractCliHandler : public InterfaceCliHandler {
  public:
   /**
    * @brief Initialize variables map and options description
    */
-  ACliHandler();
+  AbstractCliHandler();
 
-  ~ACliHandler() override = default;
+  ~AbstractCliHandler() override = default;
 
  protected:
   /// @brief Variables map that contains the parsed options
