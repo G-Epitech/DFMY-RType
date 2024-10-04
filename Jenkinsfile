@@ -65,6 +65,7 @@ pipeline {
                         dockerfile {
                             filename 'ci/unix.dockerfile'
                             reuseNode true
+                            args '-v vcpkg_archives:/root/.cache/vcpkg/archives'
                         }
                     }
 
@@ -177,7 +178,6 @@ pipeline {
             when {
                 allOf {
                     buildingTag()
-                    /* branch 'main' */
                 }
             }
             steps {
@@ -224,7 +224,6 @@ pipeline {
                     expression {
                         RELEASE_ID != null
                     }
-                    /* branch 'main' */
                 }
             }
             parallel {
@@ -233,6 +232,7 @@ pipeline {
                         dockerfile {
                             filename 'ci/unix.dockerfile'
                             reuseNode true
+                            args '-v vcpkg_archives:/root/.cache/vcpkg/archives'
                         }
                     }
 
