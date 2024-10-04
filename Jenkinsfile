@@ -22,6 +22,10 @@ LIBS_TESTS = [
     'abra': 'abra_tests',
     'ECS': 'r-type_ECS_sdk_tests'
 ]
+FILE_EXTENSIONS = [
+    'windows': ['exe', 'zip'],
+    'unix': ['deb', 'zip']
+]
 
 pipeline {
     agent any
@@ -120,12 +124,6 @@ pipeline {
                     }
 
                     stages {
-                        stage('Checkout') {
-                            steps {
-                                checkout scm
-                            }
-                        }
-
                         stage('Generate build files') {
                             steps {
                                 script {
@@ -213,7 +211,6 @@ pipeline {
                         if (releaseId) {
                             echo "Release created successfully"
                             RELEASE_ID = releaseId
-                            ACCESS_TOKEN = GITHUB_ACCESS_TOKEN
                         } else {
                             echo "Failed to create release, it may already exist"
                         }
@@ -246,13 +243,13 @@ pipeline {
                             }
                         }
 
-                        stage('Generate installers') {
+                        stage('Generate artifacts') {
                             steps {
                                 script {
                                     for (binary in BINARIES) {
                                         def TARGET_BINARY = BINARIES_TARGETS[binary]
 
-                                        stage ("${binary}") {
+                                        stage ("${binary} artifacts") {
                                             bat "cmake --preset=windows:release:${binary}"
                                             bat "cmake --build build/windows/release --config release --target r-type_${binary}"
                                             bat "cd build/windows/release && cpack -C release"
@@ -268,29 +265,19 @@ pipeline {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                        bat """
-                                            echo GITHUB_APP=%GITHUB_APP%
-                                        """
                                         for (binary in BINARIES) {
-                                            def filename = "R-Type-${binary}-${VERSION}.zip"
-                                            echo "Uploading ${filename}"
-                                            if (ACCESS_TOKEN) {
-                                                echo "Access Token"
+                                            for (ext in FILE_EXTENSIONS) {
+                                                def filename = "R-Type-${binary}-${VERSION}.${ext}"
+                                                bat """
+                                                    curl -L \
+                                                        -X POST \
+                                                        -H "Accept: application/vnd.github+json" \
+                                                        -H "Authorization: Bearer %GITHUB_ACCESS_TOKEN%" \
+                                                        -H "Content-Type: application/octet-stream" \
+                                                        "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
+                                                        --data-binary "@build/windows/release/${filename}"
+                                                """
                                             }
-                                            def response = bat(script: """
-                                                curl -L \
-                                                    -X POST \
-                                                    -H "Accept: application/vnd.github+json" \
-                                                    -H "Authorization: Bearer %GITHUB_ACCESS_TOKEN%" \
-                                                    -H "Content-Type: application/octet-stream" \
-                                                    "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
-                                                    --data-binary "@build/windows/release/${filename}"
-                                            """, returnStdout: true)
-                                            echo "Response: ${response}"
-                                            def jsonResponse = readJSON(text: response)
-                                            echo "Upload URL: ${jsonResponse.url}"
-                                            def status = jsonResponse.state
-                                            echo "Upload status: ${status}"
                                         }
                                     }
                                 }
