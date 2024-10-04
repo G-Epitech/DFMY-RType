@@ -24,7 +24,7 @@ LIBS_TESTS = [
 ]
 ARTIFACTS_FILE_EXTENSIONS = [
     'windows': ['exe', 'zip'],
-    'unix': ['deb', 'tgz']
+    'unix': ['deb', 'tar.gz']
 ]
 
 pipeline {
@@ -60,7 +60,6 @@ pipeline {
 
         stage ('Build and tests') {
             parallel {
-                /*
                 stage('Linux environment') {
                     agent {
                         dockerfile {
@@ -116,7 +115,6 @@ pipeline {
                         }
                     }
                 }
-                */
 
                 stage('Windows environment') {
                     agent {
@@ -230,6 +228,59 @@ pipeline {
                 }
             }
             parallel {
+                stage ('Unix Environment') {
+                    agent {
+                        dockerfile {
+                            filename 'ci/unix.dockerfile'
+                            reuseNode true
+                        }
+                    }
+
+                    stages {
+                        stage('Generate artifacts') {
+                            steps {
+                                script {
+                                    for (binary in BINARIES) {
+                                        def TARGET_BINARY = BINARIES_TARGETS[binary]
+
+                                        stage ("${binary} artifacts") {
+                                            sh "cmake --preset=unix:release:${binary}"
+                                            sh "cmake --build build/windows/release --config release --target r-type_${binary}"
+                                            sh "cd build/unix/release && cpack -C release"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        stage('Upload artifacts') {
+                            steps {
+                                script {
+                                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
+                                                                      usernameVariable: 'GITHUB_APP',
+                                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                                        for (binary in BINARIES) {
+                                            extensions = ARTIFACTS_FILE_EXTENSIONS['unix']
+                                            for (ext in extensions) {
+                                                def filename = "R-Type-${binary}-${VERSION}.${ext}"
+                                                sh """
+                                                    curl -L \
+                                                        -X POST \
+                                                        -H "Accept: application/vnd.github+json" \
+                                                        -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                                        -H "Content-Type: application/octet-stream" \
+                                                        "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
+                                                        --data-binary "@build/unix/release/${filename}"
+                                                """
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 stage ('Windows Environment') {
                     agent {
                         label 'windows'
