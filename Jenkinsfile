@@ -214,9 +214,18 @@ pipeline {
                             echo "Release created successfully"
                             RELEASE_ID = releaseId
                             ACCESS_TOKEN = GITHUB_ACCESS_TOKEN
+                            def responsetwo = bat(script: """
+                                curl -L \
+                                    -X POST \
+                                    -H "Accept: application/vnd.github+json" \
+                                    -H "Authorization: Bearer \$ACCESS_TOKEN" \
+                                    -H "Content-Type: application/octet-stream" \
+                                    "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
+                                    --data-binary "@build/windows/release/${filename}"
+                            """, returnStdout: true)
+                            echo "Response: ${responsetwo}"
                         } else {
                             echo "Failed to create release, it may already exist"
-                            currentBuild.result = 'SUCCESS'
                         }
                     }
                 }
@@ -227,9 +236,9 @@ pipeline {
             when {
                 allOf {
                     buildingTag()
-                    /*expression {
+                    expression {
                         RELEASE_ID != null
-                    }*/
+                    }
                     /* branch 'main' */
                 }
             }
