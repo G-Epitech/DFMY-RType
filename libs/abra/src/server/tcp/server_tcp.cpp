@@ -15,7 +15,6 @@ using namespace boost::asio;
 ServerTCP::ServerTCP(const int &port) : acceptor_(ioc_, ip::tcp::v4(), port), lastClientId_(0) {}
 
 ServerTCP::~ServerTCP() {
-  acceptor_.close();
   ioc_.stop();
 }
 
