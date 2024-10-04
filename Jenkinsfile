@@ -265,14 +265,16 @@ pipeline {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                        echo "Uploading"
+                                        echo "Upload URL: ${UPLOAD_URL}"
                                         for (binary in BINARIES) {
+                                            def filename = "R-Type-${binary}-${VERSION}.zip"
+                                            echo "Uploading ${filename}"
                                             bat """
                                                 curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
                                                      -H "Accept: application/vnd.github+json" \
                                                      -H "X-GitHub-Api-Version: 2022-11-28" \
                                                      -H "Content-Type: application/octet-stream" \
-                                                     --data-binary "@build/windows/release/R-Type-${binary}-${VERSION}.zip" \
+                                                     --data-binary "@build/windows/release/${filename}" \
                                                         "${UPLOAD_URL}?name=R-Type-${binary}-${VERSION}.zip"
                                             """
                                         }
