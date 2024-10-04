@@ -245,7 +245,7 @@ pipeline {
 
                                         stage ("${binary} artifacts") {
                                             sh "cmake --preset=unix:release:${binary}"
-                                            sh "cmake --build build/windows/release --config release --target r-type_${binary}"
+                                            sh "cmake --build build/unix/release --config release --target r-type_${binary}"
                                             sh "cd build/unix/release && cpack -C release"
                                         }
                                     }
