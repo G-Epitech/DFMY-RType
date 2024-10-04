@@ -193,8 +193,8 @@ pipeline {
                         def response = sh(script: """
                             curl -X POST -H "Content-Type: application/json" \
                                  -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                 -d '{ "tag_name": "$VERSION", \
-                                       "name": "Release $VERSION", \
+                                 -d '{ "tag_name": "v$VERSION", \
+                                       "name": "Release v$VERSION", \
                                        "body": "Description of the release.", \
                                        "draft": false, \
                                        "prerelease": false }' \
