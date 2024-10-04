@@ -184,10 +184,10 @@ pipeline {
             }
             steps {
                 script {
-                    script {
-                        VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
-                        echo "NEW VERSION IS $VERSION"
-                    }
+                    VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                    echo "NEW VERSION IS $VERSION"
+                }
+                script {
                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                       usernameVariable: 'GITHUB_APP',
                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
@@ -209,6 +209,7 @@ pipeline {
                         echo "Release ID: ${releaseId}"
                         if (releaseId) {
                             echo "Release created successfully"
+                            RELEASE_ID = releaseId
                         } else {
                             error "Failed to create release, it may already exist"
                             currentBuild.result = 'SUCCESS'
@@ -241,13 +242,38 @@ pipeline {
                         stage('Echo Version') {
                             steps {
                                 echo "Version: $VERSION"
+                                echo "Release ID: $RELEASE_ID"
                             }
                         }
 
                         stage('Generate Client') {
                             steps {
                                 script {
-                                    bat 'cmmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF'
+                                    bat 'cmake --preset=windows:release -DINSTALL_CLIENT=ON -DINSTALL_SERVER=OFF'
+                                    bat 'cmake --build build/windows/release --config release --target r-type_client'
+                                    bat 'cd build/windows/release && cpack -C release'
+                                }
+                            }
+                        }
+
+                        stage('Generate Server') {
+                            steps {
+                                script {
+                                    bat 'cmmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON'
+                                    bat 'cmake --build build/windows/release --config release --target r-type_server'
+                                    bat 'cd build/windows/release && cpack -C release'
+                                }
+                            }
+                        }
+
+                        stage('Upload') {
+                            steps {
+                                script {
+                                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
+                                                                      usernameVariable: 'GITHUB_APP',
+                                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                                        echo "Uploading client"
+                                    }
                                 }
                             }
                         }
