@@ -11,6 +11,12 @@ using namespace abra;
 
 tools::dynamic_bitset::dynamic_bitset(std::size_t size) : size_(size), bitset_((size + 7) / 8, 0) {}
 
+tools::dynamic_bitset::dynamic_bitset(const std::vector<char> &vector) {
+  size_ = vector.size() * 8;
+  bitset_.resize(vector.size());
+  std::copy(vector.begin(), vector.end(), bitset_.begin());
+}
+
 tools::dynamic_bitset::~dynamic_bitset() = default;
 
 void tools::dynamic_bitset::Set(std::size_t index, bool value) {
