@@ -9,7 +9,7 @@
 #include <queue>
 
 #include "core.hpp"
-#include "props/message.hpp"
+#include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
 
 #pragma once
@@ -31,9 +31,9 @@ class abra::client::InterfaceClient {
    * @brief Send a message to the server
    * @return The message queue
    */
-  [[nodiscard]] virtual const std::queue<ServerMessage> &getQueue() const = 0;
+  [[nodiscard]] virtual const std::queue<tools::MessageProps> &getQueue() const = 0;
 
  protected:
   /// @brief The queue of server messages
-  std::queue<ServerMessage> queue_;
+  std::queue<tools::MessageProps> queue_;
 };

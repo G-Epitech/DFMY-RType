@@ -28,18 +28,14 @@ ClientUDP::~ClientUDP() {
 
 void ClientUDP::Listen() {
   while (socket_.is_open()) {
-    std::vector<char> buf(kPacketMaxSize);
+    std::vector<char> buf(kPacketMaxBytesSize);
     ip::udp::endpoint senderEndpoint;
 
     std::size_t len = socket_.receive_from(buffer(buf), senderEndpoint);
 
-    auto bitset = std::make_shared<tools::dynamic_bitset>(len * 8);
-    for (std::size_t i = 0; i < len; i++) {
-      bitset->Append(buf[i], 8, i * 8);
-    }
-
-    ServerMessage message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                             tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
+    auto bitset = std::make_shared<tools::dynamic_bitset>(buf);
+    tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
+                                   tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
     queue_.push(message);
   }
 }

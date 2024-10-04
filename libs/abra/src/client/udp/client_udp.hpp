@@ -37,7 +37,7 @@ class abra::client::ClientUDP : public InterfaceClient {
    * @return The status of the message
    */
   template <typename T>
-  SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>> &packet);
+  tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>> &packet);
 
  private:
   /// @brief The Input Output Context

@@ -4,4 +4,3 @@ target_sources(abra PRIVATE
 
 add_subdirectory(tcp)
 add_subdirectory(udp)
-add_subdirectory(props)
