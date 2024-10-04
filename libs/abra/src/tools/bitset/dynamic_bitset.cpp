@@ -48,8 +48,11 @@ void tools::dynamic_bitset::FillFromRange(std::size_t start, std::size_t end,
   }
 }
 
-std::ostream &operator<<(std::ostream &os,
-                         const abra::tools::dynamic_bitset &bitset) {
+const std::vector<std::uint8_t> &tools::dynamic_bitset::GetVector() const {
+  return this->bitset_;
+}
+
+std::ostream &operator<<(std::ostream &os, const abra::tools::dynamic_bitset &bitset) {
   for (std::size_t i = 0; i < bitset.GetSize(); i++) {
     if (i % 8 == 0)
       os << ".";

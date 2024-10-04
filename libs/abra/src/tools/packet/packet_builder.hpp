@@ -76,7 +76,7 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketBuilder {
    * @return The packet
    */
   template <typename T>
-  Packet<T> Build(T payload);
+  std::unique_ptr<tools::Packet<T>> Build(T payload);
 
   /**
    * @brief Build a multiples packets with the given payloads and the properties set
@@ -85,7 +85,7 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketBuilder {
    * @return The packets
    */
   template <typename T>
-  std::vector<Packet<T>> Build(std::vector<T> payloads);
+  std::vector<std::unique_ptr<Packet<T>>> Build(std::vector<T> payloads);
 
   /**
    * @brief Build a packet from a bitset
@@ -95,7 +95,7 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketBuilder {
    * @return The packet
    */
   template <typename T>
-  Packet<T> Build(const std::shared_ptr<tools::dynamic_bitset> &bitset);
+  std::unique_ptr<Packet<T>> Build(const std::shared_ptr<tools::dynamic_bitset> &bitset);
 
  private:
   /**
