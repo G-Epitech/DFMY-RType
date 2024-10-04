@@ -178,6 +178,9 @@ pipeline {
         }
 
         stage ('Create Release') {
+            agent {
+                label 'windows'
+            }
             when {
                 allOf {
                     buildingTag()
@@ -194,7 +197,7 @@ pipeline {
                                                       usernameVariable: 'GITHUB_APP',
                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                         echo "Tag: $VERSION"
-                        def response = sh(script: """
+                        def response = bat(script: """
                             curl -X POST -H "Content-Type: application/json" \
                                  -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
                                  -d '{ "tag_name": "$VERSION", \
