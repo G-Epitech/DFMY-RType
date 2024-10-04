@@ -10,7 +10,7 @@
 using namespace abra::client;
 
 template<typename T>
-SendMessageStatus ClientUDP::send(const std::unique_ptr<tools::Packet<T>> &packet) {
+SendMessageStatus ClientUDP::Send(const std::unique_ptr<tools::Packet<T>> &packet) {
   const auto bitset = packet->GetBitset();
   const auto vector = bitset->GetVector();
   auto status = SendMessageStatus::kSuccess;

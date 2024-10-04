@@ -20,9 +20,10 @@ ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port) : socket_
 
 ClientTCP::~ClientTCP() {
   socket_.close();
+  ios_.stop();
 }
 
-void ClientTCP::listen() {
+void ClientTCP::Listen() {
   while (socket_.is_open()) {
     std::vector<char> buf(kPacketMaxSize);
     boost::system::error_code error;

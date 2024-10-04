@@ -25,7 +25,7 @@ class abra::client::InterfaceClient {
   /**
    * @brief Listen the server and handle the incoming data
    */
-  virtual void listen() = 0;
+  virtual void Listen() = 0;
 
   /**
    * @brief Send a message to the server

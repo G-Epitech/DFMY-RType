@@ -23,9 +23,10 @@ ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port) : socket_(ioc_
 
 ClientUDP::~ClientUDP() {
   socket_.close();
+  ioc_.stop();
 }
 
-void ClientUDP::listen() {
+void ClientUDP::Listen() {
   while (socket_.is_open()) {
     std::vector<char> buf(kPacketMaxSize);
     ip::udp::endpoint senderEndpoint;
