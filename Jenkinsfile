@@ -214,6 +214,7 @@ pipeline {
                             echo "Release created successfully"
                             RELEASE_ID = releaseId
                             ACCESS_TOKEN = GITHUB_ACCESS_TOKEN
+                            def filename = "R-Type-${binary}-${VERSION}.zip"
                             def responsetwo = bat(script: """
                                 curl -L \
                                     -X POST \
