@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "interface_client.hpp"
+#include "client/interface_client.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientUDP;

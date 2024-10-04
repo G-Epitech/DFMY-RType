@@ -8,7 +8,7 @@
 #include <boost/asio.hpp>
 #include <queue>
 
-#include "api.hpp"
+#include "core.hpp"
 #include "props/message.hpp"
 #include "tools/packet/packet.hpp"
 
