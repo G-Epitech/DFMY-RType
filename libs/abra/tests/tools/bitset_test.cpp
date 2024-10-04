@@ -18,8 +18,8 @@ TEST(BitsetTest, ConvertSimplePacketToBitset) {
   packetBuilder.SetPayloadType(tools::PayloadType::kCharacter);
   packetBuilder.SetMessageType(1);
 
-  tools::Packet packet = packetBuilder.Build<char>(payload);
-  auto bitset = packet.GetBitset();
+  auto packet = packetBuilder.Build<char>(payload);
+  auto bitset = packet->GetBitset();
 
   EXPECT_EQ(bitset->GetSize(), 7 * 8); // header(2), message(4), payload(1)
 
@@ -47,19 +47,19 @@ TEST(BitsetTest, ConvertBitsetToPacket) {
   packetBuilder.SetPayloadType(tools::PayloadType::kCustom);
   packetBuilder.SetMessageType(42);
 
-  tools::Packet packet = packetBuilder.Build<payloadStruct>(payload);
-  auto bitset = packet.GetBitset();
+  auto packet = packetBuilder.Build<payloadStruct>(payload);
+  auto bitset = packet->GetBitset();
 
-  tools::Packet convertedPacket = packetBuilder.Build<payloadStruct>(bitset);
+  auto convertedPacket = packetBuilder.Build<payloadStruct>(bitset);
 
-  EXPECT_EQ(convertedPacket.GetHeader().payloadType, static_cast<unsigned>(tools::PayloadType::kCustom));
-  EXPECT_EQ(convertedPacket.GetHeader().payloadLength, sizeof(payload));
-  EXPECT_EQ(convertedPacket.GetHeader().offsetFlag, 0);
-  EXPECT_EQ(convertedPacket.GetHeader().turnFlag, 0);
+  EXPECT_EQ(convertedPacket->GetHeader().payloadType, static_cast<unsigned>(tools::PayloadType::kCustom));
+  EXPECT_EQ(convertedPacket->GetHeader().payloadLength, sizeof(payload));
+  EXPECT_EQ(convertedPacket->GetHeader().offsetFlag, 0);
+  EXPECT_EQ(convertedPacket->GetHeader().turnFlag, 0);
 
-  EXPECT_EQ(convertedPacket.GetMessage().messageType, 42);
+  EXPECT_EQ(convertedPacket->GetMessage().messageType, 42);
 
-  auto convertedPayload = convertedPacket.GetPayload();
+  auto convertedPayload = convertedPacket->GetPayload();
   EXPECT_EQ(convertedPayload.a, payload.a);
   EXPECT_EQ(convertedPayload.b, payload.b);
   EXPECT_EQ(convertedPayload.c, payload.c);

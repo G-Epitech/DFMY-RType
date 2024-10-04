@@ -63,6 +63,12 @@ class EXPORT_NETWORK_SDK_API abra::tools::dynamic_bitset {
    */
   [[nodiscard]] std::size_t GetSize() const;
 
+  /**
+   * @brief Get the bitset vector
+   * @return The vector
+   */
+  [[nodiscard]] const std::vector<std::uint8_t> &GetVector() const;
+
  private:
   /// @brief The size of the bitset (in bits)
   std::size_t size_;
@@ -70,5 +76,5 @@ class EXPORT_NETWORK_SDK_API abra::tools::dynamic_bitset {
   std::vector<std::uint8_t> bitset_;
 };
 
-EXPORT_NETWORK_SDK_API std::ostream &operator<<(
-    std::ostream &os, const abra::tools::dynamic_bitset &bitset);
+EXPORT_NETWORK_SDK_API std::ostream &operator<<(std::ostream &os,
+                                                const abra::tools::dynamic_bitset &bitset);
