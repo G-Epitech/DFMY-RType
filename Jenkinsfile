@@ -204,12 +204,15 @@ pipeline {
                         """, returnStdout: true)
 
                         def jsonResponse = readJSON(text: response)
+                        echo "Response: ${response}"
                         def releaseId = jsonResponse.id
+                        def uploadUrl = jsonResponse.upload_url
 
                         echo "Release ID: ${releaseId}"
                         if (releaseId) {
                             echo "Release created successfully"
                             RELEASE_ID = releaseId
+                            UPLOAD_URL = uploadUrl
                         } else {
                             error "Failed to create release, it may already exist"
                             currentBuild.result = 'SUCCESS'
@@ -269,8 +272,8 @@ pipeline {
                                                      -H "Accept: application/vnd.github+json" \
                                                      -H "X-GitHub-Api-Version: 2022-11-28" \
                                                      -H "Content-Type: application/octet-stream" \
-                                                     --data-binary "@build/windows/release/R-Type-${VERSION}-${binary}.zip" \
-                                                     "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=R-Type-${binary}-${VERSION}.zip"
+                                                     --data-binary "@build/windows/release/R-Type-${binary}-${VERSION}.zip" \
+                                                        "${UPLOAD_URL}?name=R-Type-${binary}-${VERSION}.zip"
                                             """
                                         }
                                     }
