@@ -269,7 +269,7 @@ pipeline {
                                             def filename = "R-Type-${binary}-${VERSION}.zip"
                                             echo "Uploading ${filename}"
                                             def response = bat(script: """
-                                                curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                                curl -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
                                                      -H "Accept: application/vnd.github+json" \
                                                      -H "Content-Type: application/octet-stream" \
                                                      --data-binary "@build/windows/release/${filename}" \
