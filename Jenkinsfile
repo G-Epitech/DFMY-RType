@@ -206,13 +206,11 @@ pipeline {
                         def jsonResponse = readJSON(text: response)
                         echo "Response: ${response}"
                         def releaseId = jsonResponse.id
-                        def uploadUrl = jsonResponse.upload_url
 
                         echo "Release ID: ${releaseId}"
                         if (releaseId) {
                             echo "Release created successfully"
                             RELEASE_ID = releaseId
-                            UPLOAD_URL = uploadUrl
                         } else {
                             error "Failed to create release, it may already exist"
                             currentBuild.result = 'SUCCESS'
@@ -269,14 +267,18 @@ pipeline {
                                         for (binary in BINARIES) {
                                             def filename = "R-Type-${binary}-${VERSION}.zip"
                                             echo "Uploading ${filename}"
-                                            bat """
+                                            def response = bat(script: """
                                                 curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
                                                      -H "Accept: application/vnd.github+json" \
-                                                     -H "X-GitHub-Api-Version: 2022-11-28" \
                                                      -H "Content-Type: application/octet-stream" \
                                                      --data-binary "@build/windows/release/${filename}" \
-                                                        "${UPLOAD_URL}?name=R-Type-${binary}-${VERSION}.zip"
-                                            """
+                                                     "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}"
+                                            """, returnStdout: true)
+                                            echo "Response: ${response}"
+                                            def jsonResponse = readJSON(text: response)
+                                            echo "Upload URL: ${jsonResponse.url}"
+                                            def status = jsonResponse.state
+                                            echo "Upload status: ${status}"
                                         }
                                     }
                                 }
