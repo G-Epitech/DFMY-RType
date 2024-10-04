@@ -269,6 +269,9 @@ pipeline {
                                     for (binary in BINARIES) {
                                         def filename = "R-Type-${binary}-${VERSION}.zip"
                                         echo "Uploading ${filename}"
+                                        if (ACCESS_TOKEN) {
+                                            echo "Access Token"
+                                        }
                                         def response = bat(script: """
                                             curl -L \
                                                 -X POST \
