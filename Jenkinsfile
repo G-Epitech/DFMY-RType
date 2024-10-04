@@ -22,13 +22,17 @@ LIBS_TESTS = [
     'abra': 'abra_tests',
     'ECS': 'r-type_ECS_sdk_tests'
 ]
-ARTIFACTS_FILE_EXTENSIONS = [
+ARTIFACTS_FILES_EXTENSIONS = [
     'windows': ['exe', 'zip'],
     'unix': ['deb', 'tar.gz']
 ]
 
 pipeline {
     agent any
+    environment {
+        RELEASE_ID = null
+        VERSION = null
+    }
     stages {
         stage ('Check style') {
             parallel {
@@ -202,12 +206,10 @@ pipeline {
                         """, returnStdout: true)
 
                         def jsonResponse = readJSON(text: response)
-                        echo "Response: ${response}"
                         def releaseId = jsonResponse.id
 
-                        echo "Release ID: ${releaseId}"
                         if (releaseId) {
-                            echo "Release created successfully"
+                            echo "Release ${releaseId} created successfully"
                             RELEASE_ID = releaseId
                         } else {
                             echo "Failed to create release, it may already exist"
@@ -260,7 +262,7 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                         for (binary in BINARIES) {
-                                            extensions = ARTIFACTS_FILE_EXTENSIONS['unix']
+                                            extensions = ARTIFACTS_FILES_EXTENSIONS['unix']
                                             for (ext in extensions) {
                                                 def filename = "R-Type-${binary}-${VERSION}.${ext}"
                                                 sh """
@@ -310,7 +312,7 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                         for (binary in BINARIES) {
-                                            extensions = ARTIFACTS_FILE_EXTENSIONS['windows']
+                                            extensions = ARTIFACTS_FILES_EXTENSIONS['windows']
                                             for (ext in extensions) {
                                                 def filename = "R-Type-${binary}-${VERSION}.${ext}"
                                                 bat """
