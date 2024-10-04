@@ -263,22 +263,16 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                         echo "Uploading"
-                                        bat """
-                                            curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                                 -H "Accept: application/vnd.github+json" \
-                                                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                                                 -H "Content-Type: application/octet-stream" \
-                                                 --data-binary "@build/windows/release/r-type_client-${VERSION}-client.zip" \
-                                                 "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=r-type_client-${VERSION}-client.zip"
-                                        """
-                                        bat """
-                                            curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
-                                                 -H "Accept: application/vnd.github+json" \
-                                                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                                                 -H "Content-Type: application/octet-stream" \
-                                                 --data-binary "@build/windows/release/r-type_server-${VERSION}-server.zip" \
-                                                 "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=r-type_server-${VERSION}-server.zip"
-                                        """
+                                        for (binary in BINARIES) {
+                                            bat """
+                                                curl -L -X POST -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                                     -H "Accept: application/vnd.github+json" \
+                                                     -H "X-GitHub-Api-Version: 2022-11-28" \
+                                                     -H "Content-Type: application/octet-stream" \
+                                                     --data-binary "@build/windows/release/R-Type-${VERSION}-${binary}.zip" \
+                                                     "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=R-Type-${binary}-${VERSION}.zip"
+                                            """
+                                        }
                                     }
                                 }
                             }
