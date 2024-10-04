@@ -36,6 +36,28 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
       }
+    },
+    {
+      "name": "windows:release:client",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/windows/release",
+      "cacheVariables": {
+        "INSTALL_CLIENT": "ON",
+        "INSTALL_SERVER": "OFF",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
+      }
+    },
+    {
+      "name": "windows:release:server",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/windows/release",
+      "cacheVariables": {
+        "INSTALL_CLIENT": "OFF",
+        "INSTALL_SERVER": "ON",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
+      }
     }
   ]
 }

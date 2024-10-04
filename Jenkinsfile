@@ -184,7 +184,7 @@ pipeline {
             }
             steps {
                 script {
-                    VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                    VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim().substring(1)
                     echo "NEW VERSION IS $VERSION"
                 }
                 script {
@@ -228,16 +228,16 @@ pipeline {
             }
             parallel {
                 stage ('Windows Environment') {
-                     agent {
-                         label 'windows'
-                     }
+                    agent {
+                        label 'windows'
+                    }
 
-                     stages {
-                         stage('Checkout') {
-                             steps {
-                                 checkout scm
-                             }
-                         }
+                    stages {
+                        stage('Checkout') {
+                            steps {
+                                checkout scm
+                            }
+                        }
 
                         stage('Echo Version') {
                             steps {
@@ -259,20 +259,38 @@ pipeline {
                         stage('Generate Server') {
                             steps {
                                 script {
-                                    bat 'cmmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON'
+                                    bat 'cmake --preset=windows:release -DINSTALL_CLIENT=OFF -DINSTALL_SERVER=ON'
                                     bat 'cmake --build build/windows/release --config release --target r-type_server'
                                     bat 'cd build/windows/release && cpack -C release'
                                 }
                             }
                         }
 
-                        stage('Upload') {
+                        stage('Generate installers') {
+                            steps {
+                                script {
+                                    for (binary in BINARIES) {
+                                        def TARGET_BINARY = BINARIES_TARGETS[binary]
+
+                                        stage ("Generate installer for ${binary}") {
+                                            bat "cmake --preset=windows:release:${binary}"
+                                            bat "cmake --build build/windows/release --config release --target r-type_${binary}"
+                                            bat "cd build/windows/release && cpack -C release"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        stage('Upload artifacts') {
                             steps {
                                 script {
                                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
-                                        echo "Uploading client"
+                                        echo "Uploading"
+                                        bat "curl -X POST -H \"Authorization: token \$GITHUB_ACCESS_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" -H \"Content-Type: application/zip\" --data-binary @build/windows/release/R-Type-${VERSION}-client.zip https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=R-Type-${VERSION}-client.zip"
+                                        bat "curl -X POST -H \"Authorization: token \$GITHUB_ACCESS_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" -H \"Content-Type: application/zip\" --data-binary @build/windows/release/R-Type-${VERSION}-server.zip https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=R-Type-${VERSION}-server.zip"
                                     }
                                 }
                             }
