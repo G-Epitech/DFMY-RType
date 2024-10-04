@@ -281,7 +281,7 @@ pipeline {
                                                 curl -L \
                                                     -X POST \
                                                     -H "Accept: application/vnd.github+json" \
-                                                    -H "Authorization: Bearer \$ACCESS_TOKEN" \
+                                                    -H "Authorization: Bearer %GITHUB_ACCESS_TOKEN%" \
                                                     -H "Content-Type: application/octet-stream" \
                                                     "https://uploads.github.com/repos/G-Epitech/DFMY-RType/releases/${RELEASE_ID}/assets?name=${filename}" \
                                                     --data-binary "@build/windows/release/${filename}"
