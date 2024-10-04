@@ -22,9 +22,9 @@ LIBS_TESTS = [
     'abra': 'abra_tests',
     'ECS': 'r-type_ECS_sdk_tests'
 ]
-FILE_EXTENSIONS = [
+ARTIFACTS_FILE_EXTENSIONS = [
     'windows': ['exe', 'zip'],
-    'unix': ['deb', 'zip']
+    'unix': ['deb', 'tgz']
 ]
 
 pipeline {
@@ -236,13 +236,6 @@ pipeline {
                     }
 
                     stages {
-                        stage('Echo Version') {
-                            steps {
-                                echo "Version: $VERSION"
-                                echo "Release ID: $RELEASE_ID"
-                            }
-                        }
-
                         stage('Generate artifacts') {
                             steps {
                                 script {
@@ -266,7 +259,8 @@ pipeline {
                                                                       usernameVariable: 'GITHUB_APP',
                                                                       passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
                                         for (binary in BINARIES) {
-                                            for (ext in FILE_EXTENSIONS) {
+                                            extensions = ARTIFACTS_FILE_EXTENSIONS['windows']
+                                            for (ext in extensions) {
                                                 def filename = "R-Type-${binary}-${VERSION}.${ext}"
                                                 bat """
                                                     curl -L \

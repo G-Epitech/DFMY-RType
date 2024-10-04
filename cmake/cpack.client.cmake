@@ -33,7 +33,7 @@ if (INSTALL_CLIENT)
         install(FILES ${DEPENDENCIES} DESTINATION .)
 
     elseif (UNIX)
-        set(CPACK_GENERATOR "DEB;TGZ")
+        set(CPACK_GENERATOR "TGZ;DEB")
 
         set(CPACK_PACKAGE_EXECUTABLES "r-type_client;R-Type Client")
 
