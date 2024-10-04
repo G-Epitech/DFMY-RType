@@ -15,7 +15,7 @@ namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientTCP;
 }
 
-class abra::client::ClientTCP : public abra::client::IClient {
+class abra::client::ClientTCP : public abra::client::InterfaceClient {
  public:
   /**
    * @brief Construct a new ClientTCP object

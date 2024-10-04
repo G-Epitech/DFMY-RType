@@ -15,12 +15,12 @@
 #pragma once
 
 namespace abra::client {
-class EXPORT_NETWORK_SDK_API IClient;
+class EXPORT_NETWORK_SDK_API InterfaceClient;
 }  // namespace abra::client
 
-class abra::client::IClient {
+class abra::client::InterfaceClient {
  public:
-  IClient() = default;
+  InterfaceClient() = default;
 
   /**
    * @brief Listen the server and handle the incoming data

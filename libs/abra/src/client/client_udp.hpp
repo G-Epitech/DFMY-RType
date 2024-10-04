@@ -15,7 +15,7 @@ namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientUDP;
 }
 
-class abra::client::ClientUDP : public IClient {
+class abra::client::ClientUDP : public InterfaceClient {
  public:
   /**
    * @brief Construct a new ClientUDP object
