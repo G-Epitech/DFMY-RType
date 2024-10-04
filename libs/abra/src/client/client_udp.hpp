@@ -15,7 +15,7 @@ namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientUDP;
 }
 
-class EXPORT_NETWORK_SDK_API abra::client::ClientUDP : public InterfaceClient {
+class abra::client::ClientUDP : public IClient {
  public:
   /**
    * @brief Construct a new ClientUDP object
@@ -40,8 +40,11 @@ class EXPORT_NETWORK_SDK_API abra::client::ClientUDP : public InterfaceClient {
   SendMessageStatus send(const std::unique_ptr<tools::Packet<T>> &packet);
 
  private:
+  /// @brief The Input Output Context
   boost::asio::io_context ioc_;
+  /// @brief Endpoint of the server
   boost::asio::ip::udp::endpoint receiverEndpoint_;
+  /// @brief The UDP socket
   boost::asio::ip::udp::socket socket_;
 };
 

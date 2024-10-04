@@ -26,17 +26,15 @@ ClientUDP::~ClientUDP() {
 }
 
 void ClientUDP::listen() {
-  unsigned int maxPacketSize = kPacketHeaderPropsSize + kPacketMessagePropsSize +
-                               kPacketOffsetPropsSize + kPacketTurnPropsSize + 1024;
   while (socket_.is_open()) {
-    std::vector<char> buffer(maxPacketSize);
+    std::vector<char> buf(kPacketMaxSize);
     ip::udp::endpoint senderEndpoint;
 
-    std::size_t len = socket_.receive_from(boost::asio::buffer(buffer), senderEndpoint);
+    std::size_t len = socket_.receive_from(buffer(buf), senderEndpoint);
 
-    auto bitset = std::make_shared<abra::tools::dynamic_bitset>(len * 8);
+    auto bitset = std::make_shared<tools::dynamic_bitset>(len * 8);
     for (std::size_t i = 0; i < len; i++) {
-      bitset->Append(buffer[i], 8, i * 8);
+      bitset->Append(buf[i], 8, i * 8);
     }
 
     ServerMessage message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
