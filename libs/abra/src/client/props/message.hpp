@@ -13,8 +13,8 @@
 
 namespace abra::client {
 enum class SendMessageStatus {
-  SUCCESS,
-  ERROR,
+  kSuccess = 0,
+  kError = 1,
 };
 
 struct ServerMessage {

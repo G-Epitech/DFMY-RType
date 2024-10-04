@@ -17,5 +17,5 @@ SendMessageStatus ClientTCP::send(const std::unique_ptr<tools::Packet<T>> &packe
   boost::system::error_code error;
   this->socket_.write_some(boost::asio::buffer(vector, vector.size()), error);
 
-  return error ? SendMessageStatus::ERROR : SendMessageStatus::SUCCESS;
+  return error ? SendMessageStatus::kError : SendMessageStatus::kSuccess;
 }

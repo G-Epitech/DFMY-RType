@@ -13,16 +13,16 @@ template<typename T>
 SendMessageStatus ClientUDP::send(const std::unique_ptr<tools::Packet<T>> &packet) {
   auto bitset = packet->GetBitset();
   auto vector = bitset->GetVector();
-  auto status = SendMessageStatus::SUCCESS;
+  auto status = SendMessageStatus::kSuccess;
 
   try {
     std::size_t len = this->socket_.send_to(boost::asio::buffer(vector, vector.size()), this->receiverEndpoint_);
 
     if (len != vector.size()) {
-      status = SendMessageStatus::ERROR;
+      status = SendMessageStatus::kError;
     }
   } catch (const std::exception &e) {
-    status = SendMessageStatus::ERROR;
+    status = SendMessageStatus::kError;
   }
 
   return status;
