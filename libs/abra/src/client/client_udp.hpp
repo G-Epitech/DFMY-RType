@@ -31,6 +31,14 @@ class EXPORT_NETWORK_SDK_API abra::client::ClientUDP : public InterfaceClient {
    */
   void listen() override;
 
+  /**
+   * @brief Send a message to the server
+   * @param packet The packet to send
+   * @return The status of the message
+   */
+  template <typename T>
+  SendMessageStatus send(const std::unique_ptr<tools::Packet<T>> &packet);
+
  private:
   boost::asio::io_context ioc_;
   boost::asio::ip::udp::endpoint receiverEndpoint_;
