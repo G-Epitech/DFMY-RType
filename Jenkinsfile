@@ -177,11 +177,40 @@ pipeline {
             }
         }
 
+        stage ('Delete old release') {
+            when {
+                buildingTag()
+            }
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
+                                                      usernameVariable: 'GITHUB_APP',
+                                                      passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                        def response = sh(script: """
+                            curl -X GET -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                 https://api.github.com/repos/G-Epitech/DFMY-RType/releases/tags/v$VERSION
+                        """, returnStdout: true)
+
+                        def jsonResponse = readJSON(text: response)
+                        def releaseId = jsonResponse.id
+
+                        if (releaseId) {
+                            echo "Release ${releaseId} found, deleting it"
+                            sh """
+                                curl -X DELETE -H "Authorization: Bearer \$GITHUB_ACCESS_TOKEN" \
+                                     https://api.github.com/repos/G-Epitech/DFMY-RType/releases/${releaseId}
+                            """
+                        } else {
+                            echo "Release not found"
+                        }
+                    }
+                }
+            }
+        }
+
         stage ('Create Release') {
             when {
-                allOf {
-                    buildingTag()
-                }
+                buildingTag()
             }
             steps {
                 script {
@@ -245,7 +274,7 @@ pipeline {
 
                                         stage ("${binary} artifacts") {
                                             sh "cmake --preset=unix:release:${binary}"
-                                            sh "cmake --build build/unix/release --config release --target r-type_${binary}"
+                                            sh "cmake --build build/unix/release --config release --target ${TARGET_BINARY}"
                                             sh "cd build/unix/release && cpack -C release"
                                         }
                                     }
@@ -295,7 +324,7 @@ pipeline {
 
                                         stage ("${binary} artifacts") {
                                             bat "cmake --preset=windows:release:${binary}"
-                                            bat "cmake --build build/windows/release --config release --target r-type_${binary}"
+                                            bat "cmake --build build/windows/release --config release --target ${TARGET_BINARY}"
                                             bat "cd build/windows/release && cpack -C release"
                                         }
                                     }
