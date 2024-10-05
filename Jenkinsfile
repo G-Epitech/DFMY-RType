@@ -177,11 +177,15 @@ pipeline {
             }
         }
 
-        stage ('Delete old release') {
+        stage ('Create Release') {
             when {
                 buildingTag()
             }
             steps {
+                script {
+                    VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim().substring(1)
+                    echo "NEW VERSION IS $VERSION"
+                }
                 script {
                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
                                                       usernameVariable: 'GITHUB_APP',
@@ -204,18 +208,6 @@ pipeline {
                             echo "Release not found"
                         }
                     }
-                }
-            }
-        }
-
-        stage ('Create Release') {
-            when {
-                buildingTag()
-            }
-            steps {
-                script {
-                    VERSION = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim().substring(1)
-                    echo "NEW VERSION IS $VERSION"
                 }
                 script {
                     withCredentials([usernamePassword(credentialsId: '097d37a7-4a1b-4fc6-ba70-e13f043b70e8',
@@ -240,7 +232,7 @@ pipeline {
                             echo "Release ${releaseId} created successfully"
                             RELEASE_ID = releaseId
                         } else {
-                            echo "Failed to create release, it may already exist"
+                            error "Failed to create release"
                         }
                     }
                 }
