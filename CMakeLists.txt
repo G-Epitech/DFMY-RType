@@ -11,4 +11,4 @@ add_subdirectory(libs)
 add_subdirectory(client)
 add_subdirectory(server)
 
-include(cmake/cpack.cmake)
+include(cmake/cpack/cpack.cmake)
