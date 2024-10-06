@@ -10,13 +10,14 @@
 #include "scene_interface.hpp"
 
 namespace rtype::client {
+template <typename ContextType>
 class SceneBase : public IScene {
  protected:
   /**
    * @brief Build common scene with global context
-   * @param global_context Global context provided by the app
+   * @param context Context provided by the scenes manager
    */
-  explicit SceneBase(const GlobalContext &global_context);
+  explicit SceneBase(const ContextType &context);
 
   /**
    * @brief Destroy the scene
@@ -24,9 +25,9 @@ class SceneBase : public IScene {
   ~SceneBase() override = default;
 
   /**
-   * @brief Store the global context provided by the app
+   * @brief Store the context provided by the scenes manager
    */
-  const GlobalContext &globalContext_;
+  const ContextType &context_;
 
  public:
   /***
@@ -61,3 +62,5 @@ class SceneBase : public IScene {
   void OnDeactivate() override;
 };
 }  // namespace rtype::client
+
+#include "scene_base.tpp"

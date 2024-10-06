@@ -48,6 +48,21 @@ class App {
 
  private:
   /**
+   * @brief Initializes the global context for the application.
+   */
+  void InitializeGlobalContext();
+
+  /**
+   * @brief Creates the main window for the application.
+   */
+  void CreateWindow();
+
+  /**
+   * @brief Creates the scenes manager for the application.
+   */
+  void CreateScenesManager();
+
+  /**
    * @brief Processes events.
    */
   void ProcessEvents();
@@ -66,7 +81,7 @@ class App {
   std::shared_ptr<sf::RenderWindow> window_;
 
   /// @brief The scenes manager for the application.
-  ScenesManager::Ptr scenesManager_;
+  ScenesManager<GlobalContext>::Ptr scenesManager_;
 
   /// @brief The global context for the application.
   GlobalContext globalContext_;

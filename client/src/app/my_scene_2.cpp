@@ -11,17 +11,16 @@
 #include <iostream>
 
 #include "my_scene.hpp"
-#include "scenes/scenes_manager.hpp"
 
 using namespace rtype::client;
 
-MyScene2::MyScene2(const GlobalContext& global_context) : SceneBase(global_context) {}
+MyScene2::MyScene2(const GlobalContext& context) : SceneBase(context) {}
 
 void MyScene2::Draw() {
   sf::RectangleShape rect(sf::Vector2f(100, 100));
   rect.setFillColor(sf::Color::Green);
 
-  globalContext_.window->draw(rect);
+  context_.window->draw(rect);
 }
 
 void MyScene2::Update(utils::DeltaTime delta_time) {
@@ -30,7 +29,7 @@ void MyScene2::Update(utils::DeltaTime delta_time) {
   }
 
   if (counter_ > 400) {
-    globalContext_.scenesManager->GoToScene<MyScene>();
+    context_.scenesManager->GoToScene<MyScene>();
     counter_ = 0;
   }
 }

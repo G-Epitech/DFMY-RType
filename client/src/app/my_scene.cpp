@@ -15,13 +15,13 @@
 
 using namespace rtype::client;
 
-MyScene::MyScene(const GlobalContext& global_context) : SceneBase(global_context) {}
+MyScene::MyScene(const GlobalContext& context) : SceneBase(context) {}
 
 void MyScene::Draw() {
   sf::RectangleShape rect(sf::Vector2f(100, 100));
   rect.setFillColor(sf::Color::Red);
 
-  globalContext_.window->draw(rect);
+  context_.window->draw(rect);
 }
 
 void MyScene::Update(std::chrono::nanoseconds delta_time) {
@@ -29,7 +29,7 @@ void MyScene::Update(std::chrono::nanoseconds delta_time) {
     std::cout << "MyScene::Update: will nearly switch to MyScene2" << std::endl;
   }
   if (counter_ > 400) {
-    globalContext_.scenesManager->GoToScene<MyScene2>();
+    context_.scenesManager->GoToScene<MyScene2>();
     counter_ = 0;
   }
 }

@@ -10,8 +10,9 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 
+#include "scenes/scenes_manager.hpp"
+
 namespace rtype::client {
-class ScenesManager;
 
 struct GlobalContext {
   using Ptr = std::shared_ptr<GlobalContext>;
@@ -24,6 +25,6 @@ struct GlobalContext {
   /**
    * @brief Provide access to the scenes manager
    */
-  std::shared_ptr<ScenesManager> scenesManager;
+  ScenesManager<GlobalContext>::Ptr scenesManager;
 };
 }  // namespace rtype::client

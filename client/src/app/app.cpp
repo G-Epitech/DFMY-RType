@@ -14,18 +14,13 @@
 using namespace rtype::client;
 
 App::App() {
-  const auto videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT);
+  CreateWindow();
+  CreateScenesManager();
+  InitializeGlobalContext();
 
-  window_ = std::make_shared<sf::RenderWindow>(videoMode, APP_WINDOW_TITLE);
-  window_->setFramerateLimit(60);
-
-  scenesManager_ = std::make_shared<ScenesManager>(globalContext_);
   scenesManager_->RegisterScene<MyScene>();
   scenesManager_->RegisterScene<MyScene2>();
   scenesManager_->GoToScene<MyScene>();
-
-  globalContext_.window = window_;
-  globalContext_.scenesManager = scenesManager_;
 }
 
 void App::Run() {
@@ -56,4 +51,20 @@ void App::Render() {
   window_->clear();
   scenesManager_->Draw();
   window_->display();
+}
+
+void App::InitializeGlobalContext() {
+  globalContext_.window = window_;
+  globalContext_.scenesManager = scenesManager_;
+}
+
+void App::CreateWindow() {
+  const auto videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT);
+
+  window_ = std::make_shared<sf::RenderWindow>(videoMode, APP_WINDOW_TITLE);
+  window_->setFramerateLimit(60);
+}
+
+void App::CreateScenesManager() {
+  scenesManager_ = std::make_shared<ScenesManager<GlobalContext>>(globalContext_);
 }

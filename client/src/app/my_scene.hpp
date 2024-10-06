@@ -7,12 +7,13 @@
 
 #pragma once
 
+#include "context/global_context.hpp"
 #include "scenes/scene_base.hpp"
 
 namespace rtype::client {
-class MyScene : public SceneBase {
+class MyScene : public SceneBase<GlobalContext> {
  public:
-  explicit MyScene(const GlobalContext &global_context);
+  explicit MyScene(const GlobalContext &context);
   ~MyScene() override = default;
 
   void Draw() override;
@@ -20,6 +21,6 @@ class MyScene : public SceneBase {
   void Update(utils::DeltaTime delta_time) override;
 
  protected:
-  uint counter_ = 0;
+  unsigned int counter_ = 0;
 };
 }  // namespace rtype::client

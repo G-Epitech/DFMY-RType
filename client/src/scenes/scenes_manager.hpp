@@ -15,6 +15,7 @@
 
 namespace rtype::client {
 
+template <typename ContextType>
 class ScenesManager {
  private:
   /**
@@ -28,7 +29,7 @@ class ScenesManager {
   /**
    * @brief Global context of the app
    */
-  const GlobalContext &context_;
+  const ContextType &context_;
 
   /**
    * @brief Current scene
@@ -53,7 +54,7 @@ class ScenesManager {
   /**
    * @brief Construct a new Scenes Manager object
    */
-  explicit ScenesManager(const GlobalContext &context);
+  explicit ScenesManager(const ContextType &context);
 
   /**
    * @brief Destroy the Scenes Manager object

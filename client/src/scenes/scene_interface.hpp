@@ -9,14 +9,10 @@
 
 #include <chrono>
 
-#include "context/global_context.hpp"
 #include "utils/time.hpp"
 
 namespace rtype::client {
 class IScene {
- protected:
-  friend class ScenesManager;
-
  public:
   // Pointer type
   using Ptr = std::shared_ptr<IScene>;
