@@ -11,7 +11,7 @@
 
 using namespace rtype::server;
 
-CliHandlerLobby::CliHandlerLobby() : ACliHandler() {
+CliHandlerLobby::CliHandlerLobby() : AbstractCliHandler() {
   Setup();
 }
 
