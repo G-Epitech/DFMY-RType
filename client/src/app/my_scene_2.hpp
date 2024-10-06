@@ -21,5 +21,6 @@ class MyScene2 : public SceneBase<GlobalContext> {
 
  protected:
   unsigned int counter_ = 0;
+  unsigned int nbSWitch = 0;
 };
 }  // namespace rtype::client

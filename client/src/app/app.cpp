@@ -24,9 +24,8 @@ App::App() {
 }
 
 void App::Run() {
-  while (window_->isOpen()) {
+  while (window_->isOpen() && scenesManager_->IsActive()) {
     timer_.tick();
-
     ProcessEvents();
     Update(timer_.GetElapsedTime());
     Render();

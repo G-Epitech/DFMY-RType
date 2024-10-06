@@ -32,6 +32,11 @@ class ScenesManager {
   const ContextType &context_;
 
   /**
+   * @brief Active state of the scenes manager
+   */
+  bool active_ = true;
+
+  /**
    * @brief Current scene
    */
   IScene::Ptr currentScene_ = nullptr;
@@ -87,10 +92,15 @@ class ScenesManager {
   void Draw();
 
   /**
-   * @brief Get the current scene
-   * @return Current scene
+   * @brief Quit the application
    */
-  inline IScene::Ptr CurrentScene() noexcept { return currentScene_; }
+  void Quit();
+
+  /**
+   * @brief Check if the scenes manager has active scenes and has not been quit
+   * @return Active state of the scenes manager
+   */
+  bool IsActive() const;
 
  public:
   /**

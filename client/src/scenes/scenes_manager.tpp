@@ -84,3 +84,13 @@ void ScenesManager<ContextType>::GoToScene() {
     scene = CreateScene<T>();
   SwitchToScene(scene);
 }
+
+template <typename ContextType>
+void ScenesManager<ContextType>::Quit() {
+  active_ = false;
+}
+
+template <typename ContextType>
+bool ScenesManager<ContextType>::IsActive() const {
+  return active_;
+}

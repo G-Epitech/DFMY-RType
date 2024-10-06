@@ -31,5 +31,9 @@ void MyScene2::Update(utils::DeltaTime delta_time) {
   if (counter_ > 400) {
     context_.scenesManager->GoToScene<MyScene>();
     counter_ = 0;
+    nbSWitch++;
+  }
+  if (nbSWitch == 2) {
+    context_.scenesManager->Quit();
   }
 }
