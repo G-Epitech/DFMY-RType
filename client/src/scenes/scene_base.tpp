@@ -6,9 +6,12 @@
 */
 
 using namespace rtype::client;
+using namespace rtype::sdk::ECS;
 
 template <typename ContextType>
-SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context) {}
+SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context) {
+  registry_ = Registry::create();
+}
 
 template <typename ContextType>
 void SceneBase<ContextType>::Draw() {}
