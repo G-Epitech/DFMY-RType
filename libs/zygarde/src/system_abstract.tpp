@@ -9,7 +9,7 @@
 
 #include "system_abstract.hpp"
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde::ECS;
 
 template <class... Components>
 void ASystem<Components...>::operator()(std::shared_ptr<Registry> r) {

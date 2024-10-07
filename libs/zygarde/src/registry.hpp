@@ -19,13 +19,13 @@
 #include "system_interface.hpp"
 #include "tools/spare_array.hpp"
 
-namespace rtype::sdk::ECS {
+namespace zygarde::ECS {
 
 /**
  * @brief Registry class
  * This class is used to store all the entities and components
  */
-class EXPORT_ECS_SDK_API Registry : public std::enable_shared_from_this<Registry> {
+class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry> {
  private:
   struct Private {
     explicit Private() = default;
@@ -129,7 +129,7 @@ class EXPORT_ECS_SDK_API Registry : public std::enable_shared_from_this<Registry
    */
   void RunSystems();
 
-  class EXPORT_ECS_SDK_API Exception final : public std::exception {
+  class EXPORT_ZYGARDE_API Exception final : public std::exception {
    public:
     /**
      * @brief Create a new message when Registry exception

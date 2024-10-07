@@ -13,7 +13,7 @@
 
 #include "../api.hpp"
 
-namespace rtype::sdk::ECS::tools {
+namespace zygarde::ECS::tools {
 
 /**
  * @brief Sparse array class
@@ -21,7 +21,7 @@ namespace rtype::sdk::ECS::tools {
  * @tparam Component Component type
  */
 template <typename Component>
-class EXPORT_ECS_SDK_API sparse_array {
+class EXPORT_ZYGARDE_API sparse_array {
  public:
   /// @brief Type aliases
   using value_type = std::optional<Component>;
@@ -155,6 +155,6 @@ class EXPORT_ECS_SDK_API sparse_array {
   /// @brief data storage
   container_t data_;
 };
-}  // namespace rtype::sdk::ECS::tools
+}  // namespace zygarde::ECS::tools
 
 #include "spare_array.tpp"

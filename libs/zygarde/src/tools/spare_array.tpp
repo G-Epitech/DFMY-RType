@@ -7,7 +7,7 @@
 
 #pragma once
 
-using namespace rtype::sdk::ECS::tools;
+using namespace zygarde::ECS::tools;
 
 template <typename Component>
 sparse_array<Component>::sparse_array() = default;

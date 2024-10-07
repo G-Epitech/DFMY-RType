@@ -7,7 +7,7 @@
 
 #include "entity.hpp"
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde::ECS;
 
 Entity::Entity(const std::size_t idx) : id_{idx} {}
 

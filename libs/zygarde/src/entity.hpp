@@ -11,13 +11,13 @@
 
 #include "api.hpp"
 
-namespace rtype::sdk::ECS {
+namespace zygarde::ECS {
 
 /**
  * @brief Entity class
  * This class is used to represent an entity in the ECS system
  */
-class EXPORT_ECS_SDK_API Entity {
+class EXPORT_ZYGARDE_API Entity {
  public:
   /**
    * @brief Default constructor

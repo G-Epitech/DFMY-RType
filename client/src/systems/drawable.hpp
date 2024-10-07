@@ -12,7 +12,7 @@
 #include "components/drawable.hpp"
 #include "components/position.hpp"
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde::ECS;
 
 namespace rtype::client::systems {
 
