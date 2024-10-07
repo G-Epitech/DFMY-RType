@@ -166,6 +166,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   using component_destroyer = std::function<void(Registry &, Entity const &)>;
   std::map<std::type_index, component_destroyer> removeFunctions_;
 };
-}  // namespace rtype::sdk::ECS
+}  // namespace zygarde
 
 #include "registry.tpp"
