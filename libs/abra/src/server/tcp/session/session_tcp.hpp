@@ -14,6 +14,7 @@
 
 #include "core.hpp"
 #include "tools/message/message.hpp"
+#include "tools/packet/packet.hpp"
 #include "tools/packet/props/props.hpp"
 
 namespace abra::server {
@@ -34,6 +35,9 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    * @brief Start the client session
    */
   void Start();
+
+  template <typename T>
+  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet);
 
  private:
   /**
@@ -56,3 +60,5 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
   /// @brief Message queue
   std::queue<tools::MessageProps> queue_;
 };
+
+#include "session_tcp.tpp"

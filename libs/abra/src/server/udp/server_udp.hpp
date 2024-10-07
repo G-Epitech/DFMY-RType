@@ -14,6 +14,8 @@
 
 #include "core.hpp"
 #include "tools/bitset/dynamic_bitset.hpp"
+#include "tools/message/message.hpp"
+#include "tools/packet/packet.hpp"
 #include "tools/packet/props/props.hpp"
 
 namespace abra::server {
@@ -62,6 +64,17 @@ class abra::server::ServerUDP {
    */
   [[nodiscard]] std::queue<ClientMessage> &GetQueue();
 
+  /**
+   * @brief Send a message to a client
+   * @tparam T The type of the packet
+   * @param packet The packet to send
+   * @param endpoint The endpoint of the client
+   * @return The status of the message
+   */
+  template <typename T>
+  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet,
+                                const boost::asio::ip::udp::endpoint &endpoint);
+
  private:
   /**
    * @brief Listen a new request from a client
@@ -81,3 +94,5 @@ class abra::server::ServerUDP {
   std::queue<ClientMessage> queue_;
   std::mutex mutex_;
 };
+
+#include "server_udp.tpp"
