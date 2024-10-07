@@ -18,11 +18,6 @@ namespace rtype::client::systems {
 template <events::EventType, class... Components>
 class EventSystemBase : public ASystem<Components...> {
  public:
-  /**
-   * @brief Construct a new Event System Base object
-   * @param event_deferrer Event deferrer to encapsulate
-   */
-  explicit EventSystemBase(WindowManager::Ptr window_manager);
   ~EventSystemBase() = default;
 
   /**
@@ -33,6 +28,12 @@ class EventSystemBase : public ASystem<Components...> {
   void Run(Registry::Ptr r, sparse_array<Components> &...components) final;
 
  protected:
+  /**
+   * @brief Construct a new Event System Base object
+   * @param event_deferrer Event deferrer to encapsulate
+   */
+  explicit EventSystemBase(WindowManager::Ptr window_manager);
+
   /// @brief Events deferrer
   WindowManager::Ptr windowManager_;
 
