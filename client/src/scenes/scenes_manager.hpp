@@ -17,44 +17,6 @@ namespace rtype::client {
 
 template <typename ContextType>
 class ScenesManager {
- private:
-  /**
-   * @brief Map of scenes
-   */
-  using ScenesMap = std::map<std::type_index, IScene::Ptr>;
-
-  // Map of scenes
-  ScenesMap scenesMap_;
-
-  /**
-   * @brief Global context of the app
-   */
-  const ContextType &context_;
-
-  /**
-   * @brief Active state of the scenes manager
-   */
-  bool active_ = true;
-
-  /**
-   * @brief Current scene
-   */
-  IScene::Ptr currentScene_ = nullptr;
-
-  /**
-   * @brief Switch to a scene
-   * @param new_scene New scene to switch to
-   */
-  void SwitchToScene(IScene::Ptr new_scene);
-
-  /**
-   * @brief Create a scene of a specific type
-   * @tparam T Scene type to create
-   * @return Created scene
-   */
-  template <SceneType T>
-  IScene::Ptr CreateScene();
-
  public:
   /**
    * @brief Construct a new Scenes Manager object
@@ -121,6 +83,44 @@ class ScenesManager {
     // Message of the exception
     std::string msg_;
   };
+
+ private:
+  /**
+   * @brief Map of scenes
+   */
+  using ScenesMap = std::map<std::type_index, IScene::Ptr>;
+
+  // Map of scenes
+  ScenesMap scenesMap_;
+
+  /**
+   * @brief Global context of the app
+   */
+  const ContextType &context_;
+
+  /**
+   * @brief Active state of the scenes manager
+   */
+  bool active_ = true;
+
+  /**
+   * @brief Current scene
+   */
+  IScene::Ptr currentScene_ = nullptr;
+
+  /**
+   * @brief Switch to a scene
+   * @param new_scene New scene to switch to
+   */
+  void SwitchToScene(IScene::Ptr new_scene);
+
+  /**
+   * @brief Create a scene of a specific type
+   * @tparam T Scene type to create
+   * @return Created scene
+   */
+  template <SceneType T>
+  IScene::Ptr CreateScene();
 };
 }  // namespace rtype::client
 
