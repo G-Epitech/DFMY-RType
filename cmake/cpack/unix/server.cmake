@@ -6,9 +6,9 @@ set(BUILT_LIBS abra r-type_ECS_sdk)
 install(TARGETS ${BUILT_BINARIES}
         CONFIGURATIONS Release
         RUNTIME_DEPENDENCIES
-        DESTINATION .)
+        DESTINATION bin)
 
 install(TARGETS ${BUILT_LIBS}
         CONFIGURATIONS Release
         RUNTIME_DEPENDENCIES
-        DESTINATION .)
+        DESTINATION bin)

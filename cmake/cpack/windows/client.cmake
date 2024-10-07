@@ -5,9 +5,9 @@ set(DEPENDENCIES
 
 install(TARGETS r-type_client
         CONFIGURATIONS Release
-        DESTINATION .)
+        DESTINATION bin)
 
 file(GLOB CLIENT_DLLS "${CMAKE_BINARY_DIR}/client/*.dll")
-install(FILES ${CLIENT_DLLS} DESTINATION .)
+install(FILES ${CLIENT_DLLS} DESTINATION bin)
 
-install(FILES ${DEPENDENCIES} DESTINATION .)
+install(FILES ${DEPENDENCIES} DESTINATION bin)
