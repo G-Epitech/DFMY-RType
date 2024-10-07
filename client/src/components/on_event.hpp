@@ -7,57 +7,101 @@
 
 #pragma once
 
+#include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <functional>
 
-namespace rtype::client::components {
+namespace rtype::client::events {
 enum EventType {
-  kKeyPressed,         // Called when a key is pressed
-  kKeyReleased,        // Called when a key is released
-  kMousePressed,       // Called when a mouse button is pressed
-  kMouseReleased,      // Called when a mouse button is released
-  kMouseMoved,         // Called when the mouse is moved
-  kMouseWheelScrolled  // Called when the mouse wheel is scrolled
+  kNone,               /// @brief No event
+  kKeyPressed,         /// @brief Called when a key is pressed
+  kKeyReleased,        /// @brief Called when a key is released
+  kMousePressed,       /// @brief Called when a mouse button is pressed
+  kMouseReleased,      /// @brief Called when a mouse button is released
+  kMouseMoved,         /// @brief Called when the mouse is moved
+  kMouseWheelScrolled  /// @brief Called when the mouse wheel is scrolled
 };
 
 template <EventType T>
-struct OnEventHandler;  // Forward declaration
+struct EventTypeMapper;
 
 template <>
-struct OnEventHandler<kKeyPressed> {
+struct EventTypeMapper<kKeyPressed> {
+  static constexpr sf::Event::EventType type = sf::Event::EventType::KeyPressed;
+};
+
+template <>
+struct EventTypeMapper<kKeyReleased> {
+  static constexpr sf::Event::EventType type = sf::Event::EventType::KeyReleased;
+};
+
+template <>
+struct EventTypeMapper<kMousePressed> {
+  static constexpr sf::Event::EventType type = sf::Event::EventType::MouseButtonPressed;
+};
+
+template <>
+struct EventTypeMapper<kMouseReleased> {
+  static constexpr sf::Event::EventType type = sf::Event::EventType::MouseButtonReleased;
+};
+
+template <>
+struct EventTypeMapper<kMouseMoved> {
+  static constexpr sf::Event::EventType type = sf::Event::EventType::MouseMoved;
+};
+
+template <>
+struct EventTypeMapper<kMouseWheelScrolled> {
+  static constexpr sf::Event::EventType type = sf::Event::EventType::MouseWheelScrolled;
+};
+}  // namespace rtype::client::events
+
+namespace rtype::client::components {
+template <events::EventType T>
+struct OnEventHandler;
+
+template <>
+struct OnEventHandler<events::kKeyPressed> {
   using signature = std::function<void(sf::Keyboard::Key)>;
 };
 
 template <>
-struct OnEventHandler<kKeyReleased> {
+struct OnEventHandler<events::kKeyReleased> {
   using signature = std::function<void(sf::Keyboard::Key)>;
 };
 
 template <>
-struct OnEventHandler<kMousePressed> {
+struct OnEventHandler<events::kMousePressed> {
   using signature = std::function<void(sf::Mouse::Button, sf::Vector2i)>;
 };
 
 template <>
-struct OnEventHandler<kMouseReleased> {
+struct OnEventHandler<events::kMouseReleased> {
   using signature = std::function<void(sf::Mouse::Button, sf::Vector2i)>;
 };
 
 template <>
-struct OnEventHandler<kMouseMoved> {
+struct OnEventHandler<events::kMouseMoved> {
   using signature = std::function<void(sf::Vector2i)>;
 };
 
 template <>
-struct OnEventHandler<kMouseWheelScrolled> {
+struct OnEventHandler<events::kMouseWheelScrolled> {
   using signature = std::function<void(sf::Vector2i, float)>;
 };
 
-template <EventType T>
+template <events::EventType T>
 struct OnEvent {
-  using HandlerType = typename OnEventHandler<T>::signature;
-  HandlerType handler;  // Function to call when the event is triggered
+  using Handler = OnEventHandler<T>::signature;
+  Handler handler;
 };
+
+typedef OnEvent<events::kKeyPressed> OnKeyPressed;
+typedef OnEvent<events::kKeyReleased> OnKeyReleased;
+typedef OnEvent<events::kMousePressed> OnMousePressed;
+typedef OnEvent<events::kMouseReleased> OnMouseReleased;
+typedef OnEvent<events::kMouseMoved> OnMouseMoved;
+typedef OnEvent<events::kMouseWheelScrolled> OnMouseWheelScrolled;
 
 }  // namespace rtype::client::components

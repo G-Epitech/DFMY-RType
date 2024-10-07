@@ -21,6 +21,7 @@ WindowManager::WindowManager(WindowManager::Properties&& props) {
 WindowManager::Ptr WindowManager::Create(WindowManager::Properties&& props) {
   return std::make_shared<WindowManager>(std::move(props));
 }
+
 void WindowManager::DeferEvents() {
   sf::Event event{};
 

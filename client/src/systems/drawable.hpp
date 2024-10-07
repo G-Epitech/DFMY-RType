@@ -7,12 +7,10 @@
 
 #pragma once
 
-#include <libs/zygarde/src/system_abstract.hpp>
-
 #include "components/drawable.hpp"
 #include "components/position.hpp"
-
-using namespace zygarde;
+#include "libs/zygarde/src/system_abstract.hpp"
+#include "window/window_manager.hpp"
 
 namespace rtype::client::systems {
 
@@ -23,15 +21,16 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
  public:
   /**
    * @brief Default constructor of a Drawable System
+   * @param window_manager The window manager to display the entities
    */
-  explicit DrawableSystem(std::shared_ptr<sf::RenderWindow> window);
+  explicit DrawableSystem(WindowManager::Ptr window_manager);
 
-  void Run(std::shared_ptr<Registry> r, sparse_array<components::Drawable>& drawables,
+  void Run(Registry::Ptr r, sparse_array<components::Drawable>& drawables,
            sparse_array<components::Position>& positions) override;
 
  private:
   /// @brief The render window to display the entities.
-  std::shared_ptr<sf::RenderWindow> window_;
+  WindowManager::Ptr windowManager_;
 
   /// @brief This Sprite is a utils that avoid us to recreate a new sprite each time we want to
   /// display a new entity.
