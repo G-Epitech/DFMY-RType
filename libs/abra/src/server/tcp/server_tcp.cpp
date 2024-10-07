@@ -12,7 +12,7 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-ServerTCP::ServerTCP(const int &port) : acceptor_(ioc_, ip::tcp::v4(), port), lastClientId_(0) {}
+ServerTCP::ServerTCP(const int &port) : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)), lastClientId_(0) {}
 
 ServerTCP::~ServerTCP() {
   ioc_.stop();
@@ -20,6 +20,7 @@ ServerTCP::~ServerTCP() {
 
 void ServerTCP::Start() {
   AcceptNewConnection();
+  ioc_.run();
 }
 
 void ServerTCP::AcceptNewConnection() {

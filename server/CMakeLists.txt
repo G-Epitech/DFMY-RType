@@ -6,6 +6,7 @@ add_library(${SERVER_CORE_LIB} STATIC)
 target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src/)
+target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../libs/abra/src/)
 
 add_executable(${SERVER_EXECUTABLE} main.cpp)
 
