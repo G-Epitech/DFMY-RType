@@ -8,7 +8,7 @@ target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
 
 if (WIN32)
-    add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp r-type.rc)
+    add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp ../r-type.rc)
 else ()
     add_executable(${CLIENT_EXECUTABLE} main.cpp)
 endif ()

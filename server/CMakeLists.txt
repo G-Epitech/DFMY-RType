@@ -9,7 +9,7 @@ target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/s
 target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../libs/abra/src/)
 
 if (WIN32)
-    add_executable(${SERVER_EXECUTABLE} main.cpp r-type.rc)
+    add_executable(${SERVER_EXECUTABLE} main.cpp ../r-type.rc)
 else ()
     add_executable(${SERVER_EXECUTABLE} main.cpp)
 endif ()
