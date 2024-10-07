@@ -10,8 +10,10 @@
 #include <boost/asio.hpp>
 #include <cstdint>
 #include <map>
+#include <queue>
 
 #include "core.hpp"
+#include "props/message.h"
 #include "session/session_tcp.hpp"
 
 namespace abra::server {
@@ -29,6 +31,23 @@ class abra::server::ServerTCP {
    */
   void Start();
 
+  /**
+   * @brief Lock the queue mutex
+   */
+  void LockQueue();
+
+  /**
+   * @brief Unlock the queue mutex
+   */
+  void UnlockQueue();
+
+  /**
+   * @brief Get the queue of client messages
+   * @warning You need to lock the queue before using it
+   * @return The queue
+   */
+  [[nodiscard]] const std::shared_ptr<std::queue<ClientMessage>> &GetQueue();
+
  private:
   /**
    * @brief Accept a new connection
@@ -39,7 +58,7 @@ class abra::server::ServerTCP {
    * @brief Register a new client
    * @param client
    */
-  void RegisterNewClient(std::shared_ptr<SessionTCP> client);
+  void RegisterNewClient(std::shared_ptr<SessionTCP> client, const std::uint64_t &clientId);
 
   /// @brief Input Output Context
   boost::asio::io_context ioc_;
@@ -49,4 +68,8 @@ class abra::server::ServerTCP {
   std::map<std::uint64_t, std::shared_ptr<SessionTCP>> clients_;
   /// @brief Last client id
   std::uint64_t lastClientId_;
+  /// @brief Queue of client messages
+  std::shared_ptr<std::queue<ClientMessage>> queue_;
+  /// @brief Queue mutex
+  std::shared_ptr<std::mutex> mutex_;
 };

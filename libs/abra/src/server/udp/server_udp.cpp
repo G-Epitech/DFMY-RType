@@ -58,6 +58,6 @@ void ServerUDP::UnlockQueue() {
   this->mutex_.unlock();
 }
 
-std::queue<ServerUDP::ClientMessage> &ServerUDP::GetQueue() {
+std::queue<ClientMessage> &ServerUDP::GetQueue() {
   return this->queue_;
 }

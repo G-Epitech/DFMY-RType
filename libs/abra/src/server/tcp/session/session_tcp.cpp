@@ -7,13 +7,21 @@
 
 #include "session_tcp.hpp"
 
+#include <utility>
+
 #include "tools/packet/packet_utils.hpp"
 
 using namespace abra::server;
 using namespace boost::asio;
 
-SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket)
-    : socket_(std::move(socket)), buffer_() {}
+SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket,
+                       std::shared_ptr<std::queue<ClientMessage>> queue,
+                       std::shared_ptr<std::mutex> mutex, std::uint64_t clientId)
+    : socket_(std::move(socket)),
+      buffer_(),
+      queue_(std::move(queue)),
+      mutex_(std::move(mutex)),
+      clientId_(clientId) {}
 
 SessionTCP::~SessionTCP() {
   socket_.close();
@@ -41,8 +49,10 @@ void SessionTCP::HandleRequest(const std::size_t &size) {
   std::vector<char> buffer = std::vector<char>(buffer_.begin(), buffer_.begin() + size);
 
   auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
-  tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                 tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
+  ClientMessage message = {this->clientId_, tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
+                           tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
 
-  queue_.push(message);
+  this->mutex_->lock();
+  this->queue_->push(message);
+  this->mutex_->unlock();
 }

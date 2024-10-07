@@ -13,6 +13,7 @@
 #include <queue>
 
 #include "core.hpp"
+#include "server/tcp/props/message.h"
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
 #include "tools/packet/props/props.hpp"
@@ -27,8 +28,12 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    * @brief Construct a new SessionTCP. This session will handle incoming data
    * @param socket Client socket
    */
-  explicit SessionTCP(boost::asio::ip::tcp::socket socket);
+  SessionTCP(boost::asio::ip::tcp::socket socket, std::shared_ptr<std::queue<ClientMessage>> queue,
+             std::shared_ptr<std::mutex> mutex, std::uint64_t clientId);
 
+  /**
+   * @brief Destroy the SessionTCP object
+   */
   ~SessionTCP();
 
   /**
@@ -53,12 +58,14 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
 
   /// @brief The socket of the client
   boost::asio::ip::tcp::socket socket_;
-
   /// @brief The buffer of the client
   boost::array<char, kPacketMaxBytesSize> buffer_{};
-
   /// @brief Message queue
-  std::queue<tools::MessageProps> queue_;
+  std::shared_ptr<std::queue<ClientMessage>> queue_;
+  /// @brief Client id
+  std::uint64_t clientId_;
+  /// @brief Queue mutex
+  std::shared_ptr<std::mutex> mutex_;
 };
 
 #include "session_tcp.tpp"

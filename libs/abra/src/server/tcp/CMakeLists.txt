@@ -4,3 +4,4 @@ target_sources(abra PRIVATE
 )
 
 add_subdirectory(session)
+add_subdirectory(props)

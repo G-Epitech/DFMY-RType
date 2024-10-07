@@ -13,6 +13,7 @@
 #include <queue>
 
 #include "core.hpp"
+#include "props/message.h"
 #include "tools/bitset/dynamic_bitset.hpp"
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
@@ -24,13 +25,6 @@ class EXPORT_NETWORK_SDK_API ServerUDP;
 
 class abra::server::ServerUDP {
  public:
-  struct ClientMessage {
-    boost::asio::ip::udp::endpoint endpoint;
-    unsigned int messageType;
-    unsigned int messageId;
-    std::shared_ptr<tools::dynamic_bitset> bitset;
-  };
-
   /**
    * @brief Construct a new ServerUDP object
    * @param port The port of the server

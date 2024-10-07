@@ -27,10 +27,14 @@ void ServerTCP::Start() {
 void ServerTCP::AcceptNewConnection() {
   acceptor_.async_accept([this](boost::system::error_code error, ip::tcp::socket socket) {
     if (!error) {
-      auto clientSession = std::make_shared<SessionTCP>(std::move(socket));
+      std::uint64_t clientId = lastClientId_;
+      lastClientId_++;
+
+      auto clientSession =
+          std::make_shared<SessionTCP>(std::move(socket), this->queue_, this->mutex_, clientId);
 
       clientSession->Start();
-      RegisterNewClient(clientSession);
+      RegisterNewClient(clientSession, clientId);
     } else {
       std::cerr << "ServerTCP error: " << error.message() << std::endl;
     }
@@ -39,7 +43,19 @@ void ServerTCP::AcceptNewConnection() {
   });
 }
 
-void ServerTCP::RegisterNewClient(std::shared_ptr<SessionTCP> client) {
-  clients_[lastClientId_] = std::move(client);
-  lastClientId_++;
+void ServerTCP::RegisterNewClient(std::shared_ptr<SessionTCP> client,
+                                  const std::uint64_t &clientId) {
+  clients_[clientId] = std::move(client);
+}
+
+void ServerTCP::LockQueue() {
+  mutex_->lock();
+}
+
+void ServerTCP::UnlockQueue() {
+  mutex_->unlock();
+}
+
+const std::shared_ptr<std::queue<ClientMessage>> &ServerTCP::GetQueue() {
+  return queue_;
 }
