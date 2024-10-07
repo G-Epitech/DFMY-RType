@@ -51,7 +51,7 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
   boost::asio::ip::tcp::socket socket_;
 
   /// @brief The buffer of the client
-  boost::array<char, kPacketMaxBytesSize> buffer_;
+  boost::array<char, kPacketMaxBytesSize> buffer_{};
 
   /// @brief Message queue
   std::queue<tools::MessageProps> queue_;

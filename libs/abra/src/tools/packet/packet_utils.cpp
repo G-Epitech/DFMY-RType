@@ -19,3 +19,12 @@ unsigned tools::PacketUtils::ExportMessageTypeFromBitset(
   bitset->FillFromRange(startRange, startRange + kPacketMessageTypeSize, &messageType);
   return messageType;
 }
+
+unsigned tools::PacketUtils::ExportMessageIdFromBitset(
+        const std::shared_ptr<dynamic_bitset> &bitset) {
+  unsigned messageId = 0;
+  std::size_t startRange = kPacketHeaderPropsSize;
+
+  bitset->FillFromRange(startRange, startRange + kPacketMessageIdSize, &messageId);
+  return messageId;
+}

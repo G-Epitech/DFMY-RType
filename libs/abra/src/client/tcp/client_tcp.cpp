@@ -37,7 +37,7 @@ void ClientTCP::Listen() {
 
     auto bitset = std::make_shared<tools::dynamic_bitset>(buf);
     tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                   tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
+                                   tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
     queue_.push(message);
   }
 }

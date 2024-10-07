@@ -12,7 +12,7 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)) {}
+SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)), buffer_() {}
 
 SessionTCP::~SessionTCP() {
   socket_.close();
@@ -41,7 +41,7 @@ void SessionTCP::HandleRequest(const std::size_t &size) {
 
   auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
   tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                 tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
+                                 tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
 
   queue_.push(message);
 }
