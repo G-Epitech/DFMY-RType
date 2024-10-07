@@ -9,7 +9,7 @@
 
 #include "api.hpp"
 
-namespace zygarde::ECS {
+namespace zygarde {
 
 class Registry;
 
@@ -27,4 +27,4 @@ class EXPORT_ZYGARDE_API ISystem {
   virtual void operator()(std::shared_ptr<Registry> r) = 0;
 };
 
-}  // namespace zygarde::ECS
+}  // namespace zygarde

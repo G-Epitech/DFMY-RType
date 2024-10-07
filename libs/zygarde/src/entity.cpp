@@ -1,5 +1,11 @@
 /*
 ** EPITECH PROJECT, 2024
+** r-type
+** File description:
+** entity.cpp
+*/
+/*
+** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
 ** entity.cpp
@@ -7,7 +13,7 @@
 
 #include "entity.hpp"
 
-using namespace zygarde::ECS;
+using namespace zygarde;
 
 Entity::Entity(const std::size_t idx) : id_{idx} {}
 

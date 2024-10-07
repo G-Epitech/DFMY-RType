@@ -10,7 +10,7 @@
 #include "registry.hpp"
 #include "system_abstract.hpp"
 
-using namespace zygarde::ECS;
+using namespace zygarde;
 
 TEST(SystemTests, CreateBasicSystem) {
   class BasicSystem : public ASystem<int> {

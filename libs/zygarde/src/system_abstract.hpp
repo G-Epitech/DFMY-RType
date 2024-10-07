@@ -9,7 +9,7 @@
 
 #include "registry.hpp"
 
-namespace zygarde::ECS {
+namespace zygarde {
 
 /**
  * @brief Abstract class for a system
@@ -27,6 +27,6 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
    */
   virtual void Run(std::shared_ptr<Registry> r, sparse_array<Components> &...components) = 0;
 };
-}  // namespace zygarde::ECS
+}  // namespace zygarde
 
 #include "system_abstract.tpp"

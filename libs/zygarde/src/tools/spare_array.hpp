@@ -13,7 +13,7 @@
 
 #include "../api.hpp"
 
-namespace zygarde::ECS::tools {
+namespace zygarde::tools {
 
 /**
  * @brief Sparse array class
@@ -155,6 +155,6 @@ class EXPORT_ZYGARDE_API sparse_array {
   /// @brief data storage
   container_t data_;
 };
-}  // namespace zygarde::ECS::tools
+}  // namespace zygarde::tools
 
 #include "spare_array.tpp"

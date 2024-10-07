@@ -19,7 +19,7 @@
 #include "system_interface.hpp"
 #include "tools/spare_array.hpp"
 
-namespace zygarde::ECS {
+namespace zygarde {
 
 /**
  * @brief Registry class

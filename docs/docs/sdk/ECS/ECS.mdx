@@ -142,7 +142,7 @@ class LoggingSystem final : public ASystem<position, velocity> {
 };
 
 int main() {
-  auto registry = zygarde::ECS::Registry::create();
+  auto registry = zygarde::Registry::create();
 
   registry->RegisterComponent<position>();
   registry->RegisterComponent<velocity>();

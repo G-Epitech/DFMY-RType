@@ -1,5 +1,11 @@
 /*
 ** EPITECH PROJECT, 2024
+** r-type
+** File description:
+** scene_base.hpp
+*/
+/*
+** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
 ** scene_abstract.hpp
@@ -29,7 +35,7 @@ class SceneBase : public IScene {
   const ContextType &context_;
 
   /// @brief Store the ECS registry for the scene
-  zygarde::ECS::Registry::Ptr registry_;
+  zygarde::Registry::Ptr registry_;
 
  public:
   /***

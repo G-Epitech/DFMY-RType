@@ -6,7 +6,7 @@
 */
 
 using namespace rtype::client;
-using namespace zygarde::ECS;
+using namespace zygarde;
 
 template <typename ContextType>
 SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context) {
