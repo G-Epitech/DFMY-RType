@@ -61,7 +61,7 @@ void App::CreateWindow() {
   const auto videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT);
 
   window_ = std::make_shared<sf::RenderWindow>(videoMode, APP_WINDOW_TITLE);
-  window_->setFramerateLimit(60);
+  window_->setFramerateLimit(APP_WINDOW_FRAMERATE);
 }
 
 void App::CreateScenesManager() {

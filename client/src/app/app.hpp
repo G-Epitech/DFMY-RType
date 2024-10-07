@@ -14,6 +14,7 @@
 #define APP_WINDOW_WIDTH 800
 #define APP_WINDOW_HEIGHT 600
 #define APP_WINDOW_TITLE "R-Type"
+#define APP_WINDOW_FRAMERATE 60
 
 #pragma once
 
