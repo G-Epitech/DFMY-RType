@@ -7,7 +7,7 @@
 
 #include "registry.hpp"
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde;
 
 Registry::Registry(Private) {}
 

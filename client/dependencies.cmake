@@ -4,4 +4,4 @@ target_link_libraries(${CLIENT_CORE_LIB} PUBLIC sfml-graphics sfml-window sfml-s
 
 # Internal dependencies
 target_link_libraries(${CLIENT_CORE_LIB} PRIVATE abra)
-target_link_libraries(${CLIENT_CORE_LIB} PRIVATE r-type_ECS_sdk)
+target_link_libraries(${CLIENT_CORE_LIB} PRIVATE zygarde)

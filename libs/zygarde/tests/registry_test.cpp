@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde;
 
 TEST(RegistryTests, CreateEmptyRegistry) {
   auto registry = Registry::create();

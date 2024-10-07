@@ -1,13 +1,13 @@
 /*
 ** EPITECH PROJECT, 2024
-** rtype
+** r-type
 ** File description:
 ** entity.cpp
 */
 
 #include "entity.hpp"
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde;
 
 Entity::Entity(const std::size_t idx) : id_{idx} {}
 

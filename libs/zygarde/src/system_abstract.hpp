@@ -9,14 +9,14 @@
 
 #include "registry.hpp"
 
-namespace rtype::sdk::ECS {
+namespace zygarde {
 
 /**
  * @brief Abstract class for a system
  * @tparam Components Components to use in the system
  */
 template <class... Components>
-class EXPORT_ECS_SDK_API ASystem : public ISystem {
+class EXPORT_ZYGARDE_API ASystem : public ISystem {
  public:
   void operator()(std::shared_ptr<Registry> r) override;
 
@@ -27,6 +27,6 @@ class EXPORT_ECS_SDK_API ASystem : public ISystem {
    */
   virtual void Run(std::shared_ptr<Registry> r, sparse_array<Components> &...components) = 0;
 };
-}  // namespace rtype::sdk::ECS
+}  // namespace zygarde
 
 #include "system_abstract.tpp"

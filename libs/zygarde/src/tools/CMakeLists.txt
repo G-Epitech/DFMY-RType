@@ -1,4 +1,4 @@
-target_sources(r-type_ECS_sdk PRIVATE
+target_sources(zygarde PRIVATE
         spare_array.hpp
         spare_array.tpp
 )

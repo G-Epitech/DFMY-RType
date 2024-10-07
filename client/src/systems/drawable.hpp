@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <libs/ECS/src/system_abstract.hpp>
+#include <libs/zygarde/src/system_abstract.hpp>
 
 #include "components/drawable.hpp"
 #include "components/position.hpp"
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde;
 
 namespace rtype::client::systems {
 

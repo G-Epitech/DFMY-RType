@@ -9,14 +9,14 @@
 
 #include "api.hpp"
 
-namespace rtype::sdk::ECS {
+namespace zygarde {
 
 class Registry;
 
 /**
  *  @brief Interface for a system
  */
-class EXPORT_ECS_SDK_API ISystem {
+class EXPORT_ZYGARDE_API ISystem {
  public:
   virtual ~ISystem() = default;
 
@@ -27,4 +27,4 @@ class EXPORT_ECS_SDK_API ISystem {
   virtual void operator()(std::shared_ptr<Registry> r) = 0;
 };
 
-}  // namespace rtype::sdk::ECS
+}  // namespace zygarde

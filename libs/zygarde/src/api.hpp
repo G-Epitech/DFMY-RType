@@ -8,7 +8,7 @@
 #pragma once
 
 #ifdef _WIN32
-  #define EXPORT_ECS_SDK_API __declspec(dllexport)
+  #define EXPORT_ZYGARDE_API __declspec(dllexport)
 #else
-  #define EXPORT_ECS_SDK_API
+  #define EXPORT_ZYGARDE_API
 #endif

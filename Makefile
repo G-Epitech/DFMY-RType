@@ -10,7 +10,7 @@ CLIENT_NAME			= r-type_client
 TESTS_SERVER_NAME 	= r-type_server_tests
 TESTS_CLIENT_NAME 	= r-type_client_tests
 TESTS_ABRA_NAME 	= abra_tests
-TESTS_ECS_SDK_NAME 	= r-type_ECS_sdk_tests
+TESTS_ECS_SDK_NAME 	= zygrade_tests
 BUILD_PATH 			= $(shell pwd)/build
 
 COVERAGE_IGNORE_TARGETS = 	tests \

@@ -7,20 +7,20 @@ BINARIES_TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
-LIBS = ['abra', 'ECS']
+LIBS = ['abra', 'zygarde']
 LIBS_TARGETS = [
     'abra': [
         'target': 'abra',
         'type': 'shared'
     ],
-    'ECS': [
-        'target': 'r-type_ECS_sdk',
+    'zygarde': [
+        'target': 'zygarde',
         'type': 'shared'
     ]
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
-    'ECS': 'r-type_ECS_sdk_tests'
+    'zygarde': 'zygarde_tests'
 ]
 ARTIFACTS_FILES_EXTENSIONS = [
     'windows': ['exe', 'zip'],
