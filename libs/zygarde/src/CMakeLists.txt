@@ -1,6 +1,6 @@
 add_subdirectory(tools)
 
-target_sources(r-type_ECS_sdk PRIVATE
+target_sources(zygarde PRIVATE
         api.hpp
         entity.hpp
         entity.cpp
