@@ -12,6 +12,8 @@ if (WIN32)
     add_executable(${SERVER_EXECUTABLE} main.cpp ../r-type.rc)
 else ()
     add_executable(${SERVER_EXECUTABLE} main.cpp)
+    set_target_properties(${SERVER_EXECUTABLE} PROPERTIES
+            INSTALL_RPATH "$ORIGIN")
 endif ()
 
 include(dependencies.cmake)

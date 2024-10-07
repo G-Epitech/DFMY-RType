@@ -1,14 +1,14 @@
 set(CPACK_GENERATOR "TGZ;DEB")
 
 set(BUILT_BINARIES r-type_server)
-set(BUILT_LIBS abra r-type_ECS_sdk)
+set(BUILT_LIBS abra zygarde)
 
 install(TARGETS ${BUILT_BINARIES}
         CONFIGURATIONS Release
         RUNTIME_DEPENDENCIES
-        DESTINATION bin)
+        DESTINATION .)
 
 install(TARGETS ${BUILT_LIBS}
         CONFIGURATIONS Release
         RUNTIME_DEPENDENCIES
-        DESTINATION bin)
+        DESTINATION .)
