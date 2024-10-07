@@ -20,7 +20,7 @@ LIBS_TARGETS = [
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
-    'ECS': 'zygarde_tests'
+    'zygarde': 'zygarde_tests'
 ]
 ARTIFACTS_FILES_EXTENSIONS = [
     'windows': ['exe', 'zip'],
