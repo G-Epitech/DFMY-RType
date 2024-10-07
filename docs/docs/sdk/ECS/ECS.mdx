@@ -11,7 +11,7 @@ The ECS SDK is a collection of tools with a useful API that allows you to create
 The registry is the main class of the ECS SDK. It is used to create entities, components, and systems.
 
 :::info
-The ECS SDK is available in the `rtype::sdk::ECS` namespace.
+The ECS SDK is available in the `zygrade::ECS` namespace.
 :::
 
 Let's see how to use the ECS SDK with a simple example.
@@ -19,7 +19,7 @@ Let's see how to use the ECS SDK with a simple example.
 First, include the necessary headers:
 
 ```cpp
-#include <libs/ECS/src/registry.hpp>
+#include <libs/zygrade/src/registry.hpp>
 ````
 
 Then, we are going to declare some components in order to use them later:
@@ -50,7 +50,7 @@ struct controllable {
 Now, we can create a registry, register the components, and create an entity:
 
 ```cpp
-rtype::sdk::ECS::registry registry;
+zygrade::ECS::registry registry;
 
 registry.register_component<position>();
 registry.register_component<velocity>();
@@ -102,8 +102,8 @@ Here is the complete example:
 
 ```cpp
 #include <iostream>
-#include <libs/ECS/src/system_abstract.hpp>
-#include <libs/ECS/src/registry.hpp>
+#include <libs/zygarde/src/registry.hpp>
+#include <libs/zygarde/src/system_abstract.hpp>
 
 struct position {
   float x;
@@ -128,9 +128,7 @@ struct controllable {
 
 class LoggingSystem final : public ASystem<position, velocity> {
  public:
-  explicit LoggingSystem(const int nb) {
-    std::cout << nb << std::endl;
-  }
+  explicit LoggingSystem(const int nb) { std::cout << nb << std::endl; }
 
   void Run(std::shared_ptr<Registry> r, sparse_array<position>& positions,
            sparse_array<velocity>& velocities) override {
@@ -144,7 +142,7 @@ class LoggingSystem final : public ASystem<position, velocity> {
 };
 
 int main() {
-  auto registry = rtype::sdk::ECS::Registry::create();
+  auto registry = zygarde::ECS::Registry::create();
 
   registry->RegisterComponent<position>();
   registry->RegisterComponent<velocity>();
