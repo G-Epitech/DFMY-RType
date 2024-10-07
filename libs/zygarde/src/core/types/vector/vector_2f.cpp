@@ -7,6 +7,8 @@
 
 #include "vector_2f.hpp"
 
+#include <stdexcept>
+
 using namespace zygarde::core::types;
 
 constexpr vector_2f::vector_2f() : x(0), y(0) {}
@@ -67,4 +69,10 @@ double vector_2f::distance(const vector_2f& vec1, const vector_2f& vec2) noexcep
 
 vector_2f vector_2f::normalize(const vector_2f& vec) const noexcept {
   return *this / static_cast<float>(std::sqrt(std::pow(vec.x, 2) + std::pow(vec.y, 2)));
+}
+
+void vector_2f::throw_if_negative(const vector_2f& vec) {
+  if (vec.x < 0 || vec.y < 0) {
+    throw std::invalid_argument("Vector should be positive");
+  }
 }

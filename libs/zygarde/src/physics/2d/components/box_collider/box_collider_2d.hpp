@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cassert>
+#include <stdexcept>
 
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
@@ -50,10 +50,7 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
   /**
    * @brief Set the size of the box
    */
-  inline void SetSize(const core::types::vector_2f &size) noexcept {
-    assert(size.x > 0 && size.y > 0 && "Box size should be positive");
-    size_ = size;
-  }
+  void SetSize(const core::types::vector_2f &size);
 
   /**
    * @brief Execute the OnCollisionEnter function callback from the Collider2D object

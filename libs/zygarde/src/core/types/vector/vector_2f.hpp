@@ -161,6 +161,12 @@ class EXPORT_ZYGARDE_API vector_2f final {
    */
   [[nodiscard]] vector_2f normalize(const vector_2f &vec) const noexcept;
 
+  /**
+   * @brief Throw if vector has negative values
+   * @param vec vector_2f object
+   */
+  static void throw_if_negative(vector_2f const &vec);
+
  public:
   /// @brief x value
   float x;
