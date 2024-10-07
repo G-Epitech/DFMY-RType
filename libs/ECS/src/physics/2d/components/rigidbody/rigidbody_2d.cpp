@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** r-type
 ** File description:
-** rigidybody_2_d.cpp
+** Rigidbody2D.cpp
 */
 
 #include "rigidbody_2d.hpp"

@@ -19,36 +19,60 @@ class EXPORT_ECS_SDK_API BoxCollider2D final {
   BoxCollider2D() = delete;
   ~BoxCollider2D() = default;
 
-  BoxCollider2D(const core::types::vector_2f &size, Collider2D collider);
-
+  /**
+   * @brief Construct a new BoxCollider2D object
+   * @param size Size of the box
+   * @param attachedRigidbody Reference to the attached Rigidbody2D object
+   * @param onCollisionEnter On collision enter function callback
+   * @param onCollisionExit On collision exit function callback
+   */
   BoxCollider2D(const core::types::vector_2f &size, Rigidbody2D &attachedRigidbody,
                 Collision2DFunction onCollisionEnter, Collision2DFunction onCollisionExit);
 
+  /**
+   * @brief Construct a new BoxCollider2D object
+   * @param size Size of the box
+   * @param attachedRigidbody Reference to the attached Rigidbody2D object
+   * @param collisionLayers Collision layers
+   * @param onCollisionEnter On collision enter function callback
+   * @param onCollisionExit On collision exit function callback
+   */
   BoxCollider2D(const core::types::vector_2f &size, Rigidbody2D &attachedRigidbody,
                 std::vector<int> collisionLayers, Collision2DFunction onCollisionEnter,
                 Collision2DFunction onCollisionExit);
 
-  BoxCollider2D(const BoxCollider2D &other) = default;
-  BoxCollider2D(BoxCollider2D &&other) noexcept = default;
-
  public:
+  /**
+   * @brief Get the size of the box
+   */
   [[nodiscard]] inline const core::types::vector_2f &GetSize() const noexcept { return size_; }
 
+  /**
+   * @brief Set the size of the box
+   */
   inline void SetSize(const core::types::vector_2f &size) noexcept {
     assert(size.x > 0 && size.y > 0 && "Box size should be positive");
     size_ = size;
   }
 
-  [[nodiscard]] inline const Collision2DFunction &OnCollisionEnter() const noexcept {
-    return collider_.onCollisionEnter_;
+  /**
+   * @brief Execute the OnCollisionEnter function callback from the Collider2D object
+   */
+  inline void OnCollisionEnter(Collision2D &collision2D) const noexcept {
+    collider_.onCollisionEnter_(collision2D);
   }
 
-  [[nodiscard]] inline const Collision2DFunction &OnCollisionExit() const noexcept {
-    return collider_.onCollisionExit_;
+  /**
+   * @brief Execute the OnCollisionExit function callback from the Collider2D object
+   */
+  inline void OnCollisionExit(Collision2D &collision2D) const noexcept {
+    collider_.onCollisionExit_(collision2D);
   }
 
  private:
+  /// @brief Size of the box
   core::types::vector_2f size_;
+  /// @brief Collider2D object
   Collider2D collider_;
 };
 }  // namespace rtype::sdk::ECS::physics::components

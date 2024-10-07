@@ -20,23 +20,39 @@ namespace rtype::sdk::ECS::physics::components {
 class EXPORT_ECS_SDK_API Collider2D final {
  public:
   Collider2D() = delete;
+
+ private:
   ~Collider2D() = default;
 
+  /**
+   * @brief Construct a new Collider2D object
+   * @param attachedRigidbody Reference to the attached Rigidbody2D object
+   * @param collisionLayers Collision layers
+   * @param onCollisionEnter On collision enter function callback
+   * @param onCollisionExit On collision exit function callback
+   */
   Collider2D(Rigidbody2D &attachedRigidbody, std::vector<int> collisionLayers,
              Collision2DFunction onCollisionEnter, Collision2DFunction onCollisionExit);
 
+  /**
+   * @brief Construct a new Collider2D object
+   * @param attachedRigidbody Reference to the attached Rigidbody2D object
+   * @param onCollisionEnter On collision enter function callback
+   * @param onCollisionExit On collision exit function callback
+   */
   Collider2D(Rigidbody2D &attachedRigidbody, Collision2DFunction onCollisionEnter,
              Collision2DFunction onCollisionExit);
-
-  Collider2D(const Collider2D &other) = default;
-  Collider2D(Collider2D &&other) noexcept = default;
 
   friend class BoxCollider2D;
 
  private:
+  /// @brief On collision enter function callback
   Collision2DFunction onCollisionEnter_;
+  /// @brief On collision exit function callback
   Collision2DFunction onCollisionExit_;
+  /// @brief Reference to the attached Rigidbody2D object
   Rigidbody2D &attachedRigidbody_;
+  /// @brief Collision layers
   std::vector<int> collisionLayers_;
 };
 }  // namespace rtype::sdk::ECS::physics::components

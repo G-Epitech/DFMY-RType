@@ -9,5 +9,8 @@
 
 #include <vector>
 namespace rtype::sdk::ECS::physics::constants {
-static const std::vector<int> kDefaultCollisionLayers = {1, 2, 3};
-}
+
+/// @brief Default collision layers
+static const std::vector<int> kDefaultCollisionLayers = std::vector<int>{0};
+
+}  // namespace rtype::sdk::ECS::physics::constants
