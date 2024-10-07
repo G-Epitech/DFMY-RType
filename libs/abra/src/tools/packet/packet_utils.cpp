@@ -21,7 +21,7 @@ unsigned tools::PacketUtils::ExportMessageTypeFromBitset(
 }
 
 unsigned tools::PacketUtils::ExportMessageIdFromBitset(
-        const std::shared_ptr<dynamic_bitset> &bitset) {
+    const std::shared_ptr<dynamic_bitset> &bitset) {
   unsigned messageId = 0;
   std::size_t startRange = kPacketHeaderPropsSize;
 

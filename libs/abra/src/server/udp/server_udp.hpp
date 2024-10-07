@@ -7,24 +7,21 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <boost/array.hpp>
+#include <boost/asio.hpp>
+#include <mutex>
 #include <queue>
 
 #include "core.hpp"
-#include "tools/packet/props/props.hpp"
 #include "tools/bitset/dynamic_bitset.hpp"
+#include "tools/packet/props/props.hpp"
 
 namespace abra::server {
-  class EXPORT_NETWORK_SDK_API ServerUDP;
+class EXPORT_NETWORK_SDK_API ServerUDP;
 }
 
 class abra::server::ServerUDP {
-public:
-  explicit ServerUDP(const int &port);
-
-  ~ServerUDP();
-
+ public:
   struct ClientMessage {
     boost::asio::ip::udp::endpoint endpoint;
     unsigned int messageType;
@@ -33,11 +30,39 @@ public:
   };
 
   /**
+   * @brief Construct a new ServerUDP object
+   * @param port The port of the server
+   */
+  explicit ServerUDP(const int &port);
+
+  /**
+   * @brief Destroy the ServerUDP object
+   */
+  ~ServerUDP();
+
+  /**
    * @brief Start the server
    */
   void Start();
 
-private:
+  /**
+   * @brief Lock the queue mutex
+   */
+  void LockQueue();
+
+  /**
+   * @brief Unlock the queue mutex
+   */
+  void UnlockQueue();
+
+  /**
+   * @brief Get the queue of client messages
+   * @warning You need to lock the queue before using it
+   * @return The queue
+   */
+  [[nodiscard]] std::queue<ClientMessage> &GetQueue();
+
+ private:
   /**
    * @brief Listen a new request from a client
    */
@@ -54,4 +79,5 @@ private:
   boost::asio::ip::udp::endpoint remoteEndpoint_;
   boost::array<char, kPacketMaxBytesSize> buffer_;
   std::queue<ClientMessage> queue_;
+  std::mutex mutex_;
 };

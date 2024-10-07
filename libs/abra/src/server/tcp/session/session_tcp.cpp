@@ -12,7 +12,8 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)), buffer_() {}
+SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket)
+    : socket_(std::move(socket)), buffer_() {}
 
 SessionTCP::~SessionTCP() {
   socket_.close();

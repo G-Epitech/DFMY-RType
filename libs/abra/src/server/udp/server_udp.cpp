@@ -6,12 +6,14 @@
 */
 
 #include "server_udp.hpp"
+
 #include "tools/packet/packet_utils.hpp"
 
 using namespace abra::server;
 using namespace boost::asio;
 
-ServerUDP::ServerUDP(const int &port) : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_() {}
+ServerUDP::ServerUDP(const int &port)
+    : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_() {}
 
 ServerUDP::~ServerUDP() {
   this->ios_.stop();
@@ -39,8 +41,23 @@ void ServerUDP::HandleRequest(const std::size_t &size) {
 
   auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
 
-  ClientMessage message = {this->remoteEndpoint_, tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
+  ClientMessage message = {this->remoteEndpoint_,
+                           tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
                            tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
 
+  this->mutex_.lock();
   queue_.push(message);
+  this->mutex_.unlock();
+}
+
+void ServerUDP::LockQueue() {
+  this->mutex_.lock();
+}
+
+void ServerUDP::UnlockQueue() {
+  this->mutex_.unlock();
+}
+
+std::queue<ServerUDP::ClientMessage> &ServerUDP::GetQueue() {
+  return this->queue_;
 }
