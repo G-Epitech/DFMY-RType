@@ -11,10 +11,6 @@
 
 using namespace zygarde::core::types;
 
-constexpr vector_2f::vector_2f() : x(0), y(0) {}
-
-constexpr vector_2f::vector_2f(float x, float y) : x(x), y(y) {}
-
 vector_2f vector_2f::operator+(const vector_2f& vec) const noexcept {
   return {this->y + vec.y, this->x + vec.x};
 }

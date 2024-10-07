@@ -14,7 +14,7 @@
 namespace zygarde::core::types {
 class EXPORT_ZYGARDE_API vector_2f final {
  public:
-  constexpr vector_2f();
+  constexpr vector_2f() = default;
   ~vector_2f() = default;
 
   /**
@@ -22,7 +22,7 @@ class EXPORT_ZYGARDE_API vector_2f final {
    * @param x x value
    * @param y y value
    */
-  constexpr vector_2f(float x, float y);
+  constexpr vector_2f(float x, float y) : x(x), y(y) {};
 
  public:
   /**
@@ -169,8 +169,8 @@ class EXPORT_ZYGARDE_API vector_2f final {
 
  public:
   /// @brief x value
-  float x;
+  float x{0};
   /// @brief y value
-  float y;
+  float y{0};
 };
 }  // namespace zygarde::core::types

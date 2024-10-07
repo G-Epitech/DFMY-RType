@@ -10,7 +10,6 @@
 #include <utility>
 
 using namespace zygarde::physics::components;
-using namespace zygarde;
 
 BoxCollider2D::BoxCollider2D(const core::types::vector_2f& size, Rigidbody2D& attachedRigidbody,
                              std::vector<int> collisionLayers, Collision2DFunction onCollisionEnter,
