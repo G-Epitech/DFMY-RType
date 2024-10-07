@@ -11,7 +11,7 @@
 #include "cli/handlers/abstract/cli_handler_abstract.hpp"
 
 namespace rtype::server {
-class CliHandlerMaster : public ACliHandler {
+class CliHandlerMaster : public AbstractCliHandler {
  public:
   /**
    * @brief Construct a new CliHandlerMaster object and setup the cli options

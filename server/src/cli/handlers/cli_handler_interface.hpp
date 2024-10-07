@@ -15,9 +15,9 @@ namespace rtype::server {
 /// @brief CliResult alias
 using CliResult = std::optional<BaseContext>;
 
-class ICliHandler {
+class InterfaceCliHandler {
  public:
-  virtual ~ICliHandler() = default;
+  virtual ~InterfaceCliHandler() = default;
 
   /**
    * Run the cli handler

@@ -1,3 +1,6 @@
+add_subdirectory(utils)
+add_subdirectory(context)
+add_subdirectory(scenes)
 add_subdirectory(app)
 add_subdirectory(components)
 add_subdirectory(systems)

@@ -7,9 +7,14 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "context/global_context.hpp"
+#include "scenes/scenes_manager.hpp"
+#include "utils/timer.hpp"
+
 #define APP_WINDOW_WIDTH 800
 #define APP_WINDOW_HEIGHT 600
 #define APP_WINDOW_TITLE "R-Type"
+#define APP_WINDOW_FRAMERATE 60
 
 #pragma once
 
@@ -20,7 +25,7 @@ namespace rtype::client {
  * @brief The main application class responsible for running the client-side application.
  *
  * This class provides the main entry point for the client application and contains
- * the necessary methods to initialize and run the application.
+ * the necessary methods to initialize and Run the application.
  */
 class App {
  public:
@@ -40,25 +45,49 @@ class App {
    * @brief Runs the client-side application.
    * This method contains the main loop and logic to start and maintain the client application.
    */
-  void run();
+  void Run();
 
  private:
   /**
+   * @brief Initializes the global context for the application.
+   */
+  void InitializeGlobalContext();
+
+  /**
+   * @brief Creates the main window for the application.
+   */
+  void CreateWindow();
+
+  /**
+   * @brief Creates the scenes manager for the application.
+   */
+  void CreateScenesManager();
+
+  /**
    * @brief Processes events.
    */
-  void processEvents();
+  void ProcessEvents();
 
   /**
    * @brief Updates the application.
    */
-  void update();
+  void Update(utils::DeltaTime delta_time);
 
   /**
    * @brief Renders the application.
    */
-  void render();
+  void Render();
 
   /// @brief The main window for the application.
-  sf::RenderWindow mWindow;
+  std::shared_ptr<sf::RenderWindow> window_;
+
+  /// @brief The scenes manager for the application.
+  ScenesManager<GlobalContext>::Ptr scenesManager_;
+
+  /// @brief The global context for the application.
+  GlobalContext globalContext_;
+
+  /// @brief App timer
+  utils::Timer timer_;
 };
 }  // namespace rtype::client
