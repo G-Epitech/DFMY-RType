@@ -8,13 +8,11 @@
 #include "session_tcp.hpp"
 
 #include "tools/packet/packet_utils.hpp"
-#include "tools/packet/props/props.hpp"
 
 using namespace abra::server;
 using namespace boost::asio;
 
-SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket)
-    : socket_(std::move(socket)), buffer_(kPacketMaxBytesSize) {}
+SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)) {}
 
 SessionTCP::~SessionTCP() {
   socket_.close();
@@ -27,15 +25,23 @@ void SessionTCP::Start() {
 void SessionTCP::ListenNewRequest() {
   auto self(shared_from_this());
 
-  buffer_.clear();
-  socket_.async_read_some(
-      buffer(buffer_), [this, self](boost::system::error_code error, std::size_t len) {
-        if (!error) {
-          auto bitset = std::make_shared<tools::dynamic_bitset>(buffer_);
-          tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                         tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                         bitset};
-          queue_.push(message);
-        }
-      });
+  socket_.async_read_some(boost::asio::buffer(buffer_),
+                          [this, self](const boost::system::error_code &err, std::size_t size) {
+                            if (err)
+                              return;
+                            if (size > 0) {
+                              HandleRequest(size);
+                            }
+                            ListenNewRequest();
+                          });
+}
+
+void SessionTCP::HandleRequest(const std::size_t &size) {
+  std::vector<char> buffer = std::vector<char>(buffer_.begin(), buffer_.begin() + size);
+
+  auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
+  tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
+                                 tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
+
+  queue_.push(message);
 }

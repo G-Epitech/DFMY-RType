@@ -7,12 +7,14 @@
 
 #pragma once
 
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <memory>
 #include <queue>
 
 #include "core.hpp"
 #include "tools/message/message.hpp"
+#include "tools/packet/props/props.hpp"
 
 namespace abra::server {
 class EXPORT_NETWORK_SDK_API SessionTCP;
@@ -39,11 +41,17 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    */
   void ListenNewRequest();
 
+  /**
+   * @brief Handle the request of the client
+   * @param size The size of the request
+   */
+  void HandleRequest(const std::size_t &size);
+
   /// @brief The socket of the client
   boost::asio::ip::tcp::socket socket_;
 
   /// @brief The buffer of the client
-  std::vector<char> buffer_;
+  boost::array<char, kPacketMaxBytesSize> buffer_;
 
   /// @brief Message queue
   std::queue<tools::MessageProps> queue_;

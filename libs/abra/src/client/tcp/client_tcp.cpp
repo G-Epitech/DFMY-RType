@@ -19,8 +19,8 @@ ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port) : socket_
 }
 
 ClientTCP::~ClientTCP() {
-  socket_.close();
-  ios_.stop();
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->socket_.close();
 }
 
 void ClientTCP::Listen() {
