@@ -6,7 +6,6 @@ add_library(${CLIENT_CORE_LIB} STATIC)
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
-target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/abra/src/)
 
 add_executable(${CLIENT_EXECUTABLE} main.cpp)
 
