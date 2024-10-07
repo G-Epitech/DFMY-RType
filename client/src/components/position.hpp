@@ -9,7 +9,7 @@
 
 namespace rtype::client::components {
 
-/// @brief Positon Component use in an ECS
+/// @brief Position Component use in an ECS
 struct Position {
   /// @brief X position
   float x = 0;

@@ -80,32 +80,24 @@ class ScenesManager {
     [[nodiscard]] const char *what() const noexcept override;
 
    private:
-    // Message of the exception
+    /// @brief Message of the exception
     std::string msg_;
   };
 
  private:
-  /**
-   * @brief Map of scenes
-   */
+  /// @brief Map of scenes
   using ScenesMap = std::map<std::type_index, IScene::Ptr>;
 
-  // Map of scenes
+  /// @brief Map of scenes
   ScenesMap scenesMap_;
 
-  /**
-   * @brief Global context of the app
-   */
+  /// @brief Global context of the app
   const ContextType &context_;
 
-  /**
-   * @brief Active state of the scenes manager
-   */
+  /// @brief Active state of the scenes manager
   bool active_ = true;
 
-  /**
-   * @brief Current scene
-   */
+  /// @brief Current scene
   IScene::Ptr currentScene_ = nullptr;
 
   /**

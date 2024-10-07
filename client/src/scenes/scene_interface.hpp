@@ -14,7 +14,7 @@
 namespace rtype::client {
 class IScene {
  public:
-  // Pointer type
+  /// @brief Pointer type
   using Ptr = std::shared_ptr<IScene>;
 
   /**
