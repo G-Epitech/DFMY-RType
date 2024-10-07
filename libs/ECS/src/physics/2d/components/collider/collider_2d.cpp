@@ -12,15 +12,15 @@
 using namespace rtype::sdk::ECS::physics::components;
 
 Collider2D::Collider2D(Rigidbody2D &attachedRigidbody, std::vector<int> collisionLayers,
-                       CollisionFunction onCollisionEnter, CollisionFunction onCollisionExit)
+                       Collision2DFunction onCollisionEnter, Collision2DFunction onCollisionExit)
     : attachedRigidbody_(attachedRigidbody),
       collisionLayers_(std::move(collisionLayers)),
-      onCollisionEnter(std::move(onCollisionEnter)),
-      onCollisionExit(std::move(onCollisionExit)) {}
+      onCollisionEnter_(std::move(onCollisionEnter)),
+      onCollisionExit_(std::move(onCollisionExit)) {}
 
-Collider2D::Collider2D(Rigidbody2D &attachedRigidbody, CollisionFunction onCollisionEnter,
-                       CollisionFunction onCollisionExit)
+Collider2D::Collider2D(Rigidbody2D &attachedRigidbody, Collision2DFunction onCollisionEnter,
+                       Collision2DFunction onCollisionExit)
     : attachedRigidbody_(attachedRigidbody),
       collisionLayers_(constants::kDefaultCollisionLayers),
-      onCollisionEnter(std::move(onCollisionEnter)),
-      onCollisionExit(std::move(onCollisionExit)) {}
+      onCollisionEnter_(std::move(onCollisionEnter)),
+      onCollisionExit_(std::move(onCollisionExit)) {}

@@ -12,9 +12,11 @@
 
 namespace rtype::sdk::ECS::physics::components {
 struct Collision2D {
+  Rigidbody2D &myRigidbody;
+  core::components::Transform2D &myTransform;
   const Rigidbody2D &otherRigidbody;
   const core::components::Transform2D &otherTransform;
 };
 
-using CollisionFunction = std::function<void(Collision2D &)>;
+using Collision2DFunction = std::function<void(Collision2D &)>;
 }  // namespace rtype::sdk::ECS::physics::components

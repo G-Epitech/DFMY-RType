@@ -7,10 +7,11 @@
 
 #pragma once
 
+#include "libs/ECS/src/api.hpp"
 #include "libs/ECS/src/core/types/vector/vector_2f.hpp"
 
 namespace rtype::sdk::ECS::core::components {
-class Transform2D {
+class EXPORT_ECS_SDK_API Transform2D {
  public:
   Transform2D() = default;
   ~Transform2D() = default;
@@ -27,4 +28,4 @@ class Transform2D {
   types::vector_2f scale;
   float rotation;
 };
-}
+}  // namespace rtype::sdk::ECS::core::components

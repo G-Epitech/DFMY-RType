@@ -7,8 +7,10 @@
 
 #pragma once
 
+#include "libs/ECS/src/api.hpp"
+
 namespace rtype::sdk::ECS::core::types {
-class vector_2f {
+class EXPORT_ECS_SDK_API vector_2f {
  public:
   vector_2f() = default;
 
@@ -30,4 +32,4 @@ class vector_2f {
   float x;
   float y;
 };
-}
+}  // namespace rtype::sdk::ECS::core::types
