@@ -27,12 +27,6 @@ class abra::client::InterfaceClient {
    */
   virtual void Listen() = 0;
 
-  /**
-   * @brief Send a message to the server
-   * @return The message queue
-   */
-  [[nodiscard]] virtual const std::queue<tools::MessageProps> &getQueue() const = 0;
-
  protected:
   /// @brief The queue of server messages
   std::queue<tools::MessageProps> queue_;
