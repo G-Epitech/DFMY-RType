@@ -7,16 +7,22 @@ target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
 
-add_executable(${CLIENT_EXECUTABLE} main.cpp)
+if (WIN32)
+    add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp r-type.rc)
+else ()
+    add_executable(${CLIENT_EXECUTABLE} main.cpp)
+endif ()
 
 include(dependencies.cmake)
 
 target_link_libraries(${CLIENT_EXECUTABLE} PRIVATE ${CLIENT_CORE_LIB})
 
 if (COVERAGE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-  target_link_libraries(${CLIENT_CORE_LIB} PRIVATE gcov)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+    target_link_libraries(${CLIENT_CORE_LIB} PRIVATE gcov)
 endif ()
 
 add_subdirectory(src)
 add_subdirectory(tests)
+
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
