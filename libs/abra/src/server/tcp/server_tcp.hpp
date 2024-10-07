@@ -32,6 +32,17 @@ class abra::server::ServerTCP {
   void Start();
 
   /**
+   * @brief Send a message to a specific client
+   * @tparam T The type of the packet
+   * @param packet The packet to send
+   * @param clientId The client id
+   * @return The status of the message
+   */
+  template <typename T>
+  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet,
+                                const std::uint64_t &clientId);
+
+  /**
    * @brief Lock the queue mutex
    */
   void LockQueue();
@@ -73,3 +84,5 @@ class abra::server::ServerTCP {
   /// @brief Queue mutex
   std::shared_ptr<std::mutex> mutex_;
 };
+
+#include "server_tcp.tpp"

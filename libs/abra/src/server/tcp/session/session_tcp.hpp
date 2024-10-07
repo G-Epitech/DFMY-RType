@@ -41,6 +41,12 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    */
   void Start();
 
+  /**
+   * @brief Send a message to a client
+   * @tparam T The type of the packet
+   * @param packet The packet to send
+   * @return The status of the message
+   */
   template <typename T>
   tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet);
 
