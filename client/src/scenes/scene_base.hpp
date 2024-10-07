@@ -32,10 +32,6 @@ class SceneBase : public IScene {
   zygarde::Registry::Ptr registry_;
 
  public:
-  /***
-   * @brief Draw the scene
-   */
-  void Draw() override;
 
   /**
    * @brief Update the scene

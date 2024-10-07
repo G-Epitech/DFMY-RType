@@ -11,6 +11,7 @@
 #include <string>
 #include <typeindex>
 
+#include "window/window_manager.hpp"
 #include "scene_interface.hpp"
 
 namespace rtype::client {
@@ -18,10 +19,21 @@ namespace rtype::client {
 template <typename ContextType>
 class ScenesManager {
  public:
+  /// @brief Pointer type of the scenes manager
+  typedef std::shared_ptr<ScenesManager> Ptr;
+
+  /**
+   * @brief Create a new scenes manager
+   * @param window_manager Window manager
+   * @param context Context of the app
+   * @return Created scenes manager
+   */
+  static Ptr Create(WindowManager::Ptr window_manager, const ContextType &context);
+
   /**
    * @brief Construct a new Scenes Manager object
    */
-  explicit ScenesManager(const ContextType &context);
+  explicit ScenesManager(WindowManager::Ptr window_manager, const ContextType &context);
 
   /**
    * @brief Destroy the Scenes Manager object
@@ -49,11 +61,6 @@ class ScenesManager {
   void Update(utils::DeltaTime delta_time);
 
   /**
-   * @brief Draw the current scene
-   */
-  void Draw();
-
-  /**
    * @brief Quit the application
    */
   void Quit();
@@ -63,11 +70,6 @@ class ScenesManager {
    * @return Active state of the scenes manager
    */
   [[nodiscard]] bool IsActive() const;
-
-  /**
-   * @brief Pointer type of the scenes manager
-   */
-  using Ptr = std::shared_ptr<ScenesManager>;
 
   class Exception : public std::exception {
    public:
@@ -94,6 +96,9 @@ class ScenesManager {
   /// @brief Global context of the app
   const ContextType &context_;
 
+  /// @brief Window manager
+  WindowManager::Ptr windowManager_;
+
   /// @brief Active state of the scenes manager
   bool active_ = true;
 
@@ -114,6 +119,11 @@ class ScenesManager {
   template <SceneType T>
   IScene::Ptr CreateScene();
 };
+template <typename ContextType>
+ScenesManager<ContextType>::Ptr ScenesManager<ContextType>::Create(
+    WindowManager::Ptr window_manager, const ContextType &context) {
+  return std::make_shared<ScenesManager>(window_manager, context);
+}
 }  // namespace rtype::client
 
 #include "scenes_manager.tpp"

@@ -14,7 +14,7 @@
 using namespace rtype::client;
 
 App::App() {
-  CreateWindow();
+  CreateWindowManager();
   CreateScenesManager();
   InitializeGlobalContext();
 
@@ -24,49 +24,25 @@ App::App() {
 }
 
 void App::Run() {
-  while (window_->isOpen() && scenesManager_->IsActive()) {
-    timer_.tick();
-    ProcessEvents();
-    Update(timer_.GetElapsedTime());
-    Render();
+  while (scenesManager_->IsActive() && windowManager_->IsActive()) {
+    scenesManager_->Update(++timer_);
   }
-}
-
-void App::ProcessEvents() {
-  sf::Event event{};
-
-  while (window_->pollEvent(event)) {
-    if (event.type == sf::Event::Closed) {
-      window_->close();
-    }
-  }
-}
-
-void App::Update(utils::DeltaTime delta_time) {
-  scenesManager_->Update(delta_time);
-}
-
-void App::Render() {
-  window_->clear();
-  scenesManager_->Draw();
-  window_->display();
 }
 
 void App::InitializeGlobalContext() {
-  globalContext_.window = window_;
+  globalContext_.windowManager = windowManager_;
   globalContext_.scenesManager = scenesManager_;
 }
 
-void App::CreateWindow() {
-  const auto videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT);
-
-  window_ = std::make_shared<sf::RenderWindow>(videoMode, APP_WINDOW_TITLE);
-  window_->setFramerateLimit(APP_WINDOW_FRAMERATE);
-  if (logo_.loadFromFile(APP_WINDOW_ICON_PATH)) {
-    window_->setIcon(logo_.getSize().x, logo_.getSize().y, logo_.getPixelsPtr());
-  }
+void App::CreateWindowManager() {
+  windowManager_ = WindowManager::Create({
+      .title = APP_WINDOW_TITLE,
+      .videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT),
+      .style = sf::Style::Default,
+      .contextSettings = sf::ContextSettings()
+  });
 }
 
 void App::CreateScenesManager() {
-  scenesManager_ = std::make_shared<ScenesManager<GlobalContext>>(globalContext_);
+  scenesManager_ = ScenesManager<GlobalContext>::Create(windowManager_, globalContext_);
 }
