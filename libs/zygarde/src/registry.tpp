@@ -8,7 +8,7 @@
 #pragma once
 #include <stdexcept>
 
-using namespace rtype::sdk::ECS;
+using namespace zygarde;
 
 template <typename Component>
 sparse_array<Component> &Registry::RegisterComponent() {

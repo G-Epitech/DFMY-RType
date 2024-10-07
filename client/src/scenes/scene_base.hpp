@@ -1,13 +1,13 @@
 /*
 ** EPITECH PROJECT, 2024
-** rtype
+** r-type
 ** File description:
-** scene_abstract.hpp
+** scene_base.hpp
 */
 
 #pragma once
 
-#include "libs/ECS/src/registry.hpp"
+#include "libs/zygarde/src/registry.hpp"
 #include "scene_interface.hpp"
 
 namespace rtype::client {
@@ -29,7 +29,7 @@ class SceneBase : public IScene {
   const ContextType &context_;
 
   /// @brief Store the ECS registry for the scene
-  sdk::ECS::Registry::Ptr registry_;
+  zygarde::Registry::Ptr registry_;
 
  public:
   /***
