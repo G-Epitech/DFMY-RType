@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 
-#include "api.hpp"
+#include "core.hpp"
 
 namespace abra::tools {
 class EXPORT_NETWORK_SDK_API dynamic_bitset;
@@ -24,6 +24,12 @@ class EXPORT_NETWORK_SDK_API abra::tools::dynamic_bitset {
    * @param size The size of the bitset (in bits)
    */
   explicit dynamic_bitset(std::size_t size);
+
+  /**
+   * @brief Construct a new Dynamic Bitset object from a vector
+   * @param vector The vector (buffer of bytes)
+   */
+  explicit dynamic_bitset(const std::vector<char> &vector);
 
   ~dynamic_bitset();
 

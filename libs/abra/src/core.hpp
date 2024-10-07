@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** network.hpp
+** core.hpp
 */
 
 #pragma once

@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "api.hpp"
+#include "core.hpp"
 #include "tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::tools {
@@ -24,6 +24,14 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketUtils {
    * @return The message type
    */
   [[nodiscard]] static unsigned ExportMessageTypeFromBitset(
+      const std::shared_ptr<dynamic_bitset> &bitset);
+
+  /**
+   * @brief Export message id from bitset
+   * @param bitset The bitset (Compressed packet)
+   * @return The message id
+   */
+  [[nodiscard]] static unsigned ExportMessageIdFromBitset(
       const std::shared_ptr<dynamic_bitset> &bitset);
 
  private:

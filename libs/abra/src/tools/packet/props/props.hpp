@@ -12,5 +12,6 @@
 #include "offset.hpp"
 #include "turn.hpp"
 
-constexpr unsigned int kPacketMaxSize = kPacketHeaderPropsSize + kPacketMessagePropsSize +
-                                        kPacketOffsetPropsSize + kPacketTurnPropsSize + 1024;
+constexpr unsigned int kPacketMaxBytesSize = (kPacketHeaderPropsSize + kPacketMessagePropsSize +
+                                              kPacketOffsetPropsSize + kPacketTurnPropsSize / 8) +
+                                             1024;

@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "interface_client.hpp"
+#include "client/interface_client.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientTCP;
@@ -29,15 +29,15 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
   /**
    * @brief Listen the server and handle the incoming data
    */
-  void listen() override;
+  void Listen() override;
 
   /**
    * @brief Send a message to the server
-   * @param packet The packet to send
+   * @param packet The packet to Send
    * @return The status of the message
    */
   template <typename T>
-  SendMessageStatus send(const std::unique_ptr<tools::Packet<T>> &packet);
+  tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>> &packet);
 
  private:
   /// @brief The Input Output Service
