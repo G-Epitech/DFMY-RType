@@ -4,12 +4,6 @@
 ** File description:
 ** scene_base.hpp
 */
-/*
-** EPITECH PROJECT, 2024
-** rtype
-** File description:
-** scene_abstract.hpp
-*/
 
 #pragma once
 

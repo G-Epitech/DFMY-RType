@@ -4,12 +4,6 @@
 ** File description:
 ** entity.cpp
 */
-/*
-** EPITECH PROJECT, 2024
-** rtype
-** File description:
-** entity.cpp
-*/
 
 #include "entity.hpp"
 
