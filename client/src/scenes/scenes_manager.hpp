@@ -100,9 +100,8 @@ class ScenesManager {
    * @brief Check if the scenes manager has active scenes and has not been quit
    * @return Active state of the scenes manager
    */
-  bool IsActive() const;
+  [[nodiscard]] bool IsActive() const;
 
- public:
   /**
    * @brief Pointer type of the scenes manager
    */
