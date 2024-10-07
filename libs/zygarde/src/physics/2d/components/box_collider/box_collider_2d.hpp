@@ -22,53 +22,55 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
   /**
    * @brief Construct a new BoxCollider2D object
    * @param size Size of the box
-   * @param attachedRigidbody Reference to the attached Rigidbody2D object
-   * @param onCollisionEnter On collision enter function callback
-   * @param onCollisionExit On collision exit function callback
+   * @param attached_rigidbody Pointer to the attached Rigidbody2D object
+   * @param on_collision_enter On collision enter function callback
+   * @param on_collision_exit On collision exit function callback
    */
-  BoxCollider2D(const core::types::vector_2f &size, Rigidbody2D &attachedRigidbody,
-                Collision2DFunction onCollisionEnter, Collision2DFunction onCollisionExit);
+  BoxCollider2D(const core::types::Vector2f &size, Rigidbody2D *attached_rigidbody,
+                Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
 
   /**
    * @brief Construct a new BoxCollider2D object
    * @param size Size of the box
-   * @param attachedRigidbody Reference to the attached Rigidbody2D object
-   * @param collisionLayers Collision layers
-   * @param onCollisionEnter On collision enter function callback
-   * @param onCollisionExit On collision exit function callback
+   * @param attached_rigidbody Pointer to the attached Rigidbody2D object
+   * @param collision_layers Collision layers
+   * @param on_collision_enter On collision enter function callback
+   * @param on_collision_exit On collision exit function callback
    */
-  BoxCollider2D(const core::types::vector_2f &size, Rigidbody2D &attachedRigidbody,
-                std::vector<int> collisionLayers, Collision2DFunction onCollisionEnter,
-                Collision2DFunction onCollisionExit);
+  BoxCollider2D(const core::types::Vector2f &size, Rigidbody2D *attached_rigidbody,
+                std::vector<int> collision_layers, Collision2DFunction on_collision_enter,
+                Collision2DFunction on_collision_exit);
 
  public:
   /**
    * @brief Get the size of the box
    */
-  [[nodiscard]] inline const core::types::vector_2f &GetSize() const noexcept { return size_; }
+  [[nodiscard]] inline const core::types::Vector2f &GetSize() const noexcept { return size_; }
 
   /**
    * @brief Set the size of the box
    */
-  void SetSize(const core::types::vector_2f &size);
+  void SetSize(const core::types::Vector2f &size);
 
   /**
    * @brief Execute the OnCollisionEnter function callback from the Collider2D object
+   * @param collision_2d Current collision
    */
-  inline void OnCollisionEnter(Collision2D &collision2D) const noexcept {
-    collider_.onCollisionEnter_(collision2D);
+  inline void OnCollisionEnter(Collision2D *collision_2d) const noexcept {
+    collider_.onCollisionEnter_(collision_2d);
   }
 
   /**
    * @brief Execute the OnCollisionExit function callback from the Collider2D object
+   * @param collision_2d Current collision
    */
-  inline void OnCollisionExit(Collision2D &collision2D) const noexcept {
-    collider_.onCollisionExit_(collision2D);
+  inline void OnCollisionExit(Collision2D *collision_2d) const noexcept {
+    collider_.onCollisionExit_(collision_2d);
   }
 
  private:
   /// @brief Size of the box
-  core::types::vector_2f size_;
+  core::types::Vector2f size_;
   /// @brief Collider2D object
   Collider2D collider_;
 };

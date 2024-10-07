@@ -13,10 +13,10 @@
 namespace zygarde::physics::components {
 /// @brief Collision2D struct passed to the collision callback
 struct Collision2D {
-  /// @brief Rigidbody2D of the current entity
-  Rigidbody2D &myRigidbody;
-  /// @brief Transform of the current entity
-  core::components::Transform &myTransform;
+  /// @brief Pointer to the Rigidbody2D of the current entity
+  Rigidbody2D *myRigidbody;
+  /// @brief Pointer to the Transform of the current entity
+  core::components::Transform *myTransform;
   /// @brief Rigidbody2D of the other colliding entity
   const Rigidbody2D &otherRigidbody;
   /// @brief Transform of the other colliding entity
@@ -24,5 +24,5 @@ struct Collision2D {
 };
 
 /// @brief Colliding callback function
-using Collision2DFunction = std::function<void(Collision2D &)>;
+using Collision2DFunction = std::function<void(Collision2D *)>;
 }  // namespace zygarde::physics::components

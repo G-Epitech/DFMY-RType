@@ -11,24 +11,25 @@
 
 using namespace zygarde::physics::components;
 
-BoxCollider2D::BoxCollider2D(const core::types::vector_2f& size, Rigidbody2D& attachedRigidbody,
-                             std::vector<int> collisionLayers, Collision2DFunction onCollisionEnter,
-                             Collision2DFunction onCollisionExit)
+BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size, Rigidbody2D* attached_rigidbody,
+                             std::vector<int> collision_layers,
+                             Collision2DFunction on_collision_enter,
+                             Collision2DFunction on_collision_exit)
     : size_(size),
-      collider_(attachedRigidbody, std::move(collisionLayers), std::move(onCollisionEnter),
-                std::move(onCollisionExit)) {
-  core::types::vector_2f::throw_if_negative(size);
+      collider_(attached_rigidbody, std::move(collision_layers), std::move(on_collision_enter),
+                std::move(on_collision_exit)) {
+  core::types::Vector2f::throw_if_negative(size);
 }
 
-BoxCollider2D::BoxCollider2D(const core::types::vector_2f& size, Rigidbody2D& attachedRigidbody,
-                             Collision2DFunction onCollisionEnter,
-                             Collision2DFunction onCollisionExit)
+BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size, Rigidbody2D* attached_rigidbody,
+                             Collision2DFunction on_collision_enter,
+                             Collision2DFunction on_collision_exit)
     : size_(size),
-      collider_(attachedRigidbody, std::move(onCollisionEnter), std::move(onCollisionExit)) {
-  core::types::vector_2f::throw_if_negative(size);
+      collider_(attached_rigidbody, std::move(on_collision_enter), std::move(on_collision_exit)) {
+  core::types::Vector2f::throw_if_negative(size);
 }
 
-void BoxCollider2D::SetSize(const core::types::vector_2f& size) {
-  core::types::vector_2f::throw_if_negative(size);
+void BoxCollider2D::SetSize(const core::types::Vector2f& size) {
+  core::types::Vector2f::throw_if_negative(size);
   size_ = size;
 }

@@ -26,22 +26,22 @@ class EXPORT_ZYGARDE_API Collider2D final {
 
   /**
    * @brief Construct a new Collider2D object
-   * @param attachedRigidbody Reference to the attached Rigidbody2D object
-   * @param collisionLayers Collision layers
-   * @param onCollisionEnter On collision enter function callback
-   * @param onCollisionExit On collision exit function callback
+   * @param attached_rigidbody Pointer to the attached Rigidbody2D object
+   * @param collision_layers Collision layers
+   * @param on_collision_enter On collision enter function callback
+   * @param on_collision_exit On collision exit function callback
    */
-  Collider2D(Rigidbody2D &attachedRigidbody, std::vector<int> collisionLayers,
-             Collision2DFunction onCollisionEnter, Collision2DFunction onCollisionExit);
+  Collider2D(Rigidbody2D *attached_rigidbody, std::vector<int> collision_layers,
+             Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
 
   /**
    * @brief Construct a new Collider2D object
-   * @param attachedRigidbody Reference to the attached Rigidbody2D object
-   * @param onCollisionEnter On collision enter function callback
-   * @param onCollisionExit On collision exit function callback
+   * @param attached_rigidbody Pointer to the attached Rigidbody2D object
+   * @param on_collision_enter On collision enter function callback
+   * @param on_collision_exit On collision exit function callback
    */
-  Collider2D(Rigidbody2D &attachedRigidbody, Collision2DFunction onCollisionEnter,
-             Collision2DFunction onCollisionExit);
+  Collider2D(Rigidbody2D *attached_rigidbody, Collision2DFunction on_collision_enter,
+             Collision2DFunction on_collision_exit);
 
   friend class BoxCollider2D;
 
@@ -50,8 +50,8 @@ class EXPORT_ZYGARDE_API Collider2D final {
   Collision2DFunction onCollisionEnter_;
   /// @brief On collision exit function callback
   Collision2DFunction onCollisionExit_;
-  /// @brief Reference to the attached Rigidbody2D object
-  Rigidbody2D &attachedRigidbody_;
+  /// @brief Pointer to the attached Rigidbody2D object
+  Rigidbody2D *attachedRigidbody_;
   /// @brief Collision layers
   std::vector<int> collisionLayers_;
 };

@@ -22,14 +22,14 @@ class EXPORT_ZYGARDE_API Transform final {
    * @param scale Scale vector
    * @param rotation Rotation vector
    */
-  Transform(types::vector_3f position, types::vector_3f scale, types::vector_3f rotation);
+  Transform(types::Vector3f position, types::Vector3f scale, types::Vector3f rotation);
 
  public:
   /// @brief Position vector
-  types::vector_3f position;
+  types::Vector3f position;
   /// @brief Scale vector
-  types::vector_3f scale;
+  types::Vector3f scale;
   /// @brief Rotation vector
-  types::vector_3f rotation;
+  types::Vector3f rotation;
 };
 }  // namespace zygarde::core::components

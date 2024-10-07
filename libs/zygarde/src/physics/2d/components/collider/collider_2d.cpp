@@ -11,16 +11,17 @@
 
 using namespace zygarde::physics::components;
 
-Collider2D::Collider2D(Rigidbody2D &attachedRigidbody, std::vector<int> collisionLayers,
-                       Collision2DFunction onCollisionEnter, Collision2DFunction onCollisionExit)
-    : attachedRigidbody_(attachedRigidbody),
-      collisionLayers_(std::move(collisionLayers)),
-      onCollisionEnter_(std::move(onCollisionEnter)),
-      onCollisionExit_(std::move(onCollisionExit)) {}
+Collider2D::Collider2D(Rigidbody2D *attached_rigidbody, std::vector<int> collision_layers,
+                       Collision2DFunction on_collision_enter,
+                       Collision2DFunction on_collision_exit)
+    : attachedRigidbody_(attached_rigidbody),
+      collisionLayers_(std::move(collision_layers)),
+      onCollisionEnter_(std::move(on_collision_enter)),
+      onCollisionExit_(std::move(on_collision_exit)) {}
 
-Collider2D::Collider2D(Rigidbody2D &attachedRigidbody, Collision2DFunction onCollisionEnter,
-                       Collision2DFunction onCollisionExit)
-    : attachedRigidbody_(attachedRigidbody),
+Collider2D::Collider2D(Rigidbody2D *attached_rigidbody, Collision2DFunction on_collision_enter,
+                       Collision2DFunction on_collision_exit)
+    : attachedRigidbody_(attached_rigidbody),
       collisionLayers_(constants::kDefaultCollisionLayers),
-      onCollisionEnter_(std::move(onCollisionEnter)),
-      onCollisionExit_(std::move(onCollisionExit)) {}
+      onCollisionEnter_(std::move(on_collision_enter)),
+      onCollisionExit_(std::move(on_collision_exit)) {}

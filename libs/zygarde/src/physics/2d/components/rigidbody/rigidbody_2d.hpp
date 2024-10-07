@@ -22,9 +22,9 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
  public:
   /**
    * @brief Add force to the Rigidbody2D object
-   * @param force vector_2f object
+   * @param force Vector2f object
    */
-  void AddForce(core::types::vector_2f force) noexcept;
+  void AddForce(core::types::Vector2f force) noexcept;
 
   /**
    * @brief Add force to the Rigidbody2D object
@@ -35,14 +35,14 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
 
   /**
    * @brief Get velocity of the Rigidbody2D object
-   * @param velocity vector_2f object
+   * @param velocity Vector2f object
    */
-  [[nodiscard]] inline const core::types::vector_2f &GetVelocity() const noexcept {
+  [[nodiscard]] inline const core::types::Vector2f &GetVelocity() const noexcept {
     return velocity_;
   }
 
  private:
   /// @brief Velocity vector
-  core::types::vector_2f velocity_;
+  core::types::Vector2f velocity_;
 };
 }  // namespace zygarde::physics::components
