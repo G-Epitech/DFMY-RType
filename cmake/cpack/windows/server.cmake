@@ -5,9 +5,9 @@ set(DEPENDENCIES
 
 install(TARGETS r-type_server
         CONFIGURATIONS Release
-        DESTINATION .)
+        DESTINATION bin)
 
 file(GLOB SERVER_DLLS "${CMAKE_BINARY_DIR}/server/*.dll")
-install(FILES ${SERVER_DLLS} DESTINATION .)
+install(FILES ${SERVER_DLLS} DESTINATION bin)
 
-install(FILES ${DEPENDENCIES} DESTINATION .)
+install(FILES ${DEPENDENCIES} DESTINATION bin)

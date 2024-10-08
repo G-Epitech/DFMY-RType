@@ -62,6 +62,9 @@ void App::CreateWindow() {
 
   window_ = std::make_shared<sf::RenderWindow>(videoMode, APP_WINDOW_TITLE);
   window_->setFramerateLimit(APP_WINDOW_FRAMERATE);
+  if (logo_.loadFromFile(APP_WINDOW_ICON_PATH)) {
+    window_->setIcon(logo_.getSize().x, logo_.getSize().y, logo_.getPixelsPtr());
+  }
 }
 
 void App::CreateScenesManager() {

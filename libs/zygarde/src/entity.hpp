@@ -42,4 +42,4 @@ class EXPORT_ZYGARDE_API Entity {
 
   friend class Registry;
 };
-}  // namespace rtype::sdk::ECS
+}  // namespace zygarde
