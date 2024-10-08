@@ -19,4 +19,4 @@ struct Movement {
   /// @brief The new position
   utils::types::vector_2f newPosition;
 };
-}  // namespace rtype::sdk::game::api_common::payload
+}  // namespace rtype::sdk::game::api::payload

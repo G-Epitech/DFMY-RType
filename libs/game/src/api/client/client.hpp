@@ -7,20 +7,23 @@
 
 #pragma once
 
-#include <string>
 #include <cstdint>
 #include <optional>
+#include <string>
 #include <thread>
 
-#include "core.hpp"
 #include "abra/includes/network.hpp"
+#include "abra/includes/packet.hpp"
+#include "api/props/message.hpp"
+#include "api/props/payload/payload.hpp"
+#include "core.hpp"
 
 namespace rtype::sdk::game::api {
-  class EXPORT_GAME_SDK_API Client;
+class EXPORT_GAME_SDK_API Client;
 }
 
 class rtype::sdk::game::api::Client {
-public:
+ public:
   /**
    * @brief Construct a new Client API instance
    * @param ip The IP of the server
@@ -36,10 +39,17 @@ public:
 
   /**
    * @brief Check if the client is connected to the server
+   * @return true if the client is connected
    */
   [[nodiscard]] bool IsConnected() const;
 
-private:
+  /**
+   * @brief Connect the client to the server
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool connect(const payload::Connection &payload);
+
+ private:
   /**
    * @brief Initialize the TCP connection
    */
@@ -52,13 +62,20 @@ private:
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;
+
   /// @brief The ABRA Client UDP instance (specific game connection)
   /// @warning The UDP connection is used for the game only, it's not initialized by default
   std::optional<abra::client::ClientUDP> clientUDP_;
+
+  /// @brief Packet builder
+  abra::tools::PacketBuilder packetBuilder_;
+
   /// @brief The thread to listen the server (TCP)
   std::thread threadTCP_;
+
   /// @brief The thread to listen the server (UDP)
   std::thread threadUDP_;
+
   /// @brief Boolean to know if the client is connected to the server
   /// @warning It's a r-type protocol information, it's not related to the TCP connection
   bool isConnected_;

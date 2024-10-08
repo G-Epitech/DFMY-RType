@@ -24,4 +24,4 @@ struct EnemyState {
   /// @brief The health of the enemy
   std::size_t health;
 };
-}  // namespace rtype::sdk::game::api_common::payload
+}  // namespace rtype::sdk::game::api::payload

@@ -7,4 +7,5 @@
 
 #pragma once
 
-#include "libs/game/src/apis/props/payload/game/game.hpp"
+#include "auth/auth.hpp"
+#include "game/game.hpp"

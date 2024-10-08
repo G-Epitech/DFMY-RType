@@ -22,4 +22,4 @@ struct PlayerState {
   /// @brief The health of the player
   std::size_t health;
 };
-}  // namespace rtype::sdk::game::api_common::payload
+}  // namespace rtype::sdk::game::api::payload

@@ -15,4 +15,4 @@ struct vector_2i {
   /// @brief The y coordinate of the vector
   int y = 0;
 };
-}  // namespace rtype::sdk::utils::types
+}  // namespace rtype::sdk::game::utils::types

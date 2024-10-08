@@ -19,4 +19,4 @@ struct Shoot {
   /// @brief Shoot type
   types::ShootType type;
 };
-}  // namespace rtype::sdk::game::api_common::payload
+}  // namespace rtype::sdk::game::api::payload

@@ -7,11 +7,9 @@
 
 #pragma once
 
-#include "collision.hpp"
-#include "death.hpp"
-#include "enemy_spawn.hpp"
-#include "game_end.hpp"
-#include "game_start.hpp"
-#include "health_update.hpp"
-#include "movement.hpp"
-#include "shoot.hpp"
+#include "combat/shoot.hpp"
+#include "lifecycle/game_end.hpp"
+#include "lifecycle/game_start.hpp"
+#include "movement/movement.hpp"
+#include "state/enemy.hpp"
+#include "state/player.hpp"

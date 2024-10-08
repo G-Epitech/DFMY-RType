@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include <ctime>
 
 namespace rtype::sdk::game::api::payload {
 /// @brief Game end stats
@@ -19,4 +20,4 @@ struct CoopGameEnd {
   /// @brief Whether the player won or not
   bool win;
 };
-}  // namespace rtype::sdk::game::api_common::payload
+}  // namespace rtype::sdk::game::api::payload

@@ -22,6 +22,7 @@ TOOLCHAIN_FLAG = -DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg
 
 LINT_DIRS = client/src \
 			libs/abra/src \
+			libs/game/src \
 			server/src
 LINT_FILES = $(shell find $(LINT_DIRS) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.cc' -o -name '*.cxx' \))
 

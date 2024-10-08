@@ -8,13 +8,20 @@
 #pragma once
 
 namespace rtype::sdk::game::api {
-/// @brief Enum representing the packet messages types
-enum MessageType {
-  kShoot = 0,
-  kGameEnd = 1,
-  kGameStart = 2,
-  kMovement = 3,
-  kEnemyState = 4,
-  kPlayerState = 5,
+/// @brief Enum representing the packet messages types (client messages)
+enum MessageClientType {
+  kConnection,  ///< Connection message
+  kJoinLobby,   ///< Join lobby message
+  kMovement,    ///< Movement message
+  kShoot,       ///< Player shoot message
 };
-}  // namespace rtype::sdk::game::api_common
+
+/// @brief Enum representing the packet messages types (server messages)
+enum MessageServerType {
+  kJoinLobbyInfos,  ///< Join lobby infos message
+  kGameStart,       ///< Game start message
+  kGameEnd,         ///< Game end message
+  kEnemyState,      ///< Enemy state message (list)
+  kPlayerState,     ///< Player state message (list)
+};
+}  // namespace rtype::sdk::game::api

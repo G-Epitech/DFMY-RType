@@ -9,8 +9,10 @@
 
 using namespace rtype::sdk::game::api;
 using namespace abra::client;
+using namespace abra::tools;
 
-Client::Client(const std::string &ip, const uint32_t &port) : clientTCP_(ip, port), isConnected_(false) {
+Client::Client(const std::string &ip, const uint32_t &port)
+    : clientTCP_(ip, port), isConnected_(false) {
   InitTCP();
 }
 
@@ -29,4 +31,15 @@ void Client::ListenTCP() {
 
 bool Client::IsConnected() const {
   return this->isConnected_;
+}
+
+bool Client::connect(const payload::Connection &payload) {
+  this->packetBuilder_.SetMessageType(MessageClientType::kConnection)
+      .SetPayloadType(PayloadType::kCustom);
+  auto packet = this->packetBuilder_.Build<payload::Connection>(payload);
+
+  auto success = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  this->isConnected_ = success;
+
+  return success;
 }

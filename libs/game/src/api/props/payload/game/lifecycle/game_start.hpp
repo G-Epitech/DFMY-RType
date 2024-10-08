@@ -18,4 +18,4 @@ struct GameStart {
   /// @brief Message to display to the players
   std::string message;
 };
-}  // namespace rtype::sdk::game::api_common::payload
+}  // namespace rtype::sdk::game::api::payload
