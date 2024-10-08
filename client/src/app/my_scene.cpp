@@ -13,7 +13,7 @@
 #include "my_scene_2.hpp"
 #include "scenes/scenes_manager.hpp"
 #include "systems/drawable.hpp"
-#include "systems/events/key/release.hpp"
+#include "systems/events/key.hpp"
 
 using namespace rtype::client;
 

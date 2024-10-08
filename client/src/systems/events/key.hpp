@@ -21,6 +21,10 @@ class KeyEventSystemBase final : public EventSystemBase<EventType, KeyEventCompo
   void HandleEvent(const sf::Event &event, Registry::Ptr r,
                    sparse_array<KeyEventComponent>::ptr components) final;
 };
+
+typedef KeyEventSystemBase<events::kKeyPressed, components::OnKeyPressed> KeyPressEventSystem;
+typedef KeyEventSystemBase<events::kKeyReleased, components::OnKeyReleased> KeyReleaseEventSystem;
+
 }  // namespace rtype::client::systems
 
-#include "base.tpp"
+#include "key.tpp"

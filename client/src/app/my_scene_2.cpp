@@ -13,9 +13,8 @@
 #include "my_scene.hpp"
 #include "scenes/scenes_manager.hpp"
 #include "systems/drawable.hpp"
-#include "systems/events/key/release.hpp"
-#include "systems/events/mouse/buttons/press.hpp"
-#include "systems/events/mouse/buttons/release.hpp"
+#include "systems/events/key.hpp"
+#include "systems/events/mouse/buttons.hpp"
 
 using namespace rtype::client;
 
@@ -33,30 +32,22 @@ void MyScene2::OnCreate() {
   registry_->AddSystem<DrawableSystem>(context_.windowManager);
   auto entity = registry_->SpawnEntity();
   registry_->AddComponent(entity,
-                          components::OnKeyPressed{.handler = [this](sf::Keyboard::Key key) {
+                          components::OnKeyPressed{
+                              .handler = [this](sf::Keyboard::Key key) {
                             if (key == sf::Keyboard::Left || key == sf::Keyboard::Right) {
                               context_.scenesManager->GoToScene<MyScene>();
                             }
                           }});
-  registry_->AddComponent(entity,
-                          components::OnMousePressed{
-                              .strategy = events::kAnyTarget,
-                              .handler = [this](sf::Mouse::Button button, sf::Vector2i position) {
-                                if (button == sf::Mouse::Button::Left) {
-                                  std::cout << "Left mouse button pressed at " << position.x << ", "
-                                            << position.y << std::endl;
-                                }
-                              }});
-  registry_->AddComponent(entity,
-                          components::OnMouseReleased{
-                              .strategy = events::kAnyTarget,
-                              .handler = [this](sf::Mouse::Button button, sf::Vector2i position) {
-                                if (button == sf::Mouse::Button::Left) {
-                                  std::cout << "Left mouse button released at " << position.x
-                                            << ", " << position.y << std::endl;
-                                }
-                              }});
-  e = static_cast<std::size_t>(entity);
+  registry_->AddComponent(
+      entity,
+      components::OnMousePressed{.strategy = events::kOtherTarget,
+                                 .handler = [this](sf::Mouse::Button button, sf::Vector2i position,
+                                                   events::MouseEventTarget) {
+                                   if (button == sf::Mouse::Button::Left) {
+                                     std::cout << "Left mouse button pressed at " << position.x
+                                               << ", " << position.y << std::endl;
+                                   }
+                                 }});
 }
 
 void MyScene2::Update(std::chrono::nanoseconds delta_time) {

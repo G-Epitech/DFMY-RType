@@ -21,11 +21,12 @@ void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::pt
   window->clear();
   for (size_t i = 0; i < drawables->size() && i < positions->size(); ++i) {
     if ((*drawables)[i] && (*positions)[i]) {
-      const auto [texture] = (*drawables)[i].value();
-      const auto [x, y] = (*positions)[i].value();
+      auto &drawable = (*drawables)[i].value();
+      auto &position = (*positions)[i].value();
 
-      sprite_.setTexture(texture);
-      sprite_.setPosition(x, y);
+      sprite_.setTexture(drawable.texture);
+      sprite_.setPosition(position.x, position.y);
+      drawable.bounds = sprite_.getGlobalBounds();
       window->draw(sprite_);
     }
   }

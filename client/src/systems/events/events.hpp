@@ -7,4 +7,6 @@
 
 #pragma once
 
-#include "key/press.hpp"
+#include "key.hpp"
+#include "mouse/buttons.hpp"
+#include "mouse/scroll.hpp"
