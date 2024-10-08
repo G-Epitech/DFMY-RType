@@ -194,6 +194,8 @@ pipeline {
 
                         sh "git remote add mirror ${MIRROR_URL}"
 
+                        sh "git fetch --all"
+
                         sh "git checkout main"
 
                         sh "git push mirror"
