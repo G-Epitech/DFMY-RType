@@ -16,7 +16,7 @@ TEST(SystemTests, CreateBasicSystem) {
   class BasicSystem : public ASystem<int> {
    public:
     BasicSystem() = default;
-    void Run(std::shared_ptr<Registry> r, const sparse_array<int> &nb) override {
+    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
     }
@@ -31,7 +31,7 @@ TEST(SystemTests, CreateMultipleSystem) {
   class IntSystem : public ASystem<int> {
    public:
     IntSystem() = default;
-    void Run(std::shared_ptr<Registry> r, const sparse_array<int> &nb) override {
+    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
     }
@@ -39,7 +39,7 @@ TEST(SystemTests, CreateMultipleSystem) {
   class FloatSystem : public ASystem<float> {
    public:
     FloatSystem() = default;
-    void Run(std::shared_ptr<Registry> r, const sparse_array<float> &nb) override {
+    void Run(std::shared_ptr<Registry> r, sparse_array<float>::ptr nb) override {
       (void) r;
       (void) nb;
     }
@@ -56,7 +56,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   class IntSystem : public ASystem<int> {
    public:
     IntSystem() = default;
-    void Run(std::shared_ptr<Registry> r, const sparse_array<int> &nb) override {
+    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
     }
@@ -64,7 +64,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   class FloatSystem : public ASystem<int> {
    public:
     FloatSystem() = default;
-    void Run(std::shared_ptr<Registry> r, const sparse_array<int> &nb) override {
+    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
     }

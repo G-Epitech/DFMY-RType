@@ -25,7 +25,7 @@ class EventSystemBase : public ASystem<EventComponent> {
    * @param r Registry to use
    * @param components Components to use
    */
-  void Run(Registry::Ptr r, const sparse_array<EventComponent> &components) final;
+  void Run(Registry::Ptr r, sparse_array<EventComponent>::ptr components) final;
 
  protected:
   /**
@@ -44,7 +44,7 @@ class EventSystemBase : public ASystem<EventComponent> {
    * @param components Components to use
    */
   virtual void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                           const sparse_array<EventComponent> &components) = 0;
+                           sparse_array<EventComponent>::ptr components) = 0;
 };
 }  // namespace rtype::client::systems
 

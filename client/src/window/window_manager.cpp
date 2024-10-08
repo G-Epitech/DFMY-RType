@@ -5,9 +5,9 @@
 ** window_manager.cpp
 */
 
-#include <iostream>
-
 #include "window_manager.hpp"
+
+#include <iostream>
 
 using namespace rtype::client;
 

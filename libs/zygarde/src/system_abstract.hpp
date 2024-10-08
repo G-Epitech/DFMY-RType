@@ -25,7 +25,7 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
    * @param r The registry
    * @param components The components
    */
-  virtual void Run(std::shared_ptr<Registry> r, const sparse_array<Components> &...components) = 0;
+  virtual void Run(std::shared_ptr<Registry> r, sparse_array<Components>::ptr... components) = 0;
 };
 }  // namespace zygarde
 

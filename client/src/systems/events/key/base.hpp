@@ -19,7 +19,7 @@ class KeyEventSystemBase final : public EventSystemBase<EventType, KeyEventCompo
 
  protected:
   void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                   const sparse_array<KeyEventComponent> &components) final;
+                   sparse_array<KeyEventComponent>::ptr components) final;
 };
 }  // namespace rtype::client::systems
 

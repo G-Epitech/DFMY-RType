@@ -23,9 +23,9 @@ bool MouseEventSystemBase<EventType, EventComponentType>::IsStrategy(
 template <events::EventType EventType, typename MouseEventComponent>
 void MouseEventSystemBase<EventType, MouseEventComponent>::HandleLocalizedStrategy(
     const sf::Event& event, const MouseEventComponent& component,
-    const sparse_array<components::Position>& positions, std::size_t entityId) {
-  auto& position =
-      positions.size() > entityId ? positions[entityId] : std::optional<components::Position>();
+    const sparse_array<components::Position>::ptr &positions, std::size_t entityId) {
+  auto position =
+      positions->size() > entityId ? (*positions)[entityId] : std::optional<components::Position>();
   if (!position) {
     std::cerr << "No position component found for entity " << entityId
               << " . Localized mouse strategy ignored." << std::endl;
@@ -45,12 +45,12 @@ void MouseEventSystemBase<EventType, MouseEventComponent>::HandleLocalizedStrate
 
 template <events::EventType EventType, typename MouseEventComponent>
 void MouseEventSystemBase<EventType, MouseEventComponent>::HandleEvent(
-    const sf::Event& event, Registry::Ptr r, const sparse_array<MouseEventComponent>& components) {
-  auto length = components.size();
-  auto& positions = r->GetComponents<components::Position>();
+    const sf::Event& event, Registry::Ptr r, sparse_array<MouseEventComponent>::ptr components) {
+  auto length = components->size();
+  auto positions = r->GetComponents<components::Position>();
 
   for (std::size_t i = 0; i < length; i++) {
-    auto& component = components[i];
+    auto& component = (*components)[i];
     if (!component)
       continue;
     if (IsStrategy(component->strategy, events::MouseEventStrategy::kAnyTarget)) {

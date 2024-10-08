@@ -44,6 +44,9 @@ class EXPORT_ZYGARDE_API sparse_array {
   /// @brief Const iterator type
   using const_iterator = typename container_t::const_iterator;
 
+  /// @brief Pointer type
+  using ptr = typename std::shared_ptr<sparse_array<Component>>;
+
  public:
   /**
    * @brief Default constructor

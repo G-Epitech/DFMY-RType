@@ -20,7 +20,7 @@ EventSystemBase<EventType, EventComponent>::EventSystemBase(WindowManager::Ptr w
 
 template <events::EventType EventType, class EventComponent>
 void EventSystemBase<EventType, EventComponent>::Run(Registry::Ptr r,
-                                                     const sparse_array<EventComponent>& components) {
+                                                     sparse_array<EventComponent>::ptr components) {
   auto type_to_handle = events::EventTypeMapper<EventType>::type;
   auto& events = windowManager_->GetDeferredEvents();
 

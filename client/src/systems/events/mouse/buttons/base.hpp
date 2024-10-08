@@ -24,8 +24,8 @@ class MouseEventSystemBase : public EventSystemBase<EventType, MouseEventCompone
   ~MouseEventSystemBase() = default;
 
  protected:
-  void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                   const sparse_array<MouseEventComponent> &components) final;
+  void HandleEvent(const sf::Event& event, Registry::Ptr r,
+                   sparse_array<MouseEventComponent>::ptr components) final;
 
   /**
    * @brief Check if the strategy is the same as the target
@@ -43,8 +43,8 @@ class MouseEventSystemBase : public EventSystemBase<EventType, MouseEventCompone
    * @param positions Positions of the entities
    * @param entityId Entity id
    */
-  static void HandleLocalizedStrategy(const sf::Event &event, const MouseEventComponent &component,
-                                      const sparse_array<components::Position> &positions,
+  static void HandleLocalizedStrategy(const sf::Event& event, const MouseEventComponent& component,
+                                      const sparse_array<components::Position>::ptr& positions,
                                       std::size_t entityId);
 };
 }  // namespace rtype::client::systems
