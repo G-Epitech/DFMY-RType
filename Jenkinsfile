@@ -179,17 +179,14 @@ pipeline {
         }
 
         stage ('Mirror') {
-/*             when {
+             /*when {
                 branch 'main'
             } */
             steps {
                 checkout scm
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
-                        sh 'export GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY"'
-                        echo "GIT_SSH_COMMAND=$GIT_SSH_COMMAND"
-                        echo "MIRROR_URL=$MIRROR_URL"
-                        echo "PRIVATE_KEY=$PRIVATE_KEY"
+                        def gitSshCommand = "ssh -i ${PRIVATE_KEY} -o StrictHostKeyChecking=no"
 
                         if (sh(script: "git remote | grep mirror", returnStatus: true) == 0) {
                             sh "git remote remove mirror"
@@ -197,11 +194,9 @@ pipeline {
 
                         sh "git remote add mirror ${MIRROR_URL}"
 
-                        sh "git fetch --all"
-
-                        sh "git checkout main"
-
-                        sh "git push mirror"
+                        sh "GIT_SSH_COMMAND='${gitSshCommand}' git fetch --all"
+                        sh "GIT_SSH_COMMAND='${gitSshCommand}' git checkout main"
+                        sh "GIT_SSH_COMMAND='${gitSshCommand}' git push mirror"
                     }
                 }
             }
