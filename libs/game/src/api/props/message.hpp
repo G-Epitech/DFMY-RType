@@ -18,10 +18,11 @@ enum MessageClientType {
 
 /// @brief Enum representing the packet messages types (server messages)
 enum MessageServerType {
-  kJoinLobbyInfos,  ///< Join lobby infos message
-  kGameStart,       ///< Game start message
-  kGameEnd,         ///< Game end message
-  kEnemyState,      ///< Enemy state message (list)
-  kPlayerState,     ///< Player state message (list)
+  kConnectionInfos,  ///< Connection infos message
+  kJoinLobbyInfos,   ///< Join lobby infos message
+  kGameStart,        ///< Game start message
+  kGameEnd,          ///< Game end message
+  kEnemyState,       ///< Enemy state message (list)
+  kPlayerState,      ///< Player state message (list)
 };
 }  // namespace rtype::sdk::game::api

@@ -45,11 +45,16 @@ class rtype::sdk::game::api::Client {
 
   /**
    * @brief Connect the client to the server
+   * The connection confirmation is handled by the method.
+   * This method is blocking for a maximum defined in kServerResponseTimeout.
    * @return true if the packet is sent, false otherwise
    */
   [[nodiscard]] bool connect(const payload::Connection &payload);
 
  private:
+  /// @brief The server response timeout
+  static constexpr std::size_t kServerResponseTimeout = 1000 * 5;
+
   /**
    * @brief Initialize the TCP connection
    */
@@ -59,6 +64,11 @@ class rtype::sdk::game::api::Client {
    * @brief Start the TCP connection (run the IO service)
    */
   void ListenTCP();
+
+  /**
+   * @brief Handle TCP connection confirmation
+   */
+  void HandleConnectionConfirmation();
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;

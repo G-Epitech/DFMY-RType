@@ -38,8 +38,33 @@ bool Client::connect(const payload::Connection &payload) {
       .SetPayloadType(PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build<payload::Connection>(payload);
 
-  auto success = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
-  this->isConnected_ = success;
+  auto sendSuccess = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  if (!sendSuccess)
+    return false;
 
-  return success;
+  std::size_t timeout = kServerResponseTimeout;
+  while (timeout > 0) {
+    if (this->isConnected_)
+      break;
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    timeout -= 500;
+
+    HandleConnectionConfirmation();
+  }
+
+  return this->isConnected_;
+}
+
+void Client::HandleConnectionConfirmation() {
+  auto queue = this->clientTCP_.GetQueue();
+
+  if (queue.empty())
+    return;
+  const auto &firstMessage = queue.front();
+
+  if (firstMessage.messageType == MessageServerType::kConnectionInfos) {
+    this->isConnected_ = true;
+    queue.pop();
+  }
 }
