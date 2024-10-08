@@ -15,5 +15,7 @@ namespace rtype::client::components {
 struct Drawable {
   /// @brief Texture to render.
   sf::Texture texture;
+  /// @brief Text to render.
+  sf::Text text;
 };
 }  // namespace rtype::client::components

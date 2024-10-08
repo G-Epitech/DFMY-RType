@@ -19,12 +19,13 @@ void DrawableSystem::Run(std::shared_ptr<Registry> r, sparse_array<components::D
   window_->clear();
   for (size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {
     if (drawables[i] && positions[i]) {
-      const auto [texture] = drawables[i].value();
+      const auto [texture, text] = drawables[i].value();
       const auto [x, y] = positions[i].value();
 
       sprite_.setTexture(texture);
       sprite_.setPosition(x, y);
       window_->draw(sprite_);
+      window_->draw(text);
     }
   }
   window_->display();

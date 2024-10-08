@@ -11,10 +11,10 @@
 #include "scenes/scene_base.hpp"
 
 namespace rtype::client {
-class MyScene : public SceneBase<GlobalContext> {
+class SceneMenu : public SceneBase<GlobalContext> {
  public:
-  explicit MyScene(const GlobalContext &context);
-  ~MyScene() override = default;
+  explicit SceneMenu(const GlobalContext &context);
+  ~SceneMenu() override = default;
 
   void Draw() override;
 
