@@ -9,14 +9,16 @@
 
 #include <chrono>
 
+#include "api.hpp"
 #include "core/components/transform/transform.hpp"
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "system_abstract.hpp"
 
 namespace zygarde::physics::systems {
 
-class MovementSystem final : public ASystem<std::shared_ptr<components::Rigidbody2D>,
-                                            std::shared_ptr<core::components::Transform>> {
+class EXPORT_ZYGARDE_API MovementSystem final
+    : public ASystem<std::shared_ptr<components::Rigidbody2D>,
+                     std::shared_ptr<core::components::Transform>> {
  public:
   /**
    * @brief Construct a new Movement System object
