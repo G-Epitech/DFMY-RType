@@ -21,24 +21,23 @@ void MovementSystem::Run(
       auto& rigidbody = rigidbodies[i].value();
       auto& transform = transforms[i].value();
 
-      ComputeMovementOffset(rigidbody);
+      ComputePositionOffset(rigidbody);
       UpdateTransformPosition(transform);
     }
   }
 }
 
-void MovementSystem::ComputeMovementOffset(
+void MovementSystem::ComputePositionOffset(
     const std::shared_ptr<components::Rigidbody2D>& rigidbody) {
-  core::types::Vector2f offset;
   core::types::Vector2f velocity = rigidbody->GetVelocity();
-  float deltaTimeSec = GetDeltaTimeInSeconds();
 
+  if (deltaTime_.count() == 0) {
+    movementOffset_ = core::types::Vector2f::zero();
+    return;
+  }
+  float deltaTimeSec = deltaTime_.count() / 1000.0f;
   movementOffset_.x = velocity.x * deltaTimeSec;
   movementOffset_.y = velocity.y * deltaTimeSec;
-}
-
-float MovementSystem::GetDeltaTimeInSeconds() const noexcept {
-  return deltaTime_.count() / 1000.0f;
 }
 
 void MovementSystem::UpdateTransformPosition(
