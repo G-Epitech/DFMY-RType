@@ -179,9 +179,9 @@ pipeline {
         }
 
         stage ('Mirror') {
-             /*when {
+            when {
                 branch 'main'
-            } */
+            }
             steps {
                 checkout scm
                 script {
