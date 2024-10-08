@@ -32,6 +32,7 @@ pipeline {
     environment {
         RELEASE_ID = null
         VERSION = null
+        MIRROR_URL = 'git@github.com:EpitechPromo2027/B-CPP-500-NAN-5-1-rtype-dragos.suceveanu.git'
     }
     stages {
         stage ('Check style') {
@@ -173,6 +174,24 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+        }
+
+        stage ('Mirror') {
+/*             when {
+                branch 'main'
+            } */
+            steps {
+                script {
+                sh "git remote remove mirror || true"
+
+                sh "git remote add mirror ${MIRROR_URL}"
+
+                sh "git checkout main"
+
+                withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
+                    sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY" git push --mirror mirror'
                 }
             }
         }
