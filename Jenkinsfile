@@ -187,6 +187,9 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
                         sh 'export GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY"'
+                        echo "GIT_SSH_COMMAND=$GIT_SSH_COMMAND"
+                        echo "MIRROR_URL=$MIRROR_URL"
+                        echo "PRIVATE_KEY=$PRIVATE_KEY"
 
                         if (sh(script: "git remote | grep mirror", returnStatus: true) == 0) {
                             sh "git remote remove mirror"
