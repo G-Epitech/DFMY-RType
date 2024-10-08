@@ -1,9 +1,9 @@
 option(INSTALL_SERVER "Install the server version" OFF)
 
 if (INSTALL_SERVER)
-
     set(CPACK_PACKAGE_NAME "R-Type")
     set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-server-${CMAKE_PROJECT_VERSION}")
+    set(CPACK_PACKAGE_EXECUTABLES "r-type_server;R-Type Server")
 
     if (WIN32)
 

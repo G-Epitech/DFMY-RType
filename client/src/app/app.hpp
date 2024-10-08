@@ -5,6 +5,8 @@
 ** app
 */
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 #include "context/global_context.hpp"
@@ -15,8 +17,7 @@
 #define APP_WINDOW_HEIGHT 600
 #define APP_WINDOW_TITLE "R-Type"
 #define APP_WINDOW_FRAMERATE 60
-
-#pragma once
+#define APP_WINDOW_ICON_PATH "assets/icons/R-Type.png"
 
 namespace rtype::client {
 
@@ -89,5 +90,8 @@ class App {
 
   /// @brief App timer
   utils::Timer timer_;
+
+  /// @brief App logo
+  sf::Image logo_;
 };
 }  // namespace rtype::client
