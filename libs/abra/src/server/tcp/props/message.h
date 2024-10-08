@@ -11,9 +11,11 @@
 #include "tools/bitset/dynamic_bitset.hpp"
 
 /// @brief A client message for TCP protocol
-struct ClientMessage {
-  std::uint64_t clientId;                               // Client ID
-  unsigned int messageType;                             // Message type
-  unsigned int messageId;                               // Message ID
-  std::shared_ptr<abra::tools::dynamic_bitset> bitset;  // The bitset of the message
-};
+namespace abra::server {
+  struct ClientMessage {
+    std::uint64_t clientId;                               // Client ID
+    unsigned int messageType;                             // Message type
+    unsigned int messageId;                               // Message ID
+    std::shared_ptr<abra::tools::dynamic_bitset> bitset;  // The bitset of the message
+  };
+}

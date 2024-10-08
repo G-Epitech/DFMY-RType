@@ -12,7 +12,7 @@
 #include <memory>
 #include <queue>
 
-#include "core.hpp"
+#include "../../../core.hpp"
 #include "server/tcp/props/message.h"
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
