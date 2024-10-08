@@ -23,6 +23,6 @@ Collider2D::Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody,
                        Collision2DFunction on_collision_enter,
                        Collision2DFunction on_collision_exit)
     : attachedRigidbody_(std::move(attached_rigidbody)),
-      collisionLayers_(constants::kDefaultCollisionLayers),
+      collisionLayers_(),
       onCollisionEnter_(std::move(on_collision_enter)),
       onCollisionExit_(std::move(on_collision_exit)) {}

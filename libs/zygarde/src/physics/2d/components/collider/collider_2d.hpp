@@ -12,7 +12,6 @@
 #include <vector>
 
 #include "libs/zygarde/src/api.hpp"
-#include "libs/zygarde/src/physics/2d/constants/collision.hpp"
 #include "libs/zygarde/src/physics/2d/types/collision_2d.hpp"
 
 namespace zygarde::physics::components {
@@ -53,6 +52,6 @@ class EXPORT_ZYGARDE_API Collider2D final {
   /// @brief Pointer to the attached Rigidbody2D object
   std::shared_ptr<Rigidbody2D> attachedRigidbody_;
   /// @brief Collision layers
-  std::vector<int> collisionLayers_;
+  std::vector<int> collisionLayers_ = std::vector<int>{0};
 };
 }  // namespace zygarde::physics::components
