@@ -183,11 +183,15 @@ pipeline {
                 branch 'main'
             } */
             steps {
+                checkout scm
                 script {
-                    sh "git remote remove mirror || true"
+                    if (sh(script: "git remote | grep mirror", returnStatus: true) == 0) {
+                        sh "git remote remove mirror"
+                    }
 
                     sh "git remote add mirror ${MIRROR_URL}"
 
+                    sh "git fetch origin"
                     sh "git checkout main"
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
