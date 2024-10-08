@@ -194,7 +194,7 @@ pipeline {
 
                         sh "git remote add mirror ${MIRROR_URL}"
 
-                        sh "git push mirror main"
+                        sh "git push mirror"
                     }
                 }
             }
