@@ -10,19 +10,20 @@
 namespace rtype::sdk::game::api {
 /// @brief Enum representing the packet messages types (client messages)
 enum MessageClientType {
-  kConnection,  ///< Connection message
-  kJoinLobby,   ///< Join lobby message
-  kMovement,    ///< Movement message
-  kShoot,       ///< Player shoot message
+  kConnection,            ///< Connection message - TCP
+  kJoinLobby,             ///< Join lobby message - TCP
+  kClientJoinLobbyInfos,  ///< Client lobby infos message (udp endpoint) - TCP
+  kMovement,              ///< Movement message - UDP
+  kShoot,                 ///< Player shoot message - UDP
 };
 
 /// @brief Enum representing the packet messages types (server messages)
 enum MessageServerType {
-  kConnectionInfos,  ///< Connection infos message
-  kJoinLobbyInfos,   ///< Join lobby infos message
-  kGameStart,        ///< Game start message
-  kGameEnd,          ///< Game end message
-  kEnemyState,       ///< Enemy state message (list)
-  kPlayerState,      ///< Player state message (list)
+  kConnectionInfos,       ///< Connection infos message - TCP
+  kServerJoinLobbyInfos,  ///< Join lobby infos message (udp endpoint) - TCP
+  kGameStart,             ///< Game start message - TCP
+  kGameEnd,               ///< Game end message - TCP
+  kEnemyState,            ///< Enemy state message (list) - UDP
+  kPlayerState,           ///< Player state message (list) - UDP
 };
 }  // namespace rtype::sdk::game::api

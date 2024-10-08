@@ -15,6 +15,7 @@
 #include "abra/includes/network.hpp"
 #include "abra/includes/packet.hpp"
 #include "api/props/message.hpp"
+#include "api/props/network.hpp"
 #include "api/props/payload/payload.hpp"
 #include "core.hpp"
 
@@ -49,7 +50,14 @@ class rtype::sdk::game::api::Client {
    * This method is blocking for a maximum defined in kServerResponseTimeout.
    * @return true if the packet is sent, false otherwise
    */
-  [[nodiscard]] bool connect(const payload::Connection &payload);
+  [[nodiscard]] bool Connect(const payload::Connection &payload);
+
+  /**
+   * @brief Join a game lobby
+   * It will initialize the UDP connection to the game server
+   * @param payload The payload to join the lobby
+   */
+  [[nodiscard]] bool JoinLobby(const payload::JoinLobby &payload);
 
  private:
   /// @brief The server response timeout
@@ -66,9 +74,54 @@ class rtype::sdk::game::api::Client {
   void ListenTCP();
 
   /**
+   * @brief Initialize the UDP connection
+   */
+  void InitUDP();
+
+  /**
+   * @brief Start the UDP connection (run the IO contexte)
+   */
+  void ListenUDP();
+
+  /**
+   * @brief Send a payload to the server
+   * @tparam T The payload type
+   * @param type The message type
+   * @param payload The payload to send
+   * @return true if the packet is sent, false otherwise
+   */
+  template <typename T>
+  bool SendPayload(const MessageClientType &type, const T &payload);
+
+  /**
+   * @brief Wait for a message from the server
+   * @tparam T The network protocol type
+   * @param type The message type to wait for
+   * @param handler The handler to call when the message is received
+   * @return true if the message is received and handled, false otherwise
+   */
+  template <NetworkProtocolType T>
+  bool WaitForMessage(MessageServerType type,
+                      bool (Client::*handler)(const tools::MessageProps &message));
+
+  template <>
+  bool WaitForMessage<NetworkProtocolType::kTCP>(
+      MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message));
+
+  template <>
+  bool WaitForMessage<NetworkProtocolType::kUDP>(
+      MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message));
+
+  /**
    * @brief Handle TCP connection confirmation
    */
-  void HandleConnectionConfirmation();
+  bool HandleConnectionConfirmation(const tools::MessageProps &);
+
+  /**
+   * @brief Handle Join lobby and init UDP connection
+   * @param message The message with the lobby infos
+   */
+  bool HandleJoinLobbyInfos(const tools::MessageProps &message);
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;
@@ -89,4 +142,9 @@ class rtype::sdk::game::api::Client {
   /// @brief Boolean to know if the client is connected to the server
   /// @warning It's a r-type protocol information, it's not related to the TCP connection
   bool isConnected_;
+
+  /// @brief Boolean to know if the client is connected to the lobby
+  bool isLobbyConnected_;
 };
+
+#include "client.tpp"

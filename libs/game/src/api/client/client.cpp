@@ -12,14 +12,14 @@ using namespace abra::client;
 using namespace abra::tools;
 
 Client::Client(const std::string &ip, const uint32_t &port)
-    : clientTCP_(ip, port), isConnected_(false) {
+    : clientTCP_(ip, port), isConnected_(false), isLobbyConnected_(false) {
   InitTCP();
 }
 
 Client::~Client() {
   this->threadTCP_.join();
   this->threadUDP_.join();
-};
+}
 
 void Client::InitTCP() {
   this->threadTCP_ = std::thread(&Client::ListenTCP, this);
@@ -29,42 +29,62 @@ void Client::ListenTCP() {
   this->clientTCP_.Listen();
 }
 
+void Client::InitUDP() {
+  this->threadUDP_ = std::thread(&Client::ListenUDP, this);
+}
+
+void Client::ListenUDP() {
+  this->clientUDP_->Listen();
+}
+
 bool Client::IsConnected() const {
   return this->isConnected_;
 }
 
-bool Client::connect(const payload::Connection &payload) {
-  this->packetBuilder_.SetMessageType(MessageClientType::kConnection)
-      .SetPayloadType(PayloadType::kCustom);
-  auto packet = this->packetBuilder_.Build<payload::Connection>(payload);
-
-  auto sendSuccess = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+bool Client::Connect(const payload::Connection &payload) {
+  auto sendSuccess = SendPayload(MessageClientType::kConnection, payload);
   if (!sendSuccess)
     return false;
 
-  std::size_t timeout = kServerResponseTimeout;
-  while (timeout > 0) {
-    if (this->isConnected_)
-      break;
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    timeout -= 500;
-
-    HandleConnectionConfirmation();
-  }
+  WaitForMessage<NetworkProtocolType::kTCP>(MessageServerType::kConnectionInfos,
+                                            &Client::HandleConnectionConfirmation);
 
   return this->isConnected_;
 }
 
-void Client::HandleConnectionConfirmation() {
-  auto queue = this->clientTCP_.GetQueue();
+bool Client::HandleConnectionConfirmation(const MessageProps &) {
+  this->isConnected_ = true;
 
-  if (queue.empty())
-    return;
-  const auto &firstMessage = queue.front();
+  return true;
+}
 
-  if (firstMessage.messageType == MessageServerType::kConnectionInfos) {
-    this->isConnected_ = true;
-    queue.pop();
-  }
+bool Client::JoinLobby(const payload::JoinLobby &payload) {
+  auto sendSuccess = SendPayload(MessageClientType::kJoinLobby, payload);
+  if (!sendSuccess)
+    return false;
+
+  WaitForMessage<NetworkProtocolType::kTCP>(MessageServerType::kServerJoinLobbyInfos,
+                                            &Client::HandleJoinLobbyInfos);
+
+  return this->isLobbyConnected_;
+}
+
+bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
+  auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.data);
+  auto payload = packet->GetPayload();
+
+  this->clientUDP_.emplace(payload.ip, payload.port);
+  InitUDP();
+
+  auto endpoint = this->clientUDP_->GetEndpoint();
+  payload::JoinLobbyInfos infoPayload{};
+
+  const char *ipPtr = endpoint.ip.c_str();
+  strncpy(infoPayload.ip, ipPtr, 16);
+  infoPayload.port = endpoint.port;
+
+  auto success = SendPayload(MessageClientType::kClientJoinLobbyInfos, infoPayload);
+
+  this->isLobbyConnected_ = success;
+  return success;
 }
