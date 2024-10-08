@@ -31,7 +31,7 @@ class EXPORT_ZYGARDE_API Collider2D final {
    * @param on_collision_enter On collision enter function callback
    * @param on_collision_exit On collision exit function callback
    */
-  Collider2D(Rigidbody2D *attached_rigidbody, std::vector<int> collision_layers,
+  Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody, std::vector<int> collision_layers,
              Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
 
   /**
@@ -40,8 +40,8 @@ class EXPORT_ZYGARDE_API Collider2D final {
    * @param on_collision_enter On collision enter function callback
    * @param on_collision_exit On collision exit function callback
    */
-  Collider2D(Rigidbody2D *attached_rigidbody, Collision2DFunction on_collision_enter,
-             Collision2DFunction on_collision_exit);
+  Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody,
+             Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
 
   friend class BoxCollider2D;
 
@@ -51,7 +51,7 @@ class EXPORT_ZYGARDE_API Collider2D final {
   /// @brief On collision exit function callback
   Collision2DFunction onCollisionExit_;
   /// @brief Pointer to the attached Rigidbody2D object
-  Rigidbody2D *attachedRigidbody_;
+  std::shared_ptr<Rigidbody2D> attachedRigidbody_;
   /// @brief Collision layers
   std::vector<int> collisionLayers_;
 };
