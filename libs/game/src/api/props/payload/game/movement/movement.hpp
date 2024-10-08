@@ -11,7 +11,7 @@
 
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
-namespace rtype::sdk::game::api_common::payload {
+namespace rtype::sdk::game::api::payload {
 /// @brief Movement payload
 struct Movement {
   /// @brief The entity id

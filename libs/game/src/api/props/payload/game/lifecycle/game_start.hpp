@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <string>
 
-namespace rtype::sdk::game::api_common::payload {
+namespace rtype::sdk::game::api::payload {
 /// @brief Game start payload
 struct GameStart {
   /// @brief Number of players in the game

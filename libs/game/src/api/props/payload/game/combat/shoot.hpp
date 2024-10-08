@@ -11,7 +11,7 @@
 
 #include "libs/game/src/types/shoot.hpp"
 
-namespace rtype::sdk::game::api_common::payload {
+namespace rtype::sdk::game::api::payload {
 /// @brief Shoot payload
 struct Shoot {
   /// @brief Entity id

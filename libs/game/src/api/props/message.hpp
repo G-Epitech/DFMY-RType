@@ -7,7 +7,7 @@
 
 #pragma once
 
-namespace rtype::sdk::game::api_common {
+namespace rtype::sdk::game::api {
 /// @brief Enum representing the packet messages types
 enum MessageType {
   kShoot = 0,

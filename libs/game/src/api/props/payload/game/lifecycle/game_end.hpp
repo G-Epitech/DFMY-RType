@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace rtype::sdk::game::api_common::payload {
+namespace rtype::sdk::game::api::payload {
 /// @brief Game end stats
 struct CoopGameEnd {
   /// @brief Score of the player
