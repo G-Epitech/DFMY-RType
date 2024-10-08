@@ -10,7 +10,7 @@
 using namespace rtype::client::utils;
 
 Timer::Timer() {
-    this->operator++();
+  this->operator++();
 }
 
 DeltaTime Timer::operator++() {

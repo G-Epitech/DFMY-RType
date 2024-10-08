@@ -32,7 +32,6 @@ class SceneBase : public IScene {
   zygarde::Registry::Ptr registry_;
 
  public:
-
   /**
    * @brief Update the scene
    * @param delta_time Time since last update

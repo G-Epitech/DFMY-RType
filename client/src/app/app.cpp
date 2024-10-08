@@ -20,7 +20,7 @@ App::App() {
 
   scenesManager_->RegisterScene<MyScene>();
   scenesManager_->RegisterScene<MyScene2>();
-  scenesManager_->GoToScene<MyScene>();
+  scenesManager_->GoToScene<MyScene2>();
 }
 
 void App::Run() {
@@ -35,12 +35,13 @@ void App::InitializeGlobalContext() {
 }
 
 void App::CreateWindowManager() {
-  windowManager_ = WindowManager::Create({
-      .title = APP_WINDOW_TITLE,
-      .videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT),
-      .style = sf::Style::Default,
-      .contextSettings = sf::ContextSettings()
-  });
+  windowManager_ =
+      WindowManager::Create({.title = APP_WINDOW_TITLE,
+                             .videoMode = sf::VideoMode(APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT),
+                             .style = sf::Style::Default,
+                             .contextSettings = sf::ContextSettings(),
+                             .frameLimit = APP_WINDOW_FRAMERATE,
+                             .iconPath = APP_WINDOW_ICON_PATH});
 }
 
 void App::CreateScenesManager() {

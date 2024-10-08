@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <memory>
+#include <optional>
 
 namespace rtype::client {
 class WindowManager {
@@ -25,6 +26,8 @@ class WindowManager {
     sf::VideoMode videoMode;              ///< Video mode of the window
     sf::Uint32 style;                     ///< Style of the window
     sf::ContextSettings contextSettings;  ///< Context settings of the window
+    sf::Uint32 frameLimit;                ///< Frame limit of the window
+    std::optional<std::string> iconPath;  ///< Path to the icon of the window
   };
 
   /**
@@ -76,6 +79,9 @@ class WindowManager {
  private:
   /// @brief Current window
   std::shared_ptr<sf::RenderWindow> window_;
+
+  /// @brief Icon of the window
+  sf::Image icon_;
 
   /// @brief Deferred events
   EventsDeferrer deferredEvents_;

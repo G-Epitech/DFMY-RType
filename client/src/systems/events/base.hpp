@@ -15,8 +15,8 @@
 #include "window/window_manager.hpp"
 
 namespace rtype::client::systems {
-template <events::EventType, class... Components>
-class EventSystemBase : public ASystem<Components...> {
+template <events::EventType, class EventComponent>
+class EventSystemBase : public ASystem<EventComponent> {
  public:
   ~EventSystemBase() = default;
 
@@ -25,7 +25,7 @@ class EventSystemBase : public ASystem<Components...> {
    * @param r Registry to use
    * @param components Components to use
    */
-  void Run(Registry::Ptr r, sparse_array<Components> &...components) final;
+  void Run(Registry::Ptr r, const sparse_array<EventComponent> &components) final;
 
  protected:
   /**
@@ -34,7 +34,7 @@ class EventSystemBase : public ASystem<Components...> {
    */
   explicit EventSystemBase(WindowManager::Ptr window_manager);
 
-  /// @brief Events deferrer
+  /// @brief Window manager
   WindowManager::Ptr windowManager_;
 
   /**
@@ -44,8 +44,8 @@ class EventSystemBase : public ASystem<Components...> {
    * @param components Components to use
    */
   virtual void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                           sparse_array<Components> &...components) = 0;
+                           const sparse_array<EventComponent> &components) = 0;
 };
 }  // namespace rtype::client::systems
 
-#include "system_base.tpp"
+#include "base.tpp"

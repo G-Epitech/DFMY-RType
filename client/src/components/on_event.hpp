@@ -14,13 +14,21 @@
 
 namespace rtype::client::events {
 enum EventType {
-  kNone,               /// @brief No event
-  kKeyPressed,         /// @brief Called when a key is pressed
-  kKeyReleased,        /// @brief Called when a key is released
-  kMousePressed,       /// @brief Called when a mouse button is pressed
-  kMouseReleased,      /// @brief Called when a mouse button is released
-  kMouseMoved,         /// @brief Called when the mouse is moved
-  kMouseWheelScrolled  /// @brief Called when the mouse wheel is scrolled
+  kNone,                /// @brief No event
+  kKeyPressed,          /// @brief Called when a key is pressed
+  kKeyReleased,         /// @brief Called when a key is released
+  kMousePressed,        /// @brief Called when a mouse button is pressed
+  kMouseReleased,       /// @brief Called when a mouse button is released
+  kMouseMoved,          /// @brief Called when the mouse is moved
+  kMouseWheelScrolled,  /// @brief Called when the mouse wheel is scrolled
+};
+
+/// @brief Strategy to determine which entities will receive the event
+enum MouseEventStrategy {
+  kLocalTarget = 1,  /// @brief Only the entity that has the component will receive the event
+  kOtherTarget = 2,  /// @brief All entities except the one that has the component will receive
+                     /// the event
+  kAnyTarget = kLocalTarget | kOtherTarget,  /// @brief All entities will receive the event
 };
 
 template <EventType T>
@@ -94,7 +102,25 @@ struct OnEventHandler<events::kMouseWheelScrolled> {
 template <events::EventType T>
 struct OnEvent {
   using Handler = OnEventHandler<T>::signature;
-  Handler handler;
+  Handler handler;  /// @brief Function to call when the event is triggered
+};
+
+template <>
+struct OnEvent<events::kMousePressed> {
+  using Handler = OnEventHandler<events::kMousePressed>::signature;
+
+  events::MouseEventStrategy strategy =
+      events::kLocalTarget;  /// @brief Strategy to determine which entities will receive the event
+  Handler handler;           /// @brief Function to call when the event is triggered
+};
+
+template <>
+struct OnEvent<events::kMouseReleased> {
+  using Handler = OnEventHandler<events::kMouseReleased>::signature;
+
+  events::MouseEventStrategy strategy =
+      events::kLocalTarget;  /// @brief Strategy to determine which entities will receive the event
+  Handler handler;           /// @brief Function to call when the event is triggered
 };
 
 typedef OnEvent<events::kKeyPressed> OnKeyPressed;

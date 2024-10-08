@@ -11,8 +11,8 @@
 #include <string>
 #include <typeindex>
 
-#include "window/window_manager.hpp"
 #include "scene_interface.hpp"
+#include "window/window_manager.hpp"
 
 namespace rtype::client {
 

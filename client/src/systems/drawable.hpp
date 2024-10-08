@@ -25,8 +25,8 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    */
   explicit DrawableSystem(WindowManager::Ptr window_manager);
 
-  void Run(Registry::Ptr r, sparse_array<components::Drawable>& drawables,
-           sparse_array<components::Position>& positions) override;
+  void Run(Registry::Ptr r, const sparse_array<components::Drawable>& drawables,
+           const sparse_array<components::Position>& positions) override;
 
  private:
   /// @brief The render window to display the entities.

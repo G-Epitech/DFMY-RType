@@ -12,8 +12,8 @@
 
 #include "my_scene_2.hpp"
 #include "scenes/scenes_manager.hpp"
-#include "src/systems/events/events.hpp"
 #include "systems/drawable.hpp"
+#include "systems/events/key/release.hpp"
 
 using namespace rtype::client;
 
@@ -21,6 +21,7 @@ MyScene::MyScene(const GlobalContext& context) : SceneBase(context), e(0) {}
 
 void MyScene::OnCreate() {
   registry_->RegisterComponent<components::OnKeyPressed>();
+  registry_->RegisterComponent<components::OnMousePressed>();
   registry_->RegisterComponent<components::Drawable>();
   registry_->RegisterComponent<components::Position>();
   registry_->AddSystem<KeyPressEventSystem>(context_.windowManager);

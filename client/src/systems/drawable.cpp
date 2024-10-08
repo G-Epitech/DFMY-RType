@@ -5,7 +5,7 @@
 ** drawable_system.cpp
 */
 
-#include "drawable.hpp"
+#include "./drawable.hpp"
 
 #include <utility>
 
@@ -15,8 +15,8 @@ DrawableSystem::DrawableSystem(rtype::client::WindowManager::Ptr window_manager)
   windowManager_ = std::move(window_manager);
 }
 
-void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>& drawables,
-                         sparse_array<components::Position>& positions) {
+void DrawableSystem::Run(Registry::Ptr r, const sparse_array<components::Drawable>& drawables,
+                         const sparse_array<components::Position>& positions) {
   auto window = windowManager_->window();
   window->clear();
   for (size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {

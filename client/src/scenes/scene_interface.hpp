@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include <SFML/Window/Event.hpp>
 #include <chrono>
 
-#include <SFML/Window/Event.hpp>
 #include "utils/time.hpp"
 
 namespace rtype::client {

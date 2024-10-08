@@ -1,9 +1,12 @@
 target_sources(${CLIENT_CORE_LIB} PRIVATE
-        key_press.cpp
-        key_press.hpp
-        key_release.hpp
-        key_release.cpp
+        base.hpp
+        base.tpp
         events.hpp
-        system_base.hpp
-        system_base.tpp
+        key/press.hpp
+        key/release.hpp
+        key/base.hpp
+        key/base.tpp
+        mouse/buttons/press.hpp
+        mouse/buttons/base.hpp
+        mouse/buttons/base.tpp
 )
