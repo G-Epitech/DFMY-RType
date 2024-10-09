@@ -185,14 +185,12 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    if (sh(script: "git remote | grep mirror", returnStatus: true) == 0) {
-                        sh "git remote remove mirror"
-                    }
-                    sh "git remote add mirror ${MIRROR_URL}"
-
-                    sh "git pull"
-
                     withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
+                        if (sh(script: "git remote | grep mirror", returnStatus: true) == 0) {
+                            sh "git remote remove mirror"
+                        }
+                        sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY" git pull'
+                        sh "git remote add mirror ${MIRROR_URL}"
                         sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY" git push --mirror mirror'
                     }
                 }
