@@ -7,10 +7,10 @@
 
 #pragma once
 
+#include "api.hpp"
 #include "registry.hpp"
 
 namespace zygarde {
-
 /**
  * @brief Abstract class for a system
  * @tparam Components Components to use in the system
