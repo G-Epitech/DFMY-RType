@@ -23,6 +23,6 @@ class SceneMenu final : public SceneBase<GlobalContext> {
 
  protected:
   unsigned int counter_ = 0;
-  ResourcesManager resources_manager_;
+  ResourcesManager resourcesManager_;
 };
 }  // namespace rtype::client
