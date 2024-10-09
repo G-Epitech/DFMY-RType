@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** my_scene.hpp
+** menu.hpp
 */
 
 #pragma once

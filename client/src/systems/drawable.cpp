@@ -24,11 +24,26 @@ void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::pt
       auto &drawable = (*drawables)[i].value();
       auto &position = (*positions)[i].value();
 
-      sprite_.setTexture(drawable.texture);
-      sprite_.setPosition(position.x, position.y);
       drawable.bounds = sprite_.getGlobalBounds();
       window->draw(sprite_);
     }
   }
   window->display();
+}
+
+void DrawableSystem::DrawEntity(const components::Drawable& drawable, const components::Position& position) {
+  std::visit([this, position](auto&& arg) {
+    using T = std::decay_t<decltype(arg)>;
+    if constexpr (std::is_same_v<T, sf::Texture>) {
+      sprite_.setTexture(arg);
+      sprite_.setPosition(position.x, position.y);
+    } else if constexpr (std::is_same_v<T, sf::Text>) {
+
+    }
+  }, drawable.drawable);
+}
+
+void DrawableSystem::DrawTexture(const components::Texture& texture, const components::Position& position) {
+  auto texture = resourcesManager_.GetTexture(texture.path);
+  sprite_.setPosition(position.x, position.y);
 }

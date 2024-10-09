@@ -10,6 +10,7 @@
 #include "components/drawable.hpp"
 #include "components/position.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
+#include "managers/resources_manager.hpp"
 #include "window/window_manager.hpp"
 
 namespace rtype::client::systems {
@@ -35,6 +36,16 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /// @brief This Sprite is a utils that avoid us to recreate a new sprite each time we want to
   /// display a new entity.
   sf::Sprite sprite_;
+
+  /// @brief This Text is a utils that avoid us to recreate a new text each time we want to
+  /// display a new entity.
+  sf::Text text_;
+
+  ResourcesManager &resourcesManager_;
+
+  void DrawEntity(const components::Drawable &drawable, const components::Position &position);
+  void DrawTexture(const components::Texture &texture, const components::Position &position);
+  void DrawText(const components::Text &text, const components::Position &position);
 };
 
 }  // namespace rtype::client::systems

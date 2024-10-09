@@ -2,12 +2,10 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** my_scene.cpp
+** menu.cpp
 */
 
 #include "menu.hpp"
-
-#include <SFML/Graphics/RectangleShape.hpp>
 
 using namespace rtype::client;
 
