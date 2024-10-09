@@ -14,7 +14,8 @@
 
 namespace rtype::client::systems {
 template <events::EventType EventType, typename MouseEventComponent>
-class MouseButtonEventSystem : public EventSystemBase<EventType, MouseEventComponent> {
+class MouseButtonEventSystem
+    : public EventSystemBase<EventType, MouseEventComponent, components::Drawable> {
  public:
   /**
    * @brief Build a new Mouse Event System Base object
@@ -26,7 +27,8 @@ class MouseButtonEventSystem : public EventSystemBase<EventType, MouseEventCompo
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   sparse_array<MouseEventComponent>::ptr components) final;
+                   sparse_array<MouseEventComponent>::ptr components,
+                   sparse_array<components::Drawable>::ptr drawables) final;
 
   /**
    * @brief Handle the event for the entity

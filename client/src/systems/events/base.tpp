@@ -12,20 +12,20 @@
 using namespace rtype::client;
 using namespace rtype::client::systems;
 
-template <events::EventType EventType, class EventComponent>
-EventSystemBase<EventType, EventComponent>::EventSystemBase(WindowManager::Ptr window_manager)
-    : ASystem<EventComponent>() {
+template <events::EventType EventType, class... EventComponents>
+EventSystemBase<EventType, EventComponents...>::EventSystemBase(WindowManager::Ptr window_manager)
+    : ASystem<EventComponents...>() {
   windowManager_ = std::move(window_manager);
 }
 
-template <events::EventType EventType, class EventComponent>
-void EventSystemBase<EventType, EventComponent>::Run(Registry::Ptr r,
-                                                     sparse_array<EventComponent>::ptr components) {
+template <events::EventType EventType, class... EventComponents>
+void EventSystemBase<EventType, EventComponents...>::Run(
+    Registry::Ptr r, sparse_array<EventComponents>::ptr... components) {
   auto type_to_handle = events::EventTypeMapper<EventType>::type;
   auto& events = windowManager_->GetDeferredEvents();
 
   for (const auto& event : events) {
     if (event.type == type_to_handle)
-      HandleEvent(event, r, components);
+      HandleEvent(event, r, components...);
   }
 }

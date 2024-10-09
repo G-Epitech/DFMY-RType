@@ -14,11 +14,12 @@
 using namespace rtype::client::systems;
 
 MouseMoveEventSystem::MouseMoveEventSystem(WindowManager::Ptr window_manager)
-    : EventSystemBase<events::kMouseMoved, components::OnMouseMoved>(std::move(window_manager)) {}
+    : EventSystemBase<events::kMouseMoved, components::OnMouseMoved, components::Drawable>(
+          std::move(window_manager)) {}
 
 void MouseMoveEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
-                                       sparse_array<components::OnMouseMoved>::ptr components) {
-  auto drawables = r->GetComponents<components::Drawable>();
+                                       sparse_array<components::OnMouseMoved>::ptr components,
+                                       sparse_array<components::Drawable>::ptr drawables) {
   std::size_t entity_id = 0;
 
   for (auto& component : (*components)) {

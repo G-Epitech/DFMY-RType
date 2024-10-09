@@ -11,7 +11,8 @@
 #include "systems/events/base.hpp"
 
 namespace rtype::client::systems {
-class MouseMoveEventSystem : public EventSystemBase<events::kMouseMoved, components::OnMouseMoved> {
+class MouseMoveEventSystem
+    : public EventSystemBase<events::kMouseMoved, components::OnMouseMoved, components::Drawable> {
  public:
   /**
    * @brief Construct a new Mouse Move Event System object
@@ -21,7 +22,8 @@ class MouseMoveEventSystem : public EventSystemBase<events::kMouseMoved, compone
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   sparse_array<components::OnMouseMoved>::ptr components) override;
+                   sparse_array<components::OnMouseMoved>::ptr components,
+                   sparse_array<components::Drawable>::ptr drawables) override;
   /**
    * @brief Handle the event for the entity
    * @param entityId Entity id

@@ -13,12 +13,13 @@ using namespace rtype::client::systems;
 template <events::EventType EventType, typename MouseEventComponent>
 MouseButtonEventSystem<EventType, MouseEventComponent>::MouseButtonEventSystem(
     WindowManager::Ptr window_manager)
-    : EventSystemBase<EventType, MouseEventComponent>(std::move(window_manager)) {}
+    : EventSystemBase<EventType, MouseEventComponent, components::Drawable>(
+          std::move(window_manager)) {}
 
 template <events::EventType EventType, typename MouseEventComponent>
 void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEvent(
-    const sf::Event& event, Registry::Ptr r, sparse_array<MouseEventComponent>::ptr components) {
-  auto drawables = r->GetComponents<components::Drawable>();
+    const sf::Event& event, Registry::Ptr r, sparse_array<MouseEventComponent>::ptr components,
+    sparse_array<components::Drawable>::ptr drawables) {
   std::size_t entity_id = 0;
 
   for (auto& component : (*components)) {
