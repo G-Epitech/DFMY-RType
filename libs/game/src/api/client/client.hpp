@@ -104,14 +104,6 @@ class rtype::sdk::game::api::Client {
   bool WaitForMessage(MessageServerType type,
                       bool (Client::*handler)(const tools::MessageProps &message));
 
-  template <>
-  bool WaitForMessage<NetworkProtocolType::kTCP>(
-      MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message));
-
-  template <>
-  bool WaitForMessage<NetworkProtocolType::kUDP>(
-      MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message));
-
   /**
    * @brief Handle TCP connection confirmation
    */

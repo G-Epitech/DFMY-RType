@@ -19,7 +19,7 @@ bool Client::SendPayload(const MessageClientType &type, const T &payload) {
 }
 
 template <>
-bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
+inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
         MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
   MessageProps message;
@@ -46,7 +46,7 @@ bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
 }
 
 template <>
-bool Client::WaitForMessage<NetworkProtocolType::kUDP>(
+inline bool Client::WaitForMessage<NetworkProtocolType::kUDP>(
         MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
   MessageProps message;
