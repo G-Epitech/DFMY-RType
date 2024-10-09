@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "core.hpp"
+#include "../../core.hpp"
 #include "tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::tools {

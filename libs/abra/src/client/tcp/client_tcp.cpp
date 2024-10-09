@@ -41,3 +41,7 @@ void ClientTCP::Listen() {
     queue_.push(message);
   }
 }
+
+std::queue<tools::MessageProps> &ClientTCP::GetQueue() {
+  return queue_;
+}

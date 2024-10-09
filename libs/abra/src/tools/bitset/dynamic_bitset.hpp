@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 
-#include "core.hpp"
+#include "../../core.hpp"
 
 namespace abra::tools {
 class EXPORT_NETWORK_SDK_API dynamic_bitset;

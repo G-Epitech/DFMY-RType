@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "system_abstract.hpp"
-
 using namespace zygarde;
 
 template <class... Components>

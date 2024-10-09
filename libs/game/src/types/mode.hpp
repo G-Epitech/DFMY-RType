@@ -12,4 +12,4 @@ namespace rtype::sdk::game::types {
 enum GameMode {
   kCoop = 0,
 };
-}
+}  // namespace rtype::sdk::game::types
