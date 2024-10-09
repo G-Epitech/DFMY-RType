@@ -52,23 +52,23 @@ void ResourcesManager::LoadSound(const std::string &path, const std::string &nam
   resourcesMap_.sounds[name] = sound;
 }
 
-sf::Texture &ResourcesManager::GetTexture(const std::string &name) {
+sf::Texture ResourcesManager::GetTexture(const std::string &name) const {
   if (!resourcesMap_.textures.contains(name)) {
     throw Exception("Texture not found");
   }
-  return resourcesMap_.textures[name];
+  return resourcesMap_.textures.at(name);
 }
 
-sf::Font &ResourcesManager::GetFont(const std::string &name) {
+sf::Font ResourcesManager::GetFont(const std::string &name) const {
   if (!resourcesMap_.fonts.contains(name)) {
     throw Exception("Font not found");
   }
-  return resourcesMap_.fonts[name];
+  return resourcesMap_.fonts.at(name);
 }
 
-sf::SoundBuffer &ResourcesManager::GetSound(const std::string &name) {
+sf::SoundBuffer ResourcesManager::GetSound(const std::string &name) const {
   if (!resourcesMap_.sounds.contains(name)) {
     throw Exception("Sound not found");
   }
-  return resourcesMap_.sounds[name];
+  return resourcesMap_.sounds.at(name);
 }

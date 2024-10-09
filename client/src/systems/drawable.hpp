@@ -23,8 +23,10 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /**
    * @brief Default constructor of a Drawable System
    * @param window_manager The window manager to display the entities
+   * @param resources_manager The resources manager to get the textures and fonts
    */
-  explicit DrawableSystem(WindowManager::Ptr window_manager);
+  explicit DrawableSystem(WindowManager::Ptr window_manager,
+                          const ResourcesManager &resources_manager);
 
   void Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
            sparse_array<components::Position>::ptr positions) override;
@@ -41,11 +43,29 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /// display a new entity.
   sf::Text text_;
 
-  ResourcesManager &resourcesManager_;
+  /// @brief The resources manager to get the textures and fonts.
+  const ResourcesManager &resourcesManager_;
 
+  /**
+   * @brief Draw an entity
+   * @param drawable The drawable component of the entity
+   * @param position The position component of the entity
+   */
   void DrawEntity(const components::Drawable &drawable, const components::Position &position);
-  void DrawTexture(const components::Texture &texture, const components::Position &position);
-  void DrawText(const components::Text &text, const components::Position &position);
+
+  /**
+   * @brief Draw a texture
+   * @param texture The texture component of the entity
+   * @param position The position component of the entity
+   */
+  void DrawEntityTexture(const components::Texture &texture, const components::Position &position);
+
+  /**
+   * @brief Draw a text
+   * @param text The text component of the entity
+   * @param position The position component of the entity
+   */
+  void DrawEntityText(const components::Text &text, const components::Position &position);
 };
 
 }  // namespace rtype::client::systems

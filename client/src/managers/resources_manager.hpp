@@ -56,21 +56,21 @@ class ResourcesManager {
    * @param name Name of the texture to get
    * @return Texture
    */
-  [[nodiscard]] sf::Texture &GetTexture(const std::string &name);
+  [[nodiscard]] sf::Texture GetTexture(const std::string& name) const;
 
   /**
    * @brief Get a font from the resources manager
    * @param name Name of the font to get
    * @return Font
    */
-  [[nodiscard]] sf::Font &GetFont(const std::string &name);
+  [[nodiscard]] sf::Font GetFont(const std::string& name) const;
 
   /**
    * @brief Get a sound from the resources manager
    * @param name Name of the sound to get
    * @return Sound
    */
-  [[nodiscard]] sf::SoundBuffer &GetSound(const std::string &name);
+  [[nodiscard]] sf::SoundBuffer GetSound(const std::string& name) const;
 
   class Exception final : public std::exception {
    public:
