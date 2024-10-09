@@ -10,7 +10,7 @@
 using namespace abra::server;
 
 template<typename T>
-tools::SendMessageStatus SessionTCP::Send(const std::shared_ptr<tools::Packet<T>> &packet) {
+tools::SendMessageStatus SessionTCP::Send(const std::unique_ptr<tools::Packet<T>> &packet) {
   const auto bitset = packet->GetBitset();
   const auto vector = bitset->GetVector();
 

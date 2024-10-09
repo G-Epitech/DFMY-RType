@@ -44,7 +44,7 @@ class abra::server::ServerTCP {
    * @return The status of the message
    */
   template <typename T>
-  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet,
+  tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>> &packet,
                                 const std::uint64_t &clientId);
 
   /**

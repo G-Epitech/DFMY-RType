@@ -50,7 +50,7 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    * @return The status of the message
    */
   template <typename T>
-  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>>& packet);
+  tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>>& packet);
 
  private:
   /**
