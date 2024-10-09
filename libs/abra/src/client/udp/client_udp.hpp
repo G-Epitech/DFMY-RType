@@ -17,6 +17,11 @@ class EXPORT_NETWORK_SDK_API ClientUDP;
 
 class abra::client::ClientUDP : public InterfaceClient {
  public:
+  struct ClientEndpoint {
+    std::string ip;
+    unsigned int port;
+  };
+
   /**
    * @brief Construct a new ClientUDP object
    * @param ip The IP of the server (host)
@@ -38,6 +43,18 @@ class abra::client::ClientUDP : public InterfaceClient {
    */
   template <typename T>
   tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>> &packet);
+
+  /**
+   * @brief Get the queue of messages
+   * @return The queue of messages
+   */
+  std::queue<tools::MessageProps> &GetQueue();
+
+  /**
+   * @brief Get the endpoint of the client
+   * @return The endpoint of the client
+   */
+  [[nodiscard]] ClientEndpoint GetEndpoint() const;
 
  private:
   /// @brief The Input Output Context

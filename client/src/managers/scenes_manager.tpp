@@ -8,10 +8,13 @@
 #pragma once
 
 #include <iostream>
+#include <utility>
 using namespace rtype::client;
 
 template <typename ContextType>
-ScenesManager<ContextType>::ScenesManager(const ContextType& context) : context_{context} {}
+ScenesManager<ContextType>::ScenesManager(WindowManager::Ptr window_manager,
+                                          const ContextType &context)
+    : context_{context}, windowManager_{std::move(window_manager)} {}
 
 template <typename ContextType>
 void ScenesManager<ContextType>::SwitchToScene(IScene::Ptr new_scene) {
@@ -26,27 +29,18 @@ void ScenesManager<ContextType>::SwitchToScene(IScene::Ptr new_scene) {
 
 template <typename ContextType>
 void ScenesManager<ContextType>::Update(utils::DeltaTime delta_time) {
-  if (currentScene_) {
+  windowManager_->DeferEvents();
+  if (currentScene_ && windowManager_->IsActive()) {
     currentScene_->Update(delta_time);
-  } else {
-    std::cerr << "[WARN]: No scene to update" << std::endl;
   }
-}
-
-template <typename ContextType>
-void ScenesManager<ContextType>::Draw() {
-  if (currentScene_) {
-    currentScene_->Draw();
-  } else {
-    std::cerr << "[WARN]: No scene to draw" << std::endl;
-  }
+  windowManager_->ClearEvents();
 }
 
 template <typename ContextType>
 ScenesManager<ContextType>::Exception::Exception(std::string msg) : msg_{std::move(msg)} {}
 
 template <typename ContextType>
-const char* ScenesManager<ContextType>::Exception::what() const noexcept {
+const char *ScenesManager<ContextType>::Exception::what() const noexcept {
   return msg_.c_str();
 }
 

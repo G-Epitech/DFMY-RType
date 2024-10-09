@@ -12,4 +12,4 @@ namespace rtype::sdk::game::types {
 enum EnemyType {
   kPata = 0,
 };
-}  // namespace rtype::sdk::game_core::types
+}  // namespace rtype::sdk::game::types

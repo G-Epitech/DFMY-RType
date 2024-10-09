@@ -9,7 +9,6 @@
 
 #include "bases/scene_base.hpp"
 #include "context/global_context.hpp"
-#include "managers/resources_manager.hpp"
 
 namespace rtype::client {
 class SceneMenu final : public SceneBase<GlobalContext> {
@@ -17,8 +16,14 @@ class SceneMenu final : public SceneBase<GlobalContext> {
   explicit SceneMenu(const GlobalContext &context);
   ~SceneMenu() override = default;
 
-  void Draw() override;
-
   void Update(utils::DeltaTime delta_time) override;
+
+  void OnCreate() override;
+
+  void OnActivate() override;
+
+ protected:
+  unsigned int counter_ = 0;
+  std::size_t e{};
 };
 }  // namespace rtype::client

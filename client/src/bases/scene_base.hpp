@@ -36,11 +36,6 @@ class SceneBase : public IScene {
   ResourcesManager resourcesManager_;
 
  public:
-  /***
-   * @brief Draw the scene
-   */
-  void Draw() override;
-
   /**
    * @brief Update the scene
    * @param delta_time Time since last update

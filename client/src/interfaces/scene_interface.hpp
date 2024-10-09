@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <SFML/Window/Event.hpp>
 #include <chrono>
 #include <memory>
 
@@ -50,11 +51,6 @@ class IScene {
    * @param delta_time Time since the last update
    */
   virtual void Update(utils::DeltaTime delta_time) = 0;
-
-  /**
-   * @brief Draw the scene
-   */
-  virtual void Draw() = 0;
 };
 
 /**

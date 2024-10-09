@@ -10,11 +10,15 @@
 using namespace rtype::client::utils;
 
 Timer::Timer() {
-  tick();
+  this->operator++();
 }
 
-void Timer::tick() {
-  _last = std::chrono::high_resolution_clock::now();
+DeltaTime Timer::operator++() {
+  auto now = std::chrono::high_resolution_clock::now();
+  auto diff = now - _last;
+
+  _last = now;
+  return diff;
 }
 
 DeltaTime Timer::GetElapsedTime() const {

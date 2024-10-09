@@ -11,22 +11,24 @@
 
 using namespace rtype::client::systems;
 
-DrawableSystem::DrawableSystem(std::shared_ptr<sf::RenderWindow> window)
-    : window_(std::move(window)) {}
+DrawableSystem::DrawableSystem(rtype::client::WindowManager::Ptr window_manager) {
+  windowManager_ = std::move(window_manager);
+}
 
-void DrawableSystem::Run(std::shared_ptr<Registry> r, sparse_array<components::Drawable>& drawables,
-                         sparse_array<components::Position>& positions) {
-  window_->clear();
-  for (size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {
-    if (drawables[i] && positions[i]) {
-      const auto [texture, text] = drawables[i].value();
-      const auto [x, y] = positions[i].value();
+void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
+                         sparse_array<components::Position>::ptr positions) {
+  auto window = windowManager_->window();
+  window->clear();
+  for (size_t i = 0; i < drawables->size() && i < positions->size(); ++i) {
+    if ((*drawables)[i] && (*positions)[i]) {
+      auto &drawable = (*drawables)[i].value();
+      auto &position = (*positions)[i].value();
 
-      sprite_.setTexture(texture);
-      sprite_.setPosition(x, y);
-      window_->draw(sprite_);
-      window_->draw(text);
+      sprite_.setTexture(drawable.texture);
+      sprite_.setPosition(position.x, position.y);
+      drawable.bounds = sprite_.getGlobalBounds();
+      window->draw(sprite_);
     }
   }
-  window_->display();
+  window->display();
 }
