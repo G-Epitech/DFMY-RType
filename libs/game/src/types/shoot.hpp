@@ -11,5 +11,5 @@ namespace rtype::sdk::game::types {
 /// @brief Enum of the different types of shoot
 enum class ShootType {
   kCommon = 0,
-}; // namespace rtype::sdk::game_core::types
-}
+};  // namespace rtype::sdk::game_core::types
+}  // namespace rtype::sdk::game::types

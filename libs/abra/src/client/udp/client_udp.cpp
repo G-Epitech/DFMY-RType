@@ -39,3 +39,13 @@ void ClientUDP::Listen() {
     queue_.push(message);
   }
 }
+
+std::queue<tools::MessageProps> &ClientUDP::GetQueue() {
+  return queue_;
+}
+
+ClientUDP::ClientEndpoint ClientUDP::GetEndpoint() const {
+  auto endpoint = socket_.local_endpoint();
+
+  return {endpoint.address().to_string(), endpoint.port()};
+}

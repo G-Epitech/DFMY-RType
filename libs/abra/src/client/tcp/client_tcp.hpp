@@ -39,6 +39,12 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
   template <typename T>
   tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>> &packet);
 
+  /**
+   * @brief Get the queue of messages
+   * @return The queue of messages
+   */
+  std::queue<tools::MessageProps> &GetQueue();
+
  private:
   /// @brief The Input Output Service
   boost::asio::io_service ios_;

@@ -12,7 +12,7 @@
 #include <mutex>
 #include <queue>
 
-#include "core.hpp"
+#include "../../core.hpp"
 #include "props/message.h"
 #include "tools/bitset/dynamic_bitset.hpp"
 #include "tools/message/message.hpp"
