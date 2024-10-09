@@ -28,6 +28,13 @@ class abra::client::InterfaceClient {
   virtual void Listen() = 0;
 
  protected:
+  /**
+   * @brief Resolve packets in a buffer
+   * This method will split the buffer into logical packets with header props
+   * @param buffer The buffer received
+   */
+  virtual void ResolveBuffer(std::vector<char> *buffer) = 0;
+
   /// @brief The queue of server messages
   std::queue<tools::MessageProps> queue_;
 };

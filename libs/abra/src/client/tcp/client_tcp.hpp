@@ -9,13 +9,13 @@
 
 #include <memory>
 
-#include "client/interface_client.hpp"
+#include "client/abstract_client.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientTCP;
 }
 
-class abra::client::ClientTCP : public abra::client::InterfaceClient {
+class abra::client::ClientTCP final : public abra::client::AbstractClient {
  public:
   /**
    * @brief Construct a new ClientTCP object
@@ -46,13 +46,6 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
   std::queue<tools::MessageProps> &GetQueue();
 
  private:
-  /**
-   * @brief Resolve packets in a buffer
-   * This method will split the buffer into logical packets with header props
-   * @param buffer The buffer received
-   */
-  void ResolveBuffer(std::vector<char> *buffer);
-
   /// @brief The Input Output Service
   boost::asio::io_service ios_;
 

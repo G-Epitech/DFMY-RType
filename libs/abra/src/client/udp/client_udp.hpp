@@ -9,13 +9,13 @@
 
 #include <memory>
 
-#include "client/interface_client.hpp"
+#include "client/abstract_client.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientUDP;
 }
 
-class abra::client::ClientUDP : public InterfaceClient {
+class abra::client::ClientUDP final : public AbstractClient {
  public:
   struct ClientEndpoint {
     std::string ip;
@@ -57,13 +57,6 @@ class abra::client::ClientUDP : public InterfaceClient {
   [[nodiscard]] ClientEndpoint GetEndpoint() const;
 
  private:
-  /**
-   * @brief Resolve packets in a buffer
-   * This method will split the buffer into logical packets with header props
-   * @param buffer The buffer received
-   */
-  void ResolveBuffer(std::vector<char> *buffer);
-
   /// @brief The Input Output Context
   boost::asio::io_context ioc_;
   /// @brief Endpoint of the server
