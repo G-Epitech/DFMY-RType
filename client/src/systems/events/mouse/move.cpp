@@ -18,28 +18,29 @@ MouseMoveEventSystem::MouseMoveEventSystem(WindowManager::Ptr window_manager)
 
 void MouseMoveEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
                                        sparse_array<components::OnMouseMoved>::ptr components) {
+  auto drawables = r->GetComponents<components::Drawable>();
   std::size_t entity_id = 0;
 
   for (auto& component : (*components)) {
+    HandleEventForEntity(entity_id++, event, drawables, *component);
   }
 }
 
 void MouseMoveEventSystem::HandleEventForEntity(
     std::size_t entityId, const sf::Event& event,
-    const sparse_array<components::Drawable>::ptr & drawables,
+    const sparse_array<components::Drawable>::ptr& drawables,
     const std::optional<components::OnMouseMoved>& component) {
-  if (!component) {
+  auto window = this->windowManager_->window();
+  auto position = window ? window->mapPixelToCoords({event.mouseMove.x, event.mouseMove.y})
+                         : sf::Vector2f{0, 0};
+  if (!component || !window) {
     return;
   }
-  auto target =
-      component->strategy & MouseStrategyUtils::GetCurrentTarget<components::OnMouseMoved>(
-                                event.mouseButton, *component, drawables, entityId);
-  switch (target) {
-    case events::kLocalTarget:
-    case events::kOtherTarget:
-      return component->handler({event.mouseButton.x, event.mouseButton.y},
-                                static_cast<events::MouseEventTarget>(event.type));
-    default:
-      return;
+  auto current = MouseStrategyUtils::GetCurrentTarget<components::OnMouseMoved>(
+      position, *component, drawables, entityId);
+  if ((component->strategy == events::kAnyTarget) ||
+      (current == events::kLocalTarget && component->strategy == events::kLocalTarget) ||
+      (current == events::kOtherTarget && component->strategy == events::kOtherTarget)) {
+    return component->handler(position, current);
   }
 }

@@ -19,16 +19,17 @@ void MouseScrollEventSystem::HandleEvent(
     const sf::Event& event, Registry::Ptr r,
     sparse_array<components::OnMouseScrolled>::ptr components) {
   auto length = components->size();
+  auto window = this->windowManager_->window();
+  auto position =
+      window ? window->mapPixelToCoords({event.mouseWheelScroll.x, event.mouseWheelScroll.y})
+             : sf::Vector2f{0, 0};
 
+  if (!window)
+    return;
   for (std::size_t i = 0; i < length; i++) {
     auto component = (*components)[i];
     if (!component)
       continue;
-    component->handler(
-        {
-            event.mouseWheelScroll.x,
-            event.mouseWheelScroll.y,
-        },
-        event.mouseWheelScroll.delta);
+    component->handler(position, event.mouseWheelScroll.delta);
   }
 }

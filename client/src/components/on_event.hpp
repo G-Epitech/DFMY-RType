@@ -82,22 +82,22 @@ struct OnEventHandler<events::kKeyReleased> {
 
 template <>
 struct OnEventHandler<events::kMousePressed> {
-  using signature = std::function<void(sf::Mouse::Button, sf::Vector2i, events::MouseEventTarget)>;
+  using signature = std::function<void(sf::Mouse::Button, sf::Vector2f, events::MouseEventTarget)>;
 };
 
 template <>
 struct OnEventHandler<events::kMouseReleased> {
-  using signature = std::function<void(sf::Mouse::Button, sf::Vector2i, events::MouseEventTarget)>;
+  using signature = std::function<void(sf::Mouse::Button, sf::Vector2f, events::MouseEventTarget)>;
 };
 
 template <>
 struct OnEventHandler<events::kMouseMoved> {
-  using signature = std::function<void(sf::Vector2i, events::MouseEventTarget)>;
+  using signature = std::function<void(sf::Vector2f, events::MouseEventTarget)>;
 };
 
 template <>
 struct OnEventHandler<events::kMouseScrolled> {
-  using signature = std::function<void(sf::Vector2i, float)>;
+  using signature = std::function<void(sf::Vector2f, float)>;
 };
 
 template <events::EventType T>
@@ -129,7 +129,7 @@ struct OnEvent<events::kMouseMoved> {
   using Handler = OnEventHandler<events::kMouseMoved>::signature;
 
   events::MouseEventTarget strategy =
-      events::kLocalTarget;  /// @brief Strategy to determine which entities will receive the event
+      events::kAnyTarget;  /// @brief Strategy to determine which entities will receive the event
   Handler handler = Handler();  /// @brief Function to call when the event is triggered
 };
 

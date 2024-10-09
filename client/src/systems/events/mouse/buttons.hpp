@@ -36,7 +36,7 @@ class MouseButtonEventSystem : public EventSystemBase<EventType, MouseEventCompo
    * @param component Component to handle
    */
   void HandleEventForEntity(std::size_t entityId, const sf::Event& event,
-                            const sparse_array<components::Drawable>::ptr &drawables,
+                            const sparse_array<components::Drawable>::ptr& drawables,
                             const std::optional<MouseEventComponent>& component);
 };
 

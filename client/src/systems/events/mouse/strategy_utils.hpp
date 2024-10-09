@@ -25,9 +25,9 @@ class MouseStrategyUtils {
    * @param drawables Drawables to get the bounds from
    * @param entityId Entity id to get the position from
    */
-  template <typename MouseEventComponent, typename SFMLMouseType>
+  template <typename MouseEventComponent>
   static events::MouseEventTarget GetCurrentTarget(
-      const SFMLMouseType &mouse, const MouseEventComponent &component,
+      const sf::Vector2f &mouse, const MouseEventComponent &component,
       const sparse_array<components::Drawable>::ptr &drawables, std::size_t entityId);
 };
 }  // namespace rtype::client::systems

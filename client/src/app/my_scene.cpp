@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <iostream>
+#include <random>
 
 #include "my_scene_2.hpp"
 #include "scenes/scenes_manager.hpp"
@@ -42,16 +43,21 @@ void MyScene::Update(std::chrono::nanoseconds delta_time) {
 
 void MyScene::OnActivate() {
   sf::Image image;
-  // Random color
-  sf::Color color(rand() % 255, rand() % 255, rand() % 255);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, 254);
+  std::uniform_int_distribution<> disPosX(
+      0, static_cast<int>(context_.windowManager->window()->getSize().x - 100));
+  std::uniform_int_distribution<> disPosY(
+      0, static_cast<int>(context_.windowManager->window()->getSize().y - 100));
+  sf::Color color(dis(gen), dis(gen), dis(gen));
   image.create(100, 100, color);
   sf::Texture texture;
   texture.loadFromImage(image);
   auto entity = registry_->EntityFromIndex(e);
   registry_->AddComponent(entity, components::Drawable{.texture = texture});
-  registry_->AddComponent(
-      entity,
-      components::Position{
-          .x = static_cast<float>(rand() % (context_.windowManager->window()->getSize().x - 100)),
-          .y = static_cast<float>(rand() % (context_.windowManager->window()->getSize().y - 100))});
+  registry_->AddComponent(entity, components::Position{
+                                      .x = static_cast<float>(disPosX(gen)),
+                                      .y = static_cast<float>(disPosY(gen)),
+                                  });
 }
