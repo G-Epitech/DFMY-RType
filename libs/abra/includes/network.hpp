@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "tools/logger/logger.hpp"
+
 #include "client/tcp/client_tcp.hpp"
 
 #include "client/udp/client_udp.hpp"

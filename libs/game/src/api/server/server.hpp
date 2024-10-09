@@ -8,8 +8,8 @@
 #pragma once
 
 #include <cstdint>
-#include <thread>
 #include <map>
+#include <thread>
 
 #include "abra/includes/network.hpp"
 #include "abra/includes/packet.hpp"
@@ -50,7 +50,8 @@ class rtype::sdk::game::api::Server {
    * @return true if the message is sent
    */
   template <typename T>
-  bool SendPayloadTCP(const MessageServerType &type, const T &payload, const std::uint64_t &clientId);
+  bool SendPayloadTCP(const MessageServerType &type, const T &payload,
+                      const std::uint64_t &clientId);
 
   /**
    * @brief Handle the incoming TCP messages
@@ -74,8 +75,7 @@ class rtype::sdk::game::api::Server {
   abra::tools::PacketBuilder packetBuilder_;
 
   std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
-      {MessageServerType::kConnectionInfos, &Server::HandleClientConnection}
-  };
+      {MessageServerType::kConnectionInfos, &Server::HandleClientConnection}};
 };
 
 #include "server.tpp"

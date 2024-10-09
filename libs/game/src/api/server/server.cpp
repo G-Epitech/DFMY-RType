@@ -10,9 +10,9 @@
 using namespace rtype::sdk::game::api;
 
 Server::Server(int port)
-        : serverTCP_(port, [this](const ClientTCPMessage &message) {
-  return SystemTCPMessagesMiddleware(message);
-}) {
+    : serverTCP_(port, [this](const ClientTCPMessage &message) {
+        return SystemTCPMessagesMiddleware(message);
+      }) {
   this->InitTCP();
 }
 
@@ -38,9 +38,7 @@ void Server::HandleClientConnection(const ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::Connection>(message.bitset);
   auto pseudo = packet->GetPayload().pseudo;
 
-  payload::ConnectionInfos connectionInfos = {
-          .onlinePlayers = 1
-  };
+  payload::ConnectionInfos connectionInfos = {.onlinePlayers = 1};
 
   this->SendPayloadTCP(MessageServerType::kConnectionInfos, connectionInfos, message.clientId);
 }
