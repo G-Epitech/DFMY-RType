@@ -9,6 +9,7 @@
 
 #include "bases/scene_base.hpp"
 #include "context/global_context.hpp"
+#include "managers/resources_manager.hpp"
 
 namespace rtype::client {
 class SceneMenu final : public SceneBase<GlobalContext> {
@@ -22,5 +23,6 @@ class SceneMenu final : public SceneBase<GlobalContext> {
 
  protected:
   unsigned int counter_ = 0;
+  ResourcesManager resources_manager_;
 };
 }  // namespace rtype::client
