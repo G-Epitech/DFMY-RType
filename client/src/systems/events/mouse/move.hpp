@@ -30,7 +30,7 @@ class MouseMoveEventSystem : public EventSystemBase<events::kMouseMoved, compone
    * @param component Component to handle
    */
   void HandleEventForEntity(std::size_t entityId, const sf::Event& event,
-                                   const sparse_array<components::Drawable>::ptr& drawables,
-                                   const std::optional<components::OnMouseMoved>& component);
+                            const sparse_array<components::Drawable>::ptr& drawables,
+                            const std::optional<components::OnMouseMoved>& component);
 };
 }  // namespace rtype::client::systems
