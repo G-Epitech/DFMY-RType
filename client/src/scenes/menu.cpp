@@ -20,6 +20,4 @@ void SceneMenu::Draw() {
   context_.window->draw(rect);
 }
 
-void SceneMenu::Update(std::chrono::nanoseconds delta_time) {
-
-}
+void SceneMenu::Update(std::chrono::nanoseconds delta_time) {}
