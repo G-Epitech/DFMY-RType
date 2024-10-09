@@ -7,8 +7,7 @@
 
 #include "app.hpp"
 
-#include "./scenes/menu.hpp"
-#include "scenes/scenes_manager.hpp"
+#include "scenes/menu.hpp"
 
 using namespace rtype::client;
 

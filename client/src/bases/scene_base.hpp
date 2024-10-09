@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "interfaces/scene_interface.hpp"
 #include "libs/zygarde/src/registry.hpp"
-#include "scene_interface.hpp"
 
 namespace rtype::client {
 template <typename ContextType>

@@ -72,11 +72,11 @@ template <typename ContextType>
 template <SceneType T>
 void ScenesManager<ContextType>::GoToScene() {
   IScene::Ptr scene = nullptr;
-  const std::type_index scene_type = std::type_index(typeid(T));
+  const auto scene_type = std::type_index(typeid(T));
 
   try {
     scene = scenesMap_.at(scene_type);
-  } catch (const std::out_of_range &e) {
+  } catch (const std::out_of_range &_) {
     throw Exception("Scene not registered: " + std::string(scene_type.name()) + ".");
   }
 

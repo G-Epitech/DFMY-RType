@@ -10,7 +10,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 
-#include "scenes/scenes_manager.hpp"
+#include "managers/scenes_manager.hpp"
 
 namespace rtype::client {
 

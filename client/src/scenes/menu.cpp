@@ -8,7 +8,6 @@
 #include "menu.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <iostream>
 
 using namespace rtype::client;
 

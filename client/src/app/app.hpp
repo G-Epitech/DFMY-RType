@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "context/global_context.hpp"
-#include "scenes/scenes_manager.hpp"
+#include "managers/scenes_manager.hpp"
 #include "utils/timer.hpp"
 
 #define APP_WINDOW_WIDTH 800

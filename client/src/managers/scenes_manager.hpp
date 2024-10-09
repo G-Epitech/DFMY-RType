@@ -8,10 +8,11 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <typeindex>
 
-#include "scene_interface.hpp"
+#include "interfaces/scene_interface.hpp"
 
 namespace rtype::client {
 
@@ -69,7 +70,7 @@ class ScenesManager {
    */
   using Ptr = std::shared_ptr<ScenesManager>;
 
-  class Exception : public std::exception {
+  class Exception final : public std::exception {
    public:
     /**
      * @brief Construct a new scenes manager exception

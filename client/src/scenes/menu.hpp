@@ -7,11 +7,11 @@
 
 #pragma once
 
+#include "bases/scene_base.hpp"
 #include "context/global_context.hpp"
-#include "scenes/scene_base.hpp"
 
 namespace rtype::client {
-class SceneMenu : public SceneBase<GlobalContext> {
+class SceneMenu final : public SceneBase<GlobalContext> {
  public:
   explicit SceneMenu(const GlobalContext &context);
   ~SceneMenu() override = default;
