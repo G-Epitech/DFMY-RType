@@ -20,9 +20,5 @@ class SceneMenu final : public SceneBase<GlobalContext> {
   void Draw() override;
 
   void Update(utils::DeltaTime delta_time) override;
-
- protected:
-  unsigned int counter_ = 0;
-  ResourcesManager resourcesManager_;
 };
 }  // namespace rtype::client

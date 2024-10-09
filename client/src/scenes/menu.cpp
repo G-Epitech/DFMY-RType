@@ -11,7 +11,9 @@
 
 using namespace rtype::client;
 
-SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {}
+SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {
+  resourcesManager_.LoadFont("arcade", "assets/fonts/arcade.ttf");
+}
 
 void SceneMenu::Draw() {
   sf::RectangleShape rect(sf::Vector2f(100, 100));

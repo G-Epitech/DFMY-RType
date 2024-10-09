@@ -9,6 +9,7 @@
 
 #include "interfaces/scene_interface.hpp"
 #include "libs/zygarde/src/registry.hpp"
+#include "managers/resources_manager.hpp"
 
 namespace rtype::client {
 template <typename ContextType>
@@ -30,6 +31,9 @@ class SceneBase : public IScene {
 
   /// @brief Store the ECS registry for the scene
   zygarde::Registry::Ptr registry_;
+
+  /// @brief Store the resources manager
+  ResourcesManager resourcesManager_;
 
  public:
   /***
