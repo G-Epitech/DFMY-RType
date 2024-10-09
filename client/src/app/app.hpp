@@ -57,30 +57,15 @@ class App {
   /**
    * @brief Creates the main window for the application.
    */
-  void CreateWindow();
+  void CreateWindowManager();
 
   /**
    * @brief Creates the scenes manager for the application.
    */
   void CreateScenesManager();
 
-  /**
-   * @brief Processes events.
-   */
-  void ProcessEvents();
-
-  /**
-   * @brief Updates the application.
-   */
-  void Update(utils::DeltaTime delta_time);
-
-  /**
-   * @brief Renders the application.
-   */
-  void Render();
-
   /// @brief The main window for the application.
-  std::shared_ptr<sf::RenderWindow> window_;
+  WindowManager::Ptr windowManager_;
 
   /// @brief The scenes manager for the application.
   ScenesManager<GlobalContext>::Ptr scenesManager_;

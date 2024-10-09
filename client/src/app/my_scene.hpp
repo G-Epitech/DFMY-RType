@@ -16,11 +16,14 @@ class MyScene : public SceneBase<GlobalContext> {
   explicit MyScene(const GlobalContext &context);
   ~MyScene() override = default;
 
-  void Draw() override;
-
   void Update(utils::DeltaTime delta_time) override;
+
+  void OnCreate() override;
+
+  void OnActivate() override;
 
  protected:
   unsigned int counter_ = 0;
+  std::size_t e{};
 };
 }  // namespace rtype::client

@@ -15,5 +15,8 @@ namespace rtype::client::components {
 struct Drawable {
   /// @brief Texture to render.
   sf::Texture texture;
+
+  /// @brief Current bounds of the drawable.
+  sf::FloatRect bounds = {0, 0, 0, 0};
 };
 }  // namespace rtype::client::components

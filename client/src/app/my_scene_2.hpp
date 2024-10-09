@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** my_scene_2.hpp
+** my_scene.hpp
 */
 
 #pragma once
@@ -16,11 +16,14 @@ class MyScene2 : public SceneBase<GlobalContext> {
   explicit MyScene2(const GlobalContext &context);
   ~MyScene2() override = default;
 
-  void Draw() override;
   void Update(utils::DeltaTime delta_time) override;
+
+  void OnCreate() override;
+
+  void OnActivate() override;
 
  protected:
   unsigned int counter_ = 0;
-  unsigned int nbSWitch = 0;
+  std::size_t e{};
 };
 }  // namespace rtype::client

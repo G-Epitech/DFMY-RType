@@ -18,8 +18,7 @@
 namespace zygarde::physics::systems {
 
 class EXPORT_ZYGARDE_API MovementSystem final
-    : public ASystem<std::shared_ptr<components::Rigidbody2D>,
-                     std::shared_ptr<core::components::Transform>> {
+    : public ASystem<components::Rigidbody2D, core::components::Transform> {
  public:
   /**
    * @brief Construct a new Movement System object
@@ -35,21 +34,21 @@ class EXPORT_ZYGARDE_API MovementSystem final
    * @param transforms The transforms to use
    */
   void Run(std::shared_ptr<Registry> r,
-           tools::sparse_array<std::shared_ptr<components::Rigidbody2D>> &rigidbodies,
-           tools::sparse_array<std::shared_ptr<core::components::Transform>> &transforms) override;
+           tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
+           tools::sparse_array<core::components::Transform>::ptr transforms) override;
 
  private:
   /**
    * @brief Compute the position offset
    * @param rigidbody The rigidbody of the entity
    */
-  void ComputePositionOffset(const std::shared_ptr<components::Rigidbody2D> &rigidbody);
+  void ComputePositionOffset(components::Rigidbody2D *rigidbody);
 
   /**
    * @brief Update the transform position
    * @param transform The transform of the entity
    */
-  void UpdateTransformPosition(const std::shared_ptr<core::components::Transform> &transform) const;
+  void UpdateTransformPosition(core::components::Transform *transform) const;
 
  private:
   /// @brief Delta time

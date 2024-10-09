@@ -14,10 +14,9 @@ SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context
 }
 
 template <typename ContextType>
-void SceneBase<ContextType>::Draw() {}
-
-template <typename ContextType>
-void SceneBase<ContextType>::Update(utils::DeltaTime delta_time) {}
+void SceneBase<ContextType>::Update(utils::DeltaTime delta_time) {
+  registry_->RunSystems();
+}
 
 template <typename ContextType>
 void SceneBase<ContextType>::OnCreate() {}

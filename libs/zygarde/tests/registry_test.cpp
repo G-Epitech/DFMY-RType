@@ -28,7 +28,7 @@ TEST(RegistryTests, AddComponent) {
   const auto entity = registry->SpawnEntity();
   registry->AddComponent<int>(entity, 42);
   auto component = registry->GetComponents<int>();
-  const auto &value = component[static_cast<std::size_t>(entity)];
+  const auto &value = (*component)[static_cast<std::size_t>(entity)];
   ASSERT_EQ(value, 42);
 }
 
@@ -39,7 +39,7 @@ TEST(RegistryTests, RemoveComponent) {
   registry->AddComponent<int>(entity, 42);
   registry->RemoveComponent<int>(entity);
   auto component = registry->GetComponents<int>();
-  const auto &value = component[static_cast<std::size_t>(entity)];
+  const auto &value = (*component)[static_cast<std::size_t>(entity)];
   ASSERT_EQ(value, std::nullopt);
 }
 
@@ -52,8 +52,8 @@ TEST(RegistryTests, AddMultipleComponents) {
   registry->AddComponent<float>(entity, 42.0f);
   auto intComponent = registry->GetComponents<int>();
   auto floatComponent = registry->GetComponents<float>();
-  const auto &intValue = intComponent[static_cast<std::size_t>(entity)];
-  const auto &floatValue = floatComponent[static_cast<std::size_t>(entity)];
+  const auto &intValue = (*intComponent)[static_cast<std::size_t>(entity)];
+  const auto &floatValue = (*floatComponent)[static_cast<std::size_t>(entity)];
   ASSERT_EQ(intValue, 42);
   ASSERT_EQ(floatValue, 42.0f);
 }
@@ -71,7 +71,7 @@ TEST(RegistryTests, AddMultipleEntities) {
   registry->AddComponent<int>(entity4, 45);
   registry->RemoveComponent<int>(entity);
   auto component = registry->GetComponents<int>();
-  const auto &value = component[static_cast<std::size_t>(entity)];
+  const auto &value = (*component)[static_cast<std::size_t>(entity)];
   ASSERT_EQ(value, std::nullopt);
 }
 
@@ -95,8 +95,8 @@ TEST(RegistryTests, AddMultipleEntitiesMultipleComponents) {
   registry->RemoveComponent<float>(entity);
   auto intComponent = registry->GetComponents<int>();
   auto floatComponent = registry->GetComponents<float>();
-  const auto &intValue = intComponent[static_cast<std::size_t>(entity)];
-  const auto &floatValue = floatComponent[static_cast<std::size_t>(entity)];
+  const auto &intValue = (*intComponent)[static_cast<std::size_t>(entity)];
+  const auto &floatValue = (*floatComponent)[static_cast<std::size_t>(entity)];
   ASSERT_EQ(intValue, std::nullopt);
   ASSERT_EQ(floatValue, std::nullopt);
 }
@@ -123,10 +123,10 @@ TEST(RegistryTests, AddMultipleEntitiesAndRemoveSomeAndCreateNewOnes) {
   registry->AddComponent<int>(entity7, 48);
   registry->AddComponent<int>(entity8, 49);
   auto component = registry->GetComponents<int>();
-  const auto &value = component[static_cast<std::size_t>(entity)];
-  const auto &value2 = component[static_cast<std::size_t>(entity2)];
-  const auto &value3 = component[static_cast<std::size_t>(entity3)];
-  const auto &value4 = component[static_cast<std::size_t>(entity4)];
+  const auto &value = (*component)[static_cast<std::size_t>(entity)];
+  const auto &value2 = (*component)[static_cast<std::size_t>(entity2)];
+  const auto &value3 = (*component)[static_cast<std::size_t>(entity3)];
+  const auto &value4 = (*component)[static_cast<std::size_t>(entity4)];
   ASSERT_EQ(value, 47);
   ASSERT_EQ(value2, 43);
   ASSERT_EQ(value3, 44);

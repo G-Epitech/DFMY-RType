@@ -130,7 +130,7 @@ class LoggingSystem final : public ASystem<position, velocity> {
  public:
   explicit LoggingSystem(const int nb) { std::cout << nb << std::endl; }
 
-  void Run(std::shared_ptr<Registry> r, sparse_array<position>& positions,
+  void Run(std::shared_ptr<Registry> r, const sparse_array<position>& positions,
            sparse_array<velocity>& velocities) override {
     for (size_t i = 0; i < positions.size(); ++i) {
       const auto& [x, y] = positions[i].value();
