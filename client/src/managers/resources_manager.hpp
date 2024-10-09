@@ -20,7 +20,7 @@ class ResourcesManager {
   /**
    * @brief Construct a new Resources Manager object
    */
-  explicit ResourcesManager();
+  ResourcesManager();
 
   /**
    * @brief Destroy the Resources Manager object
