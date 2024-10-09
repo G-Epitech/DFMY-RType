@@ -22,7 +22,12 @@ class EXPORT_NETWORK_SDK_API ServerTCP;
 
 class abra::server::ServerTCP {
  public:
-  explicit ServerTCP(const int &port);
+  /**
+   * @brief Construct a new ServerTCP instance
+   * @param port The TCP port
+   * @param middleware The middleware to catch messages from listeners
+   */
+  ServerTCP(const int &port, const std::function<bool(const ClientTCPMessage &)> &middleware);
 
   ~ServerTCP();
 
@@ -57,7 +62,7 @@ class abra::server::ServerTCP {
    * @warning You need to lock the queue before using it
    * @return The queue
    */
-  [[nodiscard]] const std::shared_ptr<std::queue<ClientMessage>> &GetQueue();
+  [[nodiscard]] const std::shared_ptr<std::queue<ClientTCPMessage>> &GetQueue();
 
  private:
   /**
@@ -80,9 +85,11 @@ class abra::server::ServerTCP {
   /// @brief Last client id
   std::uint64_t lastClientId_;
   /// @brief Queue of client messages
-  std::shared_ptr<std::queue<ClientMessage>> queue_;
+  std::shared_ptr<std::queue<ClientTCPMessage>> queue_;
   /// @brief Queue mutex
   std::shared_ptr<std::mutex> mutex_;
+  /// @brief Middleware to catch messages from listeners
+  const std::function<bool(const ClientTCPMessage &)> &middleware_;
 };
 
 #include "server_tcp.tpp"

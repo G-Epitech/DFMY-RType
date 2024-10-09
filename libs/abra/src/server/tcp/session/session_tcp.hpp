@@ -28,8 +28,10 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    * @brief Construct a new SessionTCP. This session will handle incoming data
    * @param socket Client socket
    */
-  SessionTCP(boost::asio::ip::tcp::socket socket, std::shared_ptr<std::queue<ClientMessage>> queue,
-             std::shared_ptr<std::mutex> mutex, std::uint64_t clientId);
+  SessionTCP(boost::asio::ip::tcp::socket socket,
+             std::shared_ptr<std::queue<ClientTCPMessage>> queue, std::shared_ptr<std::mutex> mutex,
+             std::uint64_t clientId,
+             const std::function<bool(const ClientTCPMessage&)>& middleware);
 
   /**
    * @brief Destroy the SessionTCP object
@@ -48,7 +50,7 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    * @return The status of the message
    */
   template <typename T>
-  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet);
+  tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>>& packet);
 
  private:
   /**
@@ -60,18 +62,20 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    * @brief Handle the request of the client
    * @param size The size of the request
    */
-  void HandleRequest(const std::size_t &size);
+  void HandleRequest(const std::size_t& size);
 
   /// @brief The socket of the client
   boost::asio::ip::tcp::socket socket_;
   /// @brief The buffer of the client
   boost::array<char, kPacketMaxBytesSize> buffer_{};
   /// @brief Message queue
-  std::shared_ptr<std::queue<ClientMessage>> queue_;
+  std::shared_ptr<std::queue<ClientTCPMessage>> queue_;
   /// @brief Client id
   std::uint64_t clientId_;
   /// @brief Queue mutex
   std::shared_ptr<std::mutex> mutex_;
+  /// @brief Middleware
+  const std::function<bool(const ClientTCPMessage&)>& middleware_;
 };
 
 #include "session_tcp.tpp"

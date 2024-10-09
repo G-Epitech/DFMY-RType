@@ -12,8 +12,11 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-ServerTCP::ServerTCP(const int &port)
-    : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)), lastClientId_(0) {}
+ServerTCP::ServerTCP(const int &port,
+                     const std::function<bool(const ClientTCPMessage &)> &middleware)
+    : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)),
+      lastClientId_(0),
+      middleware_(middleware) {}
 
 ServerTCP::~ServerTCP() {
   ioc_.stop();
@@ -30,8 +33,8 @@ void ServerTCP::AcceptNewConnection() {
       std::uint64_t clientId = lastClientId_;
       lastClientId_++;
 
-      auto clientSession =
-          std::make_shared<SessionTCP>(std::move(socket), this->queue_, this->mutex_, clientId);
+      auto clientSession = std::make_shared<SessionTCP>(std::move(socket), this->queue_,
+                                                        this->mutex_, clientId, middleware_);
 
       clientSession->Start();
       RegisterNewClient(clientSession, clientId);
@@ -56,6 +59,6 @@ void ServerTCP::UnlockQueue() {
   mutex_->unlock();
 }
 
-const std::shared_ptr<std::queue<ClientMessage>> &ServerTCP::GetQueue() {
+const std::shared_ptr<std::queue<ClientTCPMessage>> &ServerTCP::GetQueue() {
   return queue_;
 }

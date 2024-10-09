@@ -41,9 +41,9 @@ void ServerUDP::HandleRequest(const std::size_t &size) {
 
   auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
 
-  ClientMessage message = {this->remoteEndpoint_,
-                           tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                           tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
+  ClientUDPMessage message = {this->remoteEndpoint_,
+                              tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
+                              tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
 
   this->mutex_.lock();
   queue_.push(message);
@@ -58,6 +58,6 @@ void ServerUDP::UnlockQueue() {
   this->mutex_.unlock();
 }
 
-std::queue<ClientMessage> &ServerUDP::GetQueue() {
+std::queue<ClientUDPMessage> &ServerUDP::GetQueue() {
   return this->queue_;
 }

@@ -40,6 +40,12 @@ class rtype::sdk::game::api::Server {
    */
   void ListenTCP();
 
+  /**
+   * @brief Handle the incoming TCP messages
+   * @return true if the message must be added to the queue (false if the message is handled)
+   */
+  [[nodiscard]] bool SystemTCPMessagesMiddleware(const ClientTCPMessage &message);
+
   /// @brief The ABRA Server TCP instance (monitor)
   abra::server::ServerTCP serverTCP_;
 

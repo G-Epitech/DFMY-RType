@@ -56,7 +56,7 @@ class abra::server::ServerUDP {
    * @warning You need to lock the queue before using it
    * @return The queue
    */
-  [[nodiscard]] std::queue<ClientMessage> &GetQueue();
+  [[nodiscard]] std::queue<ClientUDPMessage> &GetQueue();
 
   /**
    * @brief Send a message to a client
@@ -85,7 +85,7 @@ class abra::server::ServerUDP {
   boost::asio::ip::udp::socket socket_;
   boost::asio::ip::udp::endpoint remoteEndpoint_;
   boost::array<char, kPacketMaxBytesSize> buffer_;
-  std::queue<ClientMessage> queue_;
+  std::queue<ClientUDPMessage> queue_;
   std::mutex mutex_;
 };
 
