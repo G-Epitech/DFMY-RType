@@ -18,11 +18,6 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
  public:
   AbstractClient() = default;
 
-  /**
-   * @brief Listen the server and handle the incoming data
-   */
-  void Listen() override = 0;
-
  protected:
   /**
    * @brief Resolve packets in a buffer
@@ -30,4 +25,10 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
    * @param buffer The buffer received
    */
   void ResolveBuffer(std::vector<char> *buffer) override;
+
+  /**
+   * @biref Handle bitset when there are an offset (multi packets)
+   * @param bitset The bitset to handle
+   */
+  void HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bitset> bitset) override;
 };

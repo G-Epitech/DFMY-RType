@@ -6,7 +6,10 @@
 */
 
 #include <boost/asio.hpp>
+#include <map>
+#include <memory>
 #include <queue>
+#include <vector>
 
 #include "../core.hpp"
 #include "tools/message/message.hpp"
@@ -35,6 +38,18 @@ class abra::client::InterfaceClient {
    */
   virtual void ResolveBuffer(std::vector<char> *buffer) = 0;
 
+  /**
+   * @biref Handle bitset when there are an offset (multi packets)
+   * @param bitset The bitset to handle
+   */
+  virtual void HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bitset> bitset) = 0;
+
   /// @brief The queue of server messages
   std::queue<tools::MessageProps> queue_;
+
+  /// @brief The queue of multi packets
+  std::queue<tools::MultipleMessagesProps> multiPackets_;
+
+  /// @brief The map of messages for multi packets
+  std::map<unsigned, tools::MultipleMessagesProps> pendingMultiPackets_;
 };

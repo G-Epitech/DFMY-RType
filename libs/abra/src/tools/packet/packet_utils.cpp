@@ -55,3 +55,20 @@ tools::PacketHeaderProps tools::PacketUtils::ExportHeaderFromBitset(
 
   return props;
 }
+
+tools::PacketOffsetProps tools::PacketUtils::ExportOffsetFromBitset(
+    const std::shared_ptr<dynamic_bitset> &bitset) {
+  unsigned value = 0;
+  auto props = tools::PacketOffsetProps();
+  std::size_t startRange = kPacketHeaderPropsSize + kPacketMessagePropsSize;
+
+  bitset->FillFromRange(startRange, startRange + kPacketOffsetSize, &value);
+  props.offset = value;
+  value = 0;
+  startRange += kPacketOffsetSize;
+
+  bitset->FillFromRange(startRange, startRange + kPacketOffsetFlagSize, &value);
+  props.offsetFlag = value;
+
+  return props;
+}
