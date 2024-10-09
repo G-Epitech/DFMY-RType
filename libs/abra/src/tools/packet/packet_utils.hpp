@@ -34,6 +34,14 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketUtils {
   [[nodiscard]] static unsigned ExportMessageIdFromBitset(
       const std::shared_ptr<dynamic_bitset> &bitset);
 
+  /**
+   * @brief Export header from bitset
+   * @param bitset The bitset (Compressed packet)
+   * @return The header properties
+   */
+  [[nodiscard]] static PacketHeaderProps ExportHeaderFromBitset(
+          const std::shared_ptr<dynamic_bitset> &bitset);
+
  private:
   PacketUtils() = default;
 

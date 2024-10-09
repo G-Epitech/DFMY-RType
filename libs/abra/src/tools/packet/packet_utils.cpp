@@ -28,3 +28,29 @@ unsigned tools::PacketUtils::ExportMessageIdFromBitset(
   bitset->FillFromRange(startRange, startRange + kPacketMessageIdSize, &messageId);
   return messageId;
 }
+
+tools::PacketHeaderProps tools::PacketUtils::ExportHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset) {
+  unsigned value = 0;
+  auto props = tools::PacketHeaderProps();
+  std::size_t startRange = 0;
+
+  bitset->FillFromRange(startRange, startRange + kPacketHeaderPayloadLengthSize, &value);
+  props.payloadLength = value;
+  value = 0;
+  startRange += kPacketHeaderPayloadLengthSize;
+
+  bitset->FillFromRange(startRange, startRange + kPacketHeaderPayloadTypeSize, &value);
+  props.payloadType = value;
+  value = 0;
+  startRange += kPacketHeaderPayloadTypeSize;
+
+  bitset->FillFromRange(startRange, startRange + kPacketHeaderFlagSize, &value);
+  props.offsetFlag = value;
+  value = 0;
+  startRange += kPacketHeaderFlagSize;
+
+  bitset->FillFromRange(startRange, startRange + kPacketHeaderFlagSize, &value);
+  props.turnFlag = value;
+
+  return props;
+}

@@ -57,6 +57,13 @@ class abra::client::ClientUDP : public InterfaceClient {
   [[nodiscard]] ClientEndpoint GetEndpoint() const;
 
  private:
+  /**
+   * @brief Resolve packets in a buffer
+   * This method will split the buffer into logical packets with header props
+   * @param buffer The buffer received
+   */
+  void ResolveBuffer(std::vector<char> *buffer);
+
   /// @brief The Input Output Context
   boost::asio::io_context ioc_;
   /// @brief Endpoint of the server

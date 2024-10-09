@@ -46,8 +46,16 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
   std::queue<tools::MessageProps> &GetQueue();
 
  private:
+  /**
+   * @brief Resolve packets in a buffer
+   * This method will split the buffer into logical packets with header props
+   * @param buffer The buffer received
+   */
+  void ResolveBuffer(std::vector<char> *buffer);
+
   /// @brief The Input Output Service
   boost::asio::io_service ios_;
+
   /// @brief The TCP socket
   boost::asio::ip::tcp::socket socket_;
 };
