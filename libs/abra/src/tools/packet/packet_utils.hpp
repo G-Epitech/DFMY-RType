@@ -40,7 +40,7 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketUtils {
    * @return The header properties
    */
   [[nodiscard]] static PacketHeaderProps ExportHeaderFromBitset(
-          const std::shared_ptr<dynamic_bitset> &bitset);
+      const std::shared_ptr<dynamic_bitset> &bitset);
 
  private:
   PacketUtils() = default;

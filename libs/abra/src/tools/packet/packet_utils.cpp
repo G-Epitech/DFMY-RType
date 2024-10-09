@@ -29,7 +29,8 @@ unsigned tools::PacketUtils::ExportMessageIdFromBitset(
   return messageId;
 }
 
-tools::PacketHeaderProps tools::PacketUtils::ExportHeaderFromBitset(const std::shared_ptr<dynamic_bitset> &bitset) {
+tools::PacketHeaderProps tools::PacketUtils::ExportHeaderFromBitset(
+    const std::shared_ptr<dynamic_bitset> &bitset) {
   unsigned value = 0;
   auto props = tools::PacketHeaderProps();
   std::size_t startRange = 0;
