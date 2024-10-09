@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "../../core.hpp"
+#include "props/props.hpp"
 #include "tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::tools {
@@ -32,6 +33,23 @@ class EXPORT_NETWORK_SDK_API abra::tools::PacketUtils {
    * @return The message id
    */
   [[nodiscard]] static unsigned ExportMessageIdFromBitset(
+      const std::shared_ptr<dynamic_bitset> &bitset);
+
+  /**
+   * @brief Export header from bitset
+   * @param bitset The bitset (Compressed packet)
+   * @return The header properties
+   */
+  [[nodiscard]] static PacketHeaderProps ExportHeaderFromBitset(
+      const std::shared_ptr<dynamic_bitset> &bitset);
+
+  /**
+   * @brief Export offset from bitset
+   * @warning Be careful to have an offset in the bitset
+   * @param bitset The bitset (Compressed packet)
+   * @return The offset properties
+   */
+  [[nodiscard]] static PacketOffsetProps ExportOffsetFromBitset(
       const std::shared_ptr<dynamic_bitset> &bitset);
 
  private:
