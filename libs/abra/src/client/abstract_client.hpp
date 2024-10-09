@@ -31,4 +31,9 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
    * @param bitset The bitset to handle
    */
   void HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bitset> bitset) override;
+
+ private:
+  void StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset, bool hasOffset);
+
+  void ResolveMultiPackets(unsigned int messageId);
 };
