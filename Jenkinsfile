@@ -190,7 +190,7 @@ pipeline {
                     }
                     sh "git remote add mirror ${MIRROR_URL}"
 
-                    sh "git checkout main"
+                    sh "git pull"
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
                         sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY" git push --mirror mirror'
