@@ -9,7 +9,7 @@
 
 using namespace zygarde::physics::systems;
 
-MovementSystem::MovementSystem(const std::chrono::duration<float, std::milli>& deltaTime)
+MovementSystem::MovementSystem(const utils::Timer::Nanoseconds& deltaTime)
     : deltaTime_(deltaTime) {}
 
 void MovementSystem::Run(
@@ -35,7 +35,7 @@ void MovementSystem::ComputePositionOffset(
     movementOffset_ = core::types::Vector2f::zero();
     return;
   }
-  float deltaTimeSec = deltaTime_.count() / 1000.0f;
+  float deltaTimeSec = utils::Timer::ToSeconds(deltaTime_);
   movementOffset_.x = velocity.x * deltaTimeSec;
   movementOffset_.y = velocity.y * deltaTimeSec;
 }
