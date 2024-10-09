@@ -18,9 +18,9 @@ struct GlobalContext {
   using Ptr = std::shared_ptr<GlobalContext>;
 
   /**
-   * @brief Provide access to the app window
+   * @brief Provide access to the window manager
    */
-  std::shared_ptr<sf::RenderWindow> window;
+  WindowManager::Ptr windowManager;
 
   /**
    * @brief Provide access to the scenes manager

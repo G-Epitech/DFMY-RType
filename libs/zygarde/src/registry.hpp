@@ -28,7 +28,7 @@ namespace zygarde {
 class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry> {
  private:
   struct Private {
-    explicit Private() = default;
+    Private() = default;
   };
 
  public:
@@ -51,24 +51,24 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @tparam Component Component to register
    * @return sparse_array<Component>&
    */
-  template <class Component>
-  sparse_array<Component> &RegisterComponent();
+  template <typename Component>
+  typename sparse_array<Component>::ptr RegisterComponent();
 
   /**
    * @brief Get the components
    * @tparam Component Component to get
    * @return sparse_array<Component>&
    */
-  template <class Component>
-  sparse_array<Component> &GetComponents();
+  template <typename Component>
+  typename sparse_array<Component>::ptr GetComponents();
 
   /**
    * @brief Get the components
    * @tparam Component Component to get
    * @return const sparse_array<Component>&
    */
-  template <class Component>
-  sparse_array<Component> const &GetComponents() const;
+  template <typename Component>
+  typename sparse_array<Component>::ptr GetComponents() const;
 
   /**
    * @brief Spawn an entity

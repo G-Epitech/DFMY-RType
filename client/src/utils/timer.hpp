@@ -17,9 +17,10 @@ struct Timer {
   Timer();
 
   /**
-   * @brief Process a tick
+   * @brief Happen a tick
+   * @return The elapsed time since the last tick
    */
-  void tick();
+  DeltaTime operator++();
 
   /**
    * @brief Get the elapsed time since the last tick
