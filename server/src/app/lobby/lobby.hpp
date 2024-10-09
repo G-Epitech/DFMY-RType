@@ -11,6 +11,7 @@
 
 #include "app/context.hpp"
 #include "app/server_interface.hpp"
+#include "game_service/game_service.hpp"
 #include "props.hpp"
 
 namespace rtype::server {
@@ -46,5 +47,7 @@ class Lobby final : public IServer {
  private:
   /// @brief Lobby server context
   Context ctx_;
+  /// @brief Game service
+  game::GameService gameService_;
 };
 }  // namespace rtype::server
