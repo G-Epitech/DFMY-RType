@@ -37,6 +37,11 @@ class EXPORT_ZYGARDE_API Timer final {
   void Initialize() noexcept;
 
   /**
+   * @brief Refresh the delta time
+   */
+  void RefreshDeltaTime() noexcept;
+
+  /**
    * @brief Get the delta time in Nanoseconds
    */
   [[nodiscard]] inline Nanoseconds GetDeltaTime() const noexcept { return deltaTime_; };
@@ -45,12 +50,14 @@ class EXPORT_ZYGARDE_API Timer final {
    * @brief Convert Nanoseconds to Seconds
    * @return Seconds
    */
-  static double ToSeconds(Nanoseconds nanoseconds) noexcept;
+  [[nodiscard]] static float ToSeconds(Nanoseconds nanoseconds) noexcept;
 
   /**
    * @brief Get the current time point
    */
-  static TimePoint Now() noexcept;
+  [[nodiscard]] inline static TimePoint Now() noexcept {
+    return std::chrono::high_resolution_clock::now();
+  };
 
  private:
   /// @brief Delta time representing the time between the current and previous time point

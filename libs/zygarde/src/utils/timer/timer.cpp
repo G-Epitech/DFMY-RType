@@ -9,19 +9,19 @@
 
 using namespace zygarde::utils;
 
+void Timer::Initialize() noexcept {
+  lastTimePoint_ = Now();
+}
+
 void Timer::Update() noexcept {
   deltaTime_ = std::chrono::duration_cast<Nanoseconds>(Now() - lastTimePoint_);
   lastTimePoint_ = Now();
 }
 
-void Timer::Initialize() noexcept {
-  lastTimePoint_ = Now();
+void Timer::RefreshDeltaTime() noexcept {
+  deltaTime_ = std::chrono::duration_cast<Nanoseconds>(Now() - lastTimePoint_);
 }
 
-double Timer::ToSeconds(Timer::Nanoseconds nanoseconds) noexcept {
-  return std::chrono::duration<double>(nanoseconds).count();
-}
-
-Timer::TimePoint Timer::Now() noexcept {
-  return std::chrono::high_resolution_clock::now();
+float Timer::ToSeconds(Timer::Nanoseconds nanoseconds) noexcept {
+  return std::chrono::duration<float>(nanoseconds).count();
 }

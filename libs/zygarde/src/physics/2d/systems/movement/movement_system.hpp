@@ -13,6 +13,7 @@
 #include "core/components/transform/transform.hpp"
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "system_abstract.hpp"
+#include "utils/timer/timer.hpp"
 
 namespace zygarde::physics::systems {
 
@@ -24,7 +25,7 @@ class EXPORT_ZYGARDE_API MovementSystem final
    * @brief Construct a new Movement System object
    * @param deltaTime Delta time (provided by the game loop)
    */
-  explicit MovementSystem(const std::chrono::duration<float, std::milli> &deltaTime);
+  explicit MovementSystem(const utils::Timer::Nanoseconds &deltaTime);
   ~MovementSystem() override = default;
 
   /**
@@ -52,7 +53,7 @@ class EXPORT_ZYGARDE_API MovementSystem final
 
  private:
   /// @brief Delta time
-  const std::chrono::duration<float, std::milli> &deltaTime_;
+  const utils::Timer::Nanoseconds &deltaTime_;
   /// @brief Movement offset
   core::types::Vector2f movementOffset_ = core::types::Vector2f::zero();
 };
