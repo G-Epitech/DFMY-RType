@@ -25,8 +25,9 @@ WindowManager::WindowManager(WindowManager::Properties&& props) {
       std::cerr << "[ERROR]: Failed to load icon: " << *props.iconPath << std::endl;
     }
   }
-  const sf::Vector2f center = {static_cast<float>(static_cast<float>(1920) / 2.0),
-                               static_cast<float>(static_cast<float>(1080) / 2.0)};
+  width_ = static_cast<float>(props.videoMode.width);
+  height_ = static_cast<float>(props.videoMode.height);
+  const sf::Vector2f center = {width_ / 2, height_ / 2};
   hudView_.setCenter(center);
   gameView_.setCenter(center);
 }
@@ -57,26 +58,29 @@ const WindowManager::EventsDeferrer& WindowManager::GetDeferredEvents() {
   return deferredEvents_;
 }
 
-
 void WindowManager::HandleResize(const sf::Event& event) {
-  const sf::Vector2f size = {static_cast<float>(event.size.width),
-                             static_cast<float>(event.size.height)};
-  const auto widht = event.size.width / 1920.0;
-  const auto height = event.size.height / 1080.0;
+  const auto width = static_cast<float>(event.size.width);
+  const auto height = static_cast<float>(event.size.height);
+  const sf::Vector2f size = {width, height};
+  const auto widthRatio = width / width_;
+  const auto heightRatio = height / height_;
 
   gameView_.setSize(size);
   hudView_.setSize(size);
-  if (widht < height) {
-    hudView_.zoom(static_cast<float>(1920.0 / event.size.width));
+  if (widthRatio < heightRatio) {
+    hudView_.zoom(width_ / width);
   } else {
-    hudView_.zoom(static_cast<float>(1080.0 / event.size.height));
+    hudView_.zoom(height_ / height);
   }
 }
 
-void WindowManager::SetGameView() const {
-  window_->setView(gameView_);
-}
-
-void WindowManager::SetHUDView() const {
-  window_->setView(hudView_);
+void WindowManager::SetView(const View& view) const {
+  switch (view) {
+    case GAME:
+      window_->setView(gameView_);
+      break;
+    case HUD:
+      window_->setView(hudView_);
+      break;
+  }
 }

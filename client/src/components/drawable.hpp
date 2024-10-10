@@ -10,43 +10,33 @@
 #include <SFML/Graphics.hpp>
 #include <variant>
 
-namespace rtype::client::components {
+#include "managers/window_manager.hpp"
 
-enum ViewType {
-  GAME,
-  HUD,
-};
+namespace rtype::client::components {
 
 /// @brief Text Component use in an ECS
 struct Text {
-  /// @brief Text to display
-  std::string text;
-  /// @brief Font name to use
-  std::string fontName;
-  /// @brief Character size of the text
-  unsigned int characterSize = 12;
-  /// @brief Color of the text
-  sf::Color color = sf::Color::White;
+  std::string text;                    ///< Text to display
+  std::string fontName;                ///< Font name
+  unsigned int characterSize = 12;     ///< Character size
+  sf::Color color = sf::Color::White;  ///< Color of the text
 };
 
 /// @brief Texture Component use in an ECS
 struct Texture {
-  /// @brief Path to the texture
-  std::string path;
+  std::string path;  ///< Path to the texture
 };
 
+/// @brief Rectangle Component use in an ECS
 struct Rectangle {
-  sf::Color color;
-  sf::Vector2f size;
+  sf::Color color;    ///< Color of the rectangle
+  sf::Vector2f size;  ///< Size of the rectangle
 };
 
 /// @brief Drawable Component use in an ECS
 struct Drawable {
-  /// @brief Drawable variant.
-  std::variant<Texture, Text, Rectangle> drawable;
-  /// @brief Current bounds of the drawable.
-  sf::FloatRect bounds = {0, 0, 0, 0};
-  /// @brief View type of the drawable.
-  ViewType view = ViewType::GAME;
+  std::variant<Texture, Text, Rectangle> drawable;       ///< Drawable to display
+  sf::FloatRect bounds = {0, 0, 0, 0};                   ///< Bounds of the drawable
+  WindowManager::View view = WindowManager::View::GAME;  ///< View of the drawable
 };
 }  // namespace rtype::client::components

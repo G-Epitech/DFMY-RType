@@ -14,7 +14,7 @@
 using namespace rtype::client;
 
 SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {
-  resourcesManager_.LoadFont("assets/fonts/main.ttf", "main");
+  resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
 
   registry_->RegisterComponent<components::Position>();
   registry_->RegisterComponent<components::Drawable>();
@@ -27,13 +27,13 @@ void SceneMenu::OnActivate() {
 
   registry_->AddComponent<components::Position>(rect, {0, 0});
   registry_->AddComponent<components::Drawable>(
-      rect, {components::Rectangle{sf::Color::Red, {1920, 1080}}, {}, components::ViewType::HUD});
+      rect, {components::Rectangle{sf::Color::Red, {1920, 1080}}, {}, WindowManager::View::HUD});
 
   const auto entity = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(entity, {0, 0});
   registry_->AddComponent<components::Drawable>(
-      entity, {components::Text{"Hello World", "main"}, {}, components::ViewType::HUD});
+      entity, {components::Text{"Hello World", "main"}, {}, WindowManager::View::HUD});
 }
 
 void SceneMenu::OnCreate() {}

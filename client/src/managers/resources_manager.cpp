@@ -9,6 +9,10 @@
 
 using namespace rtype::client;
 
+ResourcesManager::Ptr ResourcesManager::Create() {
+  return std::make_shared<ResourcesManager>();
+}
+
 ResourcesManager::ResourcesManager() = default;
 
 ResourcesManager::~ResourcesManager() = default;
@@ -23,8 +27,8 @@ void ResourcesManager::LoadFont(const std::string &path, const std::string &name
   if (resourcesMap_.fonts.contains(name)) {
     throw Exception("Font already loaded");
   }
-  sf::Font font;
-  if (!font.loadFromFile(path)) {
+  auto font = std::make_shared<sf::Font>();
+  if (!font->loadFromFile(path)) {
     throw Exception("Failed to load font");
   }
   resourcesMap_.fonts[name] = font;
@@ -34,8 +38,8 @@ void ResourcesManager::LoadTexture(const std::string &path, const std::string &n
   if (resourcesMap_.textures.contains(name)) {
     throw Exception("Texture already loaded");
   }
-  sf::Texture texture;
-  if (!texture.loadFromFile(path)) {
+  auto texture = std::make_shared<sf::Texture>();
+  if (!texture->loadFromFile(path)) {
     throw Exception("Failed to load texture");
   }
   resourcesMap_.textures[name] = texture;
@@ -45,30 +49,30 @@ void ResourcesManager::LoadSound(const std::string &path, const std::string &nam
   if (resourcesMap_.sounds.contains(name)) {
     throw Exception("Sound already loaded");
   }
-  sf::SoundBuffer sound;
-  if (!sound.loadFromFile(path)) {
+  auto sound = std::make_shared<sf::SoundBuffer>();
+  if (!sound->loadFromFile(path)) {
     throw Exception("Failed to load sound");
   }
   resourcesMap_.sounds[name] = sound;
 }
 
-sf::Texture ResourcesManager::GetTexture(const std::string &name) const {
+ResourcesManager::TexturePtr ResourcesManager::GetTexture(const std::string &name) {
   if (!resourcesMap_.textures.contains(name)) {
     throw Exception("Texture not found");
   }
-  return resourcesMap_.textures.at(name);
+  return resourcesMap_.textures[name];
 }
 
-sf::Font ResourcesManager::GetFont(const std::string &name) const {
+ResourcesManager::FontPtr ResourcesManager::GetFont(const std::string &name) {
   if (!resourcesMap_.fonts.contains(name)) {
     throw Exception("Font not found");
   }
-  return resourcesMap_.fonts.at(name);
+  return resourcesMap_.fonts[name];
 }
 
-sf::SoundBuffer ResourcesManager::GetSound(const std::string &name) const {
+ResourcesManager::SoundBufferPtr ResourcesManager::GetSound(const std::string &name) {
   if (!resourcesMap_.sounds.contains(name)) {
     throw Exception("Sound not found");
   }
-  return resourcesMap_.sounds.at(name);
+  return resourcesMap_.sounds[name];
 }

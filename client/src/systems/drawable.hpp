@@ -26,7 +26,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    * @param resources_manager The resources manager to get the textures and fonts
    */
   explicit DrawableSystem(WindowManager::Ptr window_manager,
-                          const ResourcesManager &resources_manager);
+                          std::shared_ptr<ResourcesManager> resources_manager);
 
   void Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
            sparse_array<components::Position>::ptr positions) override;
@@ -43,10 +43,12 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /// display a new entity.
   sf::Text text_;
 
+  /// @brief This RectangleShape is a utils that avoid us to recreate a new rectangle each time we
+  /// display a new entity.
   sf::RectangleShape shape_;
 
   /// @brief The resources manager to get the textures and fonts.
-  const ResourcesManager &resourcesManager_;
+  ResourcesManager::Ptr resourcesManager_;
 
   /**
    * @brief Set the view of the window
@@ -59,7 +61,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    * @param drawable The drawable component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntity(const components::Drawable &drawable, const components::Position &position);
+  void DrawEntity(components::Drawable *drawable, const components::Position &position);
 
   /**
    * @brief Draw a texture

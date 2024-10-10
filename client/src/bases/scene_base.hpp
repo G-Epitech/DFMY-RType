@@ -33,7 +33,7 @@ class SceneBase : public IScene {
   zygarde::Registry::Ptr registry_;
 
   /// @brief Store the resources manager
-  ResourcesManager resourcesManager_;
+  ResourcesManager::Ptr resourcesManager_;
 
  public:
   /**

@@ -30,6 +30,12 @@ class WindowManager {
     std::optional<std::string> iconPath;  ///< Path to the icon of the window
   };
 
+  /// @brief Views of the window
+  enum View {
+    GAME,  ///< Game view
+    HUD,   ///< HUD view
+  };
+
   /**
    * @brief Create a new window manager
    * @param props Properties of the window
@@ -78,12 +84,7 @@ class WindowManager {
   /**
    * @brief Set the window view to the game view
    */
-  void SetGameView() const;
-
-  /**
-   * @brief Set the window view to the HUD view
-   */
-  void SetHUDView() const;
+  void SetView(const View &view) const;
 
  private:
   /// @brief Current window
@@ -101,6 +102,9 @@ class WindowManager {
   /// @brief HUD view used to render the HUD entities
   /// @example Score, health, etc.
   sf::View hudView_;
+
+  float width_;
+  float height_;
 
   /**
    * @brief Handle the resize event

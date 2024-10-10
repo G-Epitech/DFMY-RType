@@ -13,8 +13,8 @@
 #include "managers/scenes_manager.hpp"
 #include "utils/timer.hpp"
 
-#define APP_WINDOW_WIDTH 800
-#define APP_WINDOW_HEIGHT 600
+#define APP_WINDOW_WIDTH 1920
+#define APP_WINDOW_HEIGHT 1080
 #define APP_WINDOW_TITLE "R-Type"
 #define APP_WINDOW_FRAMERATE 60
 #define APP_WINDOW_ICON_PATH "assets/icons/R-Type.png"

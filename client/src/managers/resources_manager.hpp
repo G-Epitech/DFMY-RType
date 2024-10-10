@@ -17,6 +17,19 @@ namespace rtype::client {
 
 class ResourcesManager {
  public:
+  /// @brief Pointer type of the resources manager
+  using Ptr = std::shared_ptr<ResourcesManager>;
+
+  using TexturePtr = std::shared_ptr<sf::Texture>;
+  using FontPtr = std::shared_ptr<sf::Font>;
+  using SoundBufferPtr = std::shared_ptr<sf::SoundBuffer>;
+
+  /**
+   * @brief Create a new resources manager
+   * @return Created shared pointer of resources manager
+   */
+  static Ptr Create();
+
   /**
    * @brief Construct a new Resources Manager object
    */
@@ -56,21 +69,21 @@ class ResourcesManager {
    * @param name Name of the texture to get
    * @return Texture
    */
-  [[nodiscard]] sf::Texture GetTexture(const std::string& name) const;
+  [[nodiscard]] TexturePtr GetTexture(const std::string &name);
 
   /**
    * @brief Get a font from the resources manager
    * @param name Name of the font to get
    * @return Font
    */
-  [[nodiscard]] sf::Font GetFont(const std::string& name) const;
+  [[nodiscard]] FontPtr GetFont(const std::string &name);
 
   /**
    * @brief Get a sound from the resources manager
    * @param name Name of the sound to get
    * @return Sound
    */
-  [[nodiscard]] sf::SoundBuffer GetSound(const std::string& name) const;
+  [[nodiscard]] SoundBufferPtr GetSound(const std::string &name);
 
   class Exception final : public std::exception {
    public:
@@ -91,11 +104,11 @@ class ResourcesManager {
   /// @brief Map of resources
   struct ResourcesMap {
     /// @brief Map of textures
-    std::map<std::string, sf::Texture> textures;
+    std::map<std::string, TexturePtr> textures;
     /// @brief Map of fonts
-    std::map<std::string, sf::Font> fonts;
+    std::map<std::string, FontPtr> fonts;
     /// @brief Map of sounds
-    std::map<std::string, sf::SoundBuffer> sounds;
+    std::map<std::string, SoundBufferPtr> sounds;
   };
 
   /// @brief Map of resources
