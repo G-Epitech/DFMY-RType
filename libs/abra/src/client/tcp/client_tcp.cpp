@@ -31,7 +31,7 @@ void ClientTCP::Listen() {
     boost::system::error_code error;
 
     std::size_t len = socket_.read_some(buffer(buf), error);
-    logger_.Info("Received " + std::to_string(len) + " bytes", "⬅️");
+    logger_.Info("Received " + std::to_string(len) + " bytes", "⬅️ ");
 
     if (error == error::eof) {
       logger_.Info("Connection closed cleanly by peer");

@@ -55,6 +55,8 @@ bool Client::Connect(const payload::Connection &payload) {
     logger_.Error("Connection failed", "💢️");
   }
 
+  logger_.Info("Connected to server", "🛜");
+
   return this->isConnected_;
 }
 
@@ -75,6 +77,8 @@ bool Client::JoinLobby(const payload::JoinLobby &payload) {
   if (!waitSuccess) {
     logger_.Error("Connection to lobby failed", "💢️");
   }
+
+  logger_.Info("Connected to lobby", "🛜");
 
   return this->isLobbyConnected_;
 }

@@ -11,7 +11,7 @@ using namespace rtype::sdk::game::api;
 
 Server::Server(int port)
     : logger_("serverAPI"), serverTCP_(port, [this](const ClientTCPMessage &message) {
-        return SystemTCPMessagesMiddleware(message);
+        return this->SystemTCPMessagesMiddleware(message);
       }) {
   this->InitTCP();
 }

@@ -17,5 +17,7 @@ tools::SendMessageStatus SessionTCP::Send(const std::unique_ptr<tools::Packet<T>
   boost::system::error_code error;
   this->socket_.write_some(boost::asio::buffer(vector, vector.size()), error);
 
+  logger_.Info("Sent " + std::to_string(vector.size()) + " bytes", "➡️ ");
+
   return error ? tools::SendMessageStatus::kError : tools::SendMessageStatus::kSuccess;
 }

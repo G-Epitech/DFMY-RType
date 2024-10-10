@@ -44,7 +44,7 @@ void SessionTCP::ListenNewRequest() {
                               return;
                             }
                             if (size > 0) {
-                              logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️");
+                              logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
                               HandleRequest(size);
                             } else {
                               logger_.Warning("Receive empty data");

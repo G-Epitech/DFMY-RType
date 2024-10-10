@@ -96,7 +96,7 @@ class abra::server::ServerTCP {
   std::shared_ptr<std::mutex> mutex_;
 
   /// @brief Middleware to catch messages from listeners
-  const std::function<bool(const ClientTCPMessage &)> &middleware_;
+  std::function<bool(const ClientTCPMessage &)> middleware_;
 
   /// @brief Logger
   tools::Logger logger_;

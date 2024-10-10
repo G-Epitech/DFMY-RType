@@ -81,7 +81,7 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
   std::shared_ptr<std::mutex> mutex_;
 
   /// @brief Middleware
-  const std::function<bool(const ClientTCPMessage&)>& middleware_;
+  std::function<bool(const ClientTCPMessage&)> middleware_;
 
   /// @brief Logger
   tools::Logger logger_;
