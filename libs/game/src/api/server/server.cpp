@@ -10,7 +10,7 @@
 using namespace rtype::sdk::game::api;
 
 Server::Server(int port)
-    : serverTCP_(port, [this](const ClientTCPMessage &message) {
+    : logger_("serverAPI"), serverTCP_(port, [this](const ClientTCPMessage &message) {
         return SystemTCPMessagesMiddleware(message);
       }) {
   this->InitTCP();
@@ -18,6 +18,7 @@ Server::Server(int port)
 
 void Server::InitTCP() {
   this->threadTCP_ = std::thread(&Server::ListenTCP, this);
+  logger_.Info("Server TCP thread started", "🚀");
 }
 
 void Server::ListenTCP() {
@@ -25,11 +26,12 @@ void Server::ListenTCP() {
 }
 
 bool Server::SystemTCPMessagesMiddleware(const ClientTCPMessage &message) {
-  if (this->handlers_.find(message.messageType) == this->handlers_.end()) {
+  if (handlers_.find(message.messageType) == handlers_.end()) {
     return true;
   }
 
-  (this->*(this->handlers_[message.messageType]))(message);
+  logger_.Info("Handling message (middleware catch)", "🔧");
+  (this->*(handlers_[message.messageType]))(message);
 
   return false;
 }
@@ -37,6 +39,8 @@ bool Server::SystemTCPMessagesMiddleware(const ClientTCPMessage &message) {
 void Server::HandleClientConnection(const ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::Connection>(message.bitset);
   auto pseudo = packet->GetPayload().pseudo;
+
+  logger_.Info("New client connected: " + std::string(pseudo), "👤");
 
   payload::ConnectionInfos connectionInfos = {.onlinePlayers = 1};
 

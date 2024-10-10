@@ -16,7 +16,8 @@ ServerTCP::ServerTCP(const int &port,
                      const std::function<bool(const ClientTCPMessage &)> &middleware)
     : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)),
       lastClientId_(0),
-      middleware_(middleware) {}
+      middleware_(middleware),
+      logger_("server_tcp") {}
 
 ServerTCP::~ServerTCP() {
   ioc_.stop();
@@ -24,6 +25,8 @@ ServerTCP::~ServerTCP() {
 
 void ServerTCP::Start() {
   AcceptNewConnection();
+
+  logger_.Info("Server started on port " + std::to_string(acceptor_.local_endpoint().port()));
   ioc_.run();
 }
 
@@ -33,13 +36,16 @@ void ServerTCP::AcceptNewConnection() {
       std::uint64_t clientId = lastClientId_;
       lastClientId_++;
 
+      logger_.Info("New connection accepted");
       auto clientSession = std::make_shared<SessionTCP>(std::move(socket), this->queue_,
                                                         this->mutex_, clientId, middleware_);
 
       clientSession->Start();
+      logger_.Info("Session started with clientID " + std::to_string(clientId));
+
       RegisterNewClient(clientSession, clientId);
     } else {
-      std::cerr << "ServerTCP error: " << error.message() << std::endl;
+      logger_.Error("Error while accepting new connection: " + error.message());
     }
 
     AcceptNewConnection();

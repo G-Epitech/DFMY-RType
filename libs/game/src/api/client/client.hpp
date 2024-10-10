@@ -137,6 +137,9 @@ class rtype::sdk::game::api::Client {
 
   /// @brief Boolean to know if the client is connected to the lobby
   bool isLobbyConnected_;
+
+  /// @brief Logger
+  abra::tools::Logger logger_;
 };
 
 #include "client.tpp"

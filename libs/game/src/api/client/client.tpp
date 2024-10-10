@@ -15,7 +15,13 @@ bool Client::SendPayload(const MessageClientType &type, const T &payload) {
   this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build(payload);
 
-  return this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  logger_.Info("Send packet of type" + std::to_string(type), "📦");
+
+  auto success = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  if (!success)
+    logger_.Warning("Failed to send packet of type" + std::to_string(type), "⚠️");
+
+  return success;
 }
 
 template <>

@@ -30,21 +30,21 @@ class abra::tools::Logger {
    * @param message The message to log
    * @param emoji The emoji to display (default: none)
    */
-  void Info(const std::string &message, const char emoji = 0) const;
+  void Info(const std::string &message, const std::string emoji = 0) const;
 
   /**
    * @brief Log an warning message
    * @param message The message to log
    * @param emoji The emoji to display (default: none)
    */
-  void Warning(const std::string &message, const char emoji = 0) const;
+  void Warning(const std::string &message, const std::string emoji = 0) const;
 
   /**
    * @brief Log an error message
    * @param message The message to log
    * @param emoji The emoji to display (default: none)
    */
-  void Error(const std::string &message, const char emoji = 0) const;
+  void Error(const std::string &message, const std::string emoji = 0) const;
 
  private:
   const std::string name_;

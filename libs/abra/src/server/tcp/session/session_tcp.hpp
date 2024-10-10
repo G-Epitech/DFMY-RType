@@ -14,6 +14,7 @@
 
 #include "../../../core.hpp"
 #include "server/tcp/props/message.h"
+#include "tools/logger/logger.hpp"
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
 #include "tools/packet/props/props.hpp"
@@ -66,16 +67,24 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
 
   /// @brief The socket of the client
   boost::asio::ip::tcp::socket socket_;
+
   /// @brief The buffer of the client
   boost::array<char, kPacketMaxBytesSize> buffer_{};
+
   /// @brief Message queue
   std::shared_ptr<std::queue<ClientTCPMessage>> queue_;
+
   /// @brief Client id
   std::uint64_t clientId_;
+
   /// @brief Queue mutex
   std::shared_ptr<std::mutex> mutex_;
+
   /// @brief Middleware
   const std::function<bool(const ClientTCPMessage&)>& middleware_;
+
+  /// @brief Logger
+  tools::Logger logger_;
 };
 
 #include "session_tcp.tpp"

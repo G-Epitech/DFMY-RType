@@ -15,6 +15,7 @@
 #include "../../core.hpp"
 #include "props/message.h"
 #include "session/session_tcp.hpp"
+#include "tools/logger/logger.hpp"
 
 namespace abra::server {
 class EXPORT_NETWORK_SDK_API ServerTCP;
@@ -78,18 +79,27 @@ class abra::server::ServerTCP {
 
   /// @brief Input Output Context
   boost::asio::io_context ioc_;
+
   /// @brief Acceptor of sockets (TCP protocol)
   boost::asio::ip::tcp::acceptor acceptor_;
+
   /// @brief Clients map
   std::map<std::uint64_t, std::shared_ptr<SessionTCP>> clients_;
+
   /// @brief Last client id
   std::uint64_t lastClientId_;
+
   /// @brief Queue of client messages
   std::shared_ptr<std::queue<ClientTCPMessage>> queue_;
+
   /// @brief Queue mutex
   std::shared_ptr<std::mutex> mutex_;
+
   /// @brief Middleware to catch messages from listeners
   const std::function<bool(const ClientTCPMessage &)> &middleware_;
+
+  /// @brief Logger
+  tools::Logger logger_;
 };
 
 #include "server_tcp.tpp"

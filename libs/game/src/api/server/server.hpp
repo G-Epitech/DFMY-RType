@@ -74,7 +74,11 @@ class rtype::sdk::game::api::Server {
   /// @brief Packet builder
   abra::tools::PacketBuilder packetBuilder_;
 
-  std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
+  /// @brief The logger
+  abra::tools::Logger logger_;
+
+  /// @brief Map of handlers for the TCP messages
+  static inline std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
       {MessageServerType::kConnectionInfos, &Server::HandleClientConnection}};
 };
 
