@@ -23,10 +23,17 @@ SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {
 }
 
 void SceneMenu::OnActivate() {
+  const auto rect = registry_->SpawnEntity();
+
+  registry_->AddComponent<components::Position>(rect, {0, 0});
+  registry_->AddComponent<components::Drawable>(
+      rect, {components::Rectangle{sf::Color::Red, {1920, 1080}}, {}, components::ViewType::HUD});
+
   const auto entity = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(entity, {0, 0});
-  registry_->AddComponent<components::Drawable>(entity, {components::Text{"Hello World", "main"}});
+  registry_->AddComponent<components::Drawable>(
+      entity, {components::Text{"Hello World", "main"}, {}, components::ViewType::HUD});
 }
 
 void SceneMenu::OnCreate() {}

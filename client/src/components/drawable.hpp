@@ -12,6 +12,11 @@
 
 namespace rtype::client::components {
 
+enum ViewType {
+  GAME,
+  HUD,
+};
+
 /// @brief Text Component use in an ECS
 struct Text {
   /// @brief Text to display
@@ -30,11 +35,18 @@ struct Texture {
   std::string path;
 };
 
+struct Rectangle {
+  sf::Color color;
+  sf::Vector2f size;
+};
+
 /// @brief Drawable Component use in an ECS
 struct Drawable {
   /// @brief Drawable variant.
-  std::variant<Texture, Text> drawable;
+  std::variant<Texture, Text, Rectangle> drawable;
   /// @brief Current bounds of the drawable.
   sf::FloatRect bounds = {0, 0, 0, 0};
+  /// @brief View type of the drawable.
+  ViewType view = ViewType::GAME;
 };
 }  // namespace rtype::client::components

@@ -11,14 +11,13 @@
 
 #include "components/on_event.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
-#include "interfaces/scene_interface.hpp"
-#include "window/window_manager.hpp"
+#include "managers/window_manager.hpp"
 
 namespace rtype::client::systems {
 template <events::EventType, class... EventsComponent>
 class EventSystemBase : public ASystem<EventsComponent...> {
  public:
-  ~EventSystemBase() = default;
+  ~EventSystemBase() override = default;
 
   /**
    * @brief Run the system

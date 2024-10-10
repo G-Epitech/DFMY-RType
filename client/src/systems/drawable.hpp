@@ -11,7 +11,7 @@
 #include "components/position.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
 #include "managers/resources_manager.hpp"
-#include "window/window_manager.hpp"
+#include "managers/window_manager.hpp"
 
 namespace rtype::client::systems {
 
@@ -43,8 +43,16 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   /// display a new entity.
   sf::Text text_;
 
+  sf::RectangleShape shape_;
+
   /// @brief The resources manager to get the textures and fonts.
   const ResourcesManager &resourcesManager_;
+
+  /**
+   * @brief Set the view of the window
+   * @param drawable The drawable component of the entity
+   */
+  void SetView(const components::Drawable &drawable) const;
 
   /**
    * @brief Draw an entity
@@ -66,6 +74,14 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    * @param position The position component of the entity
    */
   void DrawEntityText(const components::Text &text, const components::Position &position);
+
+  /**
+   * @brief Draw a rectangle
+   * @param rectangle The rectangle component of the entity
+   * @param position The position component of the entity
+   */
+  void DrawEntityRectangle(const components::Rectangle &rectangle,
+                           const components::Position &position);
 };
 
 }  // namespace rtype::client::systems

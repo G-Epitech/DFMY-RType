@@ -13,7 +13,7 @@
 #include <typeindex>
 
 #include "interfaces/scene_interface.hpp"
-#include "window/window_manager.hpp"
+#include "window_manager.hpp"
 
 namespace rtype::client {
 
