@@ -22,8 +22,25 @@ class SceneMenu final : public SceneBase<GlobalContext> {
 
   void OnActivate() override;
 
- protected:
-  unsigned int counter_ = 0;
-  std::size_t e{};
+ private:
+  /**
+   * @brief Create the title
+   */
+  void CreateTitle() const;
+
+  /**
+   * @brief Create the play button
+   */
+  void CreatePlayButton() const;
+
+  /**
+   * @brief Create the settings button
+   */
+  void CreateSettingsButton() const;
+
+  /**
+   * @brief Create the exit button
+   */
+  void CreateExitButton() const;
 };
 }  // namespace rtype::client

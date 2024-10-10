@@ -12,6 +12,7 @@
 #include "components/position.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
+#include "systems/events/mouse/move.hpp"
 
 using namespace rtype::client;
 
@@ -21,13 +22,27 @@ SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {
   registry_->RegisterComponent<components::Position>();
   registry_->RegisterComponent<components::Drawable>();
   registry_->RegisterComponent<components::OnMousePressed>();
+  registry_->RegisterComponent<components::OnMouseMoved>();
 
   registry_->AddSystem<systems::DrawableSystem>(context.windowManager, resourcesManager_);
   registry_->AddSystem<systems::MousePressEventSystem>(context.windowManager);
+  registry_->AddSystem<systems::MouseMoveEventSystem>(context.windowManager);
 }
 
-#include <iostream>
 void SceneMenu::OnCreate() {
+  CreateTitle();
+  CreatePlayButton();
+  CreateSettingsButton();
+  CreateExitButton();
+}
+
+void SceneMenu::OnActivate() {}
+
+void SceneMenu::Update(std::chrono::nanoseconds delta_time) {
+  registry_->RunSystems();
+}
+
+void SceneMenu::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(
@@ -35,7 +50,9 @@ void SceneMenu::OnCreate() {
               components::HorizontalAlign::CENTER, components::VerticalAlign::CENTER});
   registry_->AddComponent<components::Drawable>(
       title, {components::Text{"R-TYPE", "main", 84}, WindowManager::View::HUD});
+}
 
+void SceneMenu::CreatePlayButton() const {
   const auto play_button = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(
@@ -50,7 +67,32 @@ void SceneMenu::OnCreate() {
                                                    events::MouseEventTarget target) {
                                    std::cout << "Play button pressed" << std::endl;
                                  }});
+  registry_->AddComponent<components::OnMouseMoved>(
+      play_button,
+      components::OnMouseMoved{
+          .strategy = events::MouseEventTarget::kAnyTarget,
+          .handler = [this, play_button](sf::Vector2f pos, const events::MouseEventTarget target) {
+            auto drawables = registry_->GetComponents<components::Drawable>();
 
+            auto& dr = (*drawables)[static_cast<std::size_t>(play_button)];
+
+            if (dr) {
+              auto& drawable = dr.value();
+              auto& variant = drawable.drawable;
+
+              if (std::holds_alternative<components::Text>(variant)) {
+                auto& text = std::get<components::Text>(variant);
+                if (target == events::MouseEventTarget::kLocalTarget) {
+                  text.style = sf::Text::Style::Underlined;
+                } else {
+                  text.style = sf::Text::Style::Regular;
+                }
+              }
+            }
+          }});
+}
+
+void SceneMenu::CreateSettingsButton() const {
   const auto settings_button = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(
@@ -66,7 +108,33 @@ void SceneMenu::OnCreate() {
                                                    events::MouseEventTarget target) {
                                    std::cout << "Settings button pressed" << std::endl;
                                  }});
+  registry_->AddComponent<components::OnMouseMoved>(
+      settings_button, components::OnMouseMoved{
+                           .strategy = events::MouseEventTarget::kAnyTarget,
+                           .handler = [this, settings_button](
+                                          sf::Vector2f pos, const events::MouseEventTarget target) {
+                             auto drawables = registry_->GetComponents<components::Drawable>();
 
+                             auto& dr = (*drawables)[static_cast<std::size_t>(settings_button)];
+
+                             if (dr) {
+                               auto& drawable = dr.value();
+                               auto& variant = drawable.drawable;
+
+                               if (std::holds_alternative<components::Text>(variant)) {
+                                 auto& text = std::get<components::Text>(variant);
+                                 std::cout << "Settings Event Type: " << target << std::endl;
+                                 if (target == events::MouseEventTarget::kLocalTarget) {
+                                   text.style = sf::Text::Style::Underlined;
+                                 } else {
+                                   text.style = sf::Text::Style::Regular;
+                                 }
+                               }
+                             }
+                           }});
+}
+
+void SceneMenu::CreateExitButton() const {
   const auto exit_button = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(
@@ -83,10 +151,27 @@ void SceneMenu::OnCreate() {
                                      context_.scenesManager->Quit();
                                    }
                                  }});
-}
+  registry_->AddComponent<components::OnMouseMoved>(
+      exit_button,
+      components::OnMouseMoved{
+          .strategy = events::MouseEventTarget::kAnyTarget,
+          .handler = [this, exit_button](sf::Vector2f pos, const events::MouseEventTarget target) {
+            auto drawables = registry_->GetComponents<components::Drawable>();
 
-void SceneMenu::OnActivate() {}
+            auto& dr = (*drawables)[static_cast<std::size_t>(exit_button)];
 
-void SceneMenu::Update(std::chrono::nanoseconds delta_time) {
-  registry_->RunSystems();
+            if (dr) {
+              auto& drawable = dr.value();
+              auto& variant = drawable.drawable;
+
+              if (std::holds_alternative<components::Text>(variant)) {
+                auto& text = std::get<components::Text>(variant);
+                if (target == events::MouseEventTarget::kLocalTarget) {
+                  text.style = sf::Text::Style::Underlined;
+                } else {
+                  text.style = sf::Text::Style::Regular;
+                }
+              }
+            }
+          }});
 }

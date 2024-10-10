@@ -103,9 +103,13 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
 
   text_.setFont(*savedFont);
   text_.setString(text.text);
+  text_.setStyle(text.style);
   text_.setCharacterSize(text.characterSize);
   text_.setFillColor(text.color);
   text_.setPosition(position.x, position.y);
+
+  text_.setOutlineColor(text.color);
+  text_.setOutlineThickness(1);
 
   const auto origin = GetOrigin(position, text_.getGlobalBounds());
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));

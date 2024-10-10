@@ -23,7 +23,10 @@ void MouseMoveEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
   std::size_t entity_id = 0;
 
   for (auto& component : (*components)) {
-    HandleEventForEntity(entity_id++, event, drawables, *component);
+    if (component) {
+      HandleEventForEntity(entity_id, event, drawables, *component);
+    }
+    entity_id += 1;
   }
 }
 

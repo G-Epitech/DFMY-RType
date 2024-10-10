@@ -16,10 +16,11 @@ namespace rtype::client::components {
 
 /// @brief Text Component use in an ECS
 struct Text {
-  std::string text;                    ///< Text to display
-  std::string fontName;                ///< Font name
-  unsigned int characterSize = 12;     ///< Character size
-  sf::Color color = sf::Color::White;  ///< Color of the text
+  std::string text;                           ///< Text to display
+  std::string fontName;                       ///< Font name
+  unsigned int characterSize = 12;            ///< Character size
+  sf::Text::Style style = sf::Text::Regular;  ///< Style of the text
+  sf::Color color = sf::Color::White;         ///< Color of the text
 };
 
 /// @brief Texture Component use in an ECS
