@@ -189,11 +189,8 @@ pipeline {
                         sh "git remote remove mirror"
                     }
                     sh "git remote add mirror ${MIRROR_URL}"
-
-                    sh "git checkout main"
-
                     withCredentials([sshUserPrivateKey(credentialsId: 'G-EPIJENKINS_SSH_KEY', keyFileVariable: 'PRIVATE_KEY')]) {
-                        sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY" git push --mirror mirror'
+                        sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_KEY" git push --tags --force --prune mirror "refs/remotes/origin/*:refs/heads/*"'
                     }
                 }
             }

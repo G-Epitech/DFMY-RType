@@ -8,6 +8,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include "tools/bitset/dynamic_bitset.hpp"
 
@@ -23,5 +24,20 @@ struct MessageProps {
   unsigned int messageId;                             // ID of the message
   unsigned int messageType;                           // Type of the message
   std::shared_ptr<abra::tools::dynamic_bitset> data;  // Data of the message (bitset)
+};
+
+/// @brief Structure of a server message
+struct MultipleMessageProps {
+  unsigned int messageId;                             // ID of the message
+  unsigned int messageType;                           // Type of the message
+  unsigned int offset;                                // Offset of the message
+  bool isLast;                                        // Is the last message
+  std::shared_ptr<abra::tools::dynamic_bitset> data;  // Data of the message (bitset)
+};
+
+/// @brief Structure of multiple messages
+struct MultipleMessagesProps {
+  std::optional<MultipleMessageProps *> lastMessage;  // The last message
+  std::vector<MultipleMessageProps> messages;         // The messages
 };
 }  // namespace abra::tools

@@ -9,13 +9,13 @@
 
 #include <memory>
 
-#include "client/interface_client.hpp"
+#include "client/abstract_client.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientUDP;
 }
 
-class abra::client::ClientUDP : public InterfaceClient {
+class abra::client::ClientUDP final : public AbstractClient {
  public:
   struct ClientEndpoint {
     std::string ip;
