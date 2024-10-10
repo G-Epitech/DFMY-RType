@@ -33,6 +33,38 @@ void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::pt
   window->display();
 }
 
+std::tuple<float, float> DrawableSystem::GetOrigin(const components::Position& position,
+                                                   const sf::FloatRect& bounds) {
+  float originX = 0;
+  float originY = 0;
+
+  switch (position.horizontalAlign) {
+    case components::HorizontalAlign::LEFT:
+      originX = 0;
+      break;
+    case components::HorizontalAlign::CENTER:
+      originX = bounds.width / 2;
+      break;
+    case components::HorizontalAlign::RIGHT:
+      originX = bounds.width;
+      break;
+  }
+
+  switch (position.verticalAlign) {
+    case components::VerticalAlign::TOP:
+      originY = 0;
+      break;
+    case components::VerticalAlign::CENTER:
+      originY = bounds.height / 2;
+      break;
+    case components::VerticalAlign::BOTTOM:
+      originY = bounds.height;
+      break;
+  }
+
+  return {originX, originY};
+}
+
 void DrawableSystem::DrawEntity(components::Drawable* drawable,
                                 const components::Position& position) {
   std::visit(
@@ -58,6 +90,10 @@ void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
 
   sprite_.setTexture(*savedTexture);
   sprite_.setPosition(position.x, position.y);
+
+  const auto origin = GetOrigin(position, sprite_.getGlobalBounds());
+  sprite_.setOrigin(std::get<0>(origin), std::get<1>(origin));
+
   windowManager_->window()->draw(sprite_);
 }
 
@@ -70,6 +106,10 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
   text_.setCharacterSize(text.characterSize);
   text_.setFillColor(text.color);
   text_.setPosition(position.x, position.y);
+
+  const auto origin = GetOrigin(position, text_.getGlobalBounds());
+  text_.setOrigin(std::get<0>(origin), std::get<1>(origin));
+
   windowManager_->window()->draw(text_);
 }
 
@@ -78,5 +118,9 @@ void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
   shape_.setFillColor(rectangle.color);
   shape_.setSize(rectangle.size);
   shape_.setPosition(position.x, position.y);
+
+  const auto origin = GetOrigin(position, shape_.getGlobalBounds());
+  shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));
+
   windowManager_->window()->draw(shape_);
 }

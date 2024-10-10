@@ -86,6 +86,11 @@ class WindowManager {
    */
   void SetView(const View &view) const;
 
+  /// @brief Get the width of the window
+  float width_;
+  /// @brief Get the height of the window
+  float height_;
+
  private:
   /// @brief Current window
   std::shared_ptr<sf::RenderWindow> window_;
@@ -102,9 +107,6 @@ class WindowManager {
   /// @brief HUD view used to render the HUD entities
   /// @example Score, health, etc.
   sf::View hudView_;
-
-  float width_;
-  float height_;
 
   /**
    * @brief Handle the resize event

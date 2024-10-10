@@ -51,12 +51,6 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
   ResourcesManager::Ptr resourcesManager_;
 
   /**
-   * @brief Set the view of the window
-   * @param drawable The drawable component of the entity
-   */
-  void SetView(const components::Drawable &drawable) const;
-
-  /**
    * @brief Draw an entity
    * @param drawable The drawable component of the entity
    * @param position The position component of the entity
@@ -84,6 +78,9 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    */
   void DrawEntityRectangle(const components::Rectangle &rectangle,
                            const components::Position &position);
+
+  static std::tuple<float, float> GetOrigin(const components::Position &position,
+                                            const sf::FloatRect &bounds);
 };
 
 }  // namespace rtype::client::systems
