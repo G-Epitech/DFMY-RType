@@ -39,25 +39,25 @@ std::tuple<float, float> DrawableSystem::GetOrigin(const components::Position& p
   float originY = 0;
 
   switch (position.horizontalAlign) {
-    case components::HorizontalAlign::LEFT:
+    case components::HorizontalAlign::kLeft:
       originX = 0;
       break;
-    case components::HorizontalAlign::CENTER:
+    case components::HorizontalAlign::kCenter:
       originX = bounds.width / 2;
       break;
-    case components::HorizontalAlign::RIGHT:
+    case components::HorizontalAlign::kRight:
       originX = bounds.width;
       break;
   }
 
   switch (position.verticalAlign) {
-    case components::VerticalAlign::TOP:
+    case components::VerticalAlign::kTop:
       originY = 0;
       break;
-    case components::VerticalAlign::CENTER:
+    case components::VerticalAlign::kCenter:
       originY = bounds.height / 2;
       break;
-    case components::VerticalAlign::BOTTOM:
+    case components::VerticalAlign::kBottom:
       originY = bounds.height;
       break;
   }

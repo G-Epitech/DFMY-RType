@@ -47,7 +47,7 @@ void SceneMenu::CreateTitle() const {
 
   registry_->AddComponent<components::Position>(
       title, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 - 250,
-              components::HorizontalAlign::CENTER, components::VerticalAlign::CENTER});
+              components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
       title, {components::Text{"R-TYPE", "main", 84}, WindowManager::View::HUD});
 }
@@ -57,7 +57,7 @@ void SceneMenu::CreatePlayButton() const {
 
   registry_->AddComponent<components::Position>(
       play_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2,
-                    components::HorizontalAlign::CENTER, components::VerticalAlign::CENTER});
+                    components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
       play_button, {components::Text{"Play", "main", 42}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
@@ -98,7 +98,7 @@ void SceneMenu::CreateSettingsButton() const {
   registry_->AddComponent<components::Position>(
       settings_button,
       {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 + 75,
-       components::HorizontalAlign::CENTER, components::VerticalAlign::CENTER});
+       components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
       settings_button, {components::Text{"Settings", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
@@ -139,7 +139,7 @@ void SceneMenu::CreateExitButton() const {
 
   registry_->AddComponent<components::Position>(
       exit_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 + 110,
-                    components::HorizontalAlign::CENTER, components::VerticalAlign::CENTER});
+                    components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
       exit_button, {components::Text{"Exit", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
