@@ -10,7 +10,7 @@
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "components/position.hpp"
-#include "systems/events/base.hpp"
+#include "src/bases/systems/events_system_base.hpp"
 
 namespace rtype::client::systems {
 template <events::EventType EventType, typename MouseEventComponent>

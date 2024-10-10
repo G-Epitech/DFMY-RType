@@ -8,7 +8,7 @@
 #pragma once
 
 #include "components/on_event.hpp"
-#include "systems/events/base.hpp"
+#include "src/bases/systems/events_system_base.hpp"
 
 namespace rtype::client::systems {
 template <events::EventType EventType, typename KeyEventComponent>
