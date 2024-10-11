@@ -19,7 +19,7 @@ App::App() {
 
   scenesManager_->RegisterScene<SceneMenu>();
   scenesManager_->RegisterScene<SceneSettings>();
-  scenesManager_->GoToScene<SceneMenu>();
+  scenesManager_->GoToScene<SceneSettings>();
 }
 
 void App::Run() {

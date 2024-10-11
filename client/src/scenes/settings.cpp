@@ -34,7 +34,8 @@ SceneSettings::SceneSettings(const GlobalContext& context) : SceneBase(context) 
 void SceneSettings::OnCreate() {
   CreateTitle();
   CreateBackButton();
-  CreateFullscreenButton(context_.windowManager->width_ / 2 + 50, 250);
+  CreateFullscreenLabel(600, 250);
+  CreateFullscreenButton(context_.windowManager->width_ - 600, 250);
 }
 
 void SceneSettings::OnActivate() {}
@@ -136,4 +137,14 @@ void SceneSettings::CreateFullscreenButton(const float& x, const float& y) const
               }
             }
           }});
+}
+
+void SceneSettings::CreateFullscreenLabel(const float& x, const float& y) const {
+  const auto fullscreen_label = registry_->SpawnEntity();
+
+  registry_->AddComponent<components::Position>(
+      fullscreen_label,
+      {x, y, components::HorizontalAlign::kLeft, components::VerticalAlign::kCenter});
+  registry_->AddComponent<components::Drawable>(
+      fullscreen_label, {components::Text{"Fullscreen", "main", 20}, WindowManager::View::HUD});
 }
