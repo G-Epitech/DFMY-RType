@@ -19,6 +19,7 @@ using namespace rtype::client;
 
 SceneSettings::SceneSettings(const GlobalContext& context) : SceneBase(context) {
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
+  resourcesManager_->LoadTexture("assets/ui/menu.png", "menu");
 
   registry_->RegisterComponent<components::Position>();
   registry_->RegisterComponent<components::Drawable>();
@@ -33,6 +34,7 @@ SceneSettings::SceneSettings(const GlobalContext& context) : SceneBase(context) 
 void SceneSettings::OnCreate() {
   CreateTitle();
   CreateBackButton();
+  CreateFullscreenButton(context_.windowManager->width_ / 2 + 50, 250);
 }
 
 void SceneSettings::OnActivate() {}
@@ -55,7 +57,7 @@ void SceneSettings::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(
-      exit_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 + 110,
+      exit_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ - 50,
                     components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
       exit_button, {components::Text{"Back", "main", 20}, WindowManager::View::HUD});
@@ -91,4 +93,47 @@ void SceneSettings::CreateBackButton() const {
                            }
                          }
                        }});
+}
+
+void SceneSettings::CreateFullscreenButton(const float& x, const float& y) const {
+  const auto fullscreen_button = registry_->SpawnEntity();
+  const sf::IntRect disable{192, 68, 16, 8};
+  const sf::IntRect active{224, 68, 16, 8};
+  const auto windowStyle = context_.windowManager->GetStyle();
+
+  registry_->AddComponent<components::Position>(
+      fullscreen_button,
+      {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
+  registry_->AddComponent<components::Drawable>(
+      fullscreen_button,
+      {components::Texture{"menu", 4, windowStyle == sf::Style::Default ? disable : active},
+       WindowManager::View::HUD});
+  registry_->AddComponent<components::OnMousePressed>(
+      fullscreen_button,
+      components::OnMousePressed{
+          .strategy = events::MouseEventTarget::kLocalTarget,
+          .handler = [this, disable, active, fullscreen_button](
+                         const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                         const events::MouseEventTarget& target) {
+            if (button == sf::Mouse::Button::Left) {
+              const auto windowStyle = context_.windowManager->GetStyle();
+              if (windowStyle == sf::Style::Default) {
+                context_.windowManager->SetStyle(sf::Style::Fullscreen);
+              } else {
+                context_.windowManager->SetStyle(sf::Style::Default);
+              }
+              auto drawables = registry_->GetComponents<components::Drawable>();
+              auto& dr = (*drawables)[static_cast<std::size_t>(fullscreen_button)];
+
+              if (dr) {
+                auto& drawable = dr.value();
+                auto& variant = drawable.drawable;
+
+                if (std::holds_alternative<components::Texture>(variant)) {
+                  auto& texture = std::get<components::Texture>(variant);
+                  texture.rect = windowStyle == sf::Style::Default ? active : disable;
+                }
+              }
+            }
+          }});
 }

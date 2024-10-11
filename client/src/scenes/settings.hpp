@@ -32,5 +32,12 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    * @brief Create the back button
    */
   void CreateBackButton() const;
+
+  /**
+   * @brief Create the fullscreen button
+   * @param x The x position of the button (Vertical axis).
+   * @param y The y position of the button (Horizontal axis).
+   */
+  void CreateFullscreenButton(const float &x, const float &y) const;
 };
 }  // namespace rtype::client

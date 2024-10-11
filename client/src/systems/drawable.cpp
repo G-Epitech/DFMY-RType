@@ -90,6 +90,8 @@ void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
 
   sprite_.setTexture(*savedTexture);
   sprite_.setPosition(position.x, position.y);
+  sprite_.setTextureRect(texture.rect);
+  sprite_.setScale(texture.scale, texture.scale);
 
   const auto origin = GetOrigin(position, sprite_.getGlobalBounds());
   sprite_.setOrigin(std::get<0>(origin), std::get<1>(origin));

@@ -86,6 +86,18 @@ class WindowManager {
    */
   void SetView(const View &view) const;
 
+  /**
+   * @brief Get the style of the window
+   * @return Style of the window
+   */
+  sf::Uint32 GetStyle() const;
+
+  /**
+   * @brief Set the style of the window
+   * @param style Style of the window
+   */
+  void SetStyle(const sf::Uint32 &style);
+
   /// @brief Get the width of the window
   float width_;
   /// @brief Get the height of the window
@@ -107,6 +119,9 @@ class WindowManager {
   /// @brief HUD view used to render the HUD entities
   /// @example Score, health, etc.
   sf::View hudView_;
+
+  /// @brief Properties of the window
+  Properties props_;
 
   /**
    * @brief Handle the resize event

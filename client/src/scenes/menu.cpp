@@ -128,7 +128,6 @@ void SceneMenu::CreateSettingsButton() const {
 
               if (std::holds_alternative<components::Text>(variant)) {
                 auto& text = std::get<components::Text>(variant);
-                std::cout << "Settings Event Type: " << target << std::endl;
                 if (target == events::MouseEventTarget::kLocalTarget) {
                   text.style = sf::Text::Style::Underlined;
                 } else {

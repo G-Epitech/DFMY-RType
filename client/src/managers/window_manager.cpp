@@ -15,7 +15,7 @@ void WindowManager::ClearEvents() noexcept {
   deferredEvents_.clear();
 }
 
-WindowManager::WindowManager(WindowManager::Properties&& props) {
+WindowManager::WindowManager(WindowManager::Properties&& props) : props_(props) {
   window_ = std::make_shared<sf::RenderWindow>(props.videoMode, props.title, props.style,
                                                props.contextSettings);
   if (props.iconPath) {
@@ -83,4 +83,16 @@ void WindowManager::SetView(const View& view) const {
       window_->setView(hudView_);
       break;
   }
+}
+
+sf::Uint32 WindowManager::GetStyle() const {
+  return props_.style;
+}
+
+void WindowManager::SetStyle(const sf::Uint32& style) {
+  if (style == props_.style) {
+    return;
+  }
+  props_.style = style;
+  window_->create(props_.videoMode, props_.title, props_.style);
 }
