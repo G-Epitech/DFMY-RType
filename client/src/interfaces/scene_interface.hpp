@@ -9,6 +9,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include <chrono>
+#include <memory>
 
 #include "utils/time.hpp"
 

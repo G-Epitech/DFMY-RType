@@ -8,11 +8,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <typeindex>
 
-#include "scene_interface.hpp"
-#include "window/window_manager.hpp"
+#include "interfaces/scene_interface.hpp"
+#include "window_manager.hpp"
 
 namespace rtype::client {
 
