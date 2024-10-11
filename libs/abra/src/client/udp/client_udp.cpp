@@ -12,7 +12,8 @@
 using namespace abra::client;
 using namespace boost::asio;
 
-ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port) : socket_(ioc_) {
+ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
+    : AbstractClient("client_udp"), socket_(ioc_) {
   ip::udp::resolver resolver(ioc_);
   ip::udp::resolver::query resolverQuery(ip::udp::v4(), ip, std::to_string(port));
   ip::udp::resolver::iterator iter = resolver.resolve(resolverQuery);

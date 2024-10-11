@@ -21,4 +21,13 @@ int main() {
     std::cerr << "💔 Failed to connect to server" << std::endl;
     return 1;
   }
+
+  payload::JoinLobby joinLobbyPayload = {
+          .lobbyId = 0
+  };
+  auto joinSuccess = client.JoinLobby(joinLobbyPayload);
+  if (!joinSuccess) {
+    std::cerr << "💔 Failed to join the lobby" << std::endl;
+    return 1;
+  }
 }

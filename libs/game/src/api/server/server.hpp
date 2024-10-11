@@ -107,6 +107,12 @@ class rtype::sdk::game::api::Server {
   void HandleLobbyJoin(const ClientTCPMessage &message);
 
   /**
+   * @brief Handle player when he joins a lobby
+   * @param message The message of the client
+   */
+  void HandleLobbyAddPlayer(const ClientTCPMessage &message);
+
+  /**
    * @brief Add a new client to the server
    * @param clientId The client id
    * @param pseudo The pseudo of the client
@@ -134,7 +140,9 @@ class rtype::sdk::game::api::Server {
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
       {MessageClientType::kConnection, &Server::HandleClientConnection},
-      {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin}};
+      {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin},
+      {MessageClientType::kClientJoinLobbyInfos, &Server::HandleLobbyAddPlayer},
+  };
 };
 
 #include "server.tpp"

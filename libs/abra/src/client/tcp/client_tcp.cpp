@@ -13,7 +13,7 @@ using namespace abra::client;
 using namespace boost::asio;
 
 ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port)
-    : socket_(ios_), logger_("client_tcp") {
+    : AbstractClient("client_tcp"), socket_(ios_) {
   ip::tcp::endpoint endpoint(ip::address::from_string(ip), port);
 
   socket_.connect(endpoint);
@@ -40,7 +40,7 @@ void ClientTCP::Listen() {
       throw boost::system::system_error(error);
     }
 
-    ResolveBuffer(&buf);
+    ResolveBuffer(&buf, len);
   }
 }
 

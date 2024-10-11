@@ -82,6 +82,8 @@ void Server::HandleLobbyJoin(const ClientTCPMessage &message) {
     return;
   }
 
+  this->clients_[message.clientId].lobbyId = id;
+
   auto endpoint = this->lobbies_[id].serverUDP->GetEndpoint();
   payload::JoinLobbyInfos joinInfos{};
 
@@ -93,4 +95,22 @@ void Server::HandleLobbyJoin(const ClientTCPMessage &message) {
   logger_.Info(
       "Send lobby [" + std::to_string(id) + "] infos to client " + std::to_string(message.clientId),
       "🛃");
+}
+
+void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.bitset);
+  auto ip = packet->GetPayload().ip;
+  auto port = packet->GetPayload().port;
+
+  this->clients_[message.clientId].inLobby = true;
+  this->clients_[message.clientId].endpoint =
+      boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ip), port);
+
+  auto lobbyId = this->clients_[message.clientId].lobbyId;
+  this->lobbies_[lobbyId].clients.push_back({
+      .id = message.clientId,
+      .endpoint = this->clients_[message.clientId].endpoint,
+  });
+
+  logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby", "🛃");
 }

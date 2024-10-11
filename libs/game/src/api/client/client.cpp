@@ -76,9 +76,9 @@ bool Client::JoinLobby(const payload::JoinLobby &payload) {
 
   if (!waitSuccess) {
     logger_.Error("Connection to lobby failed", "💢️");
+  } else {
+    logger_.Info("Connected to lobby", "🛜");
   }
-
-  logger_.Info("Connected to lobby", "🛜");
 
   return this->isLobbyConnected_;
 }
