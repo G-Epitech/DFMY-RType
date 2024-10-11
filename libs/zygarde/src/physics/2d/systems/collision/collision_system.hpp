@@ -49,9 +49,7 @@ class EXPORT_ZYGARDE_API CollisionSystem final
       components::BoxCollider2D &collider1, components::BoxCollider2D &collider2) noexcept;
 
   [[nodiscard]] static bool AreColliding(components::BoxCollider2D &collider1,
-                                         core::components::Transform &transform1,
-                                         components::BoxCollider2D &collider2,
-                                         core::components::Transform &transform2) noexcept;
+                                         components::BoxCollider2D &collider2) noexcept;
 
  private:
   const utils::Timer::Nanoseconds &deltaTime_;

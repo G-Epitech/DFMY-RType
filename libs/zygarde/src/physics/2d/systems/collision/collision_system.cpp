@@ -29,7 +29,7 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
       }
       auto otherComponentsPack = GetComponentsPackAtIndex(j, rigidbodies, transforms, colliders);
       if (!HaveCommonCollisionLayers(*componentsPack.boxCollider,
-                                    *otherComponentsPack.boxCollider)) {
+                                     *otherComponentsPack.boxCollider)) {
         continue;
       }
     }
@@ -51,6 +51,7 @@ CollisionSystem::ComponentsPack CollisionSystem::GetComponentsPackAtIndex(
   return {&(*rigidbodies)[index].value(), &(*transforms)[index].value(),
           &(*colliders)[index].value()};
 }
+
 bool CollisionSystem::HaveCommonCollisionLayers(
     physics::components::BoxCollider2D &collider1,
     physics::components::BoxCollider2D &collider2) noexcept {
@@ -61,9 +62,13 @@ bool CollisionSystem::HaveCommonCollisionLayers(
                             collisionLayers2.begin(),
                             collisionLayers2.end()) != collisionLayers1.end();
 }
+
 bool CollisionSystem::AreColliding(physics::components::BoxCollider2D &collider1,
-                                   core::components::Transform &transform1,
-                                   physics::components::BoxCollider2D &collider2,
-                                   core::components::Transform &transform2) noexcept {
-  return
+                                   physics::components::BoxCollider2D &collider2) noexcept {
+  auto boundingBox1 = collider1.GetBoundingBox();
+  auto boundingBox2 = collider2.GetBoundingBox();
+
+  bool overlapX = boundingBox1.left < boundingBox2.right && boundingBox1.right > boundingBox2.left;
+  bool overlapY = boundingBox1.top < boundingBox2.bottom && boundingBox1.bottom > boundingBox2.top;
+  return overlapX && overlapY;
 }

@@ -8,10 +8,12 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <utility>
 #include <vector>
 
 #include "libs/zygarde/src/api.hpp"
+#include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/physics/2d/types/collision_2d.hpp"
 
 namespace zygarde::physics::systems {
@@ -34,31 +36,36 @@ class EXPORT_ZYGARDE_API Collider2D final {
    * @brief Construct a new Collider2D object
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    * @param collision_layers Collision layers
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
   Collider2D(Rigidbody2D::ptr attached_rigidbody, std::vector<int> collision_layers,
-             Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
+             const core::types::Vector2f &position);
 
   /**
    * @brief Construct a new Collider2D object
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
-  Collider2D(Rigidbody2D::ptr attached_rigidbody, Collision2DFunction on_collision_enter,
-             Collision2DFunction on_collision_exit);
+  explicit Collider2D(Rigidbody2D::ptr attached_rigidbody, const core::types::Vector2f &position);
+
+  inline void SetOnCollisionEnter(Collision2DFunction on_collision_enter) {
+    onCollisionEnter_ = std::move(on_collision_enter);
+  }
+
+  inline void SetOnCollisionExit(Collision2DFunction on_collision_exit) {
+    onCollisionExit_ = std::move(on_collision_exit);
+  }
 
   friend class BoxCollider2D;
 
  private:
   /// @brief On collision enter function callback
-  Collision2DFunction onCollisionEnter_;
+  std::optional<Collision2DFunction> onCollisionEnter_;
   /// @brief On collision exit function callback
-  Collision2DFunction onCollisionExit_;
+  std::optional<Collision2DFunction> onCollisionExit_;
   /// @brief Pointer to the attached Rigidbody2D object
   Rigidbody2D::ptr attachedRigidbody_;
   /// @brief Collision layers
   std::vector<int> collisionLayers_ = std::vector<int>{0};
+  /// @brief Reference to the position of the entity
+  const core::types::Vector2f &position_;
 };
 }  // namespace zygarde::physics::components
