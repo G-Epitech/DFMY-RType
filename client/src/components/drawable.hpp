@@ -25,7 +25,7 @@ struct Text {
 
 /// @brief Texture Component use in an ECS
 struct Texture {
-  std::string path;  ///< Path to the texture
+  std::string name;  ///< Path to the texture
 };
 
 /// @brief Rectangle Component use in an ECS

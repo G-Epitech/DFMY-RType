@@ -20,7 +20,7 @@ using namespace rtype::client::scenes;
 using namespace rtype::client::systems;
 using namespace rtype::client::components;
 
-SceneGame::SceneGame(const GlobalContext& context) : SceneBase(context) {
+SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->RegisterComponent<Drawable>();
   registry_->RegisterComponent<Position>();
   registry_->RegisterComponent<OnKeyPressed>();
@@ -42,6 +42,7 @@ SceneGame::SceneGame(const GlobalContext& context) : SceneBase(context) {
 void SceneGame::OnCreate() {
   LoadResources();
   CreateControls();
+  CreatePlayerEntity();
 }
 
 void SceneGame::CreateControls() {
@@ -52,7 +53,7 @@ void SceneGame::CreateControls() {
                                                     {.handler = keypress_handler});
 }
 
-void SceneGame::OnKeyPress(const sf::Keyboard::Key& key) {
+void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {
   std::cout << "Key pressed: " << key << std::endl;
   switch (key) {
     case sf::Keyboard::Key::Escape:
@@ -64,4 +65,33 @@ void SceneGame::OnKeyPress(const sf::Keyboard::Key& key) {
 
 void SceneGame::LoadResources() {
   resourcesManager_->LoadTexture("assets/sheets/player.png", "player");
+}
+
+void SceneGame::CreatePlayerEntity() {
+  auto player = registry_->SpawnEntity();
+  auto controls_handler = [this, player](const sf::Keyboard::Key key) {
+      auto positions = registry_->GetComponents<Position>();
+      auto entity_id = static_cast<std::size_t>(player);
+      auto &position = (*positions)[entity_id];
+
+      if (!position)
+        return;
+      if (key == sf::Keyboard::Left) {
+        (*position).x -= 10;
+      } else if (key == sf::Keyboard::Right) {
+        (*position).x += 10;
+      } else if (key == sf::Keyboard::Up) {
+        (*position).y -= 10;
+      } else if (key == sf::Keyboard::Down) {
+        (*position).y += 10;
+      }
+  };
+
+  registry_->AddComponent<Drawable>(player, {
+          .drawable = Texture{.name = "player"},
+  });
+  registry_->AddComponent<Position>(player, {100, 100, HorizontalAlign::kLeft, VerticalAlign::kTop});
+  registry_->AddComponent<OnKeyPressed>(player, {
+          .handler = controls_handler
+  });
 }

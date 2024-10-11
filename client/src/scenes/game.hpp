@@ -30,6 +30,11 @@ class SceneGame final : public SceneBase<GlobalContext> {
   void CreateControls();
 
   /**
+   * @brief Create the player entity
+   */
+  void CreatePlayerEntity();
+
+  /**
    * @brief Key press event handler
    * @param key Key pressed
    */

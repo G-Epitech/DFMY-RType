@@ -86,7 +86,7 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
 
 void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
                                        const components::Position& position) {
-  const auto savedTexture = resourcesManager_->GetTexture(texture.path);
+  const auto savedTexture = resourcesManager_->GetTexture(texture.name);
 
   sprite_.setTexture(*savedTexture);
   sprite_.setPosition(position.x, position.y);
