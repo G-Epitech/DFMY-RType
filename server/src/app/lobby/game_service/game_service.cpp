@@ -12,10 +12,22 @@
 
 using namespace rtype::server::game;
 
-GameService::GameService(const size_t& tick_rate) : ticksManager_{tick_rate} {}
+GameService::GameService(const size_t& tick_rate) : ticksManager_{tick_rate}, registry_() {}
+
+void GameService::RegistrySetup() {
+  registry_ = zygarde::Registry::create();
+  std::cout << "Registry created" << std::endl;
+  utils::RegistryHelper::RegisterBaseComponents(registry_.get());
+  utils::RegistryHelper::RegisterBaseSystems(registry_.get(), ticksManager_.DeltaTime());
+}
+
+void GameService::Initialize() {
+  ticksManager_.Initialize();
+  RegistrySetup();
+}
 
 void GameService::Run() {
-  ticksManager_.Initialize();
+  Initialize();
 
   while (gameRunning_) {
     ticksManager_.Update();
