@@ -45,10 +45,10 @@ void SceneSettings::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
 
   registry_->AddComponent<components::Position>(
-      title, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 - 250,
-              components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
+      title, {context_.windowManager->width_ / 2, 0 + 150, components::HorizontalAlign::kCenter,
+              components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
-      title, {components::Text{"R-TYPE", "main", 84}, WindowManager::View::HUD});
+      title, {components::Text{"Settings", "main", 50}, WindowManager::View::HUD});
 }
 
 void SceneSettings::CreateBackButton() const {
