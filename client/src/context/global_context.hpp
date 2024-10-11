@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 
 #include "managers/scenes_manager.hpp"

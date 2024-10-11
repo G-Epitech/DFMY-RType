@@ -148,3 +148,43 @@ void SceneSettings::CreateFullscreenLabel(const float& x, const float& y) const 
   registry_->AddComponent<components::Drawable>(
       fullscreen_label, {components::Text{"Fullscreen", "main", 20}, WindowManager::View::HUD});
 }
+
+void SceneSettings::CreateVolumeButton(const float& x, const float& y) const {
+  const auto volume_button = registry_->SpawnEntity();
+  const sf::IntRect disable{192, 68, 16, 8};
+  const sf::IntRect active{224, 68, 16, 8};
+
+  registry_->AddComponent<components::Position>(
+      volume_button,
+      {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
+  registry_->AddComponent<components::Drawable>(
+      volume_button, {components::Texture{"menu", 4, active}, WindowManager::View::HUD});
+  registry_->AddComponent<components::OnMousePressed>(
+      volume_button, components::OnMousePressed{
+                         .strategy = events::MouseEventTarget::kLocalTarget,
+                         .handler = [this, disable, active, volume_button](
+                                        const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                                        const events::MouseEventTarget& target) {
+                           if (button == sf::Mouse::Button::Left) {
+                             const auto windowStyle = context_.windowManager->GetStyle();
+                             if (windowStyle == sf::Style::Default) {
+                               context_.windowManager->SetStyle(sf::Style::Fullscreen);
+                             } else {
+                               context_.windowManager->SetStyle(sf::Style::Default);
+                             }
+                             auto drawables = registry_->GetComponents<components::Drawable>();
+                             auto& dr = (*drawables)[static_cast<std::size_t>(volume_button)];
+
+                             if (dr) {
+                               auto& drawable = dr.value();
+                               auto& variant = drawable.drawable;
+
+                               if (std::holds_alternative<components::Texture>(variant)) {
+                                 auto& texture = std::get<components::Texture>(variant);
+                                 texture.rect =
+                                     windowStyle == sf::Style::Default ? active : disable;
+                               }
+                             }
+                           }
+                         }});
+}

@@ -5,4 +5,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         resources_manager.cpp
         window_manager.hpp
         window_manager.cpp
+        sound_manager.hpp
+        sound_manager.cpp
 )
