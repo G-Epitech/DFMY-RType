@@ -7,11 +7,17 @@
 
 #pragma once
 
+#include <memory>
+
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 
 namespace zygarde::physics::components {
 class EXPORT_ZYGARDE_API Rigidbody2D final {
+ public:
+  using ptr = std::shared_ptr<Rigidbody2D>;
+  using const_ptr = std::shared_ptr<const Rigidbody2D>;
+
  public:
   Rigidbody2D() = default;
   ~Rigidbody2D() = default;

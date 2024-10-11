@@ -7,11 +7,17 @@
 
 #pragma once
 
+#include <memory>
+
 #include "core/types/vector/vector_3f.hpp"
 #include "libs/zygarde/src/api.hpp"
 
 namespace zygarde::core::components {
 class EXPORT_ZYGARDE_API Transform final {
+ public:
+  using ptr = std::shared_ptr<Transform>;
+  using const_ptr = std::shared_ptr<Transform const>;
+
  public:
   Transform() = default;
   ~Transform() = default;

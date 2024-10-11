@@ -16,15 +16,42 @@
 
 namespace zygarde::physics::systems {
 class EXPORT_ZYGARDE_API CollisionSystem final
-    : public ASystem<components::Rigidbody2D *, core::components::Transform *,
-                     components::BoxCollider2D *> {
+    : public ASystem<components::Rigidbody2D, core::components::Transform,
+                     components::BoxCollider2D> {
  public:
   explicit CollisionSystem(const utils::Timer::Nanoseconds &deltaTime);
   ~CollisionSystem() override = default;
 
-  void Run(std::shared_ptr<Registry> r, tools::sparse_array<components::Rigidbody2D *> &rigidbodies,
-           tools::sparse_array<core::components::Transform *> &transforms,
-           tools::sparse_array<components::BoxCollider2D *> &colliders) override;
+  void Run(std::shared_ptr<Registry> r,
+           tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
+           tools::sparse_array<core::components::Transform>::ptr transforms,
+           tools::sparse_array<components::BoxCollider2D>::ptr colliders) override;
+
+ private:
+  struct ComponentsPack {
+    components::Rigidbody2D *rigidbody;
+    core::components::Transform *transform;
+    components::BoxCollider2D *boxCollider;
+  };
+
+ private:
+  [[nodiscard]] static bool IndexHasRequiredComponents(
+      size_t index, const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
+      const tools::sparse_array<core::components::Transform>::ptr &transforms,
+      const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) noexcept;
+
+  [[nodiscard]] static ComponentsPack GetComponentsPackAtIndex(
+      size_t index, const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
+      const tools::sparse_array<core::components::Transform>::ptr &transforms,
+      const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) noexcept;
+
+  [[nodiscard]] static bool HaveCommonCollisionLayers(
+      components::BoxCollider2D &collider1, components::BoxCollider2D &collider2) noexcept;
+
+  [[nodiscard]] static bool AreColliding(components::BoxCollider2D &collider1,
+                                         core::components::Transform &transform1,
+                                         components::BoxCollider2D &collider2,
+                                         core::components::Transform &transform2) noexcept;
 
  private:
   const utils::Timer::Nanoseconds &deltaTime_;

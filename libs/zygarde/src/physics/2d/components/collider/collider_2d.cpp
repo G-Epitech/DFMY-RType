@@ -7,6 +7,7 @@
 
 #include "collider_2d.hpp"
 
+#include <algorithm>
 #include <utility>
 
 using namespace zygarde::physics::components;
