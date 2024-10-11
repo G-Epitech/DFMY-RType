@@ -112,7 +112,7 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
   text_.setPosition(position.x, position.y);
 
   text_.setOutlineColor(text.color);
-  text_.setOutlineThickness(1);
+  text_.setOutlineThickness(text.style == sf::Text::Style::Underlined ? 1 : 0);
 
   const auto origin = GetOrigin(position, text_.getGlobalBounds());
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));

@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <optional>
 #include <vector>
+#include <memory>
 
 #include "../api.hpp"
 
