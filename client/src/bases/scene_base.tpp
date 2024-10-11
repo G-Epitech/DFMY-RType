@@ -11,6 +11,7 @@ using namespace zygarde;
 template <typename ContextType>
 SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context) {
   registry_ = Registry::create();
+  resourcesManager_ = ResourcesManager::Create();
 }
 
 template <typename ContextType>

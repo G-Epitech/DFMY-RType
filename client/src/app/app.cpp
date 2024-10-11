@@ -7,9 +7,7 @@
 
 #include "app.hpp"
 
-#include "my_scene.hpp"
-#include "my_scene_2.hpp"
-#include "scenes/scenes_manager.hpp"
+#include "scenes/menu.hpp"
 
 using namespace rtype::client;
 
@@ -18,9 +16,8 @@ App::App() {
   CreateScenesManager();
   InitializeGlobalContext();
 
-  scenesManager_->RegisterScene<MyScene>();
-  scenesManager_->RegisterScene<MyScene2>();
-  scenesManager_->GoToScene<MyScene2>();
+  scenesManager_->RegisterScene<SceneMenu>();
+  scenesManager_->GoToScene<SceneMenu>();
 }
 
 void App::Run() {

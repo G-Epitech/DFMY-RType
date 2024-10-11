@@ -30,6 +30,12 @@ class WindowManager {
     std::optional<std::string> iconPath;  ///< Path to the icon of the window
   };
 
+  /// @brief Views of the window
+  enum View {
+    GAME,  ///< Game view
+    HUD,   ///< HUD view
+  };
+
   /**
    * @brief Create a new window manager
    * @param props Properties of the window
@@ -45,14 +51,13 @@ class WindowManager {
 
   /**
    * @brief Construct a new Window Manager object
-   * @param props Properties of the window
    */
   ~WindowManager() = default;
 
   /**
    * @brief Get the Window object
    */
-  inline std::shared_ptr<sf::RenderWindow> window() { return window_; }
+  std::shared_ptr<sf::RenderWindow> window() { return window_; }
 
   /**
    * @brief Defer events
@@ -68,13 +73,23 @@ class WindowManager {
    * @brief Check if the window is active
    * @return Active status of the window
    */
-  inline bool IsActive() { return window_ && window_->isOpen(); }
+  bool IsActive() const;
 
   /**
    * @brief Get deferred events
    * @return Events list that have been deferred
    */
-  inline const EventsDeferrer &GetDeferredEvents() { return deferredEvents_; }
+  const EventsDeferrer &GetDeferredEvents();
+
+  /**
+   * @brief Set the window view to the game view
+   */
+  void SetView(const View &view) const;
+
+  /// @brief Get the width of the window
+  float width_;
+  /// @brief Get the height of the window
+  float height_;
 
  private:
   /// @brief Current window
@@ -85,5 +100,18 @@ class WindowManager {
 
   /// @brief Deferred events
   EventsDeferrer deferredEvents_;
+
+  /// @brief Game view used to render the game entities
+  sf::View gameView_;
+
+  /// @brief HUD view used to render the HUD entities
+  /// @example Score, health, etc.
+  sf::View hudView_;
+
+  /**
+   * @brief Handle the resize event
+   * @param event Resize event
+   */
+  void HandleResize(const sf::Event &event);
 };
 }  // namespace rtype::client

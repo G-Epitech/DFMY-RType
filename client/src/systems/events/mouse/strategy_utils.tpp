@@ -18,8 +18,8 @@ template <typename MouseEventComponent>
 events::MouseEventTarget MouseStrategyUtils::GetCurrentTarget(
     const sf::Vector2f &mouse, const MouseEventComponent &component,
     const sparse_array<components::Drawable>::ptr &drawables, std::size_t entityId) {
-  auto drawable =
-      drawables->size() > entityId ? (*drawables)[entityId] : std::optional<components::Drawable>();
+  auto emptyDrawable = std::optional<components::Drawable>();
+  auto &drawable = drawables->size() > entityId ? (*drawables)[entityId] : emptyDrawable;
   auto is_inside = drawable->bounds.contains(mouse);
 
   if (!drawable && component.strategy == events::MouseEventTarget::kAnyTarget) {
@@ -28,9 +28,9 @@ events::MouseEventTarget MouseStrategyUtils::GetCurrentTarget(
     std::cerr << "No drawable component found for entity " << entityId
               << " . Localized mouse strategy ignored." << std::endl;
     return events::kNoTarget;
-  } else if ((component.strategy & events::kLocalTarget) && is_inside) {
+  } else if ((component.strategy & events::kLocalTarget) == events::kLocalTarget && is_inside) {
     return events::MouseEventTarget::kLocalTarget;
-  } else if ((component.strategy & events::kOtherTarget) && !is_inside) {
+  } else if ((component.strategy & events::kOtherTarget) == events::kOtherTarget && !is_inside) {
     return events::MouseEventTarget::kOtherTarget;
   } else {
     return events::MouseEventTarget::kNoTarget;
