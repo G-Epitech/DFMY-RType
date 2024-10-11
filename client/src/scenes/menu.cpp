@@ -10,11 +10,12 @@
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "components/position.hpp"
+#include "game.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
 #include "systems/events/mouse/move.hpp"
 
-using namespace rtype::client;
+using namespace rtype::client::scenes;
 
 SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
@@ -65,7 +66,7 @@ void SceneMenu::CreatePlayButton() const {
       components::OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
                                  .handler = [this](sf::Mouse::Button button, sf::Vector2f pos,
                                                    events::MouseEventTarget target) {
-                                   std::cout << "Play button pressed" << std::endl;
+                                   context_.scenesManager->GoToScene<SceneGame>();
                                  }});
   registry_->AddComponent<components::OnMouseMoved>(
       play_button,

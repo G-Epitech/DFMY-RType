@@ -25,8 +25,8 @@ enum class VerticalAlign {
 
 /// @brief Position Component use in an ECS
 struct Position {
-  float x = 0;                                              ///< X position
-  float y = 0;                                              ///< Y position
+  float x = 0;                                               ///< X position
+  float y = 0;                                               ///< Y position
   HorizontalAlign horizontalAlign = HorizontalAlign::kLeft;  ///< Horizontal align
   VerticalAlign verticalAlign = VerticalAlign::kTop;         ///< Vertical align
 };

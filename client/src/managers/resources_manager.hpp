@@ -52,7 +52,6 @@ class ResourcesManager {
    * @brief Load a new texture in the resources manager
    * @param path Texture path to load
    * @param name Name of the texture to store
-   * @return True if the texture has been loaded, false otherwise
    */
   void LoadTexture(const std::string &path, const std::string &name);
 
@@ -60,7 +59,6 @@ class ResourcesManager {
    * @brief Load a new sound in the resources manager
    * @param path Sound path to load
    * @param name Name of the sound to store
-   * @return True if the sound has been loaded, false otherwise
    */
   void LoadSound(const std::string &path, const std::string &name);
 

@@ -7,9 +7,11 @@
 
 #include "app.hpp"
 
+#include "scenes/game.hpp"
 #include "scenes/menu.hpp"
 
 using namespace rtype::client;
+using namespace rtype::client::scenes;
 
 App::App() {
   CreateWindowManager();
@@ -17,6 +19,8 @@ App::App() {
   InitializeGlobalContext();
 
   scenesManager_->RegisterScene<SceneMenu>();
+  scenesManager_->RegisterScene<SceneGame>();
+
   scenesManager_->GoToScene<SceneMenu>();
 }
 

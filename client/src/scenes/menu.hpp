@@ -8,9 +8,9 @@
 #pragma once
 
 #include "bases/scene_base.hpp"
-#include "context/global_context.hpp"
+#include "context/global.hpp"
 
-namespace rtype::client {
+namespace rtype::client::scenes {
 class SceneMenu final : public SceneBase<GlobalContext> {
  public:
   explicit SceneMenu(const GlobalContext &context);
@@ -43,4 +43,4 @@ class SceneMenu final : public SceneBase<GlobalContext> {
    */
   void CreateExitButton() const;
 };
-}  // namespace rtype::client
+}  // namespace rtype::client::scenes

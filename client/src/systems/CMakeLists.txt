@@ -3,3 +3,4 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         drawable.cpp
 )
 add_subdirectory(events)
+add_subdirectory(game)

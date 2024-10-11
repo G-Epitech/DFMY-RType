@@ -3,9 +3,9 @@ set(CLIENT_EXECUTABLE r-type_client)
 
 add_library(${CLIENT_CORE_LIB} STATIC)
 
-target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
+target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
 if (WIN32)
     add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp ../r-type.rc)

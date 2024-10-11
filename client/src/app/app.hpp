@@ -9,7 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "context/global_context.hpp"
+#include "context/global.hpp"
 #include "managers/scenes_manager.hpp"
 #include "utils/timer.hpp"
 
