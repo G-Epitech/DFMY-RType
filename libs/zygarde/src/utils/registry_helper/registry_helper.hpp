@@ -27,34 +27,35 @@ class EXPORT_ZYGARDE_API RegistryHelper final {
    * @brief Register base components available by default in the zygarde engine
    * @param registry The registry you want to register the components to
    */
-  static void RegisterBaseComponents(Registry* registry);
+  static void RegisterBaseComponents(const std::shared_ptr<Registry> &registry);
 
   /**
    * @brief Register base systems available by default in the zygarde engine
    * @param registry The registry you want to register the systems to
    * @param delta_time Reference to the delta time
    */
-  static void RegisterBaseSystems(Registry* registry, const utils::Timer::Nanoseconds& delta_time);
+  static void RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
+                                  const utils::Timer::Nanoseconds &delta_time);
 
  private:
   /**
    * @brief Register core components available by default in the zygarde engine
    * @param registry The registry you want to register the components to
    */
-  static void RegisterCoreComponents(Registry* registry);
+  static void RegisterCoreComponents(const std::shared_ptr<Registry> &registry);
 
   /**
    * @brief Register physics components available by default in the zygarde engine
    * @param registry The registry you want to register the components to
    */
-  static void RegisterPhysicsComponents(Registry* registry);
+  static void RegisterPhysicsComponents(const std::shared_ptr<Registry> &registry);
 
   /**
    * @brief Register physics systems available by default in the zygarde engine
    * @param registry The registry you want to register the systems to
    * @param delta_time Reference to the delta time
    */
-  static void RegisterPhysicsSystems(Registry* registry,
-                                     const utils::Timer::Nanoseconds& delta_time);
+  static void RegisterPhysicsSystems(const std::shared_ptr<Registry> &registry,
+                                     const utils::Timer::Nanoseconds &delta_time);
 };
 }  // namespace zygarde::utils
