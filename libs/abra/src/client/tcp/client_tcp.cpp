@@ -35,10 +35,7 @@ void ClientTCP::Listen() {
       throw boost::system::system_error(error);
     }
 
-    auto bitset = std::make_shared<tools::dynamic_bitset>(buf);
-    tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                   tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
-    queue_.push(message);
+    ResolveBuffer(&buf);
   }
 }
 

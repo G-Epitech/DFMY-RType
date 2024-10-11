@@ -22,7 +22,7 @@ class EXPORT_ZYGARDE_API Vector2f final {
    * @param x x value
    * @param y y value
    */
-  constexpr Vector2f(float x, float y) : x(x), y(y) {};
+  constexpr Vector2f(float x, float y) : x(x), y(y) {}
 
  public:
   /**

@@ -9,13 +9,13 @@
 
 #include <memory>
 
-#include "client/interface_client.hpp"
+#include "client/abstract_client.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API ClientTCP;
 }
 
-class abra::client::ClientTCP : public abra::client::InterfaceClient {
+class abra::client::ClientTCP final : public abra::client::AbstractClient {
  public:
   /**
    * @brief Construct a new ClientTCP object
@@ -48,6 +48,7 @@ class abra::client::ClientTCP : public abra::client::InterfaceClient {
  private:
   /// @brief The Input Output Service
   boost::asio::io_service ios_;
+
   /// @brief The TCP socket
   boost::asio::ip::tcp::socket socket_;
 };

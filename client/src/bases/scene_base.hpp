@@ -7,8 +7,9 @@
 
 #pragma once
 
+#include "interfaces/scene_interface.hpp"
 #include "libs/zygarde/src/registry.hpp"
-#include "scene_interface.hpp"
+#include "managers/resources_manager.hpp"
 
 namespace rtype::client {
 template <typename ContextType>
@@ -31,12 +32,10 @@ class SceneBase : public IScene {
   /// @brief Store the ECS registry for the scene
   zygarde::Registry::Ptr registry_;
 
- public:
-  /***
-   * @brief Draw the scene
-   */
-  void Draw() override;
+  /// @brief Store the resources manager
+  ResourcesManager::Ptr resourcesManager_;
 
+ public:
   /**
    * @brief Update the scene
    * @param delta_time Time since last update

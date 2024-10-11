@@ -10,11 +10,11 @@
 #include <SFML/Graphics.hpp>
 
 #include "context/global_context.hpp"
-#include "scenes/scenes_manager.hpp"
+#include "managers/scenes_manager.hpp"
 #include "utils/timer.hpp"
 
-#define APP_WINDOW_WIDTH 800
-#define APP_WINDOW_HEIGHT 600
+#define APP_WINDOW_WIDTH 1920
+#define APP_WINDOW_HEIGHT 1080
 #define APP_WINDOW_TITLE "R-Type"
 #define APP_WINDOW_FRAMERATE 60
 #define APP_WINDOW_ICON_PATH "assets/icons/R-Type.png"
@@ -57,30 +57,15 @@ class App {
   /**
    * @brief Creates the main window for the application.
    */
-  void CreateWindow();
+  void CreateWindowManager();
 
   /**
    * @brief Creates the scenes manager for the application.
    */
   void CreateScenesManager();
 
-  /**
-   * @brief Processes events.
-   */
-  void ProcessEvents();
-
-  /**
-   * @brief Updates the application.
-   */
-  void Update(utils::DeltaTime delta_time);
-
-  /**
-   * @brief Renders the application.
-   */
-  void Render();
-
   /// @brief The main window for the application.
-  std::shared_ptr<sf::RenderWindow> window_;
+  WindowManager::Ptr windowManager_;
 
   /// @brief The scenes manager for the application.
   ScenesManager<GlobalContext>::Ptr scenesManager_;
