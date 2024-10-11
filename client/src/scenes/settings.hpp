@@ -57,13 +57,13 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    * @param x The x position of the label (Vertical axis).
    * @param y The y position of the label (Horizontal axis).
    */
-  void CreateVolumeButton(const float &x, const float &y) const;
+  void CreateDisableSoundsButton(const float &x, const float &y) const;
 
   /**
    * @brief Create the volume label
    * @param x The x position of the label (Vertical axis).
    * @param y The y position of the label (Horizontal axis).
    */
-  void CreateVolumeLabel(const float &x, const float &y) const;
+  void CreateDisableSoundsLabel(const float &x, const float &y) const;
 };
 }  // namespace rtype::client

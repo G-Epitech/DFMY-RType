@@ -21,24 +21,29 @@ SceneSettings::SceneSettings(const GlobalContext& context) : SceneBase(context) 
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
   resourcesManager_->LoadTexture("assets/ui/menu.png", "menu");
 
-  soundManager_->LoadSoundBuffer("assets/sounds/button_click.wav", "button_click");
+  soundManager_->LoadSoundBuffer("assets/sounds/button_click.ogg", "button_click");
 
   registry_->RegisterComponent<components::Position>();
   registry_->RegisterComponent<components::Drawable>();
   registry_->RegisterComponent<components::OnMousePressed>();
   registry_->RegisterComponent<components::OnMouseMoved>();
 
-  registry_->AddSystem<systems::DrawableSystem>(context.windowManager, resourcesManager_);
   registry_->AddSystem<systems::MousePressEventSystem>(context.windowManager);
   registry_->AddSystem<systems::MouseMoveEventSystem>(context.windowManager);
+  registry_->AddSystem<systems::DrawableSystem>(context.windowManager, resourcesManager_);
 }
 
 void SceneSettings::OnCreate() {
+  constexpr auto left = 600;
+  const auto right = context_.windowManager->width_ - 600;
+
   CreateTitle();
-  CreateMainEntity();
   CreateBackButton();
-  CreateFullscreenLabel(600, 250);
-  CreateFullscreenButton(context_.windowManager->width_ - 600, 250);
+  CreateFullscreenLabel(left, 250);
+  CreateFullscreenButton(right, 250);
+  CreateDisableSoundsButton(right, 300);
+  CreateDisableSoundsLabel(left, 300);
+  CreateMainEntity();
 }
 
 void SceneSettings::OnActivate() {}
@@ -166,16 +171,18 @@ void SceneSettings::CreateFullscreenLabel(const float& x, const float& y) const 
       fullscreen_label, {components::Text{"Fullscreen", "main", 20}, WindowManager::View::HUD});
 }
 
-void SceneSettings::CreateVolumeButton(const float& x, const float& y) const {
+void SceneSettings::CreateDisableSoundsButton(const float& x, const float& y) const {
   const auto volume_button = registry_->SpawnEntity();
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
+  const auto soundVolume = soundManager_->GetSoundVolume();
 
   registry_->AddComponent<components::Position>(
       volume_button,
       {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
   registry_->AddComponent<components::Drawable>(
-      volume_button, {components::Texture{"menu", 4, active}, WindowManager::View::HUD});
+      volume_button, {components::Texture{"menu", 4, soundVolume > 0 ? active : disable},
+                      WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
       volume_button, components::OnMousePressed{
                          .strategy = events::MouseEventTarget::kLocalTarget,
@@ -183,11 +190,11 @@ void SceneSettings::CreateVolumeButton(const float& x, const float& y) const {
                                         const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                         const events::MouseEventTarget& target) {
                            if (button == sf::Mouse::Button::Left) {
-                             const auto windowStyle = context_.windowManager->GetStyle();
-                             if (windowStyle == sf::Style::Default) {
-                               context_.windowManager->SetStyle(sf::Style::Fullscreen);
+                             const auto soundVolume = soundManager_->GetSoundVolume();
+                             if (soundVolume > 0) {
+                               soundManager_->SetSoundVolume(0);
                              } else {
-                               context_.windowManager->SetStyle(sf::Style::Default);
+                               soundManager_->SetSoundVolume(100);
                              }
                              auto drawables = registry_->GetComponents<components::Drawable>();
                              auto& dr = (*drawables)[static_cast<std::size_t>(volume_button)];
@@ -198,10 +205,18 @@ void SceneSettings::CreateVolumeButton(const float& x, const float& y) const {
 
                                if (std::holds_alternative<components::Texture>(variant)) {
                                  auto& texture = std::get<components::Texture>(variant);
-                                 texture.rect =
-                                     windowStyle == sf::Style::Default ? active : disable;
+                                 texture.rect = soundVolume > 0 ? disable : active;
                                }
                              }
                            }
                          }});
+}
+
+void SceneSettings::CreateDisableSoundsLabel(const float& x, const float& y) const {
+  const auto volume_label = registry_->SpawnEntity();
+
+  registry_->AddComponent<components::Position>(
+      volume_label, {x, y, components::HorizontalAlign::kLeft, components::VerticalAlign::kCenter});
+  registry_->AddComponent<components::Drawable>(
+      volume_label, {components::Text{"Disable sounds", "main", 20}, WindowManager::View::HUD});
 }
