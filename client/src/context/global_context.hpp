@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "managers/scenes_manager.hpp"
+#include "managers/sound_manager.hpp"
 
 namespace rtype::client {
 
@@ -25,5 +26,10 @@ struct GlobalContext {
    * @brief Provide access to the scenes manager
    */
   ScenesManager<GlobalContext>::Ptr scenesManager;
+
+  /**
+   * @brief Provide access to the sound manager
+   */
+  SoundManager::Ptr soundManager;
 };
 }  // namespace rtype::client

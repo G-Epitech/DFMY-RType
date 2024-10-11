@@ -21,6 +21,8 @@ SceneSettings::SceneSettings(const GlobalContext& context) : SceneBase(context) 
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
   resourcesManager_->LoadTexture("assets/ui/menu.png", "menu");
 
+  soundManager_->LoadSoundBuffer("assets/sounds/button_click.wav", "button_click");
+
   registry_->RegisterComponent<components::Position>();
   registry_->RegisterComponent<components::Drawable>();
   registry_->RegisterComponent<components::OnMousePressed>();
@@ -33,6 +35,7 @@ SceneSettings::SceneSettings(const GlobalContext& context) : SceneBase(context) 
 
 void SceneSettings::OnCreate() {
   CreateTitle();
+  CreateMainEntity();
   CreateBackButton();
   CreateFullscreenLabel(600, 250);
   CreateFullscreenButton(context_.windowManager->width_ - 600, 250);
@@ -42,6 +45,20 @@ void SceneSettings::OnActivate() {}
 
 void SceneSettings::Update(std::chrono::nanoseconds delta_time) {
   registry_->RunSystems();
+}
+
+void SceneSettings::CreateMainEntity() const {
+  const auto main = registry_->SpawnEntity();
+
+  registry_->AddComponent<components::OnMousePressed>(
+      main, components::OnMousePressed{
+                .strategy = events::MouseEventTarget::kAnyTarget,
+                .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                                  const events::MouseEventTarget& target) {
+                  if (button == sf::Mouse::Button::Left) {
+                    soundManager_->PlaySound("button_click");
+                  }
+                }});
 }
 
 void SceneSettings::CreateTitle() const {

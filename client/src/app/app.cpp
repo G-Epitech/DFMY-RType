@@ -15,6 +15,7 @@ using namespace rtype::client;
 App::App() {
   CreateWindowManager();
   CreateScenesManager();
+  CreateSoundManager();
   InitializeGlobalContext();
 
   scenesManager_->RegisterScene<SceneMenu>();
@@ -31,6 +32,7 @@ void App::Run() {
 void App::InitializeGlobalContext() {
   globalContext_.windowManager = windowManager_;
   globalContext_.scenesManager = scenesManager_;
+  globalContext_.soundManager = soundManager_;
 }
 
 void App::CreateWindowManager() {
@@ -45,4 +47,8 @@ void App::CreateWindowManager() {
 
 void App::CreateScenesManager() {
   scenesManager_ = ScenesManager<GlobalContext>::Create(windowManager_, globalContext_);
+}
+
+void App::CreateSoundManager() {
+  soundManager_ = SoundManager::Create();
 }

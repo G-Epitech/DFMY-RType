@@ -78,15 +78,25 @@ class SoundManager {
    */
   void SetMusicVolume(const float& volume);
 
+  class Exception final : public std::exception {
+   public:
+    explicit Exception(std::string message);
+
+    [[nodiscard]] const char* what() const noexcept override;
+
+   private:
+    std::string message_;
+  };
+
  private:
   /// @brief Map of sound buffers
-  std::map<std::string, std::shared_ptr<sf::SoundBuffer>> soundBuffers_;
+  std::map<std::string, std::shared_ptr<sf::SoundBuffer>> soundBuffers_{};
 
   /// @brief Queue of sounds
-  std::queue<std::shared_ptr<sf::Sound>> sounds_;
+  std::queue<std::shared_ptr<sf::Sound>> sounds_{};
 
   /// @brief Queue of musics
-  std::queue<std::shared_ptr<sf::Music>> musics_;
+  std::queue<std::shared_ptr<sf::Music>> musics_{};
 
   /// @brief Volume of the sound
   float soundVolume_ = 100;

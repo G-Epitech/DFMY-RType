@@ -24,6 +24,11 @@ class SceneSettings final : public SceneBase<GlobalContext> {
 
  private:
   /**
+   * @brief Create main entity
+   */
+  void CreateMainEntity() const;
+
+  /**
    * @brief Create the title
    */
   void CreateTitle() const;

@@ -8,6 +8,7 @@
 #include "sound_manager.hpp"
 
 #include <SFML/Audio/Sound.hpp>
+#include <iostream>
 
 using namespace rtype::client;
 
@@ -18,8 +19,14 @@ SoundManager::Ptr SoundManager::Create() {
 }
 
 void SoundManager::LoadSoundBuffer(const std::string &path, const std::string &name) {
+  if (soundBuffers_.contains(name)) {
+    std::cerr << "Sound buffer already loaded: " << name << std::endl;
+    return;
+  }
   const auto buffer = std::make_shared<sf::SoundBuffer>();
-  buffer->loadFromFile(path);
+  if (!buffer->loadFromFile(path)) {
+    throw Exception("Failed to load sound buffer: " + path);
+  }
   soundBuffers_[name] = buffer;
 }
 
@@ -53,4 +60,10 @@ void SoundManager::SetSoundVolume(const float &volume) {
 
 void SoundManager::SetMusicVolume(const float &volume) {
   musicVolume_ = volume;
+}
+
+SoundManager::Exception::Exception(std::string message) : message_{std::move(message)} {}
+
+const char *SoundManager::Exception::what() const noexcept {
+  return message_.c_str();
 }
