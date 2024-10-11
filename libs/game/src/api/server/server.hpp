@@ -30,6 +30,29 @@ class rtype::sdk::game::api::Server {
    */
   explicit Server(int port);
 
+  struct Client {
+    std::uint64_t id;
+    std::string pseudo;
+    bool inLobby;
+    std::uint32_t lobbyId;
+    boost::asio::ip::udp::endpoint endpoint;
+  };
+
+  struct LobbyClient {
+    std::uint64_t id;
+    boost::asio::ip::udp::endpoint endpoint;
+  };
+
+  struct Lobby {
+    std::uint64_t id;
+    std::string name;
+    std::unique_ptr<abra::server::ServerUDP> serverUDP;
+    std::vector<LobbyClient> clients;
+    std::thread thread;
+  };
+
+  void CreateLobby(const std::string &name);
+
  private:
   /**
    * @brief Initialize the TCP connection
@@ -40,6 +63,18 @@ class rtype::sdk::game::api::Server {
    * @brief Start the TCP connection (run the IO service)
    */
   void ListenTCP();
+
+  /**
+   * @brief Initialize the UDP connection
+   * @param id The lobby id
+   */
+  void InitUDP(std::uint64_t id);
+
+  /**
+   * @brief Start the UDP connection (run the IO context)
+   * @param id The lobby id
+   */
+  void ListenUDP(std::uint64_t id);
 
   /**
    * @brief Send a payload to a specific client (TCP)
@@ -65,6 +100,19 @@ class rtype::sdk::game::api::Server {
    */
   void HandleClientConnection(const ClientTCPMessage &message);
 
+  /**
+   * @brief Handle a lobby join
+   * @param message The message of the client
+   */
+  void HandleLobbyJoin(const ClientTCPMessage &message);
+
+  /**
+   * @brief Add a new client to the server
+   * @param clientId The client id
+   * @param pseudo The pseudo of the client
+   */
+  void AddNewClient(std::uint64_t clientId, const std::string &pseudo);
+
   /// @brief The ABRA Server TCP instance (monitor)
   abra::server::ServerTCP serverTCP_;
 
@@ -77,9 +125,16 @@ class rtype::sdk::game::api::Server {
   /// @brief The logger
   abra::tools::Logger logger_;
 
+  /// @brief Vector of clients
+  std::vector<Client> clients_;
+
+  /// @brief Map of lobbies
+  std::map<std::uint64_t, Lobby> lobbies_;
+
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
-      {MessageServerType::kConnectionInfos, &Server::HandleClientConnection}};
+      {MessageClientType::kConnection, &Server::HandleClientConnection},
+      {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin}};
 };
 
 #include "server.tpp"

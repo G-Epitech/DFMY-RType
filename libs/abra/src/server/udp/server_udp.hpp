@@ -25,11 +25,16 @@ class EXPORT_NETWORK_SDK_API ServerUDP;
 
 class abra::server::ServerUDP {
  public:
+  struct ServerEndpoint {
+    std::string ip;
+    unsigned int port;
+  };
+
   /**
    * @brief Construct a new ServerUDP object
    * @param port The port of the server
    */
-  explicit ServerUDP(const int &port);
+  explicit ServerUDP(const unsigned long int &port);
 
   /**
    * @brief Destroy the ServerUDP object
@@ -68,6 +73,12 @@ class abra::server::ServerUDP {
   template <typename T>
   tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet,
                                 const boost::asio::ip::udp::endpoint &endpoint);
+
+  /**
+   * @brief Get the endpoint of the client
+   * @return The endpoint of the client
+   */
+  [[nodiscard]] ServerEndpoint GetEndpoint() const;
 
  private:
   /**

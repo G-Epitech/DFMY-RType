@@ -12,7 +12,7 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-ServerUDP::ServerUDP(const int &port)
+ServerUDP::ServerUDP(const unsigned long int &port)
     : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_() {}
 
 ServerUDP::~ServerUDP() {
@@ -60,4 +60,10 @@ void ServerUDP::UnlockQueue() {
 
 std::queue<ClientUDPMessage> &ServerUDP::GetQueue() {
   return this->queue_;
+}
+
+ServerUDP::ServerEndpoint ServerUDP::GetEndpoint() const {
+  auto endpoint = socket_.local_endpoint();
+
+  return {endpoint.address().to_string(), endpoint.port()};
 }
