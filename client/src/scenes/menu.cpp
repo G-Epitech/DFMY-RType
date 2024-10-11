@@ -10,6 +10,7 @@
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "components/position.hpp"
+#include "settings.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
 #include "systems/events/mouse/move.hpp"
@@ -106,7 +107,9 @@ void SceneMenu::CreateSettingsButton() const {
       components::OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
                                  .handler = [this](sf::Mouse::Button button, sf::Vector2f pos,
                                                    events::MouseEventTarget target) {
-                                   std::cout << "Settings button pressed" << std::endl;
+                                   if (button == sf::Mouse::Button::Left) {
+                                     context_.scenesManager->GoToScene<SceneSettings>();
+                                   }
                                  }});
   registry_->AddComponent<components::OnMouseMoved>(
       settings_button, components::OnMouseMoved{
