@@ -44,7 +44,7 @@ class EXPORT_ZYGARDE_API Timer final {
   /**
    * @brief Get the delta time in Nanoseconds
    */
-  [[nodiscard]] inline Nanoseconds GetDeltaTime() const noexcept { return deltaTime_; };
+  [[nodiscard]] inline const Nanoseconds &GetDeltaTime() const noexcept { return deltaTime_; };
 
   /**
    * @brief Convert Nanoseconds to Seconds
