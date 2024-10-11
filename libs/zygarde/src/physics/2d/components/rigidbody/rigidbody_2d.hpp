@@ -28,6 +28,8 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
    */
   explicit Rigidbody2D(core::types::Vector2f velocity) noexcept;
 
+  Rigidbody2D(core::types::Vector2f velocity, bool isKinematic) noexcept;
+
  public:
   /**
    * @brief Add force to the Rigidbody2D object
@@ -50,8 +52,19 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
     return velocity_;
   }
 
+  inline void SetVelocity(const core::types::Vector2f &velocity) noexcept { velocity_ = velocity; }
+
+  constexpr void CancelVelocity() noexcept { velocity_ = core::types::Vector2f::zero(); }
+
+  inline void SetKinematic(bool isKinematic) noexcept { isKinematic_ = isKinematic; }
+
+  [[nodiscard]] inline bool IsKinematic() const noexcept { return isKinematic_; }
+
  private:
   /// @brief Velocity vector
   core::types::Vector2f velocity_;
+  /// @brief Is kinematic flag. Rigidbody will not be affected by physics (force, collisions,etc...)
+  /// if set to true
+  bool isKinematic_{false};
 };
 }  // namespace zygarde::physics::components

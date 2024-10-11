@@ -31,18 +31,10 @@ void BoxCollider2D::SetSize(const core::types::Vector2f& size) {
   size_ = size;
 }
 
-inline void BoxCollider2D::OnCollisionExit(const Collision2D::ptr& collision_2d) const noexcept {
-  if (collider_.onCollisionExit_.has_value()) {
-    collider_.onCollisionExit_.value()(collision_2d);
-  }
-}
-
-inline void BoxCollider2D::OnCollisionEnter(const Collision2D::ptr& collision_2d) const noexcept {
-  if (collider_.onCollisionEnter_.has_value()) {
-    collider_.onCollisionEnter_.value()(collision_2d);
-  }
-}
-
 zygarde::physics::types::BoundingBox2D BoxCollider2D::GetBoundingBox() const noexcept {
   return {collider_.position_, size_};
+}
+
+void BoxCollider2D::AddColllision(types::Collision2D collision) noexcept {
+  collider_.collisionQueue_.push(collision);
 }

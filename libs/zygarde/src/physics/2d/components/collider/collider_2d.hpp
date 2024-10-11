@@ -9,6 +9,7 @@
 
 #include <functional>
 #include <optional>
+#include <queue>
 #include <utility>
 #include <vector>
 
@@ -46,26 +47,16 @@ class EXPORT_ZYGARDE_API Collider2D final {
    */
   explicit Collider2D(Rigidbody2D::ptr attached_rigidbody, const core::types::Vector2f &position);
 
-  inline void SetOnCollisionEnter(Collision2DFunction on_collision_enter) {
-    onCollisionEnter_ = std::move(on_collision_enter);
-  }
-
-  inline void SetOnCollisionExit(Collision2DFunction on_collision_exit) {
-    onCollisionExit_ = std::move(on_collision_exit);
-  }
-
   friend class BoxCollider2D;
 
  private:
-  /// @brief On collision enter function callback
-  std::optional<Collision2DFunction> onCollisionEnter_;
-  /// @brief On collision exit function callback
-  std::optional<Collision2DFunction> onCollisionExit_;
   /// @brief Pointer to the attached Rigidbody2D object
   Rigidbody2D::ptr attachedRigidbody_;
   /// @brief Collision layers
   std::vector<int> collisionLayers_ = std::vector<int>{0};
   /// @brief Reference to the position of the entity
   const core::types::Vector2f &position_;
+  /// @brief Incoming collisions
+  std::queue<types::Collision2D> collisionQueue_;
 };
 }  // namespace zygarde::physics::components

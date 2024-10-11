@@ -32,6 +32,9 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
                                      *otherComponentsPack.boxCollider)) {
         continue;
       }
+      if (AreColliding(*componentsPack.boxCollider, *otherComponentsPack.boxCollider)) {
+        ProcessCollision(componentsPack, otherComponentsPack);
+      }
     }
   }
 }
@@ -71,4 +74,22 @@ bool CollisionSystem::AreColliding(physics::components::BoxCollider2D &collider1
   bool overlapX = boundingBox1.left < boundingBox2.right && boundingBox1.right > boundingBox2.left;
   bool overlapY = boundingBox1.top < boundingBox2.bottom && boundingBox1.bottom > boundingBox2.top;
   return overlapX && overlapY;
+}
+
+void CollisionSystem::ProcessCollision(CollisionSystem::ComponentsPack &pack1,
+                                       CollisionSystem::ComponentsPack &pack2) noexcept {
+  if (!pack1.rigidbody->IsKinematic()) {
+    pack1.rigidbody->CancelVelocity();
+  }
+  if (!pack2.rigidbody->IsKinematic()) {
+    pack2.rigidbody->CancelVelocity();
+  }
+  auto collision = BuildCollision2D(pack1, pack2);
+  pack1.boxCollider->AddColllision(collision);
+  pack2.boxCollider->AddColllision(collision);
+}
+
+physics::types::Collision2D CollisionSystem::BuildCollision2D(
+    CollisionSystem::ComponentsPack &pack1, CollisionSystem::ComponentsPack &pack2) noexcept {
+  return {pack1.rigidbody, pack1.transform, pack2.rigidbody, pack2.transform};
 }

@@ -27,8 +27,6 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @brief Construct a new BoxCollider2D object
    * @param size Size of the box
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
   BoxCollider2D(const core::types::Vector2f &size, const core::types::Vector2f &position,
                 Rigidbody2D::ptr attached_rigidbody);
@@ -38,8 +36,6 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @param size Size of the box
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    * @param collision_layers Collision layers
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
   BoxCollider2D(const core::types::Vector2f &size, const core::types::Vector2f &position,
                 Rigidbody2D::ptr attached_rigidbody, std::vector<int> collision_layers);
@@ -55,39 +51,13 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    */
   void SetSize(const core::types::Vector2f &size);
 
-  /**
-   * @brief Execute the OnCollisionEnter function callback from the Collider2D object
-   * @param collision_2d Current collision
-   */
-  void OnCollisionEnter(const Collision2D::ptr &collision_2d) const noexcept;
-
-  /**
-   * @brief Execute the OnCollisionExit function callback from the Collider2D object
-   * @param collision_2d Current collision
-   */
-  void OnCollisionExit(const Collision2D::ptr &collision_2d) const noexcept;
-
-  /**
-   * @brief Set the OnCollisionEnter function callback
-   * @param on_collision_enter OnCollisionEnter function callback
-   */
-  inline void SetOnCollisionEnter(const Collision2DFunction &on_collision_enter) noexcept {
-    collider_.onCollisionEnter_ = on_collision_enter;
-  }
-
-  /**
-   * @brief Set the OnCollisionExit function callback
-   * @param on_collision_exit OnCollisionExit function callback
-   */
-  inline void SetOnCollisionExit(const Collision2DFunction &on_collision_exit) noexcept {
-    collider_.onCollisionExit_ = on_collision_exit;
-  }
-
   [[nodiscard]] inline const std::vector<int> &GetCollisionLayers() const noexcept {
     return collider_.collisionLayers_;
   }
 
   [[nodiscard]] types::BoundingBox2D GetBoundingBox() const noexcept;
+
+  void AddColllision(types::Collision2D collision) noexcept;
 
  private:
   /// @brief Size of the box

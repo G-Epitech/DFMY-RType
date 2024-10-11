@@ -16,14 +16,10 @@ Collider2D::Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody,
                        std::vector<int> collision_layers, const core::types::Vector2f &position)
     : attachedRigidbody_(std::move(attached_rigidbody)),
       collisionLayers_(std::move(collision_layers)),
-      onCollisionEnter_(),
-      onCollisionExit_(),
-      position_(position) {}
+      position_(position), collisionQueue_() {}
 
 Collider2D::Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody,
                        const core::types::Vector2f &position)
     : attachedRigidbody_(std::move(attached_rigidbody)),
       collisionLayers_(),
-      onCollisionEnter_(),
-      onCollisionExit_(),
-      position_(position) {}
+      position_(position), collisionQueue_() {}

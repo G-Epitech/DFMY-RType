@@ -11,6 +11,7 @@
 #include "core/components/transform/transform.hpp"
 #include "physics/2d/components/box_collider/box_collider_2d.hpp"
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
+#include "physics/2d/types/collision_2d.hpp"
 #include "system_abstract.hpp"
 #include "utils/timer/timer.hpp"
 
@@ -50,6 +51,10 @@ class EXPORT_ZYGARDE_API CollisionSystem final
 
   [[nodiscard]] static bool AreColliding(components::BoxCollider2D &collider1,
                                          components::BoxCollider2D &collider2) noexcept;
+
+  static void ProcessCollision(ComponentsPack &pack1, ComponentsPack &pack2) noexcept;
+
+  static types::Collision2D BuildCollision2D(ComponentsPack &pack1, ComponentsPack &pack2) noexcept;
 
  private:
   const utils::Timer::Nanoseconds &deltaTime_;
