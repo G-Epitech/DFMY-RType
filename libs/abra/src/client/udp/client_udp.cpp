@@ -37,7 +37,9 @@ void ClientUDP::Listen() {
     auto bitset = std::make_shared<tools::dynamic_bitset>(buf);
     tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
                                    tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
-    queue_.push(message);
+
+    std::unique_lock<std::mutex> lock(this->Mutex);
+    this->queue_.push(message);
   }
 }
 

@@ -42,8 +42,8 @@ void ServerUDP::HandleRequest(const std::size_t &size) {
   auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
 
   ClientUDPMessage message = {this->remoteEndpoint_,
-                              tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                              tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
+                              tools::PacketUtils::ExportMessageIdFromBitset(bitset),
+                              tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
 
   this->mutex_.lock();
   queue_.push(message);

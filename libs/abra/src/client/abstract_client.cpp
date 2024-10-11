@@ -80,10 +80,12 @@ void AbstractClient::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset,
   if (hasOffset) {
     HandleMultiPacketsBitset(bitset);
   } else {
-    tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                   tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
+    tools::MessageProps message = {tools::PacketUtils::ExportMessageIdFromBitset(bitset),
+                                   tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
     logger_.Info("Store message with type " + std::to_string(message.messageType));
-    queue_.push(message);
+
+    std::unique_lock<std::mutex> lock(this->Mutex);
+    this->queue_.push(message);
   }
 }
 

@@ -8,6 +8,7 @@
 #include <boost/asio.hpp>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <queue>
 #include <vector>
 
@@ -26,10 +27,15 @@ class abra::client::InterfaceClient {
  public:
   InterfaceClient() = default;
 
+  virtual ~InterfaceClient() = default;
+
   /**
    * @brief Listen the server and handle the incoming data
    */
   virtual void Listen() = 0;
+
+  /// @brief The mutex for the queue
+  std::mutex Mutex;
 
  protected:
   /**

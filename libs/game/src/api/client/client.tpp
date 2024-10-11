@@ -38,6 +38,7 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
 
     auto &queue = this->clientTCP_.GetQueue();
 
+    std::unique_lock<std::mutex> lock(this->clientTCP_.Mutex);
     if (!queue.empty()) {
       message = queue.front();
 
@@ -70,6 +71,7 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kUDP>(
 
     auto queue = this->clientUDP_->GetQueue();
 
+    std::unique_lock<std::mutex> lock(this->clientUDP_->Mutex);
     if (!queue.empty()) {
       message = queue.front();
 

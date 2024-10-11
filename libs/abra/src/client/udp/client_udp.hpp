@@ -29,7 +29,7 @@ class abra::client::ClientUDP final : public AbstractClient {
    */
   ClientUDP(const std::string &ip, const std::uint32_t &port);
 
-  ~ClientUDP();
+  ~ClientUDP() override;
 
   /**
    * @brief Listen the server and handle the incoming data
