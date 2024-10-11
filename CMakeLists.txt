@@ -7,6 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 include(cmake/version.cmake)
 include(cmake/platforms.cmake)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG)
+endif()
+
 add_subdirectory(libs)
 add_subdirectory(client)
 add_subdirectory(server)

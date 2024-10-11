@@ -28,7 +28,7 @@ void ScenesManager<ContextType>::SwitchToScene(IScene::Ptr new_scene) {
 }
 
 template <typename ContextType>
-void ScenesManager<ContextType>::Update(utils::DeltaTime delta_time) {
+void ScenesManager<ContextType>::Update(client::utils::DeltaTime delta_time) {
   windowManager_->DeferEvents();
   if (currentScene_ && windowManager_->IsActive()) {
     currentScene_->Update(delta_time);

@@ -40,7 +40,7 @@ class SceneBase : public IScene {
    * @brief Update the scene
    * @param delta_time Time since last update
    */
-  void Update(utils::DeltaTime delta_time) override;
+  void Update(client::utils::DeltaTime delta_time) override;
 
   /**
    * @brief Called when the scene is created

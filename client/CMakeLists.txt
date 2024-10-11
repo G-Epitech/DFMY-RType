@@ -8,7 +8,11 @@ target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/s
 target_include_directories(${CLIENT_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
 if (WIN32)
-    add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp ../r-type.rc)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_executable(${CLIENT_EXECUTABLE} main.cpp)
+    else ()
+        add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp ../r-type.rc)
+    endif ()
 else ()
     add_executable(${CLIENT_EXECUTABLE} main.cpp)
     set_target_properties(${CLIENT_EXECUTABLE} PROPERTIES
@@ -27,4 +31,4 @@ endif ()
 add_subdirectory(src)
 add_subdirectory(tests)
 
-file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

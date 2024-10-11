@@ -59,7 +59,7 @@ class ScenesManager {
    * @brief Update the current scene
    * @param delta_time Delta time
    */
-  void Update(utils::DeltaTime delta_time);
+  void Update(client::utils::DeltaTime delta_time);
 
   /**
    * @brief Quit the application

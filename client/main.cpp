@@ -9,15 +9,20 @@
 
 using namespace rtype::client;
 
-#ifdef _WIN32
+#if (defined(_WIN32) && !defined(DEBUG))
   #define MAIN WinMain
 #else
   #define MAIN main
 #endif
 
 int MAIN() {
-  App app;
+  try {
+    App app;
 
-  app.Run();
-  return 0;
+    app.Run();
+    return 0;
+  } catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return 84;
+  }
 }

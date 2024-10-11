@@ -7,13 +7,13 @@
 
 #pragma once
 
+#ifdef __GNUG__
 #include <cxxabi.h>
+#endif
 
 #include <memory>
 #include <string>
 #include <typeinfo>
-
-#define STR_TYPE_NAME(T) #T
 
 namespace zygarde::utils {
 template <typename T>
@@ -26,7 +26,6 @@ inline std::string GetTypeName() {
       abi::__cxa_demangle(mangled_name, nullptr, nullptr, &status), std::free);
   return (status == 0) ? demangled_name.get() : mangled_name;
 #else
-  // Pour d'autres compilateurs, on retourne le nom manglé
   return mangled_name;
 #endif
 }

@@ -50,7 +50,7 @@ class IScene {
    * @brief Update the scene
    * @param delta_time Time since the last update
    */
-  virtual void Update(utils::DeltaTime delta_time) = 0;
+  virtual void Update(client::utils::DeltaTime delta_time) = 0;
 };
 
 /**

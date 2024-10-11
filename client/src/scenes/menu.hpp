@@ -16,7 +16,7 @@ class SceneMenu final : public SceneBase<GlobalContext> {
   explicit SceneMenu(const GlobalContext &context);
   ~SceneMenu() override = default;
 
-  void Update(utils::DeltaTime delta_time) override;
+  void Update(client::utils::DeltaTime delta_time) override;
 
   void OnCreate() override;
 
