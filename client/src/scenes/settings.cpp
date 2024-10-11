@@ -60,35 +60,35 @@ void SceneSettings::CreateBackButton() const {
   registry_->AddComponent<components::Drawable>(
       exit_button, {components::Text{"Back", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
-      exit_button,
-      components::OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
-                                 .handler = [this](const sf::Mouse::Button button, sf::Vector2f pos,
-                                                   events::MouseEventTarget target) {
-                                   if (button == sf::Mouse::Button::Left) {
-                                     context_.scenesManager->GoToScene<SceneMenu>();
-                                   }
-                                 }});
+      exit_button, components::OnMousePressed{
+                       .strategy = events::MouseEventTarget::kLocalTarget,
+                       .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                                         const events::MouseEventTarget& target) {
+                         if (button == sf::Mouse::Button::Left) {
+                           context_.scenesManager->GoToScene<SceneMenu>();
+                         }
+                       }});
   registry_->AddComponent<components::OnMouseMoved>(
-      exit_button,
-      components::OnMouseMoved{
-          .strategy = events::MouseEventTarget::kAnyTarget,
-          .handler = [this, exit_button](sf::Vector2f pos, const events::MouseEventTarget target) {
-            auto drawables = registry_->GetComponents<components::Drawable>();
+      exit_button, components::OnMouseMoved{
+                       .strategy = events::MouseEventTarget::kAnyTarget,
+                       .handler = [this, exit_button](const sf::Vector2f& pos,
+                                                      const events::MouseEventTarget& target) {
+                         auto drawables = registry_->GetComponents<components::Drawable>();
 
-            auto& dr = (*drawables)[static_cast<std::size_t>(exit_button)];
+                         auto& dr = (*drawables)[static_cast<std::size_t>(exit_button)];
 
-            if (dr) {
-              auto& drawable = dr.value();
-              auto& variant = drawable.drawable;
+                         if (dr) {
+                           auto& drawable = dr.value();
+                           auto& variant = drawable.drawable;
 
-              if (std::holds_alternative<components::Text>(variant)) {
-                auto& text = std::get<components::Text>(variant);
-                if (target == events::MouseEventTarget::kLocalTarget) {
-                  text.style = sf::Text::Style::Underlined;
-                } else {
-                  text.style = sf::Text::Style::Regular;
-                }
-              }
-            }
-          }});
+                           if (std::holds_alternative<components::Text>(variant)) {
+                             auto& text = std::get<components::Text>(variant);
+                             if (target == events::MouseEventTarget::kLocalTarget) {
+                               text.style = sf::Text::Style::Underlined;
+                             } else {
+                               text.style = sf::Text::Style::Regular;
+                             }
+                           }
+                         }
+                       }});
 }
