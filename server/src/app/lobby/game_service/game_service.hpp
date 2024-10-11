@@ -17,21 +17,42 @@
 namespace rtype::server::game {
 class GameService {
  public:
+  /**
+   * @brief Construct a new Game Service object
+   * @param tick_rate The tick rate of the game
+   */
   explicit GameService(const std::size_t &tick_rate);
   ~GameService() = default;
 
-  void Run();
+ public:
+  /**
+   * @brief Run the game service
+   * @return Status code
+   */
+  int Run();
 
  private:
+  /**
+   * @brief Execute the game logic during a tick
+   */
   void ExecuteGameLogic() const;
 
+  /**
+   * @brief Initialize the game service
+   */
   void Initialize();
 
+  /**
+   * @brief Setup the registry
+   */
   void RegistrySetup();
 
  private:
+  /// @brief Game running flag
   bool gameRunning_{true};
+  /// @brief Ticks manager for the game
   TicksManager ticksManager_;
+  /// @brief Registry containing all entities
   std::shared_ptr<zygarde::Registry> registry_;
 };
 }  // namespace rtype::server::game

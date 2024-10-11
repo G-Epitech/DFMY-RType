@@ -25,11 +25,11 @@ void RegistryHelper::RegisterPhysicsComponents(Registry *registry) {
   registry->RegisterComponent<physics::components::Rigidbody2D>();
 }
 
-void RegistryHelper::RegisterBaseSystems(Registry *registry, const Timer::Nanoseconds &deltaTime) {
-  RegisterPhysicsSystems(registry, deltaTime);
+void RegistryHelper::RegisterBaseSystems(Registry *registry, const Timer::Nanoseconds &delta_time) {
+  RegisterPhysicsSystems(registry, delta_time);
 }
 
 void RegistryHelper::RegisterPhysicsSystems(Registry *registry,
-                                            const Timer::Nanoseconds &deltaTime) {
-  registry->AddSystem<physics::systems::MovementSystem>(deltaTime);
+                                            const Timer::Nanoseconds &delta_time) {
+  registry->AddSystem<physics::systems::MovementSystem>(delta_time);
 }

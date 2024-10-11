@@ -12,7 +12,7 @@
 
 using namespace rtype::server::game;
 
-TicksManager::TicksManager(const size_t& tickRate) : tickRate_{tickRate} {
+TicksManager::TicksManager(const size_t& tick_rate) : tickRate_{tick_rate}, millisecondsPerTick_() {
   millisecondsPerTick_ = std::chrono::milliseconds(1000 / tickRate_);
 }
 
@@ -25,6 +25,4 @@ void TicksManager::WaitUntilNextTick() {
   if (waitTime > 0) {
     std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));
   }
-  std::cout << "delta time was " << deltaTimeInMs << "ms" << std::endl;
-  std::cout << "Waited for " << waitTime << "ms" << std::endl;
 }

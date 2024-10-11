@@ -16,7 +16,6 @@ GameService::GameService(const size_t& tick_rate) : ticksManager_{tick_rate}, re
 
 void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
-  std::cout << "Registry created" << std::endl;
   utils::RegistryHelper::RegisterBaseComponents(registry_.get());
   utils::RegistryHelper::RegisterBaseSystems(registry_.get(), ticksManager_.DeltaTime());
 }
@@ -26,7 +25,7 @@ void GameService::Initialize() {
   RegistrySetup();
 }
 
-void GameService::Run() {
+int GameService::Run() {
   Initialize();
 
   while (gameRunning_) {
@@ -34,8 +33,9 @@ void GameService::Run() {
     ExecuteGameLogic();
     ticksManager_.WaitUntilNextTick();
   }
+  return EXIT_SUCCESS;
 }
 
 void GameService::ExecuteGameLogic() const {
-  std::cout << "Game logic executed" << gameRunning_ << std::endl;
+  registry_->RunSystems();
 }
