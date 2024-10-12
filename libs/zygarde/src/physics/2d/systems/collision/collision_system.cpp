@@ -67,9 +67,11 @@ bool CollisionSystem::HaveCommonCollisionLayers(
 }
 
 bool CollisionSystem::AreColliding(physics::components::BoxCollider2D &collider1,
-                                   physics::components::BoxCollider2D &collider2) noexcept {
-  auto boundingBox1 = collider1.GetBoundingBox();
-  auto boundingBox2 = collider2.GetBoundingBox();
+                                   core::components::Transform &transform1,
+                                   physics::components::BoxCollider2D &collider2,
+                                   core::components::Transform &transform2) noexcept {
+  auto boundingBox1 = GetBoundingBox(collider1, transform1);
+  auto boundingBox2 = GetBoundingBox(collider2, transform2);
 
   bool overlapX = boundingBox1.left < boundingBox2.right && boundingBox1.right > boundingBox2.left;
   bool overlapY = boundingBox1.top < boundingBox2.bottom && boundingBox1.bottom > boundingBox2.top;
@@ -92,4 +94,9 @@ void CollisionSystem::ProcessCollision(CollisionSystem::ComponentsPack &pack1,
 physics::types::Collision2D CollisionSystem::BuildCollision2D(
     CollisionSystem::ComponentsPack &pack1, CollisionSystem::ComponentsPack &pack2) noexcept {
   return {pack1.rigidbody, pack1.transform, pack2.rigidbody, pack2.transform};
+}
+physics::types::BoundingBox2D CollisionSystem::GetBoundingBox(
+    physics::components::BoxCollider2D &collider, core::components::Transform &transform) noexcept {
+  core::types::Vector2f position2D(transform.position);
+  return {position2D, collider.GetSize()};
 }

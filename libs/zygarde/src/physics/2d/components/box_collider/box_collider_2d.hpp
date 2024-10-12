@@ -28,8 +28,7 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @param size Size of the box
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    */
-  BoxCollider2D(const core::types::Vector2f &size, const core::types::Vector2f &position,
-                Rigidbody2D::ptr attached_rigidbody);
+  BoxCollider2D(const core::types::Vector2f &size);
 
   /**
    * @brief Construct a new BoxCollider2D object
@@ -37,8 +36,7 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    * @param collision_layers Collision layers
    */
-  BoxCollider2D(const core::types::Vector2f &size, const core::types::Vector2f &position,
-                Rigidbody2D::ptr attached_rigidbody, std::vector<int> collision_layers);
+  BoxCollider2D(const core::types::Vector2f &size, std::vector<int> collision_layers);
 
  public:
   /**
@@ -54,8 +52,6 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
   [[nodiscard]] inline const std::vector<int> &GetCollisionLayers() const noexcept {
     return collider_.collisionLayers_;
   }
-
-  [[nodiscard]] types::BoundingBox2D GetBoundingBox() const noexcept;
 
   void AddColllision(types::Collision2D collision) noexcept;
 

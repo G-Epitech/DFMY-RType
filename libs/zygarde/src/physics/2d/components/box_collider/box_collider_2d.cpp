@@ -11,28 +11,18 @@
 
 using namespace zygarde::physics::components;
 
-BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size,
-                             const core::types::Vector2f& position,
-                             std::shared_ptr<Rigidbody2D> attached_rigidbody)
-    : size_(size), collider_(std::move(attached_rigidbody), position) {
+BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size) : size_(size), collider_() {
   core::types::Vector2f::throw_if_negative(size);
 }
 
-BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size,
-                             const core::types::Vector2f& position,
-                             std::shared_ptr<Rigidbody2D> attached_rigidbody,
-                             std::vector<int> collision_layers)
-    : size_(size), collider_(std::move(attached_rigidbody), std::move(collision_layers), position) {
+BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size, std::vector<int> collision_layers)
+    : size_(size), collider_(std::move(collision_layers)) {
   core::types::Vector2f::throw_if_negative(size);
 }
 
 void BoxCollider2D::SetSize(const core::types::Vector2f& size) {
   core::types::Vector2f::throw_if_negative(size);
   size_ = size;
-}
-
-zygarde::physics::types::BoundingBox2D BoxCollider2D::GetBoundingBox() const noexcept {
-  return {collider_.position_, size_};
 }
 
 void BoxCollider2D::AddColllision(types::Collision2D collision) noexcept {
