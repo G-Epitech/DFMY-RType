@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 
+#include "managers/game_manager.hpp"
 #include "managers/scenes_manager.hpp"
+#include "managers/sound_manager.hpp"
 
 namespace rtype::client {
 
@@ -26,5 +27,15 @@ struct GlobalContext {
    * @brief Provide access to the scenes manager
    */
   ScenesManager<GlobalContext>::Ptr scenesManager;
+
+  /**
+   * @brief Provide access to the sound manager
+   */
+  SoundManager::Ptr soundManager;
+
+  /**
+   * @brief Provide access to the game manager
+   */
+  GameManager::Ptr gameManager;
 };
 }  // namespace rtype::client

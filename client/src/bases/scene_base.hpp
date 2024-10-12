@@ -9,7 +9,9 @@
 
 #include "interfaces/scene_interface.hpp"
 #include "libs/zygarde/src/registry.hpp"
+#include "managers/game_manager.hpp"
 #include "managers/resources_manager.hpp"
+#include "managers/sound_manager.hpp"
 
 namespace rtype::client {
 template <typename ContextType>
@@ -34,6 +36,12 @@ class SceneBase : public IScene {
 
   /// @brief Store the resources manager
   ResourcesManager::Ptr resourcesManager_;
+
+  /// @brief Store the sound manager
+  SoundManager::Ptr soundManager_;
+
+  /// @brief Store the game manager
+  GameManager::Ptr gameManager_;
 
  public:
   /**

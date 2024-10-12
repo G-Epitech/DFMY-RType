@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 #include <optional>
 #include <vector>
 
