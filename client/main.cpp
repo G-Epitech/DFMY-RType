@@ -10,9 +10,9 @@
 using namespace rtype::client;
 
 #ifdef _WIN32
-#define MAIN WinMain
+  #define MAIN WinMain
 #else
-#define MAIN main
+  #define MAIN main
 #endif
 
 int MAIN() {
