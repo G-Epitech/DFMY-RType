@@ -31,5 +31,10 @@ struct GlobalContext {
    * @brief Provide access to the sound manager
    */
   SoundManager::Ptr soundManager;
+
+  /**
+   * @brief Provide access to the app animation in order to disable them.
+   */
+  bool animations;
 };
 }  // namespace rtype::client
