@@ -12,12 +12,12 @@
 using namespace abra;
 
 template<typename T>
-tools::Packet<T>::Packet(
-        tools::PacketHeaderProps header,
-        tools::PacketMessageProps message,
+abra::tools::Packet<T>::Packet(
+        abra::tools::PacketHeaderProps header,
+        abra::tools::PacketMessageProps message,
         T payload,
-        tools::PacketOffsetProps offset,
-        tools::PacketTurnProps turn) {
+        abra::tools::PacketOffsetProps offset,
+        abra::tools::PacketTurnProps turn) {
   this->header_ = header;
   this->message_ = message;
   this->offset_ = offset;
@@ -25,63 +25,63 @@ tools::Packet<T>::Packet(
   this->payload_ = payload;
 
   if (!OffsetIsEnabled() && offset_.offset > 0)
-    throw tools::Packet<T>::Exception("Offset is not enabled in the header.");
+    throw abra::tools::Packet<T>::Exception("Offset is not enabled in the header.");
   if (!TurnIsEnabled() && turn_.turn > 0)
-    throw tools::Packet<T>::Exception("Turn is not enabled in the header.");
+    throw abra::tools::Packet<T>::Exception("Turn is not enabled in the header.");
 }
 
 template<typename T>
-tools::Packet<T>::~Packet() = default;
+abra::tools::Packet<T>::~Packet() = default;
 
 template<typename T>
-bool tools::Packet<T>::OffsetIsEnabled() const {
+bool abra::tools::Packet<T>::OffsetIsEnabled() const {
   return this->header_.offsetFlag == 1;
 }
 
 template<typename T>
-bool tools::Packet<T>::TurnIsEnabled() const {
+bool abra::tools::Packet<T>::TurnIsEnabled() const {
   return this->header_.turnFlag == 1;
 }
 
 template<typename T>
-const tools::PacketHeaderProps &tools::Packet<T>::GetHeader() const {
+const abra::tools::PacketHeaderProps &abra::tools::Packet<T>::GetHeader() const {
   return this->header_;
 }
 
 template<typename T>
-const tools::PacketMessageProps &tools::Packet<T>::GetMessage() const {
+const abra::tools::PacketMessageProps &abra::tools::Packet<T>::GetMessage() const {
   return this->message_;
 }
 
 template<typename T>
-const tools::PacketOffsetProps &tools::Packet<T>::GetOffset() const {
+const abra::tools::PacketOffsetProps &abra::tools::Packet<T>::GetOffset() const {
   if (!OffsetIsEnabled())
-    throw tools::Packet<T>::Exception("Offset is not enabled for this packet.");
+    throw abra::tools::Packet<T>::Exception("Offset is not enabled for this packet.");
   return this->offset_;
 }
 
 template<typename T>
-const tools::PacketTurnProps &tools::Packet<T>::GetTurn() const {
+const abra::tools::PacketTurnProps &abra::tools::Packet<T>::GetTurn() const {
   if (!TurnIsEnabled())
-    throw tools::Packet<T>::Exception("Turn is not enabled for this packet.");
+    throw abra::tools::Packet<T>::Exception("Turn is not enabled for this packet.");
   return this->turn_;
 }
 
 template<typename T>
-const T &tools::Packet<T>::GetPayload() const {
+const T &abra::tools::Packet<T>::GetPayload() const {
   return this->payload_;
 }
 
 template<typename T>
-tools::Packet<T>::Exception::Exception(std::string message) : mMessage(std::move(message)) {}
+abra::tools::Packet<T>::Exception::Exception(std::string message) : mMessage(std::move(message)) {}
 
 template<typename T>
-const char *tools::Packet<T>::Exception::what() const noexcept {
+const char *abra::tools::Packet<T>::Exception::what() const noexcept {
   return this->mMessage.c_str();
 }
 
 template<typename T>
-std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() {
+std::shared_ptr<abra::tools::dynamic_bitset> abra::tools::Packet<T>::GetBitset() {
   unsigned int bitsetSize = kPacketHeaderPropsSize + kPacketMessagePropsSize;
   if (OffsetIsEnabled())
     bitsetSize += kPacketOffsetPropsSize;
@@ -103,7 +103,7 @@ std::shared_ptr<tools::dynamic_bitset> tools::Packet<T>::GetBitset() {
 }
 
 template<typename T>
-void tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
+void abra::tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   bitset->Append(header_.payloadLength, kPacketHeaderPayloadLengthSize, *offset);
   *offset += kPacketHeaderPayloadLengthSize;
 
@@ -118,7 +118,7 @@ void tools::Packet<T>::AppendHeaderToBitset(const std::shared_ptr<dynamic_bitset
 }
 
 template<typename T>
-void tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
+void abra::tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   bitset->Append(message_.messageId, kPacketMessageIdSize, *offset);
   *offset += kPacketMessageIdSize;
 
@@ -129,7 +129,7 @@ void tools::Packet<T>::AppendMessageToBitset(const std::shared_ptr<dynamic_bitse
 }
 
 template<typename T>
-void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
+void abra::tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   if (!OffsetIsEnabled())
     return;
 
@@ -141,7 +141,7 @@ void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset
 }
 
 template<typename T>
-void tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
+void abra::tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) const {
   if (!TurnIsEnabled())
     return;
 
@@ -150,7 +150,7 @@ void tools::Packet<T>::AppendTurnToBitset(const std::shared_ptr<dynamic_bitset> 
 }
 
 template<typename T>
-void tools::Packet<T>::AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
+void abra::tools::Packet<T>::AppendPayloadToBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset) {
   auto *payloadMemory = reinterpret_cast<char *>(&payload_);
 
   for (std::size_t i = 0; i < sizeof(payload_); i++) {

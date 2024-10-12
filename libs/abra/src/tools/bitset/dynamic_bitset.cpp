@@ -5,7 +5,7 @@
 ** dynamic_bitset class
 */
 
-#include "dynamic_bitset.hpp"
+#include "./dynamic_bitset.hpp"
 
 using namespace abra;
 

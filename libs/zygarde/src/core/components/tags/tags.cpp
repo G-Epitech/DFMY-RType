@@ -5,7 +5,7 @@
 ** tag.cpp
 */
 
-#include "tags.hpp"
+#include "./tags.hpp"
 using namespace zygarde::core::components;
 
 Tags::Tags(const std::set<std::string>& tags) : tags_{tags} {}

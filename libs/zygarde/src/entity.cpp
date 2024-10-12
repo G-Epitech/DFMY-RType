@@ -5,7 +5,7 @@
 ** entity.cpp
 */
 
-#include "entity.hpp"
+#include "./entity.hpp"
 
 using namespace zygarde;
 

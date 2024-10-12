@@ -7,10 +7,9 @@
 
 #pragma once
 
-using namespace abra::server;
-
-template<typename T>
-tools::SendMessageStatus SessionTCP::Send(const std::unique_ptr<tools::Packet<T>> &packet) {
+template <typename T>
+abra::tools::SendMessageStatus abra::server::SessionTCP::Send(
+    const std::unique_ptr<abra::tools::Packet<T>> &packet) {
   const auto bitset = packet->GetBitset();
   const auto vector = bitset->GetVector();
 
@@ -19,5 +18,5 @@ tools::SendMessageStatus SessionTCP::Send(const std::unique_ptr<tools::Packet<T>
 
   logger_.Info("Sent " + std::to_string(vector.size()) + " bytes", "➡️ ");
 
-  return error ? tools::SendMessageStatus::kError : tools::SendMessageStatus::kSuccess;
+  return error ? abra::tools::SendMessageStatus::kError : abra::tools::SendMessageStatus::kSuccess;
 }

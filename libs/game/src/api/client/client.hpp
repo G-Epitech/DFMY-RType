@@ -12,12 +12,12 @@
 #include <string>
 #include <thread>
 
-#include "abra/includes/network.hpp"
-#include "abra/includes/packet.hpp"
-#include "api/props/message.hpp"
-#include "api/props/network.hpp"
-#include "api/props/payload/payload.hpp"
-#include "core.hpp"
+#include "libs/abra/includes/network.hpp"
+#include "libs/abra/includes/packet.hpp"
+#include "libs/game/src/api/props/message.hpp"
+#include "libs/game/src/api/props/network.hpp"
+#include "libs/game/src/api/props/payload/payload.hpp"
+#include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
 class EXPORT_GAME_SDK_API Client;
@@ -164,25 +164,25 @@ class rtype::sdk::game::api::Client {
    */
   template <NetworkProtocolType T>
   bool WaitForMessage(MessageServerType type,
-                      bool (Client::*handler)(const tools::MessageProps &message));
+                      bool (Client::*handler)(const abra::tools::MessageProps &message));
 
   /**
    * @brief Handle TCP connection confirmation
    */
-  bool HandleConnectionConfirmation(const tools::MessageProps &);
+  bool HandleConnectionConfirmation(const abra::tools::MessageProps &);
 
   /**
    * @brief Handle Join lobby and init UDP connection
    * @param message The message with the lobby infos
    */
-  bool HandleJoinLobbyInfos(const tools::MessageProps &message);
+  bool HandleJoinLobbyInfos(const abra::tools::MessageProps &message);
 
   /**
    * @brief Convert a abra queue to generic server messages queue
    * @param queue The abra queue
    * @param serverQueue The server messages queue
    */
-  static void ConvertQueueData(std::queue<tools::MessageProps> *queue,
+  static void ConvertQueueData(std::queue<abra::tools::MessageProps> *queue,
                                std::queue<ServerMessage> *serverQueue);
 
   /// @brief The ABRA Client TCP instance (main connection)

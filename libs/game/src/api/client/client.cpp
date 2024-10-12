@@ -5,7 +5,7 @@
 ** Client class
 */
 
-#include "client.hpp"
+#include "./client.hpp"
 
 using namespace rtype::sdk::game::api;
 using namespace abra::client;

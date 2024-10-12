@@ -10,8 +10,8 @@
 #include <memory>
 #include <vector>
 
-#include "../../core.hpp"
-#include "packet.hpp"
+#include "./packet.hpp"
+#include "libs/abra/src/core.hpp"
 
 namespace abra::tools {
 class EXPORT_NETWORK_SDK_API PacketBuilder;

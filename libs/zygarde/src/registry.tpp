@@ -8,7 +8,7 @@
 #pragma once
 #include <stdexcept>
 
-#include "utils/symbols.hpp"
+#include "./utils/symbols.hpp"
 
 using namespace zygarde;
 

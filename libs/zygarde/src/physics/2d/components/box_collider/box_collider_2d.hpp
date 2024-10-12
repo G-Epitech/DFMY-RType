@@ -11,7 +11,7 @@
 
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
-#include "physics/2d/components/collider/collider_2d.hpp"
+#include "libs/zygarde/src/physics/2d/components/collider/collider_2d.hpp"
 
 namespace zygarde::physics::components {
 class EXPORT_ZYGARDE_API BoxCollider2D final {

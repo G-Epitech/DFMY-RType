@@ -5,7 +5,7 @@
 ** Vector3f.cpp
 */
 
-#include "vector_3f.hpp"
+#include "./vector_3f.hpp"
 
 using namespace zygarde::core::types;
 

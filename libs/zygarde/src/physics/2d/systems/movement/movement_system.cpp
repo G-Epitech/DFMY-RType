@@ -5,7 +5,7 @@
 ** MovementSystem.cpp
 */
 
-#include "movement_system.hpp"
+#include "./movement_system.hpp"
 
 using namespace zygarde::physics::systems;
 

@@ -11,9 +11,9 @@
 #include <memory>
 #include <string>
 
-#include "../../core.hpp"
-#include "props/props.hpp"
-#include "tools/bitset/dynamic_bitset.hpp"
+#include "./props/props.hpp"
+#include "libs/abra/src/core.hpp"
+#include "libs/abra/src/tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::tools {
 template <typename T>

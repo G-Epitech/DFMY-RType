@@ -9,7 +9,7 @@
 
 #include <boost/asio.hpp>
 
-#include "tools/bitset/dynamic_bitset.hpp"
+#include "libs/abra/src/tools/bitset/dynamic_bitset.hpp"
 
 /// @brief A client message for UDP protocol
 namespace abra::server {

@@ -9,8 +9,8 @@
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
-#include "libs/zygarde/src/core/components/components.hpp"
 #include "game.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
 #include "settings.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"

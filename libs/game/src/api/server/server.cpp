@@ -5,12 +5,12 @@
 ** Server class
 */
 
-#include "server.hpp"
+#include "./server.hpp"
 
 using namespace rtype::sdk::game::api;
 
 Server::Server(int port)
-    : logger_("serverAPI"), serverTCP_(port, [this](const ClientTCPMessage &message) {
+    : logger_("serverAPI"), serverTCP_(port, [this](const abra::server::ClientTCPMessage &message) {
         return this->SystemTCPMessagesMiddleware(message);
       }) {
   this->InitTCP();
@@ -44,7 +44,7 @@ void Server::ListenUDP(std::uint64_t id) {
   this->lobbies_[id].serverUDP->Start();
 }
 
-bool Server::SystemTCPMessagesMiddleware(const ClientTCPMessage &message) {
+bool Server::SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message) {
   if (handlers_.find(message.messageType) == handlers_.end()) {
     return true;
   }
@@ -55,7 +55,7 @@ bool Server::SystemTCPMessagesMiddleware(const ClientTCPMessage &message) {
   return false;
 }
 
-void Server::HandleClientConnection(const ClientTCPMessage &message) {
+void Server::HandleClientConnection(const abra::server::ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::Connection>(message.bitset);
   auto pseudo = packet->GetPayload().pseudo;
 
@@ -73,7 +73,7 @@ void Server::AddNewClient(std::uint64_t clientId, const std::string &pseudo) {
   logger_.Info("New client connected: " + pseudo, "👤");
 }
 
-void Server::HandleLobbyJoin(const ClientTCPMessage &message) {
+void Server::HandleLobbyJoin(const abra::server::ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobby>(message.bitset);
   auto id = packet->GetPayload().lobbyId;
 
@@ -97,7 +97,7 @@ void Server::HandleLobbyJoin(const ClientTCPMessage &message) {
       "🛃");
 }
 
-void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
+void Server::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.bitset);
   auto ip = packet->GetPayload().ip;
   auto port = packet->GetPayload().port;
@@ -115,7 +115,7 @@ void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
   logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby", "🛃");
 }
 
-std::queue<ClientTCPMessage> Server::ExtractMainQueue() {
+std::queue<abra::server::ClientTCPMessage> Server::ExtractMainQueue() {
   return this->serverTCP_.ExtractQueue();
 }
 
@@ -135,14 +135,15 @@ std::uint64_t Server::FindUserByEndpoint(std::uint64_t lobbyId,
   return 0;
 }
 
-std::queue<std::pair<std::uint64_t, ClientUDPMessage>> Server::ExtractLobbyQueue(std::uint64_t id) {
+std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Server::ExtractLobbyQueue(
+    std::uint64_t id) {
   if (this->lobbies_.find(id) == this->lobbies_.end()) {
     logger_.Warning("Try to extract an invalid lobby queue", "🧟‍♂️");
     return {};
   }
 
   auto queue = this->lobbies_[id].serverUDP->ExtractQueue();
-  std::queue<std::pair<std::uint64_t, ClientUDPMessage>> extractedQueue;
+  std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> extractedQueue;
 
   while (!queue.empty()) {
     auto message = queue.front();

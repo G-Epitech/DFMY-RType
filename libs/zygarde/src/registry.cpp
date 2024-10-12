@@ -5,7 +5,7 @@
 ** registry.cpp
 */
 
-#include "registry.hpp"
+#include "./registry.hpp"
 
 using namespace zygarde;
 

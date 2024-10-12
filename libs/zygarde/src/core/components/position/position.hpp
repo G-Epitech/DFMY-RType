@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "core/types/vector/vector.hpp"
+#include "libs/zygarde/src/core/types/vector/vector.hpp"
 
 namespace zygarde::core::components {
 

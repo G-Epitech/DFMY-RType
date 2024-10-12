@@ -5,11 +5,11 @@
 ** SessionTCP class
 */
 
-#include "session_tcp.hpp"
+#include "./session_tcp.hpp"
 
 #include <utility>
 
-#include "tools/packet/packet_utils.hpp"
+#include "libs/abra/src/tools/packet/packet_utils.hpp"
 
 using namespace abra::server;
 using namespace boost::asio;

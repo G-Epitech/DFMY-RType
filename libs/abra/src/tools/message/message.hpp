@@ -10,7 +10,7 @@
 #include <memory>
 #include <optional>
 
-#include "tools/bitset/dynamic_bitset.hpp"
+#include "libs/abra/src/tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::tools {
 /// @brief Enum for the status of the message

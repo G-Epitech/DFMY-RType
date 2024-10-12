@@ -7,6 +7,7 @@
 
 #include "app.hpp"
 
+#include "libs/game/src/api/client/client.hpp"
 #include "scenes/game.hpp"
 #include "scenes/menu.hpp"
 #include "scenes/settings.hpp"
@@ -19,6 +20,8 @@ App::App() {
   CreateScenesManager();
   CreateSoundManager();
   InitializeGlobalContext();
+
+  rtype::sdk::game::api::Client client("127.0.0.1", 4242);
 
   scenesManager_->RegisterScene<SceneMenu>();
   scenesManager_->RegisterScene<SceneGame>();

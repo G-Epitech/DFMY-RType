@@ -5,7 +5,7 @@
 ** Rigidbody2D.cpp
 */
 
-#include "rigidbody_2d.hpp"
+#include "./rigidbody_2d.hpp"
 
 using namespace zygarde::physics::components;
 

@@ -15,9 +15,9 @@
 #include <string>
 #include <typeindex>
 
-#include "entity.hpp"
-#include "system_interface.hpp"
-#include "tools/spare_array.hpp"
+#include "./entity.hpp"
+#include "./system_interface.hpp"
+#include "./tools/spare_array.hpp"
 
 namespace zygarde {
 

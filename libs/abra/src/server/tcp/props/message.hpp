@@ -8,7 +8,8 @@
 #pragma once
 
 #include <cstdint>
-#include "tools/bitset/dynamic_bitset.hpp"
+
+#include "libs/abra/src/tools/bitset/dynamic_bitset.hpp"
 
 /// @brief A client message for TCP protocol
 namespace abra::server {
@@ -18,4 +19,4 @@ struct ClientTCPMessage {
   unsigned int messageId;                               // Message ID
   std::shared_ptr<abra::tools::dynamic_bitset> bitset;  // The bitset of the message
 };
-}
+}  // namespace abra::server

@@ -12,10 +12,10 @@
 #include <map>
 #include <queue>
 
-#include "../../core.hpp"
-#include "props/message.h"
-#include "session/session_tcp.hpp"
-#include "tools/logger/logger.hpp"
+#include "./props/message.hpp"
+#include "./session/session_tcp.hpp"
+#include "libs/abra/src/core.hpp"
+#include "libs/abra/src/tools/logger/logger.hpp"
 
 namespace abra::server {
 class EXPORT_NETWORK_SDK_API ServerTCP;

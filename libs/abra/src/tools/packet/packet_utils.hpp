@@ -9,9 +9,9 @@
 
 #include <memory>
 
-#include "../../core.hpp"
-#include "props/props.hpp"
-#include "tools/bitset/dynamic_bitset.hpp"
+#include "./props/props.hpp"
+#include "libs/abra/src/core.hpp"
+#include "libs/abra/src/tools/bitset/dynamic_bitset.hpp"
 
 namespace abra::tools {
 class EXPORT_NETWORK_SDK_API PacketUtils;

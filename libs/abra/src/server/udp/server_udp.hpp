@@ -12,12 +12,12 @@
 #include <mutex>
 #include <queue>
 
-#include "../../core.hpp"
-#include "props/message.h"
-#include "tools/bitset/dynamic_bitset.hpp"
-#include "tools/message/message.hpp"
-#include "tools/packet/packet.hpp"
-#include "tools/packet/props/props.hpp"
+#include "./props/message.h"
+#include "libs/abra/src/core.hpp"
+#include "libs/abra/src/tools/bitset/dynamic_bitset.hpp"
+#include "libs/abra/src/tools/message/message.hpp"
+#include "libs/abra/src/tools/packet/packet.hpp"
+#include "libs/abra/src/tools/packet/props/props.hpp"
 
 namespace abra::server {
 class EXPORT_NETWORK_SDK_API ServerUDP;
