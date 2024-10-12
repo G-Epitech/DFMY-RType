@@ -58,7 +58,7 @@ void SceneSettings::Update(std::chrono::nanoseconds delta_time) {
   registry_->RunSystems();
   auto v = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
   if (v && v.has_value()) {
-    std::cout << "Selected: " << std::get<std::string>(v.value()) << std::endl;
+    context_.windowManager->SetShader(std::get<std::string>(v.value()));
   }
 }
 

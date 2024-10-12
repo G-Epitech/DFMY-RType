@@ -30,6 +30,20 @@ WindowManager::WindowManager(WindowManager::Properties&& props) : props_(props) 
   const sf::Vector2f center = {width_ / 2, height_ / 2};
   hudView_.setCenter(center);
   gameView_.setCenter(center);
+
+  auto normalShader = std::make_shared<sf::Shader>();
+  normalShader->loadFromFile("assets/shaders/normal.frag", sf::Shader::Fragment);
+  shaders_["normal"] = normalShader;
+  auto protanopiaShader = std::make_shared<sf::Shader>();
+  protanopiaShader->loadFromFile("assets/shaders/protanopia.frag", sf::Shader::Fragment);
+  shaders_["protanopia"] = protanopiaShader;
+  auto deuteranopiaShader = std::make_shared<sf::Shader>();
+  deuteranopiaShader->loadFromFile("assets/shaders/deuteranopia.frag", sf::Shader::Fragment);
+  shaders_["deuteranopia"] = deuteranopiaShader;
+  auto tritanopiaShader = std::make_shared<sf::Shader>();
+  tritanopiaShader->loadFromFile("assets/shaders/tritanopia.frag", sf::Shader::Fragment);
+  shaders_["tritanopia"] = tritanopiaShader;
+  selectedShader_ = normalShader;
 }
 
 WindowManager::Ptr WindowManager::Create(WindowManager::Properties&& props) {
@@ -95,4 +109,17 @@ void WindowManager::SetStyle(const sf::Uint32& style) {
   }
   props_.style = style;
   window_->create(props_.videoMode, props_.title, props_.style);
+}
+
+void WindowManager::SetShader(const std::string& name) {
+  auto shader = shaders_.find(name);
+  if (shader != shaders_.end()) {
+    selectedShader_ = shader->second;
+  } else {
+    std::cerr << "[ERROR]: Shader not found: " << name << std::endl;
+  }
+}
+
+std::shared_ptr<sf::Shader> WindowManager::GetSelectedShader() const {
+  return selectedShader_;
 }

@@ -98,6 +98,18 @@ class WindowManager {
    */
   void SetStyle(const sf::Uint32 &style);
 
+  /**
+   * @brief Set the shader of the window
+   * @param name Name of the shader
+   */
+  void SetShader(const std::string &name);
+
+  /**
+   * @brief Get the selected shader
+   * @return Selected shader
+   */
+  std::shared_ptr<sf::Shader> GetSelectedShader() const;
+
   /// @brief Get the width of the window
   float width_;
   /// @brief Get the height of the window
@@ -122,6 +134,11 @@ class WindowManager {
 
   /// @brief Properties of the window
   Properties props_;
+
+  /// @brief Map of shaders
+  std::map<std::string, std::shared_ptr<sf::Shader>> shaders_;
+
+  std::shared_ptr<sf::Shader> selectedShader_;
 
   /**
    * @brief Handle the resize event

@@ -70,14 +70,15 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
   std::visit(
       [this, position, drawable](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
+        auto shader = windowManager_->GetSelectedShader();
         if constexpr (std::is_same_v<T, components::Texture>) {
-          DrawEntityTexture(arg, position);
+          DrawEntityTexture(arg, position, *shader);
           drawable->bounds = sprite_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Text>) {
-          DrawEntityText(arg, position);
+          DrawEntityText(arg, position, *shader);
           drawable->bounds = text_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Rectangle>) {
-          DrawEntityRectangle(arg, position);
+          DrawEntityRectangle(arg, position, *shader);
           drawable->bounds = shape_.getGlobalBounds();
         }
       },
@@ -85,7 +86,8 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
 }
 
 void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
-                                       const components::Position& position) {
+                                       const components::Position& position,
+                                       const sf::Shader& shader) {
   const auto savedTexture = resourcesManager_->GetTexture(texture.path);
 
   sprite_.setScale(1, 1);
@@ -97,11 +99,12 @@ void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
   sprite_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
   sprite_.setScale(texture.scale, texture.scale);
-  windowManager_->window()->draw(sprite_);
+  windowManager_->window()->draw(sprite_, &shader);
 }
 
 void DrawableSystem::DrawEntityText(const components::Text& text,
-                                    const components::Position& position) {
+                                    const components::Position& position,
+                                    const sf::Shader& shader) {
   const auto savedFont = resourcesManager_->GetFont(text.fontName);
 
   text_.setFont(*savedFont);
@@ -117,11 +120,12 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
   const auto origin = GetOrigin(position, text_.getGlobalBounds());
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
-  windowManager_->window()->draw(text_);
+  windowManager_->window()->draw(text_, &shader);
 }
 
 void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
-                                         const components::Position& position) {
+                                         const components::Position& position,
+                                         const sf::Shader& shader) {
   shape_.setFillColor(rectangle.color);
   shape_.setSize(rectangle.size);
   shape_.setPosition(position.x, position.y);
@@ -129,5 +133,5 @@ void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
-  windowManager_->window()->draw(shape_);
+  windowManager_->window()->draw(shape_, &shader);
 }
