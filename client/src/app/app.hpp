@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "context/global.hpp"
+#include "libs/game/includes/api.hpp"
 #include "managers/scenes_manager.hpp"
 #include "utils/timer.hpp"
 
@@ -77,6 +78,9 @@ class App {
 
   /// @brief The sound manager for the application.
   SoundManager::Ptr soundManager_;
+
+  /// @brief The client API for the application.
+  std::shared_ptr<rtype::sdk::game::api::Client> client_;
 
   /// @brief The global context for the application.
   GlobalContext globalContext_;

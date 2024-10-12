@@ -21,7 +21,7 @@ App::App() {
   CreateSoundManager();
   InitializeGlobalContext();
 
-  rtype::sdk::game::api::Client client("127.0.0.1", 4242);
+  client_ = std::make_shared<rtype::sdk::game::api::Client>("172.21.63.255", 5001);
 
   scenesManager_->RegisterScene<SceneMenu>();
   scenesManager_->RegisterScene<SceneGame>();
