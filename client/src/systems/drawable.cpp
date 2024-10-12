@@ -9,6 +9,7 @@
 
 #include <utility>
 
+namespace zyc = zygarde::core;
 using namespace rtype::client::systems;
 
 DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
@@ -18,13 +19,13 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
 }
 
 void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
-                         sparse_array<components::Position>::ptr positions) {
+                         sparse_array<zyc::components::Position>::ptr positions) {
   const auto window = windowManager_->window();
   window->clear();
   for (size_t i = 0; i < drawables->size() && i < positions->size(); ++i) {
     if ((*drawables)[i] && (*positions)[i]) {
       const auto drawable = &((*drawables)[i].value());
-      auto position = (*positions)[i].value();
+      auto &position = (*positions)[i].value();
 
       windowManager_->SetView(drawable->view);
       DrawEntity(drawable, position);
@@ -33,31 +34,31 @@ void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::pt
   window->display();
 }
 
-std::tuple<float, float> DrawableSystem::GetOrigin(const components::Position& position,
+std::tuple<float, float> DrawableSystem::GetOrigin(const zyc::components::Position& position,
                                                    const sf::FloatRect& bounds) {
   float originX = 0;
   float originY = 0;
 
-  switch (position.horizontalAlign) {
-    case components::HorizontalAlign::kLeft:
+  switch (position.aligns.horizontal) {
+    case zyc::components::HorizontalAlign::kLeft:
       originX = 0;
       break;
-    case components::HorizontalAlign::kCenter:
+    case zyc::components::HorizontalAlign::kCenter:
       originX = bounds.width / 2;
       break;
-    case components::HorizontalAlign::kRight:
+    case zyc::components::HorizontalAlign::kRight:
       originX = bounds.width;
       break;
   }
 
-  switch (position.verticalAlign) {
-    case components::VerticalAlign::kTop:
+  switch (position.aligns.vertical) {
+    case zyc::components::VerticalAlign::kTop:
       originY = 0;
       break;
-    case components::VerticalAlign::kCenter:
+    case zyc::components::VerticalAlign::kCenter:
       originY = bounds.height / 2;
       break;
-    case components::VerticalAlign::kBottom:
+    case zyc::components::VerticalAlign::kBottom:
       originY = bounds.height;
       break;
   }
@@ -66,7 +67,7 @@ std::tuple<float, float> DrawableSystem::GetOrigin(const components::Position& p
 }
 
 void DrawableSystem::DrawEntity(components::Drawable* drawable,
-                                const components::Position& position) {
+                                const zyc::components::Position& position) {
   std::visit(
       [this, position, drawable](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
@@ -86,14 +87,14 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
 }
 
 void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
-                                       const components::Position& position,
+                                       const zyc::components::Position& position,
                                        const sf::Shader& shader) {
   const auto saved_texture = resourcesManager_->GetTexture(texture.name);
 
   sprite_.setScale(1, 1);
   sprite_.setTexture(*saved_texture);
   sprite_.setTextureRect(texture.rect);
-  sprite_.setPosition(position.x, position.y);
+  sprite_.setPosition(position.point.x, position.point.y);
 
   const auto origin = GetOrigin(position, sprite_.getGlobalBounds());
   sprite_.setOrigin(std::get<0>(origin), std::get<1>(origin));
@@ -103,7 +104,7 @@ void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
 }
 
 void DrawableSystem::DrawEntityText(const components::Text& text,
-                                    const components::Position& position,
+                                    const zyc::components::Position& position,
                                     const sf::Shader& shader) {
   const auto savedFont = resourcesManager_->GetFont(text.fontName);
 
@@ -112,7 +113,7 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
   text_.setStyle(text.style);
   text_.setCharacterSize(text.characterSize);
   text_.setFillColor(text.color);
-  text_.setPosition(position.x, position.y);
+  text_.setPosition(position.point.x, position.point.y);
 
   text_.setOutlineColor(text.color);
   text_.setOutlineThickness(text.style == sf::Text::Style::Underlined ? 1 : 0);
@@ -124,11 +125,11 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
 }
 
 void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
-                                         const components::Position& position,
+                                         const zyc::components::Position& position,
                                          const sf::Shader& shader) {
   shape_.setFillColor(rectangle.color);
   shape_.setSize(rectangle.size);
-  shape_.setPosition(position.x, position.y);
+  shape_.setPosition(position.point.x, position.point.y);
 
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));

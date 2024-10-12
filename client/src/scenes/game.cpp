@@ -19,6 +19,7 @@
 using namespace rtype::client::scenes;
 using namespace rtype::client::systems;
 using namespace rtype::client::components;
+using namespace zygarde::core::components;
 
 SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->RegisterComponent<Drawable>();
@@ -77,22 +78,23 @@ void SceneGame::CreatePlayerEntity() {
     if (!position)
       return;
     if (key == sf::Keyboard::Left) {
-      (*position).x -= 10;
+      (*position).point.x -= 10;
     } else if (key == sf::Keyboard::Right) {
-      (*position).x += 10;
+      (*position).point.x += 10;
     } else if (key == sf::Keyboard::Up) {
-      (*position).y -= 10;
+      (*position).point.y -= 10;
     } else if (key == sf::Keyboard::Down) {
-      (*position).y += 10;
+      (*position).point.y += 10;
     }
   };
 
   static const sf::IntRect base{100, 0, 32, 16};
-
-  registry_->AddComponent<Drawable>(player, {
-                                                .drawable = Texture{.name = "player", .scale = 4, .rect = base},
-                                            });
-  registry_->AddComponent<Position>(player,
-                                    {100, 100, HorizontalAlign::kLeft, VerticalAlign::kTop});
+  auto point = zygarde::core::types::Vector3f(100, 100);
+  auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kTop};
+  registry_->AddComponent<Drawable>(
+      player, {
+                  .drawable = Texture{.name = "player", .scale = 4, .rect = base},
+              });
+  registry_->AddComponent<Position>(player, {point, aligns});
   registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
 }

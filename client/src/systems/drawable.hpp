@@ -8,17 +8,19 @@
 #pragma once
 
 #include "components/drawable.hpp"
-#include "components/position.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
 #include "managers/resources_manager.hpp"
 #include "managers/window_manager.hpp"
+
+namespace zyc = zygarde::core;
 
 namespace rtype::client::systems {
 
 /**
  * @brief Drawable System class
  */
-class DrawableSystem final : public ASystem<components::Drawable, components::Position> {
+class DrawableSystem final : public ASystem<components::Drawable, zyc::components::Position> {
  public:
   /**
    * @brief Default constructor of a Drawable System
@@ -29,7 +31,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
                           std::shared_ptr<ResourcesManager> resources_manager);
 
   void Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
-           sparse_array<components::Position>::ptr positions) override;
+           sparse_array<zyc::components::Position>::ptr positions) override;
 
  private:
   /// @brief The render window to display the entities.
@@ -55,14 +57,14 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    * @param drawable The drawable component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntity(components::Drawable *drawable, const components::Position &position);
+  void DrawEntity(components::Drawable *drawable, const zyc::components::Position &position);
 
   /**
    * @brief Draw a texture
    * @param texture The texture component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntityTexture(const components::Texture &texture, const components::Position &position,
+  void DrawEntityTexture(const components::Texture &texture, const zyc::components::Position &position,
                          const sf::Shader &shader);
 
   /**
@@ -70,7 +72,7 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    * @param text The text component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntityText(const components::Text &text, const components::Position &position,
+  void DrawEntityText(const components::Text &text, const zyc::components::Position &position,
                       const sf::Shader &shader);
 
   /**
@@ -79,9 +81,9 @@ class DrawableSystem final : public ASystem<components::Drawable, components::Po
    * @param position The position component of the entity
    */
   void DrawEntityRectangle(const components::Rectangle &rectangle,
-                           const components::Position &position, const sf::Shader &shader);
+                           const zyc::components::Position &position, const sf::Shader &shader);
 
-  static std::tuple<float, float> GetOrigin(const components::Position &position,
+  static std::tuple<float, float> GetOrigin(const zyc::components::Position &position,
                                             const sf::FloatRect &bounds);
 };
 

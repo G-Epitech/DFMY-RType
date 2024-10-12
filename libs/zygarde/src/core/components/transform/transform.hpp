@@ -18,15 +18,12 @@ class EXPORT_ZYGARDE_API Transform final {
 
   /**
    * @brief Construct a new Transform object
-   * @param position Position vector
    * @param scale Scale vector
    * @param rotation Rotation vector
    */
-  Transform(types::Vector3f position, types::Vector3f scale, types::Vector3f rotation);
+  Transform(types::Vector3f scale, types::Vector3f rotation);
 
  public:
-  /// @brief Position vector
-  types::Vector3f position;
   /// @brief Scale vector
   types::Vector3f scale;
   /// @brief Rotation vector

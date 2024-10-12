@@ -10,6 +10,7 @@
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "components/position.hpp"
+#include "components/position.hpp"
 #include "src/bases/systems/events_system_base.hpp"
 
 namespace rtype::client::systems {
