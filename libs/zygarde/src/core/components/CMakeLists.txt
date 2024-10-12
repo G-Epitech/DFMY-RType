@@ -3,3 +3,4 @@ target_sources(zygarde PRIVATE
 )
 
 add_subdirectory(transform)
+add_subdirectory(tags)

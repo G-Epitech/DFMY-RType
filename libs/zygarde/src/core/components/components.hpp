@@ -7,4 +7,5 @@
 
 #pragma once
 
+#include "tags/tags.hpp"
 #include "transform/transform.hpp"
