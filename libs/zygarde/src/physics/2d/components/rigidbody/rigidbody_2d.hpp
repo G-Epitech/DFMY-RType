@@ -16,8 +16,11 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
   Rigidbody2D() = default;
   ~Rigidbody2D() = default;
 
-  Rigidbody2D &operator=(const Rigidbody2D &other) = delete;
-  Rigidbody2D &operator=(Rigidbody2D &&other) noexcept = delete;
+  /**
+   * @brief Construct a new Rigidbody2D object
+   * @param velocity The applied velocity to the Rigidbody2D object
+   */
+  explicit Rigidbody2D(core::types::Vector2f velocity) noexcept;
 
  public:
   /**
