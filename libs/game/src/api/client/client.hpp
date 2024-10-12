@@ -67,6 +67,20 @@ class rtype::sdk::game::api::Client {
    */
   [[nodiscard]] std::queue<tools::MessageProps> ExtractQueue();
 
+  /**
+   * @brief Register a shoot
+   * @param payload The shoot payload
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool Shoot(const payload::Shoot &payload);
+
+  /**
+   * @brief Register a movement
+   * @param payload The movement payload
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool Move(const payload::Movement &payload);
+
  private:
   /// @brief The server response timeout
   static constexpr std::size_t kServerResponseTimeout = 1000 * 5;

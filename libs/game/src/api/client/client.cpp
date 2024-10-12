@@ -122,3 +122,11 @@ std::queue<tools::MessageProps> Client::ExtractQueue() {
 
   return queue;
 }
+
+bool Client::Shoot(const payload::Shoot &payload) {
+  return SendPayload(MessageClientType::kShoot, payload);
+}
+
+bool Client::Move(const payload::Movement &payload) {
+  return SendPayload(MessageClientType::kMovement, payload);
+}
