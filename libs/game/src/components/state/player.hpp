@@ -17,13 +17,20 @@
 #include "libs/game/src/types/projectile.hpp"
 
 namespace rtype::sdk::game::components {
+/// @brief Player collision data
 struct PlayerCollisionData {
+  /// @brief The type of the entity collided with
   rtype::sdk::game::types::GameEntityType collidedType;
+  /// @brief The id of the entity collided with
   int collidedId;
-  std::variant<ProjectilePropsComponent, PowerupPropsComponent> collidedProps;
+  /// @brief The properties of the entity collided with
+  std::variant<ProjectilePropsComponent, PowerupPropsComponent>
+      collidedProps;
 };
 
+/// @brief Player collisions state component
 struct PlayerCollisionStateComponent {
+  /// @brief The collisions data
   std::optional<std::vector<PlayerCollisionData>> collisionsData;
 };
 }  // namespace rtype::sdk::game::components
