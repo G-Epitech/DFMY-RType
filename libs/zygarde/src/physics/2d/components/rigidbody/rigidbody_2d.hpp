@@ -7,11 +7,17 @@
 
 #pragma once
 
+#include <memory>
+
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 
 namespace zygarde::physics::components {
 class EXPORT_ZYGARDE_API Rigidbody2D final {
+ public:
+  using ptr = std::shared_ptr<Rigidbody2D>;
+  using const_ptr = std::shared_ptr<const Rigidbody2D>;
+
  public:
   Rigidbody2D() = default;
   ~Rigidbody2D() = default;
@@ -21,6 +27,8 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
    * @param velocity The applied velocity to the Rigidbody2D object
    */
   explicit Rigidbody2D(core::types::Vector2f velocity) noexcept;
+
+  Rigidbody2D(core::types::Vector2f velocity, bool isKinematic) noexcept;
 
  public:
   /**
@@ -44,8 +52,19 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
     return velocity_;
   }
 
+  inline void SetVelocity(const core::types::Vector2f &velocity) noexcept { velocity_ = velocity; }
+
+  constexpr void CancelVelocity() noexcept { velocity_ = core::types::Vector2f::zero(); }
+
+  inline void SetKinematic(bool isKinematic) noexcept { isKinematic_ = isKinematic; }
+
+  [[nodiscard]] inline bool IsKinematic() const noexcept { return isKinematic_; }
+
  private:
   /// @brief Velocity vector
   core::types::Vector2f velocity_;
+  /// @brief Is kinematic flag. Rigidbody will not be affected by physics (force, collisions,etc...)
+  /// if set to true
+  bool isKinematic_{false};
 };
 }  // namespace zygarde::physics::components

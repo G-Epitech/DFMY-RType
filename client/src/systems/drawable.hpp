@@ -65,14 +65,15 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @param position The position component of the entity
    */
   void DrawEntityTexture(const components::Texture &texture,
-                         const zyc::components::Position &position);
+                         const zyc::components::Position &position, const sf::Shader &shader);
 
   /**
    * @brief Draw a text
    * @param text The text component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntityText(const components::Text &text, const zyc::components::Position &position);
+  void DrawEntityText(const components::Text &text, const zyc::components::Position &position,
+                      const sf::Shader &shader);
 
   /**
    * @brief Draw a rectangle
@@ -80,7 +81,7 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @param position The position component of the entity
    */
   void DrawEntityRectangle(const components::Rectangle &rectangle,
-                           const zyc::components::Position &position);
+                           const zyc::components::Position &position, const sf::Shader &shader);
 
   static std::tuple<float, float> GetOrigin(const zyc::components::Position &position,
                                             const sf::FloatRect &bounds);

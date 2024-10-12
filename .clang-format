@@ -18,3 +18,8 @@ IndentWidth: 2
 TabWidth: 2
 UseTab: Never
 InsertNewlineAtEOF: true
+BraceWrapping:
+  AfterClass: false
+  AfterStruct: false
+  AfterEnum: false
+  BeforeElse: true
