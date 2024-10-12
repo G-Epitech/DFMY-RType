@@ -25,7 +25,7 @@ void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::pt
   for (size_t i = 0; i < drawables->size() && i < positions->size(); ++i) {
     if ((*drawables)[i] && (*positions)[i]) {
       const auto drawable = &((*drawables)[i].value());
-      auto &position = (*positions)[i].value();
+      auto& position = (*positions)[i].value();
 
       windowManager_->SetView(drawable->view);
       DrawEntity(drawable, position);
@@ -134,5 +134,5 @@ void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
-  windowManager_->window()->draw(shape_, &shader);
+  windowManager_->window()->draw(shape_);
 }

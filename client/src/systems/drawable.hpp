@@ -63,14 +63,16 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @brief Draw a texture
    * @param texture The texture component of the entity
    * @param position The position component of the entity
+   * @param shader The shader to apply to the texture
    */
-  void DrawEntityTexture(const components::Texture &texture, const zyc::components::Position &position,
-                         const sf::Shader &shader);
+  void DrawEntityTexture(const components::Texture &texture,
+                         const zyc::components::Position &position, const sf::Shader &shader);
 
   /**
    * @brief Draw a text
    * @param text The text component of the entity
    * @param position The position component of the entity
+   * @param shader The shader to apply to the text
    */
   void DrawEntityText(const components::Text &text, const zyc::components::Position &position,
                       const sf::Shader &shader);
@@ -79,6 +81,7 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @brief Draw a rectangle
    * @param rectangle The rectangle component of the entity
    * @param position The position component of the entity
+   * @param shader The shader to apply to the rectangle
    */
   void DrawEntityRectangle(const components::Rectangle &rectangle,
                            const zyc::components::Position &position, const sf::Shader &shader);

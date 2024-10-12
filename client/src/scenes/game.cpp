@@ -10,6 +10,7 @@
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "menu.hpp"
+#include "systems/background.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/key.hpp"
 #include "systems/events/mouse/buttons.hpp"
@@ -39,6 +40,7 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->AddSystem<MouseMoveEventSystem>(context_.windowManager);
   registry_->AddSystem<DrawableSystem>(context_.windowManager, resourcesManager_);
   registry_->AddSystem<GameSyncSystem>();
+  registry_->AddSystem<BackgroundSystem>();
 }
 
 void SceneGame::OnCreate() {
