@@ -12,7 +12,7 @@ using namespace abra::client;
 using namespace abra::tools;
 
 Client::Client(const std::string &ip, const uint32_t &port)
-    : clientTCP_(ip, port), isConnected_(false), isLobbyConnected_(false) {
+    : clientTCP_(ip, port), isConnected_(false), isLobbyConnected_(false), logger_("clientAPI") {
   InitTCP();
 }
 
@@ -23,6 +23,7 @@ Client::~Client() {
 
 void Client::InitTCP() {
   this->threadTCP_ = std::thread(&Client::ListenTCP, this);
+  logger_.Info("Client TCP thread started", "🚀");
 }
 
 void Client::ListenTCP() {
@@ -31,6 +32,7 @@ void Client::ListenTCP() {
 
 void Client::InitUDP() {
   this->threadUDP_ = std::thread(&Client::ListenUDP, this);
+  logger_.Info("Client UDP thread started", "🚀");
 }
 
 void Client::ListenUDP() {
@@ -46,8 +48,14 @@ bool Client::Connect(const payload::Connection &payload) {
   if (!sendSuccess)
     return false;
 
-  WaitForMessage<NetworkProtocolType::kTCP>(MessageServerType::kConnectionInfos,
-                                            &Client::HandleConnectionConfirmation);
+  auto waitSuccess = WaitForMessage<NetworkProtocolType::kTCP>(
+      MessageServerType::kConnectionInfos, &Client::HandleConnectionConfirmation);
+
+  if (!waitSuccess) {
+    logger_.Error("Connection failed", "💢️");
+  }
+
+  logger_.Info("Connected to server", "🛜");
 
   return this->isConnected_;
 }
@@ -63,8 +71,14 @@ bool Client::JoinLobby(const payload::JoinLobby &payload) {
   if (!sendSuccess)
     return false;
 
-  WaitForMessage<NetworkProtocolType::kTCP>(MessageServerType::kServerJoinLobbyInfos,
-                                            &Client::HandleJoinLobbyInfos);
+  auto waitSuccess = WaitForMessage<NetworkProtocolType::kTCP>(
+      MessageServerType::kServerJoinLobbyInfos, &Client::HandleJoinLobbyInfos);
+
+  if (!waitSuccess) {
+    logger_.Error("Connection to lobby failed", "💢️");
+  } else {
+    logger_.Info("Connected to lobby", "🛜");
+  }
 
   return this->isLobbyConnected_;
 }
@@ -72,6 +86,9 @@ bool Client::JoinLobby(const payload::JoinLobby &payload) {
 bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.data);
   auto payload = packet->GetPayload();
+
+  logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
+               "🚪");
 
   this->clientUDP_.emplace(payload.ip, payload.port);
   InitUDP();
@@ -84,7 +101,24 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   infoPayload.port = endpoint.port;
 
   auto success = SendPayload(MessageClientType::kClientJoinLobbyInfos, infoPayload);
+  if (!success) {
+    logger_.Error("Joining lobby failed", "💢️");
+  }
 
   this->isLobbyConnected_ = success;
   return success;
+}
+
+std::queue<tools::MessageProps> Client::ExtractQueue() {
+  auto queue = this->clientTCP_.ExtractQueue();
+
+  if (this->clientUDP_.has_value()) {
+    auto queueUDP = this->clientUDP_->ExtractQueue();
+    while (!queueUDP.empty()) {
+      queue.push(queueUDP.front());
+      queueUDP.pop();
+    }
+  }
+
+  return queue;
 }

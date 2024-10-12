@@ -16,7 +16,14 @@ class EXPORT_NETWORK_SDK_API AbstractClient;
 
 class abra::client::AbstractClient : public abra::client::InterfaceClient {
  public:
-  AbstractClient() = default;
+  explicit AbstractClient(const std::string &name);
+
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  std::queue<tools::MessageProps> ExtractQueue() override;
 
  protected:
   /**
@@ -24,13 +31,16 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
    * This method will split the buffer into logical packets with header props
    * @param buffer The buffer received
    */
-  void ResolveBuffer(std::vector<char> *buffer) override;
+  void ResolveBuffer(std::vector<char> *buffer, std::size_t len) override;
 
   /**
    * @biref Handle bitset when there are an offset (multi packets)
    * @param bitset The bitset to handle
    */
   void HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bitset> bitset) override;
+
+  /// @brief Logger
+  tools::Logger logger_;
 
  private:
   void StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset, bool hasOffset);

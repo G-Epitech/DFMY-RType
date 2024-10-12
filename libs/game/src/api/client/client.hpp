@@ -59,6 +59,14 @@ class rtype::sdk::game::api::Client {
    */
   [[nodiscard]] bool JoinLobby(const payload::JoinLobby &payload);
 
+  /**
+   * @brief Extract queue of messages
+   * It's a mix of TCP and UDP messages
+   * @warning The queue is cleared after the extraction
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<tools::MessageProps> ExtractQueue();
+
  private:
   /// @brief The server response timeout
   static constexpr std::size_t kServerResponseTimeout = 1000 * 5;
@@ -137,6 +145,9 @@ class rtype::sdk::game::api::Client {
 
   /// @brief Boolean to know if the client is connected to the lobby
   bool isLobbyConnected_;
+
+  /// @brief Logger
+  abra::tools::Logger logger_;
 };
 
 #include "client.tpp"

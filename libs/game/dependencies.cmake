@@ -1,2 +1,2 @@
 # Internal dependencies
-target_link_libraries(${GAME_SDK} PRIVATE abra)
+target_link_libraries(${GAME_SDK} PUBLIC abra)
