@@ -25,7 +25,7 @@ void BackgroundSystem::Run(const std::shared_ptr<Registry> r,
                            const sparse_array<core::components::Position>::ptr positions) {
   const float deltaTime = clock_.restart().asSeconds();
 
-  if (tags->size() < 30) {
+  if (tags->size() < 50) {
     SpawnStar(r);
   }
 
