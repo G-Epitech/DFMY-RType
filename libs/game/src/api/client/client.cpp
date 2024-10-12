@@ -113,7 +113,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
   auto queue = std::queue<ServerMessage>();
 
   auto queueTCP = this->clientTCP_.ExtractQueue();
-  Client::ConvertQueueData(queueTCP, queue);
+  Client::ConvertQueueData(&queueTCP, &queue);
 
   if (!this->isLobbyConnected_) {
     logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
@@ -121,7 +121,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
   }
 
   auto queueUDP = this->clientUDP_->ExtractQueue();
-  Client::ConvertQueueData(queueUDP, queue);
+  Client::ConvertQueueData(&queueUDP, &queue);
 
   auto multiQueue = this->clientUDP_->ExtractMultiQueue();
   while (!multiQueue.empty()) {
@@ -153,15 +153,14 @@ bool Client::Move(const payload::Movement &payload) {
   return SendPayload(MessageClientType::kMovement, payload);
 }
 
-void Client::ConvertQueueData(std::queue<tools::MessageProps> &queue,
-                              std::queue<ServerMessage> &serverQueue) {
-  while (!queue.empty()) {
-    auto &message = queue.front();
+void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue, std::queue<ServerMessage> *serverQueue) {
+  while (!queue->empty()) {
+    auto &message = queue->front();
 
-    serverQueue.push(
+    serverQueue->push(
         {.messageId = message.messageId,
          .messageType = message.messageType,
          .data = std::vector<std::shared_ptr<abra::tools::dynamic_bitset>>{message.data}});
-    queue.pop();
+    queue->pop();
   }
 }

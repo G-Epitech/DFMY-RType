@@ -151,8 +151,8 @@ class rtype::sdk::game::api::Client {
    * @param queue The abra queue
    * @param serverQueue The server messages queue
    */
-  static void ConvertQueueData(std::queue<tools::MessageProps> &queue,
-                               std::queue<ServerMessage> &serverQueue);
+  static void ConvertQueueData(std::queue<tools::MessageProps> *queue,
+                               std::queue<ServerMessage> *serverQueue);
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;
