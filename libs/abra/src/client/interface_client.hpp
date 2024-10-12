@@ -34,6 +34,13 @@ class abra::client::InterfaceClient {
    */
   virtual void Listen() = 0;
 
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  virtual std::queue<tools::MessageProps> ExtractQueue() = 0;
+
   /// @brief The mutex for the queue
   std::mutex Mutex;
 

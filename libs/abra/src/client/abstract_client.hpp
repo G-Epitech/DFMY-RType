@@ -18,7 +18,14 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
  public:
   explicit AbstractClient(const std::string &name);
 
- protected:
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  std::queue<tools::MessageProps> ExtractQueue() override;
+
+protected:
   /**
    * @brief Resolve packets in a buffer
    * This method will split the buffer into logical packets with header props

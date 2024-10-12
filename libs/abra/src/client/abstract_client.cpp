@@ -103,3 +103,12 @@ void AbstractClient::ResolveMultiPackets(unsigned int messageId) {
     pendingMultiPackets_.erase(messageId);
   }
 }
+
+std::queue<tools::MessageProps> AbstractClient::ExtractQueue() {
+  std::unique_lock<std::mutex> lock(this->Mutex);
+
+  auto queue = this->queue_;
+  this->queue_ = std::queue<tools::MessageProps>();
+
+  return queue;
+}

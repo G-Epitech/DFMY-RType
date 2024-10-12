@@ -108,3 +108,17 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   this->isLobbyConnected_ = success;
   return success;
 }
+
+std::queue<tools::MessageProps> Client::ExtractQueue() {
+  auto queue = this->clientTCP_.ExtractQueue();
+
+  if (this->clientUDP_.has_value()) {
+    auto queueUDP = this->clientUDP_->ExtractQueue();
+    while (!queueUDP.empty()) {
+      queue.push(queueUDP.front());
+      queueUDP.pop();
+    }
+  }
+
+  return queue;
+}
