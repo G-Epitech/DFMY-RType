@@ -41,6 +41,13 @@ class abra::client::InterfaceClient {
    */
   virtual std::queue<tools::MessageProps> ExtractQueue() = 0;
 
+  /**
+   * @brief Extract the queue of multi messages
+   * @warning This method will clear the queue
+   * @return The queue of multi messages
+   */
+  virtual std::queue<tools::MultipleMessagesProps> ExtractMultiQueue() = 0;
+
   /// @brief The mutex for the queue
   std::mutex Mutex;
 

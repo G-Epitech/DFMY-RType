@@ -25,6 +25,13 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
    */
   std::queue<tools::MessageProps> ExtractQueue() override;
 
+  /**
+   * @brief Extract the queue of multi messages
+   * @warning This method will clear the queue
+   * @return The queue of multi messages
+   */
+  std::queue<tools::MultipleMessagesProps> ExtractMultiQueue() override;
+
  protected:
   /**
    * @brief Resolve packets in a buffer

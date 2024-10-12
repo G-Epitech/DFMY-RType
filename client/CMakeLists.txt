@@ -15,6 +15,12 @@ else ()
             INSTALL_RPATH "$ORIGIN")
 endif ()
 
+if (APPLE)
+    set(CMAKE_EXE_LINKER_FLAGS
+            "-framework AudioToolbox -framework CoreAudio"
+    )
+endif ()
+
 include(dependencies.cmake)
 
 target_link_libraries(${CLIENT_EXECUTABLE} PRIVATE ${CLIENT_CORE_LIB})

@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-#include "libs/game/src/types/shoot.hpp"
+#include "libs/game/src/types/bullet.hpp"
 
 namespace rtype::sdk::game::api::payload {
 /// @brief Shoot payload
@@ -17,6 +17,6 @@ struct Shoot {
   /// @brief Entity id
   std::size_t entityId;
   /// @brief Shoot type
-  types::ShootType type;
+  types::BulletType type;
 };
 }  // namespace rtype::sdk::game::api::payload
