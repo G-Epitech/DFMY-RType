@@ -33,4 +33,5 @@ void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &regist
 void RegistryHelper::RegisterPhysicsSystems(const std::shared_ptr<Registry> &registry,
                                             const Timer::Nanoseconds &delta_time) {
   registry->AddSystem<physics::systems::MovementSystem>(delta_time);
+  registry->AddSystem<physics::systems::CollisionSystem>();
 }

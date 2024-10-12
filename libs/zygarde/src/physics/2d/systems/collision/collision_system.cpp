@@ -8,11 +8,9 @@
 #include "collision_system.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 using namespace zygarde::physics::systems;
-
-CollisionSystem::CollisionSystem(const utils::Timer::Nanoseconds &deltaTime)
-    : deltaTime_(deltaTime) {}
 
 void CollisionSystem::Run(std::shared_ptr<Registry> r,
                           tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
@@ -32,7 +30,10 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
                                      *otherComponentsPack.boxCollider)) {
         continue;
       }
-      if (AreColliding(*componentsPack.boxCollider, *otherComponentsPack.boxCollider)) {
+      std::cout << "Collision systemered" << std::endl;
+      if (AreColliding(*componentsPack.boxCollider, *componentsPack.transform,
+                       *otherComponentsPack.boxCollider, *otherComponentsPack.transform)) {
+        std::cerr << "COLLISION" << std::endl;
         ProcessCollision(componentsPack, otherComponentsPack);
       }
     }
@@ -73,8 +74,10 @@ bool CollisionSystem::AreColliding(physics::components::BoxCollider2D &collider1
   auto boundingBox1 = GetBoundingBox(collider1, transform1);
   auto boundingBox2 = GetBoundingBox(collider2, transform2);
 
-  bool overlapX = boundingBox1.left < boundingBox2.right && boundingBox1.right > boundingBox2.left;
-  bool overlapY = boundingBox1.top < boundingBox2.bottom && boundingBox1.bottom > boundingBox2.top;
+  bool overlapX =
+      boundingBox1.left <= boundingBox2.right && boundingBox1.right >= boundingBox2.left;
+  bool overlapY =
+      boundingBox1.top <= boundingBox2.bottom && boundingBox1.bottom >= boundingBox2.top;
   return overlapX && overlapY;
 }
 

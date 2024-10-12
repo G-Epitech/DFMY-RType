@@ -17,10 +17,6 @@
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/physics/2d/types/collision_2d.hpp"
 
-namespace zygarde::physics::systems {
-class CollisionSystem;
-}
-
 namespace zygarde::physics::components {
 
 class EXPORT_ZYGARDE_API Collider2D final {

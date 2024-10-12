@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "libs/zygarde/src/api.hpp"
+#include "libs/zygarde/src/core/types/vector/vector_3f.hpp"
 
 namespace zygarde::core::types {
 class EXPORT_ZYGARDE_API Vector2f final {
