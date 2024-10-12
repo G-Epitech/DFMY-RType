@@ -18,6 +18,8 @@ void RegistryHelper::RegisterBaseComponents(const std::shared_ptr<Registry> &reg
 
 void RegistryHelper::RegisterCoreComponents(const std::shared_ptr<Registry> &registry) {
   registry->RegisterComponent<core::components::Transform>();
+  registry->RegisterComponent<core::components::Position>();
+  registry->RegisterComponent<core::components::Tags>();
 }
 
 void RegistryHelper::RegisterPhysicsComponents(const std::shared_ptr<Registry> &registry) {

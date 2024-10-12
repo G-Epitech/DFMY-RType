@@ -7,15 +7,14 @@
 
 #pragma once
 
+#include "core/components/position/position.hpp"
 #include "core/types/vector/vector_2f.hpp"
 
 namespace zygarde::physics::types {
 struct BoundingBox2D {
-  float left;
-  float right;
-  float top;
-  float bottom;
-
-  BoundingBox2D(core::types::Vector2f position, core::types::Vector2f size);
+  float left = 0;
+  float right = 0;
+  float top = 0;
+  float bottom = 0;
 };
 }  // namespace zygarde::physics::types
