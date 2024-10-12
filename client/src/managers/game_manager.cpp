@@ -27,6 +27,6 @@ void GameManager::DisableAnimation() {
   animations_ = false;
 }
 
-bool GameManager::GetAnimationStatus() {
+bool GameManager::GetAnimationStatus() const {
   return animations_;
 }

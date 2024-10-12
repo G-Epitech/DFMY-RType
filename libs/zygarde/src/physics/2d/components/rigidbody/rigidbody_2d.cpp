@@ -9,6 +9,8 @@
 
 using namespace zygarde::physics::components;
 
+Rigidbody2D::Rigidbody2D(core::types::Vector2f velocity) noexcept : velocity_{velocity} {}
+
 void Rigidbody2D::AddForce(core::types::Vector2f force) noexcept {
   velocity_ += force;
 }

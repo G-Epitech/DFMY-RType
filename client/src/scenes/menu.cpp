@@ -9,7 +9,7 @@
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
-#include "components/position.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
 #include "settings.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
@@ -20,7 +20,7 @@ using namespace rtype::client;
 SceneMenu::SceneMenu(const GlobalContext& context) : SceneBase(context) {
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
 
-  registry_->RegisterComponent<components::Position>();
+  registry_->RegisterComponent<zyc::components::Position>();
   registry_->RegisterComponent<components::Drawable>();
   registry_->RegisterComponent<components::OnMousePressed>();
   registry_->RegisterComponent<components::OnMouseMoved>();
@@ -45,20 +45,24 @@ void SceneMenu::Update(std::chrono::nanoseconds delta_time) {
 
 void SceneMenu::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
+  const auto aligns = zyc::components::Alignment{zyc::components::HorizontalAlign::kCenter,
+                                                 zyc::components::VerticalAlign::kCenter};
+  const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
+                                          context_.windowManager->height_ / 2 - 250);
 
-  registry_->AddComponent<components::Position>(
-      title, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 - 250,
-              components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
+  registry_->AddComponent<zyc::components::Position>(title, {point, aligns});
   registry_->AddComponent<components::Drawable>(
       title, {components::Text{"R-TYPE", "main", 84}, WindowManager::View::HUD});
 }
 
 void SceneMenu::CreatePlayButton() const {
   const auto play_button = registry_->SpawnEntity();
+  const auto point =
+      zyc::types::Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height_ / 2);
+  const auto aligns = zyc::components::Alignment{zyc::components::HorizontalAlign::kCenter,
+                                                 zyc::components::VerticalAlign::kCenter};
 
-  registry_->AddComponent<components::Position>(
-      play_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2,
-                    components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
+  registry_->AddComponent<zyc::components::Position>(play_button, {point, aligns});
   registry_->AddComponent<components::Drawable>(
       play_button, {components::Text{"Play", "main", 42}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
@@ -95,11 +99,12 @@ void SceneMenu::CreatePlayButton() const {
 
 void SceneMenu::CreateSettingsButton() const {
   const auto settings_button = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
+                                          context_.windowManager->height_ / 2 + 75);
+  const auto aligns = zyc::components::Alignment{zyc::components::HorizontalAlign::kCenter,
+                                                 zyc::components::VerticalAlign::kCenter};
 
-  registry_->AddComponent<components::Position>(
-      settings_button,
-      {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 + 75,
-       components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
+  registry_->AddComponent<zyc::components::Position>(settings_button, {point, aligns});
   registry_->AddComponent<components::Drawable>(
       settings_button, {components::Text{"Settings", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(
@@ -140,10 +145,11 @@ void SceneMenu::CreateSettingsButton() const {
 
 void SceneMenu::CreateExitButton() const {
   const auto exit_button = registry_->SpawnEntity();
-
-  registry_->AddComponent<components::Position>(
-      exit_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 + 110,
-                    components::HorizontalAlign::kCenter, components::VerticalAlign::kCenter});
+  const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
+                                          context_.windowManager->height_ / 2 + 110);
+  const auto aligns = zyc::components::Alignment{zyc::components::HorizontalAlign::kCenter,
+                                                 zyc::components::VerticalAlign::kCenter};
+  registry_->AddComponent<zyc::components::Position>(exit_button, {point, aligns});
   registry_->AddComponent<components::Drawable>(
       exit_button, {components::Text{"Exit", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<components::OnMousePressed>(

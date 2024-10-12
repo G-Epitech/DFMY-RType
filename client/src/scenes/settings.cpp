@@ -18,6 +18,7 @@
 
 using namespace rtype::client;
 using namespace rtype::client::components;
+using namespace zyc::components;
 
 SceneSettings::SceneSettings(const GlobalContext &context) : SceneBase(context) {
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
@@ -80,19 +81,21 @@ void SceneSettings::CreateMainEntity() const {
 
 void SceneSettings::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2, 150);
+  const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(title, {context_.windowManager->width_ / 2, 0 + 150,
-                                            HorizontalAlign::kCenter, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(title, {point, aligns});
   registry_->AddComponent<Drawable>(title,
                                     {Text{"Settings", "main", 50}, WindowManager::View::HUD});
 }
 
 void SceneSettings::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
+  const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+  const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
+                                          context_.windowManager->height_ - 50);
 
-  registry_->AddComponent<Position>(
-      exit_button, {context_.windowManager->width_ / 2, context_.windowManager->height_ - 50,
-                    HorizontalAlign::kCenter, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,
                                     {Text{"Back", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<OnMousePressed>(
@@ -134,9 +137,10 @@ void SceneSettings::CreateFullscreenButton(const float &x, const float &y) const
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto window_style = context_.windowManager->GetStyle();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(fullscreen_button,
-                                    {x, y, HorizontalAlign::kRight, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(fullscreen_button, {point, aligns});
   registry_->AddComponent<Drawable>(
       fullscreen_button, {Texture{"menu", 4, window_style == sf::Style::Default ? disable : active},
                           WindowManager::View::HUD});
@@ -171,9 +175,10 @@ void SceneSettings::CreateFullscreenButton(const float &x, const float &y) const
 
 void SceneSettings::CreateFullscreenLabel(const float &x, const float &y) const {
   const auto fullscreen_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(fullscreen_label,
-                                    {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(fullscreen_label, {point, aligns});
   registry_->AddComponent<Drawable>(fullscreen_label,
                                     {Text{"Fullscreen", "main", 20}, WindowManager::View::HUD});
 }
@@ -183,47 +188,48 @@ void SceneSettings::CreateDisableSoundsButton(const float &x, const float &y) co
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto soundVolume = soundManager_->GetSoundVolume();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<components::Position>(
+  registry_->AddComponent<Position>(volume_button, {point, aligns});
+  registry_->AddComponent<Drawable>(
       volume_button,
-      {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
-  registry_->AddComponent<components::Drawable>(
-      volume_button, {components::Texture{"menu", 4, soundVolume > 0 ? active : disable},
-                      WindowManager::View::HUD});
-  registry_->AddComponent<components::OnMousePressed>(
-      volume_button, components::OnMousePressed{
-                         .strategy = events::MouseEventTarget::kLocalTarget,
-                         .handler = [this, disable, active, volume_button](
-                                        const sf::Mouse::Button &button, const sf::Vector2f &pos,
-                                        const events::MouseEventTarget &target) {
-                           if (button == sf::Mouse::Button::Left) {
-                             const auto soundVolume = soundManager_->GetSoundVolume();
-                             if (soundVolume > 0) {
-                               soundManager_->SetSoundVolume(0);
-                             } else {
-                               soundManager_->SetSoundVolume(100);
-                             }
-                             auto drawables = registry_->GetComponents<components::Drawable>();
-                             auto &dr = (*drawables)[static_cast<std::size_t>(volume_button)];
+      {Texture{"menu", 4, soundVolume > 0 ? active : disable}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      volume_button,
+      OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
+                     .handler = [this, disable, active, volume_button](
+                                    const sf::Mouse::Button &button, const sf::Vector2f &pos,
+                                    const events::MouseEventTarget &target) {
+                       if (button == sf::Mouse::Button::Left) {
+                         const auto soundVolume = soundManager_->GetSoundVolume();
+                         if (soundVolume > 0) {
+                           soundManager_->SetSoundVolume(0);
+                         } else {
+                           soundManager_->SetSoundVolume(100);
+                         }
+                         auto drawables = registry_->GetComponents<Drawable>();
+                         auto &dr = (*drawables)[static_cast<std::size_t>(volume_button)];
 
-                             if (dr) {
-                               auto &drawable = dr.value();
-                               auto &variant = drawable.drawable;
+                         if (dr) {
+                           auto &drawable = dr.value();
+                           auto &variant = drawable.drawable;
 
-                               if (std::holds_alternative<components::Texture>(variant)) {
-                                 auto &texture = std::get<components::Texture>(variant);
-                                 texture.rect = soundVolume > 0 ? disable : active;
-                               }
-                             }
+                           if (std::holds_alternative<Texture>(variant)) {
+                             auto &texture = std::get<Texture>(variant);
+                             texture.rect = soundVolume > 0 ? disable : active;
                            }
-                         }});
+                         }
+                       }
+                     }});
 }
 
 void SceneSettings::CreateDisableSoundsLabel(const float &x, const float &y) const {
   const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(volume_label,
-                                    {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
   registry_->AddComponent<Drawable>(volume_label,
                                     {Text{"Sounds", "main", 20}, WindowManager::View::HUD});
 }
@@ -233,47 +239,48 @@ void SceneSettings::CreateDisableMusicButton(const float &x, const float &y) con
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto soundVolume = soundManager_->GetSoundVolume();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<components::Position>(
+  registry_->AddComponent<Position>(music_button, {point, aligns});
+  registry_->AddComponent<Drawable>(
       music_button,
-      {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
-  registry_->AddComponent<components::Drawable>(
-      music_button, {components::Texture{"menu", 4, soundVolume > 0 ? active : disable},
-                     WindowManager::View::HUD});
-  registry_->AddComponent<components::OnMousePressed>(
-      music_button, components::OnMousePressed{
-                        .strategy = events::MouseEventTarget::kLocalTarget,
-                        .handler = [this, disable, active, music_button](
-                                       const sf::Mouse::Button &button, const sf::Vector2f &pos,
-                                       const events::MouseEventTarget &target) {
-                          if (button == sf::Mouse::Button::Left) {
-                            const auto musicVolume = soundManager_->GetMusicVolume();
-                            if (musicVolume > 0) {
-                              soundManager_->SetMusicVolume(0);
-                            } else {
-                              soundManager_->SetMusicVolume(100);
-                            }
-                            auto drawables = registry_->GetComponents<components::Drawable>();
-                            auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
+      {Texture{"menu", 4, soundVolume > 0 ? active : disable}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      music_button,
+      OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
+                     .handler = [this, disable, active, music_button](
+                                    const sf::Mouse::Button &button, const sf::Vector2f &pos,
+                                    const events::MouseEventTarget &target) {
+                       if (button == sf::Mouse::Button::Left) {
+                         const auto musicVolume = soundManager_->GetMusicVolume();
+                         if (musicVolume > 0) {
+                           soundManager_->SetMusicVolume(0);
+                         } else {
+                           soundManager_->SetMusicVolume(100);
+                         }
+                         auto drawables = registry_->GetComponents<Drawable>();
+                         auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
 
-                            if (dr) {
-                              auto &drawable = dr.value();
-                              auto &variant = drawable.drawable;
+                         if (dr) {
+                           auto &drawable = dr.value();
+                           auto &variant = drawable.drawable;
 
-                              if (std::holds_alternative<components::Texture>(variant)) {
-                                auto &texture = std::get<components::Texture>(variant);
-                                texture.rect = musicVolume > 0 ? disable : active;
-                              }
-                            }
-                          }
-                        }});
+                           if (std::holds_alternative<Texture>(variant)) {
+                             auto &texture = std::get<Texture>(variant);
+                             texture.rect = musicVolume > 0 ? disable : active;
+                           }
+                         }
+                       }
+                     }});
 }
 
 void SceneSettings::CreateDisableMusicLabel(const float &x, const float &y) const {
   const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(volume_label,
-                                    {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
   registry_->AddComponent<Drawable>(volume_label,
                                     {Text{"Music", "main", 20}, WindowManager::View::HUD});
 }
@@ -289,8 +296,10 @@ void SceneSettings::CreateColorBlindnessSetting(const float &x, const float &y) 
 
 void SceneSettings::CreateColorBlindnessLabel(const float &x, const float &y) const {
   const auto label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(label, {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(label, {point, aligns});
   registry_->AddComponent<Drawable>(label,
                                     {Text{"Color settings", "main", 20}, WindowManager::View::HUD});
 }
@@ -300,6 +309,7 @@ void SceneSettings::CreateColorBlindnessRadioOption(
     const zygarde::core::types::Vector2f &position) {
   auto label_entity = registry_->SpawnEntity();
   auto radio_entity = registry_->SpawnEntity();
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
   auto on_mouse_pressed = [this, radio_entity, value](const sf::Mouse::Button &button,
                                                       const sf::Vector2f &pos,
                                                       const events::MouseEventTarget &target) {
@@ -308,16 +318,16 @@ void SceneSettings::CreateColorBlindnessRadioOption(
     }
   };
 
-  registry_->AddComponent<Position>(
-      radio_entity, {position.x, position.y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(radio_entity,
+                                    {zyc::types::Vector3f(position.x, position.y), aligns});
   registry_->AddComponent<Drawable>(radio_entity, {Texture{"menu", 2.5}, WindowManager::View::HUD});
 
   registry_->AddComponent<Radio>(radio_entity, {.id = "color_blindness", .value = value});
   registry_->AddComponent<OnMousePressed>(
       radio_entity,
       {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
-  registry_->AddComponent<Position>(
-      label_entity, {position.x + 50, position.y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(label_entity,
+                                    {zyc::types::Vector3f(position.x + 50, position.y), aligns});
   registry_->AddComponent<Drawable>(label_entity,
                                     {Text{label, "main", 13}, WindowManager::View::HUD});
   registry_->AddComponent<OnMousePressed>(
@@ -352,47 +362,48 @@ void SceneSettings::CreateDisableAnimationsButton(const float &x, const float &y
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto animationStatus = gameManager_->GetAnimationStatus();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<components::Position>(
+  registry_->AddComponent<Position>(music_button, {point, aligns});
+  registry_->AddComponent<Drawable>(
       music_button,
-      {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
-  registry_->AddComponent<components::Drawable>(
-      music_button, {components::Texture{"menu", 4, animationStatus ? active : disable},
-                     WindowManager::View::HUD});
-  registry_->AddComponent<components::OnMousePressed>(
-      music_button, components::OnMousePressed{
-                        .strategy = events::MouseEventTarget::kLocalTarget,
-                        .handler = [this, disable, active, music_button](
-                                       const sf::Mouse::Button &button, const sf::Vector2f &pos,
-                                       const events::MouseEventTarget &target) {
-                          if (button == sf::Mouse::Button::Left) {
-                            const auto animations = gameManager_->GetAnimationStatus();
-                            if (animations) {
-                              gameManager_->DisableAnimation();
-                            } else {
-                              gameManager_->EnableAnimation();
-                            }
-                            auto drawables = registry_->GetComponents<components::Drawable>();
-                            auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
+      {Texture{"menu", 4, animationStatus ? active : disable}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      music_button,
+      OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
+                     .handler = [this, disable, active, music_button](
+                                    const sf::Mouse::Button &button, const sf::Vector2f &pos,
+                                    const events::MouseEventTarget &target) {
+                       if (button == sf::Mouse::Button::Left) {
+                         const auto animations = gameManager_->GetAnimationStatus();
+                         if (animations) {
+                           gameManager_->DisableAnimation();
+                         } else {
+                           gameManager_->EnableAnimation();
+                         }
+                         auto drawables = registry_->GetComponents<Drawable>();
+                         auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
 
-                            if (dr) {
-                              auto &drawable = dr.value();
-                              auto &variant = drawable.drawable;
+                         if (dr) {
+                           auto &drawable = dr.value();
+                           auto &variant = drawable.drawable;
 
-                              if (std::holds_alternative<components::Texture>(variant)) {
-                                auto &texture = std::get<components::Texture>(variant);
-                                texture.rect = animations ? disable : active;
-                              }
-                            }
-                          }
-                        }});
+                           if (std::holds_alternative<Texture>(variant)) {
+                             auto &texture = std::get<Texture>(variant);
+                             texture.rect = animations ? disable : active;
+                           }
+                         }
+                       }
+                     }});
 }
 
 void SceneSettings::CreateDisableAnimationsLabel(const float &x, const float &y) const {
   const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(volume_label,
-                                    {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
   registry_->AddComponent<Drawable>(volume_label,
                                     {Text{"Animations", "main", 20}, WindowManager::View::HUD});
 }

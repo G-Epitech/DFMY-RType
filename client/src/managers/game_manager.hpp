@@ -35,10 +35,10 @@ class GameManager {
 
   void DisableAnimation();
 
-  bool GetAnimationStatus();
+  [[nodiscard]] bool GetAnimationStatus() const;
 
  private:
   /// @brief Enable or disable animations.
-  bool animations_;
+  bool animations_ = true;
 };
 }  // namespace rtype::client
