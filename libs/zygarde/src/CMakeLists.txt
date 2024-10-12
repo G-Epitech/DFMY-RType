@@ -2,6 +2,7 @@ add_subdirectory(tools)
 add_subdirectory(physics)
 add_subdirectory(core)
 add_subdirectory(utils)
+add_subdirectory(scripting)
 
 target_sources(zygarde PRIVATE
         api.hpp

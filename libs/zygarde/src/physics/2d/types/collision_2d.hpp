@@ -9,12 +9,14 @@
 
 #include <memory>
 
+#include "entity.hpp"
 #include "libs/zygarde/src/core/components/transform/transform.hpp"
 #include "libs/zygarde/src/physics/2d/components/rigidbody/rigidbody_2d.hpp"
 
 namespace zygarde::physics::components {
 /// @brief Collision2D struct passed to the collision callback
 struct Collision2D {
+  using Ptr = std::shared_ptr<Collision2D>;
   /// @brief Pointer to the Rigidbody2D of the current entity
   std::shared_ptr<Rigidbody2D> myRigidbody;
   /// @brief Pointer to the Transform of the current entity
@@ -23,6 +25,8 @@ struct Collision2D {
   const Rigidbody2D &otherRigidbody;
   /// @brief Transform of the other colliding entity
   const core::components::Transform &otherTransform;
+  /// @brief Other entity
+  const Entity &otherEntity;
 };
 
 /// @brief Colliding callback function
