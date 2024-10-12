@@ -26,6 +26,15 @@ class EXPORT_GAME_SDK_API Client;
 class rtype::sdk::game::api::Client {
  public:
   /**
+   * @brief Represent a message from the server
+   */
+  struct ServerMessage {
+    unsigned int messageId;                                          ///< ID of the message
+    unsigned int messageType;                                        ///< Type of the message
+    std::vector<std::shared_ptr<abra::tools::dynamic_bitset>> data;  ///< Content of the message
+  };
+
+  /**
    * @brief Construct a new Client API instance
    * @param ip The IP of the server
    * @param port The port of the server (Main TCP port)
@@ -65,7 +74,7 @@ class rtype::sdk::game::api::Client {
    * @warning The queue is cleared after the extraction
    * @return The queue of messages
    */
-  [[nodiscard]] std::queue<tools::MessageProps> ExtractQueue();
+  [[nodiscard]] std::queue<ServerMessage> ExtractQueue();
 
   /**
    * @brief Register a shoot
@@ -136,6 +145,14 @@ class rtype::sdk::game::api::Client {
    * @param message The message with the lobby infos
    */
   bool HandleJoinLobbyInfos(const tools::MessageProps &message);
+
+  /**
+   * @brief Convert a abra queue to generic server messages queue
+   * @param queue The abra queue
+   * @param serverQueue The server messages queue
+   */
+  static void ConvertQueueData(std::queue<tools::MessageProps> &queue,
+                               std::queue<ServerMessage> &serverQueue);
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;

@@ -112,3 +112,12 @@ std::queue<tools::MessageProps> AbstractClient::ExtractQueue() {
 
   return queue;
 }
+
+std::queue<tools::MultipleMessagesProps> AbstractClient::ExtractMultiQueue() {
+  std::unique_lock<std::mutex> lock(this->Mutex);
+
+  auto queue = this->multiPackets_;
+  this->multiPackets_ = std::queue<tools::MultipleMessagesProps>();
+
+  return queue;
+}
