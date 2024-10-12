@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "libs/zygarde/src/api.hpp"
+#include "libs/zygarde/src/core/types/vector/vector_3f.hpp"
 
 namespace zygarde::core::types {
 class EXPORT_ZYGARDE_API Vector2f final {
@@ -23,6 +24,12 @@ class EXPORT_ZYGARDE_API Vector2f final {
    * @param y y value
    */
   constexpr Vector2f(float x, float y) : x(x), y(y) {}
+
+  /**
+   * @brief Construct a new Vector2f object from a Vector3f object
+   * @param vec Vector3f object
+   */
+  constexpr explicit Vector2f(const Vector3f &vec) : x(vec.x), y(vec.y) {}
 
  public:
   /**

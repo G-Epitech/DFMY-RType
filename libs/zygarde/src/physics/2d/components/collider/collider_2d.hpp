@@ -8,17 +8,23 @@
 #pragma once
 
 #include <functional>
+#include <optional>
+#include <queue>
 #include <utility>
 #include <vector>
 
 #include "libs/zygarde/src/api.hpp"
+#include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/physics/2d/types/collision_2d.hpp"
 
 namespace zygarde::physics::components {
 
 class EXPORT_ZYGARDE_API Collider2D final {
  public:
-  Collider2D() = delete;
+  using ptr = std::shared_ptr<Collider2D>;
+
+ public:
+  Collider2D() = default;
 
  private:
   ~Collider2D() = default;
@@ -27,31 +33,15 @@ class EXPORT_ZYGARDE_API Collider2D final {
    * @brief Construct a new Collider2D object
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    * @param collision_layers Collision layers
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
-  Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody, std::vector<int> collision_layers,
-             Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
-
-  /**
-   * @brief Construct a new Collider2D object
-   * @param attached_rigidbody Pointer to the attached Rigidbody2D object
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
-   */
-  Collider2D(std::shared_ptr<Rigidbody2D> attached_rigidbody,
-             Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
+  explicit Collider2D(std::vector<int> collision_layers);
 
   friend class BoxCollider2D;
 
  private:
-  /// @brief On collision enter function callback
-  Collision2DFunction onCollisionEnter_;
-  /// @brief On collision exit function callback
-  Collision2DFunction onCollisionExit_;
-  /// @brief Pointer to the attached Rigidbody2D object
-  std::shared_ptr<Rigidbody2D> attachedRigidbody_;
   /// @brief Collision layers
   std::vector<int> collisionLayers_ = std::vector<int>{0};
+  /// @brief Incoming collisions
+  std::queue<types::Collision2D> collisionQueue_;
 };
 }  // namespace zygarde::physics::components
