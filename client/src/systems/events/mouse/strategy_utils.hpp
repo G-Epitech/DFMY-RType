@@ -11,7 +11,6 @@
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
-#include "components/position.hpp"
 #include "libs/zygarde/src/core/components/transform/transform.hpp"
 #include "libs/zygarde/src/tools/spare_array.hpp"
 

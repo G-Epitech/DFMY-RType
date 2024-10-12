@@ -10,6 +10,7 @@
 #include <chrono>
 
 #include "api.hpp"
+#include "core/components/position/position.hpp"
 #include "core/components/transform/transform.hpp"
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "system_abstract.hpp"
@@ -18,24 +19,24 @@
 namespace zygarde::physics::systems {
 
 class EXPORT_ZYGARDE_API MovementSystem final
-    : public ASystem<components::Rigidbody2D, core::components::Transform> {
+    : public ASystem<components::Rigidbody2D, core::components::Position> {
  public:
   /**
    * @brief Construct a new Movement System object
-   * @param deltaTime Delta time (provided by the game loop)
+   * @param delta_time Delta time (provided by the game loop)
    */
-  explicit MovementSystem(const utils::Timer::Nanoseconds &deltaTime);
+  explicit MovementSystem(const utils::Timer::Nanoseconds &delta_time);
   ~MovementSystem() override = default;
 
   /**
    * @brief Run the system
    * @param r The registry to use
    * @param rigidbodies The rigidbodies to use
-   * @param transforms The transforms to use
+   * @param positions The positions to use
    */
   void Run(std::shared_ptr<Registry> r,
            tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
-           tools::sparse_array<core::components::Transform>::ptr transforms) override;
+           tools::sparse_array<core::components::Position>::ptr positions) override;
 
  private:
   /**
@@ -45,10 +46,10 @@ class EXPORT_ZYGARDE_API MovementSystem final
   void ComputePositionOffset(components::Rigidbody2D *rigidbody);
 
   /**
-   * @brief Update the transform position
-   * @param transform The transform of the entity
+   * @brief Update the position
+   * @param position The position of the entity
    */
-  void UpdateTransformPosition(core::components::Transform *transform) const;
+  void UpdatePosition(core::components::Position *position) const;
 
  private:
   /// @brief Delta time
