@@ -24,7 +24,7 @@ class abra::client::ClientTCP final : public abra::client::AbstractClient {
    */
   ClientTCP(const std::string &ip, const std::uint32_t &port);
 
-  ~ClientTCP();
+  ~ClientTCP() override;
 
   /**
    * @brief Listen the server and handle the incoming data

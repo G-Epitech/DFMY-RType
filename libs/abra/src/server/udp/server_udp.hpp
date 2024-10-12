@@ -25,11 +25,16 @@ class EXPORT_NETWORK_SDK_API ServerUDP;
 
 class abra::server::ServerUDP {
  public:
+  struct ServerEndpoint {
+    std::string ip;
+    unsigned int port;
+  };
+
   /**
    * @brief Construct a new ServerUDP object
    * @param port The port of the server
    */
-  explicit ServerUDP(const int &port);
+  explicit ServerUDP(const std::uint64_t &port);
 
   /**
    * @brief Destroy the ServerUDP object
@@ -56,7 +61,7 @@ class abra::server::ServerUDP {
    * @warning You need to lock the queue before using it
    * @return The queue
    */
-  [[nodiscard]] std::queue<ClientMessage> &GetQueue();
+  [[nodiscard]] std::queue<ClientUDPMessage> &GetQueue();
 
   /**
    * @brief Send a message to a client
@@ -68,6 +73,19 @@ class abra::server::ServerUDP {
   template <typename T>
   tools::SendMessageStatus Send(const std::shared_ptr<tools::Packet<T>> &packet,
                                 const boost::asio::ip::udp::endpoint &endpoint);
+
+  /**
+   * @brief Get the endpoint of the client
+   * @return The endpoint of the client
+   */
+  [[nodiscard]] ServerEndpoint GetEndpoint() const;
+
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<ClientUDPMessage> ExtractQueue();
 
  private:
   /**
@@ -85,7 +103,7 @@ class abra::server::ServerUDP {
   boost::asio::ip::udp::socket socket_;
   boost::asio::ip::udp::endpoint remoteEndpoint_;
   boost::array<char, kPacketMaxBytesSize> buffer_;
-  std::queue<ClientMessage> queue_;
+  std::queue<ClientUDPMessage> queue_;
   std::mutex mutex_;
 };
 

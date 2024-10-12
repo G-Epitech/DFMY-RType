@@ -12,7 +12,7 @@
 
 /// @brief A client message for TCP protocol
 namespace abra::server {
-struct ClientMessage {
+struct ClientTCPMessage {
   std::uint64_t clientId;                               // Client ID
   unsigned int messageType;                             // Message type
   unsigned int messageId;                               // Message ID

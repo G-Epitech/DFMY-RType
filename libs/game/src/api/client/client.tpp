@@ -15,7 +15,28 @@ bool Client::SendPayload(const MessageClientType &type, const T &payload) {
   this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build(payload);
 
-  return this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  logger_.Info("Send packet of type " + std::to_string(type), "📦");
+
+  auto success = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  if (!success)
+    logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
+
+  return success;
+}
+
+template <typename T>
+std::vector<T> Client::ResolvePayloads(MessageServerType type, const ServerMessage &message) {
+  if (message.messageType != type) {
+    return {};
+  }
+  auto elements = std::vector<T>();
+
+  for (auto &data : message.data) {
+    auto packet = this->packetBuilder_.Build<T>(data);
+    elements.push_back(packet->GetPayload());
+  }
+
+  return elements;
 }
 
 template <>
@@ -25,12 +46,14 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
   MessageProps message;
   bool success = false;
 
+  logger_.Info("Waiting for message type " + std::to_string(type), "😴");
   while (timeout > 0) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     timeout -= 500;
 
-    auto queue = this->clientTCP_.GetQueue();
+    auto &queue = this->clientTCP_.GetQueue();
 
+    std::unique_lock<std::mutex> lock(this->clientTCP_.Mutex);
     if (!queue.empty()) {
       message = queue.front();
 
@@ -38,6 +61,8 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
         success = (this->*handler)(message);
         queue.pop();
         break;
+      } else {
+        logger_.Warning("Receive an other message of type " + std::to_string(message.messageType), "⚠️ ");
       }
     }
   }
@@ -61,6 +86,7 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kUDP>(
 
     auto queue = this->clientUDP_->GetQueue();
 
+    std::unique_lock<std::mutex> lock(this->clientUDP_->Mutex);
     if (!queue.empty()) {
       message = queue.front();
 

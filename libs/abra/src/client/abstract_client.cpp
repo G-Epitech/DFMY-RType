@@ -11,7 +11,9 @@
 
 using namespace abra::client;
 
-void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer) {
+AbstractClient::AbstractClient(const std::string &name) : logger_(name) {}
+
+void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
   if (buffer->size() < kPacketHeaderPropsSize / 8) {
     return;
   }
@@ -28,11 +30,14 @@ void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer) {
   }
   packetSize += header.payloadLength;
 
-  if (packetSize == buffer->size()) {
+  if (packetSize == len) {
     return StoreMessage(bitset, header.offsetFlag);
   }
 
-  if (packetSize > buffer->size()) {
+  logger_.Info("Receive too bigger packet (" + std::to_string(len) + " bytes) than expected (" +
+               std::to_string(packetSize) + " bytes)");
+
+  if (packetSize > len) {
     return;
   }
 
@@ -45,7 +50,7 @@ void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer) {
 
   buffer->erase(buffer->begin(),
                 buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
-  return ResolveBuffer(buffer);
+  return ResolveBuffer(buffer, len - packetSize);
 }
 
 void AbstractClient::HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bitset> bitset) {
@@ -75,9 +80,12 @@ void AbstractClient::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset,
   if (hasOffset) {
     HandleMultiPacketsBitset(bitset);
   } else {
-    tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                   tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
-    queue_.push(message);
+    tools::MessageProps message = {tools::PacketUtils::ExportMessageIdFromBitset(bitset),
+                                   tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
+    logger_.Info("Store message with type " + std::to_string(message.messageType));
+
+    std::unique_lock<std::mutex> lock(this->Mutex);
+    this->queue_.push(message);
   }
 }
 
@@ -94,4 +102,22 @@ void AbstractClient::ResolveMultiPackets(unsigned int messageId) {
     this->multiPackets_.push(pendingMultiPackets_[messageId]);
     pendingMultiPackets_.erase(messageId);
   }
+}
+
+std::queue<tools::MessageProps> AbstractClient::ExtractQueue() {
+  std::unique_lock<std::mutex> lock(this->Mutex);
+
+  auto queue = this->queue_;
+  this->queue_ = std::queue<tools::MessageProps>();
+
+  return queue;
+}
+
+std::queue<tools::MultipleMessagesProps> AbstractClient::ExtractMultiQueue() {
+  std::unique_lock<std::mutex> lock(this->Mutex);
+
+  auto queue = this->multiPackets_;
+  this->multiPackets_ = std::queue<tools::MultipleMessagesProps>();
+
+  return queue;
 }

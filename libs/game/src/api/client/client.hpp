@@ -26,6 +26,15 @@ class EXPORT_GAME_SDK_API Client;
 class rtype::sdk::game::api::Client {
  public:
   /**
+   * @brief Represent a message from the server
+   */
+  struct ServerMessage {
+    unsigned int messageId;                                          ///< ID of the message
+    unsigned int messageType;                                        ///< Type of the message
+    std::vector<std::shared_ptr<abra::tools::dynamic_bitset>> data;  ///< Content of the message
+  };
+
+  /**
    * @brief Construct a new Client API instance
    * @param ip The IP of the server
    * @param port The port of the server (Main TCP port)
@@ -58,6 +67,49 @@ class rtype::sdk::game::api::Client {
    * @param payload The payload to join the lobby
    */
   [[nodiscard]] bool JoinLobby(const payload::JoinLobby &payload);
+
+  /**
+   * @brief Extract queue of messages
+   * It's a mix of TCP and UDP messages
+   * @warning The queue is cleared after the extraction
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<ServerMessage> ExtractQueue();
+
+  /**
+   * @brief Register a shoot
+   * @param payload The shoot payload
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool Shoot(const payload::Shoot &payload);
+
+  /**
+   * @brief Register a movement
+   * @param payload The movement payload
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool Move(const payload::Movement &payload);
+
+  /**
+   * @brief Resolve players state from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The list of player states
+   */
+  [[nodiscard]] std::vector<payload::PlayerState> ResolvePlayersState(const ServerMessage &message);
+
+  /**
+   * @brief Resolve enemies state from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The list of enemies states
+   */
+  [[nodiscard]] std::vector<payload::EnemyState> ResolveEnemiesState(const ServerMessage &message);
+
+  /**
+   * @brief Resolve bullets state from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The list of bullets states
+   */
+  [[nodiscard]] std::vector<payload::BulletState> ResolveBulletsState(const ServerMessage &message);
 
  private:
   /// @brief The server response timeout
@@ -94,6 +146,16 @@ class rtype::sdk::game::api::Client {
   bool SendPayload(const MessageClientType &type, const T &payload);
 
   /**
+   * @brief Resolve payloads from a server message
+   * @tparam T The payload type
+   * @param type The message type to resolve
+   * @param message The server message
+   * @return The list of payloads
+   */
+  template <typename T>
+  std::vector<T> ResolvePayloads(MessageServerType type, const ServerMessage &message);
+
+  /**
    * @brief Wait for a message from the server
    * @tparam T The network protocol type
    * @param type The message type to wait for
@@ -114,6 +176,14 @@ class rtype::sdk::game::api::Client {
    * @param message The message with the lobby infos
    */
   bool HandleJoinLobbyInfos(const tools::MessageProps &message);
+
+  /**
+   * @brief Convert a abra queue to generic server messages queue
+   * @param queue The abra queue
+   * @param serverQueue The server messages queue
+   */
+  static void ConvertQueueData(std::queue<tools::MessageProps> *queue,
+                               std::queue<ServerMessage> *serverQueue);
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;
@@ -137,6 +207,9 @@ class rtype::sdk::game::api::Client {
 
   /// @brief Boolean to know if the client is connected to the lobby
   bool isLobbyConnected_;
+
+  /// @brief Logger
+  abra::tools::Logger logger_;
 };
 
 #include "client.tpp"

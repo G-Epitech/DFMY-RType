@@ -16,10 +16,10 @@ namespace rtype::sdk::game::api::payload {
 /// @brief Payload for player state
 struct PlayerState {
   /// @brief The entity id of the player
-  std::size_t entityId;
+  std::size_t entityId = 0;
   /// @brief The position of the player
   utils::types::vector_2f position;
   /// @brief The health of the player
-  std::size_t health;
+  std::size_t health = 0;
 };
 }  // namespace rtype::sdk::game::api::payload

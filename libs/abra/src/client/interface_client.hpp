@@ -8,10 +8,12 @@
 #include <boost/asio.hpp>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <queue>
 #include <vector>
 
 #include "../core.hpp"
+#include "tools/logger/logger.hpp"
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
 
@@ -25,10 +27,29 @@ class abra::client::InterfaceClient {
  public:
   InterfaceClient() = default;
 
+  virtual ~InterfaceClient() = default;
+
   /**
    * @brief Listen the server and handle the incoming data
    */
   virtual void Listen() = 0;
+
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  virtual std::queue<tools::MessageProps> ExtractQueue() = 0;
+
+  /**
+   * @brief Extract the queue of multi messages
+   * @warning This method will clear the queue
+   * @return The queue of multi messages
+   */
+  virtual std::queue<tools::MultipleMessagesProps> ExtractMultiQueue() = 0;
+
+  /// @brief The mutex for the queue
+  std::mutex Mutex;
 
  protected:
   /**
@@ -36,7 +57,7 @@ class abra::client::InterfaceClient {
    * This method will split the buffer into logical packets with header props
    * @param buffer The buffer received
    */
-  virtual void ResolveBuffer(std::vector<char> *buffer) = 0;
+  virtual void ResolveBuffer(std::vector<char> *buffer, std::size_t len) = 0;
 
   /**
    * @biref Handle bitset when there are an offset (multi packets)
