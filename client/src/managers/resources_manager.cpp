@@ -45,17 +45,6 @@ void ResourcesManager::LoadTexture(const std::string &path, const std::string &n
   resourcesMap_.textures[name] = texture;
 }
 
-void ResourcesManager::LoadSound(const std::string &path, const std::string &name) {
-  if (resourcesMap_.sounds.contains(name)) {
-    throw Exception("Sound already loaded");
-  }
-  auto sound = std::make_shared<sf::SoundBuffer>();
-  if (!sound->loadFromFile(path)) {
-    throw Exception("Failed to load sound");
-  }
-  resourcesMap_.sounds[name] = sound;
-}
-
 ResourcesManager::TexturePtr ResourcesManager::GetTexture(const std::string &name) {
   if (!resourcesMap_.textures.contains(name)) {
     throw Exception("Texture not found");
@@ -68,11 +57,4 @@ ResourcesManager::FontPtr ResourcesManager::GetFont(const std::string &name) {
     throw Exception("Font not found");
   }
   return resourcesMap_.fonts[name];
-}
-
-ResourcesManager::SoundBufferPtr ResourcesManager::GetSound(const std::string &name) {
-  if (!resourcesMap_.sounds.contains(name)) {
-    throw Exception("Sound not found");
-  }
-  return resourcesMap_.sounds[name];
 }
