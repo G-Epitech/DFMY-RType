@@ -31,4 +31,4 @@ endif ()
 add_subdirectory(src)
 add_subdirectory(tests)
 
-file(COPY assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

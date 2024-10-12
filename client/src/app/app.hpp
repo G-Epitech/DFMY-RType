@@ -64,11 +64,19 @@ class App {
    */
   void CreateScenesManager();
 
+  /**
+   * @brief Creates the sound manager for the application.
+   */
+  void CreateSoundManager();
+
   /// @brief The main window for the application.
   WindowManager::Ptr windowManager_;
 
   /// @brief The scenes manager for the application.
   ScenesManager<GlobalContext>::Ptr scenesManager_;
+
+  /// @brief The sound manager for the application.
+  SoundManager::Ptr soundManager_;
 
   /// @brief The global context for the application.
   GlobalContext globalContext_;

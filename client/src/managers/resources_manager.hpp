@@ -22,7 +22,6 @@ class ResourcesManager {
 
   using TexturePtr = std::shared_ptr<sf::Texture>;
   using FontPtr = std::shared_ptr<sf::Font>;
-  using SoundBufferPtr = std::shared_ptr<sf::SoundBuffer>;
 
   /**
    * @brief Create a new resources manager
@@ -56,13 +55,6 @@ class ResourcesManager {
   void LoadTexture(const std::string &path, const std::string &name);
 
   /**
-   * @brief Load a new sound in the resources manager
-   * @param path Sound path to load
-   * @param name Name of the sound to store
-   */
-  void LoadSound(const std::string &path, const std::string &name);
-
-  /**
    * @brief Get a texture from the resources manager
    * @param name Name of the texture to get
    * @return Texture
@@ -75,13 +67,6 @@ class ResourcesManager {
    * @return Font
    */
   [[nodiscard]] FontPtr GetFont(const std::string &name);
-
-  /**
-   * @brief Get a sound from the resources manager
-   * @param name Name of the sound to get
-   * @return Sound
-   */
-  [[nodiscard]] SoundBufferPtr GetSound(const std::string &name);
 
   class Exception final : public std::exception {
    public:
@@ -105,8 +90,6 @@ class ResourcesManager {
     std::map<std::string, TexturePtr> textures;
     /// @brief Map of fonts
     std::map<std::string, FontPtr> fonts;
-    /// @brief Map of sounds
-    std::map<std::string, SoundBufferPtr> sounds;
   };
 
   /// @brief Map of resources

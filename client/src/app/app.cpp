@@ -9,6 +9,7 @@
 
 #include "scenes/game.hpp"
 #include "scenes/menu.hpp"
+#include "scenes/settings.hpp"
 
 using namespace rtype::client;
 using namespace rtype::client::scenes;
@@ -16,10 +17,12 @@ using namespace rtype::client::scenes;
 App::App() {
   CreateWindowManager();
   CreateScenesManager();
+  CreateSoundManager();
   InitializeGlobalContext();
 
   scenesManager_->RegisterScene<SceneMenu>();
   scenesManager_->RegisterScene<SceneGame>();
+  scenesManager_->RegisterScene<SceneSettings>();
 
   scenesManager_->GoToScene<SceneMenu>();
 }
@@ -33,6 +36,7 @@ void App::Run() {
 void App::InitializeGlobalContext() {
   globalContext_.windowManager = windowManager_;
   globalContext_.scenesManager = scenesManager_;
+  globalContext_.soundManager = soundManager_;
 }
 
 void App::CreateWindowManager() {
@@ -47,4 +51,8 @@ void App::CreateWindowManager() {
 
 void App::CreateScenesManager() {
   scenesManager_ = ScenesManager<GlobalContext>::Create(windowManager_, globalContext_);
+}
+
+void App::CreateSoundManager() {
+  soundManager_ = SoundManager::Create();
 }

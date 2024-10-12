@@ -9,6 +9,9 @@
 
 #include <iostream>
 #include <utility>
+
+#include "utils/symbols.hpp"
+
 using namespace rtype::client;
 
 template <typename ContextType>
@@ -57,7 +60,7 @@ IScene::Ptr ScenesManager<ContextType>::CreateScene() {
   auto scene = scenesMap_[type] = std::make_shared<T>(context_);
 
   if (!scene)
-    throw Exception("Failed to create scene: " + std::string(type.name()) + ".");
+    throw Exception("Failed to create scene: " + utils::GetTypeName<T>());
   scene->OnCreate();
   return scene;
 }
@@ -71,7 +74,7 @@ void ScenesManager<ContextType>::GoToScene() {
   try {
     scene = scenesMap_.at(scene_type);
   } catch (const std::out_of_range &_) {
-    throw Exception("Scene not registered: " + std::string(scene_type.name()) + ".");
+    throw Exception("Scene not registered: " + utils::GetTypeName<T>());
   }
 
   if (!scene)
