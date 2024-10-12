@@ -24,6 +24,21 @@ bool Client::SendPayload(const MessageClientType &type, const T &payload) {
   return success;
 }
 
+template <typename T>
+std::vector<T> Client::ResolvePayloads(MessageServerType type, const ServerMessage &message) {
+  if (message.messageType != type) {
+    return {};
+  }
+  auto elements = std::vector<T>();
+
+  for (auto &data : message.data) {
+    auto packet = this->packetBuilder_.Build<T>(data);
+    elements.push_back(packet->GetPayload());
+  }
+
+  return elements;
+}
+
 template <>
 inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
         MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message)) {

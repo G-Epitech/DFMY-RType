@@ -109,16 +109,85 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   return success;
 }
 
-std::queue<tools::MessageProps> Client::ExtractQueue() {
-  auto queue = this->clientTCP_.ExtractQueue();
+std::queue<Client::ServerMessage> Client::ExtractQueue() {
+  auto queue = std::queue<ServerMessage>();
 
-  if (this->clientUDP_.has_value()) {
-    auto queueUDP = this->clientUDP_->ExtractQueue();
-    while (!queueUDP.empty()) {
-      queue.push(queueUDP.front());
-      queueUDP.pop();
-    }
+  auto queueTCP = this->clientTCP_.ExtractQueue();
+  Client::ConvertQueueData(&queueTCP, &queue);
+
+  if (!this->isLobbyConnected_) {
+    logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
+    return queue;
   }
 
+  auto queueUDP = this->clientUDP_->ExtractQueue();
+  Client::ConvertQueueData(&queueUDP, &queue);
+
+  auto multiQueue = this->clientUDP_->ExtractMultiQueue();
+  while (!multiQueue.empty()) {
+    auto &multiMessages = multiQueue.front();
+
+    std::vector<std::shared_ptr<abra::tools::dynamic_bitset>> data;
+    data.reserve(multiMessages.messages.size());
+
+    for (auto &message : multiMessages.messages) {
+      data.push_back(message.data);
+    }
+
+    queue.push({.messageId = multiMessages.messages[0].messageId,
+                .messageType = multiMessages.messages[0].messageType,
+                .data = data});
+    multiQueue.pop();
+  }
+
+  logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
+
   return queue;
+}
+
+bool Client::Shoot(const payload::Shoot &payload) {
+  return SendPayload(MessageClientType::kShoot, payload);
+}
+
+bool Client::Move(const payload::Movement &payload) {
+  return SendPayload(MessageClientType::kMovement, payload);
+}
+
+void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
+                              std::queue<ServerMessage> *serverQueue) {
+  while (!queue->empty()) {
+    auto &message = queue->front();
+
+    serverQueue->push(
+        {.messageId = message.messageId,
+         .messageType = message.messageType,
+         .data = std::vector<std::shared_ptr<abra::tools::dynamic_bitset>>{message.data}});
+    queue->pop();
+  }
+}
+
+std::vector<payload::PlayerState> Client::ResolvePlayersState(
+    const Client::ServerMessage &message) {
+  auto players = ResolvePayloads<payload::PlayerState>(MessageServerType::kPlayersState, message);
+
+  logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹🏽");
+
+  return players;
+}
+
+std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::ServerMessage &message) {
+  auto players = ResolvePayloads<payload::EnemyState>(MessageServerType::kEnemiesState, message);
+
+  logger_.Info("Resolved " + std::to_string(players.size()) + " enemies states", "🧌");
+
+  return players;
+}
+
+std::vector<payload::BulletState> Client::ResolveBulletsState(
+    const Client::ServerMessage &message) {
+  auto players = ResolvePayloads<payload::BulletState>(MessageServerType::kBulletsState, message);
+
+  logger_.Info("Resolved " + std::to_string(players.size()) + " bullets states", "💥");
+
+  return players;
 }
