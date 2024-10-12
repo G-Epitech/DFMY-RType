@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace rtype::sdk::game::stats {
+namespace rtype::sdk::game::constants::stats {
 /// @brief Player stats
 struct Player {
   /// @brief Base speed of the player
@@ -17,4 +17,4 @@ struct Player {
   /// @brief Base maximum health_update points of the player
   inline static std::size_t maxHp = 100;
 };
-}  // namespace rtype::sdk::game::stats
+}  // namespace rtype::sdk::game::constants::stats

@@ -16,5 +16,5 @@ enum class PowerupType {
   kDamage = 3,
   kFireRate = 4,
   kInvincibility = 5,
-};  // namespace rtype::sdk::game_core::types
-}
+};
+}  // namespace rtype::sdk::game::types

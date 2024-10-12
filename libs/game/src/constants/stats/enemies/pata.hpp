@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace rtype::sdk::game::stats {
+namespace rtype::sdk::game::constants::stats {
 /// @brief Pata enemy stats
 struct Pata {
   /// @brief Damage dealt by the enemy
@@ -23,4 +23,4 @@ struct Pata {
   /// @brief Speed of the enemy
   inline static float speed = 10;
 };
-};  // namespace rtype::sdk::game::stats
+};  // namespace rtype::sdk::game::constants::stats

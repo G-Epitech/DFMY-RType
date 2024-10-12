@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace rtype::sdk::game::stats {
+namespace rtype::sdk::game::constants::stats {
 /// @brief Main player weapon stats
 struct WeaponBasic {
   /// @brief Damage dealt by the weapon
@@ -19,4 +19,4 @@ struct WeaponBasic {
   /// @brief Speed of the weapon's projectiles
   inline static float projectileSpeed = 10;
 };
-}  // namespace rtype::sdk::game::stats
+}  // namespace rtype::sdk::game::constants::stats
