@@ -67,3 +67,13 @@ ServerUDP::ServerEndpoint ServerUDP::GetEndpoint() const {
 
   return {endpoint.address().to_string(), endpoint.port()};
 }
+
+std::queue<ClientUDPMessage> ServerUDP::ExtractQueue() {
+  std::queue<ClientUDPMessage> extractedQueue;
+
+  std::lock_guard<std::mutex> lock(mutex_);
+  extractedQueue = queue_;
+
+  queue_ = std::queue<ClientUDPMessage>();
+  return extractedQueue;
+}

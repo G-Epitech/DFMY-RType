@@ -80,6 +80,13 @@ class abra::server::ServerUDP {
    */
   [[nodiscard]] ServerEndpoint GetEndpoint() const;
 
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<ClientUDPMessage> ExtractQueue();
+
  private:
   /**
    * @brief Listen a new request from a client

@@ -68,3 +68,15 @@ void ServerTCP::UnlockQueue() {
 const std::shared_ptr<std::queue<ClientTCPMessage>> &ServerTCP::GetQueue() {
   return queue_;
 }
+
+std::queue<ClientTCPMessage> ServerTCP::ExtractQueue() {
+  std::queue<ClientTCPMessage> extractedQueue;
+
+  std::lock_guard<std::mutex> lock(*mutex_);
+  extractedQueue = *queue_;
+
+  while (!queue_->empty()) {
+    queue_->pop();
+  }
+  return extractedQueue;
+}

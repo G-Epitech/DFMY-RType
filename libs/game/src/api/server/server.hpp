@@ -51,7 +51,29 @@ class rtype::sdk::game::api::Server {
     std::thread thread;
   };
 
+  /**
+   * @brief Create a lobby that will generate a new UDP server
+   * @param name Name of the lobby
+   */
   void CreateLobby(const std::string &name);
+
+  /**
+   * @brief Extract queue of messages
+   * It's a mix of TCP and UDP messages
+   * @warning The queue is cleared after the extraction
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<ClientTCPMessage> ExtractMainQueue();
+
+  /**
+   * @brief Extract queue of messages of a lobby
+   * It's a mix of TCP and UDP messages
+   * @warning The queue is cleared after the extraction
+   * @param id The lobby id
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<std::pair<std::uint64_t, ClientUDPMessage>> ExtractLobbyQueue(
+      std::uint64_t id);
 
  private:
   /**
@@ -118,6 +140,15 @@ class rtype::sdk::game::api::Server {
    * @param pseudo The pseudo of the client
    */
   void AddNewClient(std::uint64_t clientId, const std::string &pseudo);
+
+  /**
+   * @brief Find a user by its endpoint
+   * @param lobbyId The lobby id
+   * @param endpoint The endpoint of the user
+   * @return The user id
+   */
+  [[nodiscard]] std::uint64_t FindUserByEndpoint(std::uint64_t lobbyId,
+                                                 const boost::asio::ip::udp::endpoint &endpoint);
 
   /// @brief The ABRA Server TCP instance (monitor)
   abra::server::ServerTCP serverTCP_;

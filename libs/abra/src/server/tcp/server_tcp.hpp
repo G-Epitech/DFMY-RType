@@ -65,6 +65,13 @@ class abra::server::ServerTCP {
    */
   [[nodiscard]] const std::shared_ptr<std::queue<ClientTCPMessage>> &GetQueue();
 
+  /**
+   * @brief Extract the queue of messages
+   * @warning This method will clear the queue
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::queue<ClientTCPMessage> ExtractQueue();
+
  private:
   /**
    * @brief Accept a new connection

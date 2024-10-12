@@ -114,3 +114,43 @@ void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
 
   logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby", "🛃");
 }
+
+std::queue<ClientTCPMessage> Server::ExtractMainQueue() {
+  return this->serverTCP_.ExtractQueue();
+}
+
+std::uint64_t Server::FindUserByEndpoint(std::uint64_t lobbyId,
+                                         const boost::asio::ip::udp::endpoint &endpoint) {
+  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
+    logger_.Warning("Try to extract an invalid lobby queue", "🧟‍♂️");
+    return 0;
+  }
+
+  for (auto &client : this->lobbies_[lobbyId].clients) {
+    if (client.endpoint == endpoint) {
+      return client.id;
+    }
+  }
+
+  return 0;
+}
+
+std::queue<std::pair<std::uint64_t, ClientUDPMessage>> Server::ExtractLobbyQueue(std::uint64_t id) {
+  if (this->lobbies_.find(id) == this->lobbies_.end()) {
+    logger_.Warning("Try to extract an invalid lobby queue", "🧟‍♂️");
+    return {};
+  }
+
+  auto queue = this->lobbies_[id].serverUDP->ExtractQueue();
+  std::queue<std::pair<std::uint64_t, ClientUDPMessage>> extractedQueue;
+
+  while (!queue.empty()) {
+    auto message = queue.front();
+    auto userId = this->FindUserByEndpoint(id, message.endpoint);
+
+    extractedQueue.emplace(userId, queue.front());
+    queue.pop();
+  }
+
+  return extractedQueue;
+}

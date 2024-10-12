@@ -25,7 +25,7 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
    */
   std::queue<tools::MessageProps> ExtractQueue() override;
 
-protected:
+ protected:
   /**
    * @brief Resolve packets in a buffer
    * This method will split the buffer into logical packets with header props
