@@ -153,7 +153,8 @@ bool Client::Move(const payload::Movement &payload) {
   return SendPayload(MessageClientType::kMovement, payload);
 }
 
-void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue, std::queue<ServerMessage> *serverQueue) {
+void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
+                              std::queue<ServerMessage> *serverQueue) {
   while (!queue->empty()) {
     auto &message = queue->front();
 
@@ -163,4 +164,30 @@ void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue, std::queue
          .data = std::vector<std::shared_ptr<abra::tools::dynamic_bitset>>{message.data}});
     queue->pop();
   }
+}
+
+std::vector<payload::PlayerState> Client::ResolvePlayersState(
+    const Client::ServerMessage &message) {
+  auto players = ResolvePayloads<payload::PlayerState>(MessageServerType::kPlayersState, message);
+
+  logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹🏽");
+
+  return players;
+}
+
+std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::ServerMessage &message) {
+  auto players = ResolvePayloads<payload::EnemyState>(MessageServerType::kEnemiesState, message);
+
+  logger_.Info("Resolved " + std::to_string(players.size()) + " enemies states", "🧌");
+
+  return players;
+}
+
+std::vector<payload::BulletState> Client::ResolveBulletsState(
+    const Client::ServerMessage &message) {
+  auto players = ResolvePayloads<payload::BulletState>(MessageServerType::kBulletsState, message);
+
+  logger_.Info("Resolved " + std::to_string(players.size()) + " bullets states", "💥");
+
+  return players;
 }

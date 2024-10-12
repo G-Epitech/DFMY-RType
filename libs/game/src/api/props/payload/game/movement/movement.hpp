@@ -15,7 +15,7 @@ namespace rtype::sdk::game::api::payload {
 /// @brief Movement payload
 struct Movement {
   /// @brief The entity id
-  std::size_t entityId;
+  std::size_t entityId = 0;
   /// @brief The new position
   utils::types::vector_2f newPosition;
 };

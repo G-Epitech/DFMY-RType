@@ -90,6 +90,27 @@ class rtype::sdk::game::api::Client {
    */
   [[nodiscard]] bool Move(const payload::Movement &payload);
 
+  /**
+   * @brief Resolve players state from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The list of player states
+   */
+  [[nodiscard]] std::vector<payload::PlayerState> ResolvePlayersState(const ServerMessage &message);
+
+  /**
+   * @brief Resolve enemies state from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The list of enemies states
+   */
+  [[nodiscard]] std::vector<payload::EnemyState> ResolveEnemiesState(const ServerMessage &message);
+
+  /**
+   * @brief Resolve bullets state from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The list of bullets states
+   */
+  [[nodiscard]] std::vector<payload::BulletState> ResolveBulletsState(const ServerMessage &message);
+
  private:
   /// @brief The server response timeout
   static constexpr std::size_t kServerResponseTimeout = 1000 * 5;
@@ -123,6 +144,16 @@ class rtype::sdk::game::api::Client {
    */
   template <typename T>
   bool SendPayload(const MessageClientType &type, const T &payload);
+
+  /**
+   * @brief Resolve payloads from a server message
+   * @tparam T The payload type
+   * @param type The message type to resolve
+   * @param message The server message
+   * @return The list of payloads
+   */
+  template <typename T>
+  std::vector<T> ResolvePayloads(MessageServerType type, const ServerMessage &message);
 
   /**
    * @brief Wait for a message from the server
