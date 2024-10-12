@@ -56,9 +56,9 @@ class EXPORT_ZYGARDE_API CollisionSystem final
                                          const physics::components::BoxCollider2D &collider2,
                                          const core::components::Position &position2) noexcept;
 
-  static void ProcessCollision(ComponentsPack &pack1, ComponentsPack &pack2) noexcept;
+  static void ProcessCollision(const ComponentsPack &pack1, const ComponentsPack &pack2) noexcept;
 
-  [[nodiscard]] static types::Collision2D BuildCollision2D(ComponentsPack &pack1,
-                                                           ComponentsPack &pack2) noexcept;
+  [[nodiscard]] static types::Collision2D BuildCollision2D(const ComponentsPack &pack1,
+                                                           const ComponentsPack &pack2) noexcept;
 };
 }  // namespace zygarde::physics::systems

@@ -11,10 +11,11 @@
 #include "core/types/vector/vector_2f.hpp"
 
 namespace zygarde::physics::types {
+/// @brief BoundingBox2D struct
 struct BoundingBox2D {
-  float left = 0;
-  float right = 0;
-  float top = 0;
-  float bottom = 0;
+  float left = 0;           ///< Left bound
+  float right = 0;          ///< Right bound
+  float top = 0;            ///< Top bound
+  float bottom = 0;         ///< Bottom bound
 };
 }  // namespace zygarde::physics::types

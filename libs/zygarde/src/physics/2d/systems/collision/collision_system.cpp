@@ -79,8 +79,8 @@ bool CollisionSystem::AreColliding(const physics::components::BoxCollider2D &col
   return overlapX && overlapY;
 }
 
-void CollisionSystem::ProcessCollision(CollisionSystem::ComponentsPack &pack1,
-                                       CollisionSystem::ComponentsPack &pack2) noexcept {
+void CollisionSystem::ProcessCollision(const CollisionSystem::ComponentsPack &pack1,
+                                       const CollisionSystem::ComponentsPack &pack2) noexcept {
   if (!pack1.rigidbody->IsKinematic()) {
     pack1.rigidbody->CancelVelocity();
   }
@@ -93,6 +93,7 @@ void CollisionSystem::ProcessCollision(CollisionSystem::ComponentsPack &pack1,
 }
 
 physics::types::Collision2D CollisionSystem::BuildCollision2D(
-    CollisionSystem::ComponentsPack &pack1, CollisionSystem::ComponentsPack &pack2) noexcept {
+    const CollisionSystem::ComponentsPack &pack1,
+    const CollisionSystem::ComponentsPack &pack2) noexcept {
   return {pack1.rigidbody, pack1.position, pack2.rigidbody, pack2.position};
 }
