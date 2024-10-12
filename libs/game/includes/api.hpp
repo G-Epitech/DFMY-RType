@@ -7,5 +7,5 @@
 
 #pragma once
 
-#include "api/server/server.hpp"
 #include "api/client/client.hpp"
+#include "api/server/server.hpp"

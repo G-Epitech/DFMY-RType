@@ -3,4 +3,5 @@ target_sources(${GAME_SDK} PRIVATE
         weapons.hpp
         mode.hpp
         bullet.hpp
+        entities.hpp
 )
