@@ -6,12 +6,12 @@
 */
 
 #include "menu.hpp"
-#include "game.hpp"
-#include "settings.hpp"
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "components/position.hpp"
+#include "game.hpp"
+#include "settings.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
 #include "systems/events/mouse/move.hpp"
@@ -67,7 +67,7 @@ void SceneMenu::CreatePlayButton() const {
                        .strategy = events::MouseEventTarget::kLocalTarget,
                        .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                          const events::MouseEventTarget& target) {
-                         std::cout << "Play button pressed" << std::endl;
+                         context_.scenesManager->GoToScene<SceneGame>();
                        }});
   registry_->AddComponent<components::OnMouseMoved>(
       play_button, components::OnMouseMoved{

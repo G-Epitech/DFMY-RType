@@ -8,9 +8,9 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 #include <optional>
 #include <vector>
-#include <memory>
 
 #include "../api.hpp"
 

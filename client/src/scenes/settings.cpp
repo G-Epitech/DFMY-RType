@@ -5,13 +5,13 @@
 ** settings.cpp
 */
 
-#include "menu.hpp"
 #include "settings.hpp"
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
 #include "components/position.hpp"
 #include "components/radio.hpp"
+#include "menu.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
 #include "systems/events/mouse/move.hpp"

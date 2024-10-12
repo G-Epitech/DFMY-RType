@@ -9,8 +9,9 @@
 
 using namespace rtype::client::components;
 
-Radio::ValueType Radio::Utils::GetValue(const zygarde::tools::sparse_array<Radio>::ptr &radios, const std::string &id) {
-  for (auto &radio: *radios) {
+Radio::ValueType Radio::Utils::GetValue(const zygarde::tools::sparse_array<Radio>::ptr &radios,
+                                        const std::string &id) {
+  for (auto &radio : *radios) {
     if (!radio)
       continue;
     if (radio->id == id && radio->selected)
@@ -19,12 +20,11 @@ Radio::ValueType Radio::Utils::GetValue(const zygarde::tools::sparse_array<Radio
   return std::nullopt;
 }
 
-Radio::ValueType
-Radio::Utils::SetValue(const zygarde::tools::sparse_array<Radio>::ptr &radios, const std::string &id,
-                       const Radio::ValueType &value) {
+Radio::ValueType Radio::Utils::SetValue(const zygarde::tools::sparse_array<Radio>::ptr &radios,
+                                        const std::string &id, const Radio::ValueType &value) {
   auto old = GetValue(radios, id);
   auto set = false;
-  for (auto &radio: *radios) {
+  for (auto &radio : *radios) {
     if (!radio || radio->id != id)
       continue;
     radio->selected = radio->value == value;

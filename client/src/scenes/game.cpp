@@ -70,28 +70,29 @@ void SceneGame::LoadResources() {
 void SceneGame::CreatePlayerEntity() {
   auto player = registry_->SpawnEntity();
   auto controls_handler = [this, player](const sf::Keyboard::Key key) {
-      auto positions = registry_->GetComponents<Position>();
-      auto entity_id = static_cast<std::size_t>(player);
-      auto &position = (*positions)[entity_id];
+    auto positions = registry_->GetComponents<Position>();
+    auto entity_id = static_cast<std::size_t>(player);
+    auto &position = (*positions)[entity_id];
 
-      if (!position)
-        return;
-      if (key == sf::Keyboard::Left) {
-        (*position).x -= 10;
-      } else if (key == sf::Keyboard::Right) {
-        (*position).x += 10;
-      } else if (key == sf::Keyboard::Up) {
-        (*position).y -= 10;
-      } else if (key == sf::Keyboard::Down) {
-        (*position).y += 10;
-      }
+    if (!position)
+      return;
+    if (key == sf::Keyboard::Left) {
+      (*position).x -= 10;
+    } else if (key == sf::Keyboard::Right) {
+      (*position).x += 10;
+    } else if (key == sf::Keyboard::Up) {
+      (*position).y -= 10;
+    } else if (key == sf::Keyboard::Down) {
+      (*position).y += 10;
+    }
   };
 
+  static const sf::IntRect base{100, 0, 32, 16};
+
   registry_->AddComponent<Drawable>(player, {
-          .drawable = Texture{.name = "player"},
-  });
-  registry_->AddComponent<Position>(player, {100, 100, HorizontalAlign::kLeft, VerticalAlign::kTop});
-  registry_->AddComponent<OnKeyPressed>(player, {
-          .handler = controls_handler
-  });
+                                                .drawable = Texture{.name = "player", .scale = 4, .rect = base},
+                                            });
+  registry_->AddComponent<Position>(player,
+                                    {100, 100, HorizontalAlign::kLeft, VerticalAlign::kTop});
+  registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
 }
