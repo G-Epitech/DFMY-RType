@@ -34,7 +34,7 @@ class abra::server::ServerUDP {
    * @brief Construct a new ServerUDP object
    * @param port The port of the server
    */
-  explicit ServerUDP(const unsigned long int &port);
+  explicit ServerUDP(const std::uint64_t &port);
 
   /**
    * @brief Destroy the ServerUDP object
