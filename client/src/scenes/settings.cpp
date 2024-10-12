@@ -9,7 +9,6 @@
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
-#include "components/position.hpp"
 #include "components/radio.hpp"
 #include "menu.hpp"
 #include "systems/drawable.hpp"
@@ -29,10 +28,12 @@ SceneSettings::SceneSettings(const GlobalContext &context) : SceneBase(context) 
   registry_->RegisterComponent<Position>();
   registry_->RegisterComponent<Drawable>();
   registry_->RegisterComponent<OnMousePressed>();
+  registry_->RegisterComponent<OnKeyPressed>();
   registry_->RegisterComponent<OnMouseMoved>();
   registry_->RegisterComponent<Radio>();
 
   registry_->AddSystem<systems::MousePressEventSystem>(context.windowManager);
+  registry_->AddSystem<systems::KeyPressEventSystem>(context.windowManager);
   registry_->AddSystem<systems::MouseMoveEventSystem>(context.windowManager);
   registry_->AddSystem<systems::DrawableSystem>(context.windowManager, resourcesManager_);
 }
@@ -49,9 +50,10 @@ void SceneSettings::OnCreate() {
   CreateDisableSoundsLabel(left, 300);
   CreateDisableMusicButton(right, 350);
   CreateDisableMusicLabel(left, 350);
-  CreateColorBlindnessSetting(left, 400);
-  CreateDisableAnimationsButton(right, 500);
-  CreateDisableAnimationsLabel(left, 500);
+  CreateDisableAnimationsButton(right, 400);
+  CreateDisableAnimationsLabel(left, 400);
+  CreateColorBlindnessSetting(left, 450);
+  CreateKeyMapSetting(left, 550);
   CreateMainEntity();
 }
 
@@ -59,9 +61,21 @@ void SceneSettings::OnActivate() {}
 
 void SceneSettings::Update(std::chrono::nanoseconds delta_time) {
   registry_->RunSystems();
-  auto v = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
-  if (v && v.has_value()) {
-    context_.windowManager->SetShader(std::get<std::string>(v.value()));
+
+  auto blindness_mode =
+      Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
+  if (blindness_mode && blindness_mode.has_value()) {
+    context_.windowManager->SetShader(std::get<std::string>(blindness_mode.value()));
+  }
+
+  auto keymap_mode = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "keymap");
+  if (keymap_mode && keymap_mode.has_value()) {
+    auto mode = std::get<std::string>(keymap_mode.value());
+    if (mode == "zqsd") {
+      context_.gameManager->keyMap = KeyMap::ZQSD;
+    } else {
+      context_.gameManager->keyMap = KeyMap::Arrows;
+    }
   }
 }
 
@@ -77,6 +91,13 @@ void SceneSettings::CreateMainEntity() const {
                          soundManager_->PlaySound("button_click");
                        }
                      }});
+  registry_->AddComponent<OnKeyPressed>(
+      main, {.handler = [this](const sf::Keyboard::Key &key) {
+        const auto action = context_.gameManager->keyMap.GetActionFromKey(key);
+        if (action != GameAction::kNone) {
+          std::cout << "Key pressed: " << static_cast<int>(action) << std::endl;
+        }
+      }});
 }
 
 void SceneSettings::CreateTitle() const {
@@ -406,4 +427,73 @@ void SceneSettings::CreateDisableAnimationsLabel(const float &x, const float &y)
   registry_->AddComponent<Position>(volume_label, {point, aligns});
   registry_->AddComponent<Drawable>(volume_label,
                                     {Text{"Animations", "main", 20}, WindowManager::View::HUD});
+}
+void SceneSettings::CreateKeyMapLabel(const float &x, const float &y) const {
+  const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
+  registry_->AddComponent<Drawable>(volume_label,
+                                    {Text{"Keymap", "main", 20}, WindowManager::View::HUD});
+}
+
+void SceneSettings::CreateKeyMapSetting(const float &x, const float &y) {
+  CreateKeyMapLabel(x, y);
+  CreateKeyMapRadioOption("ZQSD mode", "zqsd", {x + 50, y + 40});
+  CreateKeyMapRadioOption("Arrow mode", "arrow", {x + 400, y + 40});
+  SelectKeyMapRadioOptions("zqsd");
+}
+
+void SceneSettings::CreateKeyMapRadioOption(const std::string &label, const std::string &value,
+                                            const zygarde::core::types::Vector2f &position) {
+  auto label_entity = registry_->SpawnEntity();
+  auto radio_entity = registry_->SpawnEntity();
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+  auto on_mouse_pressed = [this, radio_entity, value](const sf::Mouse::Button &button,
+                                                      const sf::Vector2f &pos,
+                                                      const events::MouseEventTarget &target) {
+    if (button == sf::Mouse::Button::Left) {
+      SelectKeyMapRadioOptions(value);
+    }
+  };
+
+  registry_->AddComponent<Position>(radio_entity,
+                                    {zyc::types::Vector3f(position.x, position.y), aligns});
+  registry_->AddComponent<Drawable>(radio_entity, {Texture{"menu", 2.5}, WindowManager::View::HUD});
+
+  registry_->AddComponent<Radio>(radio_entity, {.id = "keymap", .value = value});
+  registry_->AddComponent<OnMousePressed>(
+      radio_entity,
+      {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
+  registry_->AddComponent<Position>(label_entity,
+                                    {zyc::types::Vector3f(position.x + 50, position.y), aligns});
+  registry_->AddComponent<Drawable>(label_entity,
+                                    {Text{label, "main", 13}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      label_entity,
+      {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
+}
+
+void SceneSettings::SelectKeyMapRadioOptions(const std::string &selected_value) {
+  static const sf::IntRect disable{192, 68, 16, 8};
+  static const sf::IntRect active{224, 68, 16, 8};
+  auto radio_components = registry_->GetComponents<Radio>();
+  auto drawables = registry_->GetComponents<Drawable>();
+  std::size_t entity_id = 0;
+
+  for (auto &radio : *radio_components) {
+    if (!radio || (*radio).id != "keymap") {
+      entity_id += 1;
+      continue;
+    }
+    auto &drawable = (*drawables)[entity_id];
+    auto &variant = drawable->drawable;
+    auto selected =
+        radio->value.has_value() && std::get<std::string>(*(radio->value)) == selected_value;
+    auto &texture = std::get<Texture>(variant);
+    texture.rect = selected ? active : disable;
+    radio->selected = selected;
+    entity_id += 1;
+  }
 }

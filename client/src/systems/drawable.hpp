@@ -64,8 +64,8 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @param texture The texture component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntityTexture(const components::Texture &texture, const zyc::components::Position &position,
-                         const sf::Shader &shader);
+  void DrawEntityTexture(const components::Texture &texture,
+                         const zyc::components::Position &position, const sf::Shader &shader);
 
   /**
    * @brief Draw a text

@@ -9,6 +9,8 @@
 
 #include <memory>
 
+#include "game/keymap.hpp"
+
 namespace rtype::client {
 class GameManager {
  public:
@@ -36,6 +38,9 @@ class GameManager {
   void DisableAnimation();
 
   [[nodiscard]] bool GetAnimationStatus() const;
+
+  /// @brief Key map
+  KeyMap keyMap = KeyMap::ZQSD;
 
  private:
   /// @brief Enable or disable animations.

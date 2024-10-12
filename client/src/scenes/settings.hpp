@@ -112,7 +112,43 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    */
   void SelectColorBlindnessRadioOptions(const std::string &selected_value);
 
+  /**
+   * @brief Create the volume label
+   * @param x Position of the label on the x axis
+   * @param y Position of the label on the y axis
+   */
   void CreateDisableAnimationsButton(const float &x, const float &y) const;
+
+  /**
+   * @brief Create the volume label
+   * @param x Position of the label on the x axis
+   * @param y Position of the label on the y axis
+   */
   void CreateDisableAnimationsLabel(const float &x, const float &y) const;
+
+  /**
+   * @brief Create the keymap label
+   * @param x Position of the label on the x axis
+   * @param y Position of the label on the y axis
+   */
+  void CreateKeyMapLabel(const float &x, const float &y) const;
+
+  /**
+   * @brief Create a new radio option for the keymap
+   * @param label The label of the radio options.
+   * @param value The value of the radio options.
+   * @param position The position of the radio options.
+   */
+  void CreateKeyMapRadioOption(const std::string &label, const std::string &value,
+                               const zygarde::core::types::Vector2f &position);
+
+  void SelectKeyMapRadioOptions(const std::string &selected_value);
+
+  /**
+   * @brief Create the keymap setting
+   * @param x Position of the setting on the x axis
+   * @param y Y position of the setting on the y axis
+   */
+  void CreateKeyMapSetting(const float &x, const float &y);
 };
 }  // namespace rtype::client
