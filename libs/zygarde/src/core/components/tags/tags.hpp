@@ -36,7 +36,7 @@ class EXPORT_ZYGARDE_API Tags final {
    * @param tag Tag to check
    * @return Match result
    */
-  bool operator==(const std::string &tag) const;
+  bool operator&(const std::string &tag) const;
 
   /**
    * @brief Add a tag to the tag

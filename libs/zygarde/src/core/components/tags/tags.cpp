@@ -10,7 +10,7 @@ using namespace zygarde::core::components;
 
 Tags::Tags(const std::set<std::string>& tags) : tags_{tags} {}
 
-bool Tags::operator==(const std::string& tag) const {
+bool Tags::operator&(const std::string& tag) const {
   return tags_.find(tag) != tags_.end();
 }
 

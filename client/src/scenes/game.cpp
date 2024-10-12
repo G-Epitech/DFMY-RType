@@ -29,6 +29,7 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->RegisterComponent<OnMousePressed>();
   registry_->RegisterComponent<OnMouseReleased>();
   registry_->RegisterComponent<OnMouseMoved>();
+  registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<int>();
 
   registry_->AddSystem<KeyPressEventSystem>(context_.windowManager);
@@ -55,7 +56,6 @@ void SceneGame::CreateControls() {
 }
 
 void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {
-  std::cout << "Key pressed: " << key << std::endl;
   switch (key) {
     case sf::Keyboard::Key::Escape:
       return context_.scenesManager->GoToScene<SceneMenu>();
@@ -73,10 +73,10 @@ void SceneGame::CreatePlayerEntity() {
   auto controls_handler = [this, player](const sf::Keyboard::Key key) {
     auto positions = registry_->GetComponents<Position>();
     auto entity_id = static_cast<std::size_t>(player);
-    auto &position = (*positions)[entity_id];
 
-    if (!position)
+    if ((*positions).size() <= entity_id)
       return;
+    auto &position = (*positions)[entity_id];
     if (key == sf::Keyboard::Left) {
       (*position).point.x -= 10;
     } else if (key == sf::Keyboard::Right) {
@@ -89,12 +89,12 @@ void SceneGame::CreatePlayerEntity() {
   };
 
   static const sf::IntRect base{100, 0, 32, 16};
-  auto point = zygarde::core::types::Vector3f(100, 100);
-  auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kTop};
+
   registry_->AddComponent<Drawable>(
       player, {
-                  .drawable = Texture{.name = "player", .scale = 4, .rect = base},
+                  .drawable = Texture{.name = "player", .scale = 3, .rect = base},
               });
-  registry_->AddComponent<Position>(player, {point, aligns});
+  registry_->AddComponent<Tags>(player, Tags({"player"}));
   registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
+  registry_->AddComponent<Position>(player, {zyc::types::Vector3f{100, 100, 0}});
 }
