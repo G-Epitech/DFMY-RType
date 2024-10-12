@@ -13,6 +13,20 @@ GameManager::Ptr GameManager::Create() {
   return std::make_shared<GameManager>();
 }
 
-GameManager::GameManager() = default;
+GameManager::GameManager() {
+  EnableAnimation();
+}
 
 GameManager::~GameManager() = default;
+
+void GameManager::EnableAnimation() {
+  animations_ = true;
+}
+
+void GameManager::DisableAnimation() {
+  animations_ = false;
+}
+
+bool GameManager::GetAnimationStatus() {
+  return animations_;
+}

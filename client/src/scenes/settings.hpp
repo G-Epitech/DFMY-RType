@@ -96,7 +96,7 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    * @param x The x position of the label (Vertical axis).
    * @param y The y position of the label (Horizontal axis).
    */
-  void CreateColorBlindnessLabel(const float &x, const float &y);
+  void CreateColorBlindnessLabel(const float &x, const float &y) const;
 
   /**
    * @brief Create the color blindness setting
@@ -111,5 +111,8 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    * @param selected_value Selected value of the radio options.
    */
   void SelectColorBlindnessRadioOptions(const std::string &selected_value);
+
+  void CreateDisableAnimationsButton(const float &x, const float &y) const;
+  void CreateDisableAnimationsLabel(const float &x, const float &y) const;
 };
 }  // namespace rtype::client

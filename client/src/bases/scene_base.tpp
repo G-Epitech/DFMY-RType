@@ -13,6 +13,7 @@ SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context
   registry_ = Registry::create();
   resourcesManager_ = ResourcesManager::Create();
   soundManager_ = context_.soundManager;
+  gameManager_ = context_.gameManager;
 }
 
 template <typename ContextType>

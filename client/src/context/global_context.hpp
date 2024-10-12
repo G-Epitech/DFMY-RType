@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "managers/game_manager.hpp"
 #include "managers/scenes_manager.hpp"
 #include "managers/sound_manager.hpp"
 
@@ -33,8 +34,8 @@ struct GlobalContext {
   SoundManager::Ptr soundManager;
 
   /**
-   * @brief Provide access to the app animation in order to disable them.
+   * @brief Provide access to the game manager
    */
-  bool animations;
+  GameManager::Ptr gameManager;
 };
 }  // namespace rtype::client

@@ -30,5 +30,15 @@ class GameManager {
    * @brief Construct a new Window Manager object
    */
   ~GameManager();
+
+  void EnableAnimation();
+
+  void DisableAnimation();
+
+  bool GetAnimationStatus();
+
+ private:
+  /// @brief Enable or disable animations.
+  bool animations_;
 };
 }  // namespace rtype::client

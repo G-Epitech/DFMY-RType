@@ -48,8 +48,10 @@ void SceneSettings::OnCreate() {
   CreateDisableSoundsLabel(left, 300);
   CreateDisableMusicButton(right, 350);
   CreateDisableMusicLabel(left, 350);
-  CreateMainEntity();
   CreateColorBlindnessSetting(left, 400);
+  CreateDisableAnimationsButton(right, 500);
+  CreateDisableAnimationsLabel(left, 500);
+  CreateMainEntity();
 }
 
 void SceneSettings::OnActivate() {}
@@ -285,7 +287,7 @@ void SceneSettings::CreateColorBlindnessSetting(const float &x, const float &y) 
   SelectColorBlindnessRadioOptions("normal");
 }
 
-void SceneSettings::CreateColorBlindnessLabel(const float &x, const float &y) {
+void SceneSettings::CreateColorBlindnessLabel(const float &x, const float &y) const {
   const auto label = registry_->SpawnEntity();
 
   registry_->AddComponent<Position>(label, {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
@@ -343,4 +345,54 @@ void SceneSettings::SelectColorBlindnessRadioOptions(const std::string &value) {
     radio->selected = selected;
     entity_id += 1;
   }
+}
+
+void SceneSettings::CreateDisableAnimationsButton(const float &x, const float &y) const {
+  const auto music_button = registry_->SpawnEntity();
+  const sf::IntRect disable{192, 68, 16, 8};
+  const sf::IntRect active{224, 68, 16, 8};
+  const auto animationStatus = gameManager_->GetAnimationStatus();
+
+  registry_->AddComponent<components::Position>(
+      music_button,
+      {x, y, components::HorizontalAlign::kRight, components::VerticalAlign::kCenter});
+  registry_->AddComponent<components::Drawable>(
+      music_button, {components::Texture{"menu", 4, animationStatus ? active : disable},
+                     WindowManager::View::HUD});
+  registry_->AddComponent<components::OnMousePressed>(
+      music_button, components::OnMousePressed{
+                        .strategy = events::MouseEventTarget::kLocalTarget,
+                        .handler = [this, disable, active, music_button](
+                                       const sf::Mouse::Button &button, const sf::Vector2f &pos,
+                                       const events::MouseEventTarget &target) {
+                          if (button == sf::Mouse::Button::Left) {
+                            const auto animations = gameManager_->GetAnimationStatus();
+                            if (animations) {
+                              gameManager_->DisableAnimation();
+                            } else {
+                              gameManager_->EnableAnimation();
+                            }
+                            auto drawables = registry_->GetComponents<components::Drawable>();
+                            auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
+
+                            if (dr) {
+                              auto &drawable = dr.value();
+                              auto &variant = drawable.drawable;
+
+                              if (std::holds_alternative<components::Texture>(variant)) {
+                                auto &texture = std::get<components::Texture>(variant);
+                                texture.rect = animations ? disable : active;
+                              }
+                            }
+                          }
+                        }});
+}
+
+void SceneSettings::CreateDisableAnimationsLabel(const float &x, const float &y) const {
+  const auto volume_label = registry_->SpawnEntity();
+
+  registry_->AddComponent<Position>(volume_label,
+                                    {x, y, HorizontalAlign::kLeft, VerticalAlign::kCenter});
+  registry_->AddComponent<Drawable>(volume_label,
+                                    {Text{"Animations", "main", 20}, WindowManager::View::HUD});
 }

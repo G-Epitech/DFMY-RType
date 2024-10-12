@@ -16,6 +16,7 @@ App::App() {
   CreateWindowManager();
   CreateScenesManager();
   CreateSoundManager();
+  CreateGameManager();
   InitializeGlobalContext();
 
   scenesManager_->RegisterScene<SceneMenu>();
@@ -33,6 +34,7 @@ void App::InitializeGlobalContext() {
   globalContext_.windowManager = windowManager_;
   globalContext_.scenesManager = scenesManager_;
   globalContext_.soundManager = soundManager_;
+  globalContext_.gameManager = gameManager_;
 }
 
 void App::CreateWindowManager() {
@@ -51,4 +53,8 @@ void App::CreateScenesManager() {
 
 void App::CreateSoundManager() {
   soundManager_ = SoundManager::Create();
+}
+
+void App::CreateGameManager() {
+  gameManager_ = GameManager::Create();
 }
