@@ -12,13 +12,12 @@
 namespace zygarde::core::types {
 class EXPORT_ZYGARDE_API Vector3f final {
  public:
-  constexpr Vector3f() = default;
   ~Vector3f() = default;
 
   /**
    * @brief Construct a new Vector3f object
    */
-  constexpr Vector3f(float x, float y, float z) : x(x), y(y), z(z) {}
+  constexpr explicit Vector3f(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
 
   /**
    * @brief Add Vector3f object by another Vector3f object
@@ -63,32 +62,32 @@ class EXPORT_ZYGARDE_API Vector3f final {
   /**
    * @brief Get the zero vector
    */
-  [[nodiscard]] static constexpr Vector3f zero() noexcept { return {0, 0, 0}; }
+  [[nodiscard]] static constexpr Vector3f zero() noexcept { return Vector3f{0, 0, 0}; }
 
   /**
    * @brief Get the one vector
    */
-  [[nodiscard]] static constexpr Vector3f one() noexcept { return {1, 1, 1}; }
+  [[nodiscard]] static constexpr Vector3f one() noexcept { return Vector3f{1, 1, 1}; }
 
   /**
    * @brief Get the up vector
    */
-  [[nodiscard]] static constexpr Vector3f up() noexcept { return {0, 1, 0}; }
+  [[nodiscard]] static constexpr Vector3f up() noexcept { return Vector3f{0, 1, 0}; }
 
   /**
    * @brief Get the down vector
    */
-  [[nodiscard]] static constexpr Vector3f down() noexcept { return {0, -1, 0}; }
+  [[nodiscard]] static constexpr Vector3f down() noexcept { return Vector3f{0, -1, 0}; }
 
   /**
    * @brief Get the left vector
    */
-  [[nodiscard]] static constexpr Vector3f left() noexcept { return {-1, 0, 0}; }
+  [[nodiscard]] static constexpr Vector3f left() noexcept { return Vector3f{-1, 0, 0}; }
 
   /**
    * @brief Get the right vector
    */
-  [[nodiscard]] static constexpr Vector3f right() noexcept { return {1, 0, 0}; }
+  [[nodiscard]] static constexpr Vector3f right() noexcept { return Vector3f{1, 0, 0}; }
 
  public:
   /// @brief x value

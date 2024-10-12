@@ -7,4 +7,6 @@
 
 #pragma once
 
+#include "position/position.hpp"
+#include "tags/tags.hpp"
 #include "transform/transform.hpp"
