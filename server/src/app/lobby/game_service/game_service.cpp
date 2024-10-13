@@ -130,6 +130,6 @@ void GameService::SendStates() {
     states.push_back(state);
   }
   this->api_->SendPlayersState(lobbyId_, states);
-  this->api_->SendEnemiesState(lobbyId_, {});
-  this->api_->SendBulletsState(lobbyId_, {});
+  // this->api_->SendEnemiesState(lobbyId_, {});
+  // this->api_->SendBulletsState(lobbyId_, {});
 }
