@@ -71,6 +71,9 @@ void AbstractClient::HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bit
   pendingMultiPackets_[messageId].messages.push_back(message);
   if (message.isLast) {
     pendingMultiPackets_[messageId].lastMessage = &pendingMultiPackets_[messageId].messages.back();
+
+    logger_.Info("Store last part of multi packet with type " + std::to_string(message.messageType) +
+                 " and offset " + std::to_string(offset.offset));
   }
 
   logger_.Info("Store a part of multi packet with type " + std::to_string(message.messageType) +
