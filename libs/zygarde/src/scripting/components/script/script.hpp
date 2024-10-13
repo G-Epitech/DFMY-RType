@@ -20,10 +20,11 @@ class EXPORT_ZYGARDE_API Script final {
   Script() = default;
   ~Script() = default;
 
-  Script(types::Collision2DFunction on_collision_enter, types::FixedUpdateFunction fixed_update,
-         types::ValuesMap values);
+  Script(std::optional<types::Collision2DFunction> on_collision_enter,
+         std::optional<types::FixedUpdateFunction> fixed_update, types::ValuesMap values);
 
-  Script(types::Collision2DFunction on_collision_enter, types::FixedUpdateFunction fixed_update);
+  Script(std::optional<types::Collision2DFunction> on_collision_enter,
+         std::optional<types::FixedUpdateFunction> fixed_update);
 
  public:
   /**

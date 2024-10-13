@@ -7,6 +7,8 @@
 
 #include "script_execution_system.hpp"
 
+#include <iostream>
+
 using namespace zygarde::scripting::systems;
 
 ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& deltaTime)
@@ -21,6 +23,7 @@ void ScriptExecutionSystem::Run(Registry::Ptr r,
     }
     ProcessScript(r, &scriptComponent.value());
   }
+  currentScriptIndex_ = 0;
 }
 
 void ScriptExecutionSystem::ProcessScript(Registry::Const_Ptr registry,
@@ -44,7 +47,6 @@ void ScriptExecutionSystem::HandleCollisionCallback(
   }
   zygarde::Entity entity = registry->EntityFromIndex(currentScriptIndex_);
   auto collider = registry->GetComponent<physics::components::BoxCollider2D>(entity);
-
   if (!collider) {
     return;
   }

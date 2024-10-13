@@ -22,7 +22,7 @@ void GameService::RegistrySetup() {
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
   PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(0, 0, 0), {5, 5});
-  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(10, 0, 0), {5, 5});
+  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(7, 0, 0), {5, 5});
 }
 
 void GameService::Initialize() {

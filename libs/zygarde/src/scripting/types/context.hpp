@@ -15,7 +15,7 @@ using ValuesMap = std::map<std::string, std::any>;
 
 struct ScriptingContext {
   const Registry::Ptr &registry;
-  const ValuesMap &values;
+  ValuesMap &values;
   const utils::Timer::Nanoseconds &deltaTime;
 };
 }  // namespace zygarde::scripting::types

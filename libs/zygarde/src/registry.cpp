@@ -7,6 +7,8 @@
 
 #include "registry.hpp"
 
+#include <iostream>
+
 using namespace zygarde;
 
 Registry::Registry(Private) {}
