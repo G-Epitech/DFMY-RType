@@ -12,6 +12,7 @@
 #include "context/global.hpp"
 #include "libs/game/includes/api.hpp"
 #include "managers/scenes_manager.hpp"
+#include "managers/server_connection_manager.hpp"
 #include "utils/timer.hpp"
 
 #define APP_WINDOW_WIDTH 1920
@@ -74,9 +75,9 @@ class App {
   void CreateSoundManager();
 
   /**
-   * @brief Creates the client API for the application.
+   * @brief Creates the server connection manager for the application.
    */
-  void CreateClient();
+  void CreateServerConnectionManager();
 
   /// @brief The main window for the application.
   WindowManager::Ptr windowManager_;
@@ -87,8 +88,8 @@ class App {
   /// @brief The sound manager for the application.
   SoundManager::Ptr soundManager_;
 
-  /// @brief The client API for the application.
-  std::shared_ptr<rtype::sdk::game::api::Client> client_;
+  /// @brief The server connection manager for the application.
+  ServerConnectionManager::Ptr serverConnectionManager_;
 
   /// @brief The global context for the application.
   GlobalContext globalContext_;

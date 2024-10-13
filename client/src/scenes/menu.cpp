@@ -38,10 +38,15 @@ void SceneMenu::OnCreate() {
   CreateExitButton();
 }
 
-void SceneMenu::OnActivate() {}
+void SceneMenu::OnActivate() {
+  context_.serverConnectionManager->ConnectAsync();
+}
 
 void SceneMenu::Update(std::chrono::nanoseconds delta_time) {
   registry_->RunSystems();
+  /*  if (context_.serverConnectionManager->Connected()) {
+      std::cout << "Connected" << std::endl;
+    }*/
 }
 
 void SceneMenu::CreateTitle() const {
@@ -71,8 +76,7 @@ void SceneMenu::CreatePlayButton() const {
                        .strategy = events::MouseEventTarget::kLocalTarget,
                        .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                          const events::MouseEventTarget& target) {
-                         const auto res = context_.client->JoinLobby({0});
-                         if (res) {
+                         if (button == sf::Mouse::Button::Left) {
                            context_.scenesManager->GoToScene<SceneGame>();
                          }
                        }});

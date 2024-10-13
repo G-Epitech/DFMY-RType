@@ -42,5 +42,10 @@ class SceneMenu final : public SceneBase<GlobalContext> {
    * @brief Create the exit button
    */
   void CreateExitButton() const;
+
+  /**
+   * @brief Check the server connection
+   */
+  void CheckServerConnection() const;
 };
 }  // namespace rtype::client::scenes

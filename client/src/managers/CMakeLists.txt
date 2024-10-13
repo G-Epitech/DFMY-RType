@@ -7,4 +7,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         window_manager.cpp
         sound_manager.hpp
         sound_manager.cpp
+        server_connection_manager.cpp
+        server_connection_manager.hpp
 )
