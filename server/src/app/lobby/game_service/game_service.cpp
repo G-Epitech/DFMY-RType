@@ -150,8 +150,8 @@ void GameService::SendStates() {
 
   if (!states.empty())
     this->api_->SendPlayersState(lobbyId_, states);
-  if (!states.empty())
+  if (!enemyStates.empty())
     this->api_->SendEnemiesState(lobbyId_, enemyStates);
-  if (!states.empty())
+  if (!bulletStates.empty())
     this->api_->SendBulletsState(lobbyId_, bulletStates);
 }
