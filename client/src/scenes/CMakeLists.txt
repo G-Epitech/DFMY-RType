@@ -5,4 +5,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         game.cpp
         settings.hpp
         settings.cpp
+        lobby.cpp
+        lobby.hpp
 )

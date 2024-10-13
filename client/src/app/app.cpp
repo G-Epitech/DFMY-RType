@@ -7,8 +7,8 @@
 
 #include "app.hpp"
 
-#include "libs/game/src/api/client/client.hpp"
 #include "scenes/game.hpp"
+#include "scenes/lobby.hpp"
 #include "scenes/menu.hpp"
 #include "scenes/settings.hpp"
 
@@ -19,14 +19,15 @@ App::App() {
   CreateWindowManager();
   CreateScenesManager();
   CreateSoundManager();
-  CreateClient();
+  // CreateClient();
   InitializeGlobalContext();
 
   scenesManager_->RegisterScene<SceneMenu>();
   scenesManager_->RegisterScene<SceneGame>();
   scenesManager_->RegisterScene<SceneSettings>();
+  scenesManager_->RegisterScene<SceneLobby>();
 
-  scenesManager_->GoToScene<SceneMenu>();
+  scenesManager_->GoToScene<SceneLobby>();
 }
 
 void App::Run() {

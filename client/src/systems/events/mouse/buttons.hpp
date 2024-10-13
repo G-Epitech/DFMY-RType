@@ -27,7 +27,7 @@ class MouseButtonEventSystem
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
                    typename sparse_array<MouseEventComponent>::ptr components,
-                   sparse_array<components::Drawable>::ptr drawables);
+                   sparse_array<components::Drawable>::ptr drawables) override;
 
   /**
    * @brief Handle the event for the entity

@@ -25,6 +25,9 @@ class EXPORT_GAME_SDK_API Client;
 
 class rtype::sdk::game::api::Client {
  public:
+  /// @brief Pointer type
+  using Ptr = std::shared_ptr<Client>;
+
   /**
    * @brief Represent a message from the server
    */
