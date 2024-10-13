@@ -53,6 +53,11 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
   template <typename T>
   tools::SendMessageStatus Send(const std::unique_ptr<tools::Packet<T>>& packet);
 
+  /**
+   * @brief Close the connection
+   */
+  void Close();
+
  private:
   /**
    * @brief Listen the new request of the client

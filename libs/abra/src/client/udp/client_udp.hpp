@@ -56,6 +56,11 @@ class abra::client::ClientUDP final : public AbstractClient {
    */
   [[nodiscard]] ClientEndpoint GetEndpoint() const;
 
+  /**
+   * @brief Close the connection
+   */
+  void Close();
+
  private:
   /// @brief The Input Output Context
   boost::asio::io_context ioc_;
