@@ -77,7 +77,8 @@ void SceneMenu::CreatePlayButton() const {
       OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
                      .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                        const events::MouseEventTarget& target) {
-                       if (button == sf::Mouse::Button::Left && context_.serverConnectionManager->Connected()) {
+                       if (button == sf::Mouse::Button::Left &&
+                           context_.serverConnectionManager->Connected()) {
                          context_.scenesManager->GoToScene<SceneGame>();
                        }
                      }});
@@ -231,8 +232,8 @@ void SceneMenu::UpdateConnectionLabel() const {
   }
   if (entity_id >= labels->size())
     return;
-  auto &drawable = (*drawables)[entity_id];
-  auto &text = std::get<Text>(drawable->drawable);
+  auto& drawable = (*drawables)[entity_id];
+  auto& text = std::get<Text>(drawable->drawable);
   text.text = GetConnectionLabelText();
   text.color = GetConnectionLabelColor();
 }
