@@ -95,25 +95,25 @@ void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, con
 }
 
 void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const zygarde::core::types::Vector3f& pos) {
+                                 const zygarde::core::types::Vector3f& pos) {
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{0, 0, 33, 36};
 
   registry->AddComponent<components::ServerEntityId>(enemy, {.id = id});
   registry->AddComponent<zygarde::core::components::Position>(
       enemy, {.point = pos,
-               .aligns = {core::components::HorizontalAlign::kLeft,
-                          core::components::VerticalAlign::kTop}});
+              .aligns = {core::components::HorizontalAlign::kLeft,
+                         core::components::VerticalAlign::kTop}});
   registry->AddComponent<components::Drawable>(
       enemy, {
-                  .drawable = components::Texture{.name = "enemy", .scale = 3, .rect = base},
-              });
+                 .drawable = components::Texture{.name = "enemy", .scale = 3, .rect = base},
+             });
   enemies_.insert_or_assign(id, enemy);
 }
 
 void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const zygarde::core::types::Vector3f& pos) {
-  auto enemy = players_.at(id);
+                                 const zygarde::core::types::Vector3f& pos) {
+  auto enemy = enemies_.at(id);
   auto positions = registry->GetComponents<zygarde::core::components::Position>();
   auto entity_id = static_cast<std::size_t>(enemy);
 
