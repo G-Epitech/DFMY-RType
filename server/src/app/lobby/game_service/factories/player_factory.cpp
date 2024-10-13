@@ -38,21 +38,21 @@ void PlayerFactory::CreateScript(zygarde::Registry::Const_Ptr registry, const En
       entity, {onCollisionEnter, std::nullopt, valuesMap});
 }
 
-void PlayerFactory::HandleCollision(const scripting::types::ScriptingContext &context,
+void PlayerFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                     const physics::types::Collision2D::ptr &collision) {
-  auto playerHealth = std::any_cast<int>(context.values.at("health"));
+  auto playerHealth = std::any_cast<int>(context->values->at("health"));
   auto rb = collision.get()->otherRigidbody;
   auto entity = collision.get()->otherEntity;
-  auto otherEntityTag = context.registry->GetComponent<zygarde::core::components::Tags>(entity);
+  auto otherEntityTag = context->registry->GetComponent<zygarde::core::components::Tags>(entity);
   if (!otherEntityTag) {
     return;
   }
   if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
     std::cout << "Player hit by enemy bullet" << std::endl;
     playerHealth -= 10;
-    context.values["health"] = playerHealth;
+    (*context->values)["health"] = playerHealth;
   }
   if (playerHealth <= 0) {
-    context.registry->DestroyEntity(context.me);
+    context->registry->DestroyEntity(context->me);
   }
 }

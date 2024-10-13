@@ -51,8 +51,8 @@ void ProjectileFactory::CreateScript(zygarde::Registry::Const_Ptr registry, cons
       entity, {onCollisionEnter, std::nullopt, valuesMap});
 }
 
-void ProjectileFactory::HandleCollision(const scripting::types::ScriptingContext& context,
+void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                         const physics::types::Collision2D::ptr& collision) {
-  context.registry->DestroyEntity(context.me);
+  context->registry->DestroyEntity(context->me);
   std::cout << "I died" << std::endl;
 }
