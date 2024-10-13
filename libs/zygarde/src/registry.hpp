@@ -32,6 +32,10 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   };
 
  public:
+  using Ptr = std::shared_ptr<Registry>;
+  using Const_Ptr = const std::shared_ptr<Registry> &;
+
+ public:
   explicit Registry(Private);
 
   /**
@@ -70,6 +74,9 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   template <typename Component>
   typename sparse_array<Component>::ptr GetComponents() const;
 
+  template <typename Component>
+  Component *GetComponent(Entity const &e);
+
   /**
    * @brief Spawn an entity
    * @return Entity
@@ -82,6 +89,8 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @return Entity
    */
   [[nodiscard]] Entity EntityFromIndex(std::size_t idx) const;
+
+  [[nodiscard]] std::size_t IndexFromEntity(Entity const &e) const;
 
   /**
    * @brief Kill an entity
@@ -146,8 +155,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    private:
     const std::string message_;
   };
-
-  typedef std::shared_ptr<Registry> Ptr;
 
  private:
   /// @brief systems stored

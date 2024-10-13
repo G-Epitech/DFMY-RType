@@ -52,6 +52,15 @@ void Registry::KillEntity(Entity const &e) {
   }
 }
 
+std::size_t Registry::IndexFromEntity(const Entity &e) const {
+  for (std::size_t i = 0; i < entities_.size(); i++) {
+    if (entities_.at(i) == e) {
+      return i;
+    }
+  }
+  throw Exception("Entity not found");
+}
+
 Registry::Exception::Exception(std::string message) : message_(std::move(message)) {}
 
 const char *Registry::Exception::what() const noexcept {

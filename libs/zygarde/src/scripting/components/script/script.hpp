@@ -10,6 +10,10 @@
 #include "api.hpp"
 #include "scripting/types/callbacks.hpp"
 
+namespace zygarde::scripting::systems {
+class ScriptExecutionSystem;
+}
+
 namespace zygarde::scripting::components {
 class EXPORT_ZYGARDE_API Script final {
  public:
@@ -34,6 +38,8 @@ class EXPORT_ZYGARDE_API Script final {
  public:
   std::optional<types::Collision2DFunction> onCollisionEnter;
   std::optional<types::FixedUpdateFunction> fixedUpdate;
+
+  friend class zygarde::scripting::systems::ScriptExecutionSystem;
 
  private:
   types::ValuesMap values_;

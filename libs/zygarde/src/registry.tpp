@@ -49,6 +49,24 @@ typename sparse_array<Component>::ptr Registry::GetComponents() const {
 }
 
 template <typename Component>
+Component *Registry::GetComponent(const Entity &e) {
+  typename sparse_array<Component>::ptr components = GetComponents<Component>();
+  if (!components) {
+    return nullptr;
+  }
+
+  const auto entityIndex = IndexFromEntity(e);
+
+  if (components.get()->size() > entityIndex) {
+    auto &optionalComponent = (*components)[entityIndex];
+    if (optionalComponent) {
+      return &(*optionalComponent);
+    }
+  }
+  return nullptr;
+}
+
+template <typename Component>
 typename sparse_array<Component>::reference_type Registry::AddComponent(Entity const &to,
                                                                         Component &&c) {
   auto components = GetComponents<Component>();
