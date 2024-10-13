@@ -7,6 +7,8 @@
 
 #include "./movement_system.hpp"
 
+#include <iostream>
+
 using namespace zygarde::physics::systems;
 
 MovementSystem::MovementSystem(const utils::Timer::Nanoseconds& delta_time)

@@ -9,7 +9,7 @@ The first thing you need to do is to create a new instance of the client with th
 - The server address
 - The server port
 
-Next, you need to connect to the server with the `Connect` method.
+Next, you need to connect to the server with the `Register` method.
 
 ```cpp
 auto client = new api::Client("127.0.0.1", 5000);
@@ -18,7 +18,7 @@ payload::Connection connectPayload = {
   .pseudo = "TekMath"
 };
 
-bool success = client->Connect(connectPayload);
+bool success = client->Register(connectPayload);
 if (!success)
   throw std::runtime_error("Failed to connect to the server.");
 ```
@@ -43,7 +43,7 @@ The API will get the lobby UDP infos, connect to the UDP and reply to the server
 Now, you can send and receive messages from the server.
 
 :::note
-The first `Connect` method have a timeout of 5 seconds.\
+The first `Register` method have a timeout of 5 seconds.\
 The `JoinLobby` method have a timeout of 10 seconds.
 :::
 

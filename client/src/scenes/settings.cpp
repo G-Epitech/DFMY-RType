@@ -29,10 +29,12 @@ SceneSettings::SceneSettings(const GlobalContext &context) : SceneBase(context) 
   registry_->RegisterComponent<Position>();
   registry_->RegisterComponent<Drawable>();
   registry_->RegisterComponent<OnMousePressed>();
+  registry_->RegisterComponent<OnKeyPressed>();
   registry_->RegisterComponent<OnMouseMoved>();
   registry_->RegisterComponent<Radio>();
 
   registry_->AddSystem<systems::MousePressEventSystem>(context.windowManager);
+  registry_->AddSystem<systems::KeyPressEventSystem>(context.windowManager);
   registry_->AddSystem<systems::MouseMoveEventSystem>(context.windowManager);
   registry_->AddSystem<systems::DrawableSystem>(context.windowManager, resourcesManager_);
 }
@@ -49,17 +51,32 @@ void SceneSettings::OnCreate() {
   CreateDisableSoundsLabel(left, 300);
   CreateDisableMusicButton(right, 350);
   CreateDisableMusicLabel(left, 350);
+  CreateDisableAnimationsButton(right, 400);
+  CreateDisableAnimationsLabel(left, 400);
+  CreateColorBlindnessSetting(left, 450);
+  CreateKeyMapSetting(left, 550);
   CreateMainEntity();
-  CreateColorBlindnessSetting(left, 400);
 }
 
 void SceneSettings::OnActivate() {}
 
 void SceneSettings::Update(std::chrono::nanoseconds delta_time) {
   registry_->RunSystems();
-  auto v = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
-  if (v && v.has_value()) {
-    context_.windowManager->SetShader(std::get<std::string>(v.value()));
+
+  auto blindness_mode =
+      Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
+  if (blindness_mode && blindness_mode.has_value()) {
+    context_.windowManager->SetShader(std::get<std::string>(blindness_mode.value()));
+  }
+
+  auto keymap_mode = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "keymap");
+  if (keymap_mode && keymap_mode.has_value()) {
+    auto mode = std::get<std::string>(keymap_mode.value());
+    if (mode == "zqsd") {
+      context_.gameManager->keyMap = KeyMap::ZQSD;
+    } else {
+      context_.gameManager->keyMap = KeyMap::Arrows;
+    }
   }
 }
 
@@ -75,6 +92,13 @@ void SceneSettings::CreateMainEntity() const {
                          soundManager_->PlaySound("button_click");
                        }
                      }});
+  registry_->AddComponent<OnKeyPressed>(
+      main, {.handler = [this](const sf::Keyboard::Key &key) {
+        const auto action = context_.gameManager->keyMap.GetActionFromKey(key);
+        if (action != GameAction::kNone) {
+          std::cout << "Key pressed: " << static_cast<int>(action) << std::endl;
+        }
+      }});
 }
 
 void SceneSettings::CreateTitle() const {
@@ -89,9 +113,9 @@ void SceneSettings::CreateTitle() const {
 
 void SceneSettings::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
+  const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
                                           context_.windowManager->height_ - 50);
-  const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,
@@ -135,9 +159,10 @@ void SceneSettings::CreateFullscreenButton(const float &x, const float &y) const
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto window_style = context_.windowManager->GetStyle();
+  const auto point = zyc::types::Vector3f(x, y);
   const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(fullscreen_button, {zyc::types::Vector3f(x, y), aligns});
+  registry_->AddComponent<Position>(fullscreen_button, {point, aligns});
   registry_->AddComponent<Drawable>(
       fullscreen_button, {Texture{"menu", 4, window_style == sf::Style::Default ? disable : active},
                           WindowManager::View::HUD});
@@ -185,9 +210,10 @@ void SceneSettings::CreateDisableSoundsButton(const float &x, const float &y) co
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto soundVolume = soundManager_->GetSoundVolume();
+  const auto point = zyc::types::Vector3f(x, y);
   const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(volume_button, {zyc::types::Vector3f(x, y), aligns});
+  registry_->AddComponent<Position>(volume_button, {point, aligns});
   registry_->AddComponent<Drawable>(
       volume_button,
       {Texture{"menu", 4, soundVolume > 0 ? active : disable}, WindowManager::View::HUD});
@@ -235,9 +261,10 @@ void SceneSettings::CreateDisableMusicButton(const float &x, const float &y) con
   const sf::IntRect disable{192, 68, 16, 8};
   const sf::IntRect active{224, 68, 16, 8};
   const auto soundVolume = soundManager_->GetSoundVolume();
+  const auto point = zyc::types::Vector3f(x, y);
   const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(music_button, {zyc::types::Vector3f(x, y), aligns});
+  registry_->AddComponent<Position>(music_button, {point, aligns});
   registry_->AddComponent<Drawable>(
       music_button,
       {Texture{"menu", 4, soundVolume > 0 ? active : disable}, WindowManager::View::HUD});
@@ -272,9 +299,10 @@ void SceneSettings::CreateDisableMusicButton(const float &x, const float &y) con
 
 void SceneSettings::CreateDisableMusicLabel(const float &x, const float &y) const {
   const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
   const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(volume_label, {zyc::types::Vector3f(x, y), aligns});
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
   registry_->AddComponent<Drawable>(volume_label,
                                     {Text{"Music", "main", 20}, WindowManager::View::HUD});
 }
@@ -288,11 +316,12 @@ void SceneSettings::CreateColorBlindnessSetting(const float &x, const float &y) 
   SelectColorBlindnessRadioOptions("normal");
 }
 
-void SceneSettings::CreateColorBlindnessLabel(const float &x, const float &y) {
+void SceneSettings::CreateColorBlindnessLabel(const float &x, const float &y) const {
   const auto label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
   const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
-  registry_->AddComponent<Position>(label, {zyc::types::Vector3f(x, y), aligns});
+  registry_->AddComponent<Position>(label, {point, aligns});
   registry_->AddComponent<Drawable>(label,
                                     {Text{"Color settings", "main", 20}, WindowManager::View::HUD});
 }
@@ -312,7 +341,7 @@ void SceneSettings::CreateColorBlindnessRadioOption(const std::string &label,
   };
 
   registry_->AddComponent<Position>(radio_entity,
-                                    {zygarde::core::types::Vector3f(pos.x, pos.y), aligns});
+                                    {zyc::types::Vector3f(pos.x, pos.y), aligns});
   registry_->AddComponent<Drawable>(radio_entity, {Texture{"menu", 2.5}, WindowManager::View::HUD});
 
   registry_->AddComponent<Radio>(radio_entity, {.id = "color_blindness", .value = value});
@@ -320,7 +349,7 @@ void SceneSettings::CreateColorBlindnessRadioOption(const std::string &label,
       radio_entity,
       {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
   registry_->AddComponent<Position>(label_entity,
-                                    {zygarde::core::types::Vector3f(pos.x + 50, pos.y), aligns});
+                                    {zyc::types::Vector3f(pos.x + 50, pos.y), aligns});
   registry_->AddComponent<Drawable>(label_entity,
                                     {Text{label, "main", 13}, WindowManager::View::HUD});
   registry_->AddComponent<OnMousePressed>(
@@ -343,6 +372,126 @@ void SceneSettings::SelectColorBlindnessRadioOptions(const std::string &value) {
     auto &drawable = (*drawables)[entity_id];
     auto &variant = drawable->drawable;
     auto selected = radio->value.has_value() && std::get<std::string>(*(radio->value)) == value;
+    auto &texture = std::get<Texture>(variant);
+    texture.rect = selected ? active : disable;
+    radio->selected = selected;
+    entity_id += 1;
+  }
+}
+
+void SceneSettings::CreateDisableAnimationsButton(const float &x, const float &y) const {
+  const auto music_button = registry_->SpawnEntity();
+  const sf::IntRect disable{192, 68, 16, 8};
+  const sf::IntRect active{224, 68, 16, 8};
+  const auto animationStatus = gameManager_->GetAnimationStatus();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kRight, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(music_button, {point, aligns});
+  registry_->AddComponent<Drawable>(
+      music_button,
+      {Texture{"menu", 4, animationStatus ? active : disable}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      music_button,
+      OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
+                     .handler = [this, disable, active, music_button](
+                                    const sf::Mouse::Button &button, const sf::Vector2f &pos,
+                                    const events::MouseEventTarget &target) {
+                       if (button == sf::Mouse::Button::Left) {
+                         const auto animations = gameManager_->GetAnimationStatus();
+                         if (animations) {
+                           gameManager_->DisableAnimation();
+                         } else {
+                           gameManager_->EnableAnimation();
+                         }
+                         auto drawables = registry_->GetComponents<Drawable>();
+                         auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
+
+                         if (dr) {
+                           auto &drawable = dr.value();
+                           auto &variant = drawable.drawable;
+
+                           if (std::holds_alternative<Texture>(variant)) {
+                             auto &texture = std::get<Texture>(variant);
+                             texture.rect = animations ? disable : active;
+                           }
+                         }
+                       }
+                     }});
+}
+
+void SceneSettings::CreateDisableAnimationsLabel(const float &x, const float &y) const {
+  const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
+  registry_->AddComponent<Drawable>(volume_label,
+                                    {Text{"Animations", "main", 20}, WindowManager::View::HUD});
+}
+void SceneSettings::CreateKeyMapLabel(const float &x, const float &y) const {
+  const auto volume_label = registry_->SpawnEntity();
+  const auto point = zyc::types::Vector3f(x, y);
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(volume_label, {point, aligns});
+  registry_->AddComponent<Drawable>(volume_label,
+                                    {Text{"Keymap", "main", 20}, WindowManager::View::HUD});
+}
+
+void SceneSettings::CreateKeyMapSetting(const float &x, const float &y) {
+  CreateKeyMapLabel(x, y);
+  CreateKeyMapRadioOption("ZQSD mode", "zqsd", {x + 50, y + 40});
+  CreateKeyMapRadioOption("Arrow mode", "arrow", {x + 400, y + 40});
+  SelectKeyMapRadioOptions("zqsd");
+}
+
+void SceneSettings::CreateKeyMapRadioOption(const std::string &label, const std::string &value,
+                                            const zygarde::core::types::Vector2f &position) {
+  auto label_entity = registry_->SpawnEntity();
+  auto radio_entity = registry_->SpawnEntity();
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+  auto on_mouse_pressed = [this, radio_entity, value](const sf::Mouse::Button &button,
+                                                      const sf::Vector2f &pos,
+                                                      const events::MouseEventTarget &target) {
+    if (button == sf::Mouse::Button::Left) {
+      SelectKeyMapRadioOptions(value);
+    }
+  };
+
+  registry_->AddComponent<Position>(radio_entity,
+                                    {zyc::types::Vector3f(position.x, position.y), aligns});
+  registry_->AddComponent<Drawable>(radio_entity, {Texture{"menu", 2.5}, WindowManager::View::HUD});
+
+  registry_->AddComponent<Radio>(radio_entity, {.id = "keymap", .value = value});
+  registry_->AddComponent<OnMousePressed>(
+      radio_entity,
+      {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
+  registry_->AddComponent<Position>(label_entity,
+                                    {zyc::types::Vector3f(position.x + 50, position.y), aligns});
+  registry_->AddComponent<Drawable>(label_entity,
+                                    {Text{label, "main", 13}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      label_entity,
+      {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
+}
+
+void SceneSettings::SelectKeyMapRadioOptions(const std::string &selected_value) {
+  static const sf::IntRect disable{192, 68, 16, 8};
+  static const sf::IntRect active{224, 68, 16, 8};
+  auto radio_components = registry_->GetComponents<Radio>();
+  auto drawables = registry_->GetComponents<Drawable>();
+  std::size_t entity_id = 0;
+
+  for (auto &radio : *radio_components) {
+    if (!radio || (*radio).id != "keymap") {
+      entity_id += 1;
+      continue;
+    }
+    auto &drawable = (*drawables)[entity_id];
+    auto &variant = drawable->drawable;
+    auto selected =
+        radio->value.has_value() && std::get<std::string>(*(radio->value)) == selected_value;
     auto &texture = std::get<Texture>(variant);
     texture.rect = selected ? active : disable;
     radio->selected = selected;

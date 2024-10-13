@@ -12,9 +12,13 @@
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/physics/2d/components/collider/collider_2d.hpp"
+#include "libs/zygarde/src/physics/2d/types/bounding_box/bounding_box_2d.hpp"
 
 namespace zygarde::physics::components {
 class EXPORT_ZYGARDE_API BoxCollider2D final {
+ public:
+  using ptr = std::shared_ptr<BoxCollider2D>;
+
  public:
   BoxCollider2D() = delete;
   ~BoxCollider2D() = default;
@@ -23,23 +27,16 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @brief Construct a new BoxCollider2D object
    * @param size Size of the box
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
-  BoxCollider2D(const core::types::Vector2f &size, std::shared_ptr<Rigidbody2D> attached_rigidbody,
-                Collision2DFunction on_collision_enter, Collision2DFunction on_collision_exit);
+  explicit BoxCollider2D(const core::types::Vector2f &size);
 
   /**
    * @brief Construct a new BoxCollider2D object
    * @param size Size of the box
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    * @param collision_layers Collision layers
-   * @param on_collision_enter On collision enter function callback
-   * @param on_collision_exit On collision exit function callback
    */
-  BoxCollider2D(const core::types::Vector2f &size, std::shared_ptr<Rigidbody2D> attached_rigidbody,
-                std::vector<int> collision_layers, Collision2DFunction on_collision_enter,
-                Collision2DFunction on_collision_exit);
+  BoxCollider2D(const core::types::Vector2f &size, std::vector<int> collision_layers);
 
  public:
   /**
@@ -52,21 +49,11 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    */
   void SetSize(const core::types::Vector2f &size);
 
-  /**
-   * @brief Execute the OnCollisionEnter function callback from the Collider2D object
-   * @param collision_2d Current collision
-   */
-  inline void OnCollisionEnter(std::shared_ptr<Collision2D> collision_2d) const noexcept {
-    collider_.onCollisionEnter_(collision_2d);
+  [[nodiscard]] inline const std::vector<int> &GetCollisionLayers() const noexcept {
+    return collider_.collisionLayers_;
   }
 
-  /**
-   * @brief Execute the OnCollisionExit function callback from the Collider2D object
-   * @param collision_2d Current collision
-   */
-  inline void OnCollisionExit(std::shared_ptr<Collision2D> collision_2d) const noexcept {
-    collider_.onCollisionExit_(collision_2d);
-  }
+  void AddColllision(types::Collision2D collision) noexcept;
 
  private:
   /// @brief Size of the box

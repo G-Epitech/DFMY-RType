@@ -19,6 +19,7 @@ App::App() {
   CreateWindowManager();
   CreateScenesManager();
   CreateSoundManager();
+  CreateGameManager();
   CreateServerConnectionManager();
   InitializeGlobalContext();
 
@@ -41,6 +42,7 @@ void App::InitializeGlobalContext() {
   globalContext_.scenesManager = scenesManager_;
   globalContext_.soundManager = soundManager_;
   globalContext_.serverConnectionManager = serverConnectionManager_;
+  globalContext_.gameManager = gameManager_;
 }
 
 void App::CreateWindowManager() {
@@ -59,6 +61,10 @@ void App::CreateScenesManager() {
 
 void App::CreateSoundManager() {
   soundManager_ = SoundManager::Create();
+}
+
+void App::CreateGameManager() {
+  gameManager_ = GameManager::Create();
 }
 
 void App::CreateServerConnectionManager() {

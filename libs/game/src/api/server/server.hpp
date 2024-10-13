@@ -54,8 +54,11 @@ class rtype::sdk::game::api::Server {
   /**
    * @brief Create a lobby that will generate a new UDP server
    * @param name Name of the lobby
+   * @param newPlayerHandler Handler for new player
+   * @warning The handler will be async, please use a mutex when you access to your own resources
    */
-  void CreateLobby(const std::string &name);
+  std::uint64_t CreateLobby(const std::string &name,
+                            const std::function<void(std::uint64_t)> &newPlayerHandler);
 
   /**
    * @brief Extract queue of messages
@@ -74,6 +77,33 @@ class rtype::sdk::game::api::Server {
    */
   [[nodiscard]] std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>>
   ExtractLobbyQueue(std::uint64_t id);
+
+  /**
+   * @brief Send state of players to all clients in a lobby
+   * @param lobbyId The lobby id
+   * @param state The state of the players
+   * @return true if the message is sent
+   */
+  bool SendPlayersState(const std::uint64_t &lobbyId,
+                        const std::vector<payload::PlayerState> &state);
+
+  /**
+   * @brief Send state of players to all clients in a lobby
+   * @param lobbyId The lobby id
+   * @param state The state of the players
+   * @return true if the message is sent
+   */
+  bool SendEnemiesState(const std::uint64_t &lobbyId,
+                        const std::vector<payload::EnemyState> &state);
+
+  /**
+   * @brief Send state of players to all clients in a lobby
+   * @param lobbyId The lobby id
+   * @param state The state of the players
+   * @return true if the message is sent
+   */
+  bool SendBulletsState(const std::uint64_t &lobbyId,
+                        const std::vector<payload::BulletState> &state);
 
  private:
   /**
@@ -109,6 +139,10 @@ class rtype::sdk::game::api::Server {
   template <typename T>
   bool SendPayloadTCP(const MessageServerType &type, const T &payload,
                       const std::uint64_t &clientId);
+
+  template <typename T>
+  bool SendPayloadsToLobby(const MessageServerType &type, const std::vector<T> &payload,
+                           const std::uint64_t &lobbyId);
 
   /**
    * @brief Handle the incoming TCP messages
@@ -167,6 +201,9 @@ class rtype::sdk::game::api::Server {
 
   /// @brief Map of lobbies
   std::map<std::uint64_t, Lobby> lobbies_;
+
+  /// @brief Handler for new player (connection to lobby)
+  std::function<void(std::uint64_t)> newPlayerHandler_;
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Server::*)(const abra::server::ClientTCPMessage &)>

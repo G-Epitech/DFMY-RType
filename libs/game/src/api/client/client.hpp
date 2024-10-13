@@ -57,12 +57,12 @@ class rtype::sdk::game::api::Client {
   [[nodiscard]] bool IsConnected() const;
 
   /**
-   * @brief Connect the client to the server
+   * @brief Register the client to the server
    * The connection confirmation is handled by the method.
    * This method is blocking for a maximum defined in kServerResponseTimeout.
    * @return true if the packet is sent, false otherwise
    */
-  [[nodiscard]] bool Connect(const payload::Connection &payload);
+  [[nodiscard]] bool Register(const payload::Connection &payload);
 
   /**
    * @brief Join a game lobby

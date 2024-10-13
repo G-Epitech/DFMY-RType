@@ -13,7 +13,7 @@ using namespace abra::server;
 using namespace boost::asio;
 
 ServerUDP::ServerUDP(const std::uint64_t &port)
-    : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_() {}
+    : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_(), logger_("server-udp") {}
 
 ServerUDP::~ServerUDP() {
   this->ios_.stop();
@@ -39,8 +39,50 @@ void ServerUDP::ListenNewRequest() {
 void ServerUDP::HandleRequest(const std::size_t &size) {
   std::vector<char> buffer = std::vector<char>(buffer_.begin(), buffer_.begin() + size);
 
-  auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
+  ResolveBuffer(&buffer, size);
+}
 
+void ServerUDP::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
+  if (buffer->size() < kPacketHeaderPropsSize / 8) {
+    return;
+  }
+
+  auto bitset = std::make_shared<tools::dynamic_bitset>(*buffer);
+  auto header = tools::PacketUtils::ExportHeaderFromBitset(bitset);
+  std::size_t packetSize = (kPacketHeaderPropsSize + kPacketMessagePropsSize) / 8;
+
+  if (header.offsetFlag) {
+    packetSize += kPacketOffsetPropsSize / 8;
+  }
+  if (header.turnFlag) {
+    packetSize += kPacketTurnPropsSize / 8;
+  }
+  packetSize += header.payloadLength;
+
+  if (packetSize == len) {
+    return StoreMessage(bitset);
+  }
+
+  logger_.Info("Receive too bigger packet (" + std::to_string(len) + " bytes) than expected (" +
+               std::to_string(packetSize) + " bytes)");
+
+  if (packetSize > len) {
+    return;
+  }
+
+  std::vector<char> cleanBuffer(
+          buffer->begin(),
+          buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
+  auto cleanBitset = std::make_shared<tools::dynamic_bitset>(*buffer);
+
+  StoreMessage(cleanBitset);
+
+  buffer->erase(buffer->begin(),
+                buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
+  return ResolveBuffer(buffer, len - packetSize);
+}
+
+void ServerUDP::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset) {
   ClientUDPMessage message = {this->remoteEndpoint_,
                               tools::PacketUtils::ExportMessageIdFromBitset(bitset),
                               tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};

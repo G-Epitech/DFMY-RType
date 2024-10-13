@@ -43,7 +43,7 @@ bool Client::IsConnected() const {
   return this->isConnected_;
 }
 
-bool Client::Connect(const payload::Connection &payload) {
+bool Client::Register(const payload::Connection &payload) {
   auto sendSuccess = SendPayload(MessageClientType::kConnection, payload);
   if (!sendSuccess)
     return false;
@@ -52,10 +52,10 @@ bool Client::Connect(const payload::Connection &payload) {
       MessageServerType::kConnectionInfos, &Client::HandleConnectionConfirmation);
 
   if (!waitSuccess) {
-    logger_.Error("Connection failed", "💢️");
+    logger_.Error("Register failed", "💢️");
   }
 
-  logger_.Info("Connected to server", "🛜");
+  logger_.Info("Register to server", "🛜");
 
   return this->isConnected_;
 }

@@ -15,16 +15,17 @@
 #include "core/components/position/position.hpp"
 
 using namespace rtype::client::systems;
+using namespace rtype::client::components;
+using namespace zygarde::core::components;
+using namespace zygarde::core::types;
 
 BackgroundSystem::BackgroundSystem() {
   clock_.restart();
 }
 
-void BackgroundSystem::Run(const std::shared_ptr<Registry> r,
-                           const sparse_array<core::components::Tags>::ptr tags,
-                           const sparse_array<core::components::Position>::ptr positions) {
+void BackgroundSystem::Run(const std::shared_ptr<Registry> r, const sparse_array<Tags>::ptr tags,
+                           const sparse_array<Position>::ptr positions) {
   const float deltaTime = clock_.restart().asSeconds();
-
   if (tags->size() < 50) {
     SpawnStar(r);
   }
@@ -61,11 +62,10 @@ void BackgroundSystem::SpawnStar(const std::shared_ptr<Registry>& r) {
   const auto randomY = static_cast<float>(disY(gen));
   float randomSize = disSize(gen);
 
-  r->AddComponent<zygarde::core::components::Position>(
-      entity, {core::types::Vector3f{randomX, randomY, 0}});
-  r->AddComponent<core::components::Tags>(entity, core::components::Tags({"background"}));
-  r->AddComponent<rtype::client::components::Drawable>(entity, {components::Rectangle{
-                                                                   .color = sf::Color::White,
-                                                                   .size = {randomSize, randomSize},
-                                                               }});
+  r->AddComponent<Position>(entity, {Vector3f{randomX, randomY, 0}});
+  r->AddComponent<Tags>(entity, Tags({"background"}));
+  r->AddComponent<Drawable>(entity, {Rectangle{
+                                        .color = sf::Color::White,
+                                        .size = {randomSize, randomSize},
+                                    }});
 }

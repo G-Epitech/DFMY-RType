@@ -9,8 +9,8 @@
 
 #include <memory>
 
-#include "libs/game/src/api/client/client.hpp"
 #include "managers/scenes_manager.hpp"
+#include "managers/game_manager.hpp"
 #include "managers/server_connection_manager.hpp"
 #include "managers/sound_manager.hpp"
 
@@ -33,6 +33,11 @@ struct GlobalContext {
    * @brief Provide access to the sound manager
    */
   SoundManager::Ptr soundManager;
+
+  /**
+   * @brief Provide access to the game manager
+   */
+  GameManager::Ptr gameManager;
 
   /**
    * @brief Provide access to the client API

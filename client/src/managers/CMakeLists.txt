@@ -9,4 +9,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         sound_manager.cpp
         server_connection_manager.cpp
         server_connection_manager.hpp
+        game_manager.hpp
+        game_manager.cpp
 )

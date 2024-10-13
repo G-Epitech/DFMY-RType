@@ -9,6 +9,7 @@
 
 #include "interfaces/scene_interface.hpp"
 #include "libs/zygarde/src/registry.hpp"
+#include "managers/game_manager.hpp"
 #include "managers/resources_manager.hpp"
 #include "managers/sound_manager.hpp"
 
@@ -38,6 +39,9 @@ class SceneBase : public IScene {
 
   /// @brief Store the sound manager
   SoundManager::Ptr soundManager_;
+
+  /// @brief Store the game manager
+  GameManager::Ptr gameManager_;
 
  public:
   /**

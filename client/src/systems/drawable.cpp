@@ -106,9 +106,9 @@ void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
 void DrawableSystem::DrawEntityText(const components::Text& text,
                                     const zyc::components::Position& position,
                                     const sf::Shader& shader) {
-  const auto savedFont = resourcesManager_->GetFont(text.fontName);
+  const auto saved_font = resourcesManager_->GetFont(text.fontName);
 
-  text_.setFont(*savedFont);
+  text_.setFont(*saved_font);
   text_.setString(text.text);
   text_.setStyle(text.style);
   text_.setCharacterSize(text.characterSize);
@@ -134,5 +134,5 @@ void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
-  windowManager_->window()->draw(shape_);
+  windowManager_->window()->draw(shape_, &shader);
 }

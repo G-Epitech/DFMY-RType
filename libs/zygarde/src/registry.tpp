@@ -6,6 +6,7 @@
 */
 
 #pragma once
+
 #include <stdexcept>
 
 #include "./utils/symbols.hpp"
@@ -16,7 +17,8 @@ template <typename Component>
 typename sparse_array<Component>::ptr Registry::RegisterComponent() {
   const auto type_idx = std::type_index(typeid(Component));
 
-  auto [it, inserted] = componentsArrays_.try_emplace(typeid(Component), std::make_shared<sparse_array<Component>>());
+  auto [it, inserted] =
+      componentsArrays_.try_emplace(typeid(Component), std::make_shared<sparse_array<Component>>());
 
   if (!inserted) {
     return std::any_cast<typename sparse_array<Component>::ptr>(it->second);
