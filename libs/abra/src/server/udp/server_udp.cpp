@@ -16,7 +16,7 @@ ServerUDP::ServerUDP(const std::uint64_t &port)
     : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_(), logger_("server-udp") {}
 
 ServerUDP::~ServerUDP() {
-  this->ios_.stop();
+  this->Close();
 }
 
 void ServerUDP::Start() {
@@ -71,8 +71,8 @@ void ServerUDP::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
   }
 
   std::vector<char> cleanBuffer(
-          buffer->begin(),
-          buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
+      buffer->begin(),
+      buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
   auto cleanBitset = std::make_shared<tools::dynamic_bitset>(*buffer);
 
   StoreMessage(cleanBitset);
@@ -118,4 +118,16 @@ std::queue<ClientUDPMessage> ServerUDP::ExtractQueue() {
 
   queue_ = std::queue<ClientUDPMessage>();
   return extractedQueue;
+}
+
+void ServerUDP::Close() {
+  if (!this->socket_.is_open()) {
+    return;
+  }
+
+  this->logger_.Info("Closing session");
+
+  this->socket_.close();
+
+  this->logger_.Info("Session closed");
 }

@@ -23,16 +23,21 @@ ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
 }
 
 ClientUDP::~ClientUDP() {
-  socket_.close();
-  ioc_.stop();
+  this->Close();
 }
 
 void ClientUDP::Listen() {
   while (socket_.is_open()) {
     std::vector<char> buf(kPacketMaxBytesSize);
     ip::udp::endpoint senderEndpoint;
+    std::size_t len = 0;
 
-    std::size_t len = socket_.receive_from(buffer(buf), senderEndpoint);
+    try {
+      len = socket_.receive_from(buffer(buf), senderEndpoint);
+    } catch (const std::exception &e) {
+      this->logger_.Warning("Error during read: " + std::string(e.what()));
+      break;
+    }
 
     auto bitset = std::make_shared<tools::dynamic_bitset>(buf);
     tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
@@ -51,4 +56,18 @@ ClientUDP::ClientEndpoint ClientUDP::GetEndpoint() const {
   auto endpoint = socket_.local_endpoint();
 
   return {endpoint.address().to_string(), endpoint.port()};
+}
+
+void ClientUDP::Close() {
+  if (!this->socket_.is_open() || ioc_.stopped()) {
+    return;
+  }
+
+  this->logger_.Info("Closing session");
+
+  socket_.shutdown(ip::udp::socket::shutdown_both);
+  socket_.close();
+  ioc_.stop();
+
+  this->logger_.Info("Session closed");
 }

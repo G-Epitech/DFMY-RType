@@ -14,8 +14,9 @@ ServerConnectionManager::ServerConnectionManager(ServerConnectionManager::Proper
 
 ServerConnectionManager::~ServerConnectionManager() {
   connectionStatus_ = ConnectionStatus::kDisconnected;
-  if (connectionThread_.joinable())
-    connectionThread_.join();
+  if (connectionThread_ && connectionThread_->joinable()) {
+    connectionThread_->join();
+  }
 }
 
 ServerConnectionManager::Ptr ServerConnectionManager::Create(
@@ -28,7 +29,7 @@ bool ServerConnectionManager::Connected() const {
 }
 
 void ServerConnectionManager::ConnectAsync() {
-  if (connectionStatus_ == ConnectionStatus::kConnecting)
+  if (connectionThread_)
     return;
   connectionStatus_ = ConnectionStatus::kConnecting;
   nextRetry_ = std::chrono::system_clock::now();

@@ -72,6 +72,11 @@ class abra::server::ServerTCP {
    */
   [[nodiscard]] std::queue<ClientTCPMessage> ExtractQueue();
 
+  /**
+   * @brief Close the server
+   */
+  void Close();
+
  private:
   /**
    * @brief Accept a new connection

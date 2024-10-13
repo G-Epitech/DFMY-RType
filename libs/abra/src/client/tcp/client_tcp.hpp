@@ -45,6 +45,11 @@ class abra::client::ClientTCP final : public abra::client::AbstractClient {
    */
   std::queue<tools::MessageProps> &GetQueue();
 
+  /**
+   * @brief Close the connection
+   */
+  void Close();
+
  private:
   /// @brief The Input Output Service
   boost::asio::io_service ios_;
