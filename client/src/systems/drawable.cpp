@@ -77,9 +77,11 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
           DrawEntityTexture(arg, position, *shader);
           drawable->bounds = sprite_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Text>) {
+          shader->setUniform("addColor", sf::Glsl::Vec4(arg.color));
           DrawEntityText(arg, position, *shader);
           drawable->bounds = text_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Rectangle>) {
+          shader->setUniform("addColor", sf::Glsl::Vec4(arg.color));
           DrawEntityRectangle(arg, position, *shader);
           drawable->bounds = shape_.getGlobalBounds();
         }
