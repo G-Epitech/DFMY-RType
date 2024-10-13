@@ -13,6 +13,7 @@
 #include "app/server_interface.hpp"
 #include "game_service/game_service.hpp"
 #include "props.hpp"
+#include "libs/game/includes/api.hpp"
 
 namespace rtype::server {
 class Lobby final : public IServer {
@@ -32,6 +33,7 @@ class Lobby final : public IServer {
   int Run() override;
 
  private:
+
   /// @brief Lobby server context
   struct Context {
     /// @brief Name of the server
@@ -44,10 +46,13 @@ class Lobby final : public IServer {
     LobbyCtxProps props;
   };
 
- private:
   /// @brief Lobby server context
   Context ctx_;
+
   /// @brief Game service
   game::GameService gameService_;
+
+  /// @brief Server network
+  std::shared_ptr<rtype::sdk::game::api::Server> api_;
 };
 }  // namespace rtype::server

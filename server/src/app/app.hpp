@@ -45,6 +45,7 @@ class App {
  private:
   /// @brief ParseArguments result
   CliResult cliResult_;
+
   /// @brief Server instance
   std::unique_ptr<IServer> server_;
 };
