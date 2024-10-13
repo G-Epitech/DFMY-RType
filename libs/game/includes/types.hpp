@@ -8,7 +8,7 @@
 #pragma once
 
 #include "types/enemies.hpp"
-#include "types/game_entities"
+#include "types/game_entities.hpp"
 #include "types/mode.hpp"
 #include "types/projectile.hpp"
-#include "types/weapons"
+#include "types/weapons.hpp"

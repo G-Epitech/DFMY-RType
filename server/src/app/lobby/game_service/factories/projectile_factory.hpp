@@ -8,6 +8,7 @@
 #pragma once
 
 #include "game/includes/constants.hpp"
+#include "game/includes/types.hpp"
 #include "scripting/types/context.hpp"
 #include "zygarde/src/core/components/components.hpp"
 #include "zygarde/src/entity.hpp"
@@ -22,7 +23,8 @@ class ProjectileFactory {
 
   static zygarde::Entity CreateProjectile(zygarde::Registry::Const_Ptr registry,
                                           const zygarde::core::types::Vector3f &position,
-                                          const zygarde::core::types::Vector2f &box_size);
+                                          const zygarde::core::types::Vector2f &box_size,
+                                          rtype::sdk::game::types::GameEntityType shooter);
 
  private:
   static void CreateScript(zygarde::Registry::Const_Ptr registry, const zygarde::Entity &entity);
