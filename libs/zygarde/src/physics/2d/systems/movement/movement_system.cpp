@@ -43,4 +43,5 @@ void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {
 void MovementSystem::UpdatePosition(core::components::Position* position) const {
   position->point.x += movementOffset_.x;
   position->point.y += movementOffset_.y;
+  std::cout << "Position: " << position->point.x << ", " << position->point.y << std::endl;
 }

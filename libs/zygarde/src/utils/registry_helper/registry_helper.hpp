@@ -15,6 +15,8 @@
 #include "physics/2d/systems/systems.hpp"
 #include "registry.hpp"
 #include "utils/timer/timer.hpp"
+#include "scripting/components/script/script.hpp"
+#include "scripting/systems/execution/script_execution_system.hpp"
 
 namespace zygarde::utils {
 class EXPORT_ZYGARDE_API RegistryHelper final {
@@ -45,17 +47,15 @@ class EXPORT_ZYGARDE_API RegistryHelper final {
   static void RegisterCoreComponents(const std::shared_ptr<Registry> &registry);
 
   /**
+   * @brief Register scripting components available by default in the zygarde engine
+   * @param registry The registry you want to register the components to
+   */
+  static void RegisterScriptingComponents(const std::shared_ptr<Registry> &registry);
+
+  /**
    * @brief Register physics components available by default in the zygarde engine
    * @param registry The registry you want to register the components to
    */
   static void RegisterPhysicsComponents(const std::shared_ptr<Registry> &registry);
-
-  /**
-   * @brief Register physics systems available by default in the zygarde engine
-   * @param registry The registry you want to register the systems to
-   * @param delta_time Reference to the delta time
-   */
-  static void RegisterPhysicsSystems(const std::shared_ptr<Registry> &registry,
-                                     const utils::Timer::Nanoseconds &delta_time);
 };
 }  // namespace zygarde::utils

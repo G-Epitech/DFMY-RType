@@ -10,6 +10,9 @@
 #include <iostream>
 #include <thread>
 
+#include "factories/player_factory.hpp"
+#include "factories/projectile_factory.hpp"
+
 using namespace rtype::server::game;
 
 GameService::GameService(const size_t& tick_rate) : ticksManager_{tick_rate}, registry_() {}
@@ -18,7 +21,8 @@ void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
-  InitEntites();
+  PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(0, 0, 0), {5, 5});
+  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(10, 0, 0), {5, 5});
 }
 
 void GameService::Initialize() {
@@ -28,6 +32,7 @@ void GameService::Initialize() {
 
 int GameService::Run() {
   Initialize();
+  std::cout << "GameService is running" << std::endl;
 
   while (gameRunning_) {
     ticksManager_.Update();
@@ -39,22 +44,4 @@ int GameService::Run() {
 
 void GameService::ExecuteGameLogic() const {
   registry_->RunSystems();
-}
-
-void GameService::InitEntites() {
-  auto ent1 = registry_->SpawnEntity();
-  auto ent2 = registry_->SpawnEntity();
-
-  registry_->AddComponent<core::components::Position>(
-      ent1, core::components::Position{core::types::Vector3f{0, 0, 0}});
-  registry_->AddComponent<core::components::Position>(
-      ent2, core::components::Position{core::types::Vector3f{2, 0, 0}});
-  registry_->AddComponent<physics::components::Rigidbody2D>(ent1,
-                                                            physics::components::Rigidbody2D{});
-  registry_->AddComponent<physics::components::Rigidbody2D>(
-      ent2, physics::components::Rigidbody2D{core::types::Vector2f::left()});
-  registry_->AddComponent<physics::components::BoxCollider2D>(
-      ent1, physics::components::BoxCollider2D{core::types::Vector2f(1, 1)});
-  registry_->AddComponent<physics::components::BoxCollider2D>(
-      ent2, physics::components::BoxCollider2D{core::types::Vector2f(1, 1)});
 }

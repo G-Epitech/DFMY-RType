@@ -5,18 +5,12 @@
 ** main.cpp
 */
 
-#include "libs/game/includes/api.hpp"
+#include <iostream>
+#include "app/app.hpp"
 
-using namespace rtype::sdk::game;
+int main(int ac, char **av) {
+  rtype::server::App app;
 
-int main(int ac, char **av)
-{
-    auto server = api::Server(5001);
-
-    server.CreateLobby("Prototype game");
-
-    while (true) {
-        // wait some seconds with std
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+  std::cout << "Starting server" << std::endl;
+  return app.Run(ac, av);
 }

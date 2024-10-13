@@ -15,7 +15,13 @@
 namespace zygarde::core::components {
 class EXPORT_ZYGARDE_API Tags final {
  public:
-  /***
+  /**
+   * @brief Build a tag with a single tag
+   * @param tag Tag to add
+   */
+  explicit Tags(const std::string &tag);
+
+  /**
    * @brief Build a tags with a set of tags
    * @param tags Tags to add
    */

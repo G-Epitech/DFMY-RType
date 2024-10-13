@@ -8,6 +8,8 @@
 #include "tags.hpp"
 using namespace zygarde::core::components;
 
+Tags::Tags(const std::string& tag) : tags_{std::set<std::string>{tag}} {}
+
 Tags::Tags(const std::set<std::string>& tags) : tags_{tags} {}
 
 bool Tags::operator==(const std::string& tag) const {

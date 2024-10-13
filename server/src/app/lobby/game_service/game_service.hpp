@@ -47,8 +47,6 @@ class GameService {
    */
   void RegistrySetup();
 
-  void InitEntites();
-
  private:
   /// @brief Game running flag
   bool gameRunning_{true};
