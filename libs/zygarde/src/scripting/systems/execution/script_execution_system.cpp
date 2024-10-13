@@ -16,9 +16,10 @@ ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& de
 
 void ScriptExecutionSystem::Run(Registry::Ptr r,
                                 sparse_array<scripting::components::Script>::ptr scripts) {
+  std::cout << "Scripts size " << scripts->size() << std::endl;
   for (currentScriptIndex_; currentScriptIndex_ < scripts->size(); currentScriptIndex_++) {
     auto& scriptComponent = (*scripts)[currentScriptIndex_];
-    if (!scriptComponent.has_value()) {
+    if (!scriptComponent.has_value() || !r->HasEntityAtIndex(currentScriptIndex_)) {
       continue;
     }
     ProcessScript(r, &scriptComponent.value());
@@ -36,7 +37,7 @@ void ScriptExecutionSystem::ProcessScript(Registry::Const_Ptr registry,
 
 scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
     Registry::Const_Ptr registry, scripting::components::Script* script) {
-  return {registry, script->values_, deltaTime_};
+  return {registry, script->values_, deltaTime_, registry->EntityFromIndex(currentScriptIndex_)};
 }
 
 void ScriptExecutionSystem::HandleCollisionCallback(

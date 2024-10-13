@@ -17,15 +17,17 @@ MovementSystem::MovementSystem(const utils::Timer::Nanoseconds& delta_time)
 void MovementSystem::Run(std::shared_ptr<Registry> r,
                          tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
                          tools::sparse_array<core::components::Position>::ptr positions) {
+  std::cout << "rigidbodies size: " << rigidbodies->size() << std::endl;
   auto max = std::max(rigidbodies->size(), positions->size());
   for (size_t i = 0; i < max; ++i) {
     auto& rigidbody = (*rigidbodies)[i];
     auto& position = (*positions)[i];
-    if (rigidbody && position) {
+    if (rigidbody.has_value() && position.has_value()) {
       ComputePositionOffset(&(*rigidbody));
       UpdatePosition(&((*position)));
     }
   }
+
 }
 
 void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {

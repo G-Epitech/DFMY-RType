@@ -17,5 +17,6 @@ struct ScriptingContext {
   const Registry::Ptr &registry;
   ValuesMap &values;
   const utils::Timer::Nanoseconds &deltaTime;
+  zygarde::Entity me;
 };
 }  // namespace zygarde::scripting::types

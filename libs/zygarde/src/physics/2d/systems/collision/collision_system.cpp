@@ -21,11 +21,16 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
       continue;
     }
     auto componentsPack = GetComponentsPackAtIndex(r, i, rigidbodies, positions, colliders);
+
     for (size_t j = i + 1; j < positions->size(); j++) {
       if (!IndexHasRequiredComponents(j, rigidbodies, positions, colliders)) {
         continue;
       }
+      if (!r->HasEntityAtIndex(j)) {
+        break;
+      }
       auto otherComponentsPack = GetComponentsPackAtIndex(r, j, rigidbodies, positions, colliders);
+
       if (!HaveCommonCollisionLayers(*componentsPack.boxCollider,
                                      *otherComponentsPack.boxCollider)) {
         continue;
@@ -42,15 +47,18 @@ bool CollisionSystem::IndexHasRequiredComponents(
     size_t index, const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
     const tools::sparse_array<core::components::Position>::ptr &positions,
     const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) noexcept {
-  return (*rigidbodies)[index].has_value() && (*positions)[index].has_value() &&
-         (*colliders)[index].has_value();
+  if (index >= rigidbodies->size() || index >= positions->size() || index >= colliders->size()) {
+    return false;
+  }
+  return ((*rigidbodies)[index].has_value() && (*positions)[index].has_value() &&
+          (*colliders)[index].has_value());
 }
 
 CollisionSystem::ComponentsPack CollisionSystem::GetComponentsPackAtIndex(
     Registry::Const_Ptr r, size_t index,
     const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
     const tools::sparse_array<core::components::Position>::ptr &positions,
-    const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) noexcept {
+    const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) {
   return {&(*rigidbodies)[index].value(), &(*positions)[index].value(),
           &(*colliders)[index].value(), r->EntityFromIndex(index)};
 }
@@ -88,13 +96,9 @@ void CollisionSystem::ProcessCollision(const CollisionSystem::ComponentsPack &pa
   if (!pack2.rigidbody->IsKinematic()) {
     pack2.rigidbody->CancelVelocity();
   }
-  std::cout << static_cast<std::size_t>(pack1.entity) << std::endl;
 
   pack1.boxCollider->AddColllision(BuildCollision2D(pack1, pack2));
   pack2.boxCollider->AddColllision(BuildCollision2D(pack2, pack1));
-  auto col = pack2.boxCollider->GetNextCollision();
-  auto ent = col.get()->otherEntity;
-  std::cout << "entity " << static_cast<std::size_t>(ent) << std::endl;
 }
 
 physics::types::Collision2D CollisionSystem::BuildCollision2D(

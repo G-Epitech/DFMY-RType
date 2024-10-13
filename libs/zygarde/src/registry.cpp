@@ -43,6 +43,9 @@ Entity Registry::SpawnEntity() {
 }
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
+  if (idx >= entities_.size()) {
+    return Entity(-1);
+  }
   return entities_.at(idx);
 }
 
@@ -61,6 +64,20 @@ std::size_t Registry::IndexFromEntity(const Entity &e) const {
     }
   }
   throw Exception("Entity not found");
+}
+
+void Registry::DestroyEntity(const Entity &e) {
+  entitesToKill_.push(e);
+}
+
+void Registry::CleanupDestroyedEntities() {
+  while (!entitesToKill_.empty()) {
+    KillEntity(entitesToKill_.top());
+    entitesToKill_.pop();
+  }
+}
+bool Registry::HasEntityAtIndex(std::size_t idx) const {
+  return idx < entities_.size();
 }
 
 Registry::Exception::Exception(std::string message) : message_(std::move(message)) {}

@@ -90,6 +90,8 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    */
   [[nodiscard]] Entity EntityFromIndex(std::size_t idx) const;
 
+  bool HasEntityAtIndex(std::size_t idx) const;
+
   [[nodiscard]] std::size_t IndexFromEntity(Entity const &e) const;
 
   /**
@@ -97,6 +99,17 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @param e Entity to kill
    */
   void KillEntity(Entity const &e);
+
+  /**
+   * @brief Destroy an entity
+   * @param e Entity to destroy
+   */
+  void DestroyEntity(Entity const &e);
+
+  /**
+   * @brief Cleanup destroyed entities
+   */
+  void CleanupDestroyedEntities();
 
   /**
    * @brief Add a component to an entity
@@ -171,6 +184,9 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
 
   /// @brief Free ids available for entities
   std::stack<std::size_t> freeIds_;
+
+  /// @brief Entities to kill
+  std::stack<Entity> entitesToKill_;
 
   /// @brief remove functions used to remove components
   using component_destroyer = std::function<void(Registry &, Entity const &)>;

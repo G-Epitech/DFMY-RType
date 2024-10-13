@@ -21,6 +21,7 @@ void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
+  PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(-2, 0, 0), {5, 5});
   PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(0, 0, 0), {5, 5});
   ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(7, 0, 0), {5, 5});
 }
@@ -32,7 +33,6 @@ void GameService::Initialize() {
 
 int GameService::Run() {
   Initialize();
-  std::cout << "GameService is running" << std::endl;
 
   while (gameRunning_) {
     ticksManager_.Update();
@@ -44,4 +44,5 @@ int GameService::Run() {
 
 void GameService::ExecuteGameLogic() const {
   registry_->RunSystems();
+  registry_->CleanupDestroyedEntities();
 }

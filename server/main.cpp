@@ -11,6 +11,5 @@
 int main(int ac, char **av) {
   rtype::server::App app;
 
-  std::cout << "Starting server" << std::endl;
   return app.Run(ac, av);
 }

@@ -51,4 +51,7 @@ void PlayerFactory::HandleCollision(const scripting::types::ScriptingContext &co
     playerHealth -= 10;
     context.values["health"] = playerHealth;
   }
+  if (playerHealth <= 0) {
+    context.registry->DestroyEntity(context.me);
+  }
 }
