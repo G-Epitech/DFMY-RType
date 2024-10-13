@@ -5,7 +5,7 @@
 ** collider.cpp
 */
 
-#include "collider_2d.hpp"
+#include "./collider_2d.hpp"
 
 #include <algorithm>
 #include <utility>

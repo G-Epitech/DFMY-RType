@@ -5,7 +5,7 @@
 ** MovementSystem.cpp
 */
 
-#include "movement_system.hpp"
+#include "./movement_system.hpp"
 
 #include <iostream>
 
@@ -27,7 +27,6 @@ void MovementSystem::Run(std::shared_ptr<Registry> r,
       UpdatePosition(&((*position)));
     }
   }
-
 }
 
 void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {

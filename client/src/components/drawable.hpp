@@ -25,7 +25,7 @@ struct Text {
 
 /// @brief Texture Component use in an ECS
 struct Texture {
-  std::string path;  ///< Path to the texture
+  std::string name;  ///< Path to the texture
   float scale = 1;   ///< Scale of the texture
   sf::IntRect rect;  ///< Rectangle of the texture
 };

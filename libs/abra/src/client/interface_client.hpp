@@ -12,10 +12,10 @@
 #include <queue>
 #include <vector>
 
-#include "../core.hpp"
-#include "tools/logger/logger.hpp"
-#include "tools/message/message.hpp"
-#include "tools/packet/packet.hpp"
+#include "libs/abra/src/core.hpp"
+#include "libs/abra/src/tools/logger/logger.hpp"
+#include "libs/abra/src/tools/message/message.hpp"
+#include "libs/abra/src/tools/packet/packet.hpp"
 
 #pragma once
 

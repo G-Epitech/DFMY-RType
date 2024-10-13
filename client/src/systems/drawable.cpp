@@ -7,6 +7,7 @@
 
 #include "drawable.hpp"
 
+#include <iostream>
 #include <utility>
 
 namespace zyc = zygarde::core;
@@ -25,7 +26,7 @@ void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::pt
   for (size_t i = 0; i < drawables->size() && i < positions->size(); ++i) {
     if ((*drawables)[i] && (*positions)[i]) {
       const auto drawable = &((*drawables)[i].value());
-      auto position = (*positions)[i].value();
+      auto& position = (*positions)[i].value();
 
       windowManager_->SetView(drawable->view);
       DrawEntity(drawable, position);
@@ -73,12 +74,20 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
         using T = std::decay_t<decltype(arg)>;
         auto shader = windowManager_->GetSelectedShader();
         if constexpr (std::is_same_v<T, components::Texture>) {
+          shader->setUniform("objectColor", sf::Glsl::Vec4(1, 1, 1, 1));
+          shader->setUniform("hasTexture", true);
+          shader->setUniform("texture", sf::Shader::CurrentTexture);
           DrawEntityTexture(arg, position, *shader);
           drawable->bounds = sprite_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Text>) {
+          shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
+          shader->setUniform("hasTexture", true);
+          shader->setUniform("texture", sf::Shader::CurrentTexture);
           DrawEntityText(arg, position, *shader);
           drawable->bounds = text_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Rectangle>) {
+          shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
+          shader->setUniform("hasTexture", false);
           DrawEntityRectangle(arg, position, *shader);
           drawable->bounds = shape_.getGlobalBounds();
         }
@@ -89,7 +98,7 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
 void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
                                        const zyc::components::Position& position,
                                        const sf::Shader& shader) {
-  const auto saved_texture = resourcesManager_->GetTexture(texture.path);
+  const auto saved_texture = resourcesManager_->GetTexture(texture.name);
 
   sprite_.setScale(1, 1);
   sprite_.setTexture(*saved_texture);

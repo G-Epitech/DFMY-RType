@@ -5,9 +5,9 @@
 ** AbstractClient class
 */
 
-#include "abstract_client.hpp"
+#include "./abstract_client.hpp"
 
-#include "tools/packet/packet_utils.hpp"
+#include "libs/abra/src/tools/packet/packet_utils.hpp"
 
 using namespace abra::client;
 

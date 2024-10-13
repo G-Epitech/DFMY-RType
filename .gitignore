@@ -42,4 +42,5 @@ abra_tests
 .idea
 
 build
+bin
 cmake-build-*

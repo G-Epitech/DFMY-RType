@@ -7,13 +7,9 @@
 
 #pragma once
 
-#include "tools/logger/logger.hpp"
-
-#include "client/tcp/client_tcp.hpp"
-
-#include "client/udp/client_udp.hpp"
-
-#include "server/tcp/server_tcp.hpp"
-#include "server/tcp/session/session_tcp.hpp"
-
-#include "server/udp/server_udp.hpp"
+#include "libs/abra/src/client/tcp/client_tcp.hpp"
+#include "libs/abra/src/client/udp/client_udp.hpp"
+#include "libs/abra/src/server/tcp/server_tcp.hpp"
+#include "libs/abra/src/server/tcp/session/session_tcp.hpp"
+#include "libs/abra/src/server/udp/server_udp.hpp"
+#include "libs/abra/src/tools/logger/logger.hpp"

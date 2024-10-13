@@ -11,12 +11,12 @@
 #include <map>
 #include <thread>
 
-#include "abra/includes/network.hpp"
-#include "abra/includes/packet.hpp"
-#include "api/props/message.hpp"
-#include "api/props/network.hpp"
-#include "api/props/payload/payload.hpp"
-#include "core.hpp"
+#include "libs/abra/includes/network.hpp"
+#include "libs/abra/includes/packet.hpp"
+#include "libs/game/src/api/props/message.hpp"
+#include "libs/game/src/api/props/network.hpp"
+#include "libs/game/src/api/props/payload/payload.hpp"
+#include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
 class EXPORT_GAME_SDK_API Server;
@@ -71,7 +71,7 @@ class rtype::sdk::game::api::Server {
    * @warning The queue is cleared after the extraction
    * @return The queue of messages
    */
-  [[nodiscard]] std::queue<ClientTCPMessage> ExtractMainQueue();
+  [[nodiscard]] std::queue<abra::server::ClientTCPMessage> ExtractMainQueue();
 
   /**
    * @brief Extract queue of messages of a lobby
@@ -80,8 +80,8 @@ class rtype::sdk::game::api::Server {
    * @param id The lobby id
    * @return The queue of messages
    */
-  [[nodiscard]] std::queue<std::pair<std::uint64_t, ClientUDPMessage>> ExtractLobbyQueue(
-      std::uint64_t id);
+  [[nodiscard]] std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>>
+  ExtractLobbyQueue(std::uint64_t id);
 
   /**
    * @brief Send state of players to all clients in a lobby
@@ -153,25 +153,25 @@ class rtype::sdk::game::api::Server {
    * @brief Handle the incoming TCP messages
    * @return true if the message must be added to the queue (false if the message is handled)
    */
-  [[nodiscard]] bool SystemTCPMessagesMiddleware(const ClientTCPMessage &message);
+  [[nodiscard]] bool SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Handle a client connection
    * @param message The message of the client
    */
-  void HandleClientConnection(const ClientTCPMessage &message);
+  void HandleClientConnection(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Handle a lobby join
    * @param message The message of the client
    */
-  void HandleLobbyJoin(const ClientTCPMessage &message);
+  void HandleLobbyJoin(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Handle player when he joins a lobby
    * @param message The message of the client
    */
-  void HandleLobbyAddPlayer(const ClientTCPMessage &message);
+  void HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Add a new client to the server
@@ -211,10 +211,11 @@ class rtype::sdk::game::api::Server {
   std::function<void(std::uint64_t)> newPlayerHandler_;
 
   /// @brief Map of handlers for the TCP messages
-  static inline std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
-      {MessageClientType::kConnection, &Server::HandleClientConnection},
-      {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin},
-      {MessageClientType::kClientJoinLobbyInfos, &Server::HandleLobbyAddPlayer},
+  static inline std::map<unsigned int, void (Server::*)(const abra::server::ClientTCPMessage &)>
+      handlers_ = {
+          {MessageClientType::kConnection, &Server::HandleClientConnection},
+          {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin},
+          {MessageClientType::kClientJoinLobbyInfos, &Server::HandleLobbyAddPlayer},
   };
 };
 

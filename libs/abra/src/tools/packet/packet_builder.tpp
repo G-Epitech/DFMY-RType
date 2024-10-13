@@ -7,10 +7,9 @@
 
 #pragma once
 
-using namespace abra;
 
 template<typename T>
-std::unique_ptr<tools::Packet<T>> tools::PacketBuilder::Build(T payload) {
+std::unique_ptr<abra::tools::Packet<T>> abra::tools::PacketBuilder::Build(T payload) {
   if (!IsValidBitSize(sizeof(payload), kPacketHeaderPayloadLengthSize))
     throw Exception("Invalid structure: Payload length is too big.");
 
@@ -25,7 +24,7 @@ std::unique_ptr<tools::Packet<T>> tools::PacketBuilder::Build(T payload) {
 }
 
 template<typename T>
-std::vector<std::unique_ptr<tools::Packet<T>>> tools::PacketBuilder::Build(std::vector<T> payloads) {
+std::vector<std::unique_ptr<abra::tools::Packet<T>>> abra::tools::PacketBuilder::Build(std::vector<T> payloads) {
   if (!IsValidBitSize(payloads.size(), kPacketOffsetSize))
     throw Exception("Invalid structure: Vector size is too big.");
   if (payloads.size() == 0)
@@ -55,7 +54,7 @@ std::vector<std::unique_ptr<tools::Packet<T>>> tools::PacketBuilder::Build(std::
 }
 
 template<typename T>
-std::unique_ptr<tools::Packet<T>> tools::PacketBuilder::Build(const std::shared_ptr<tools::dynamic_bitset> &bitset) {
+std::unique_ptr<abra::tools::Packet<T>> abra::tools::PacketBuilder::Build(const std::shared_ptr<abra::tools::dynamic_bitset> &bitset) {
   if (bitset->GetSize() < kPacketHeaderPropsSize + kPacketMessagePropsSize)
     throw Exception("Protocol error: Bitset is too small.");
 
@@ -78,7 +77,7 @@ std::unique_ptr<tools::Packet<T>> tools::PacketBuilder::Build(const std::shared_
 }
 
 template<typename T>
-void tools::PacketBuilder::FillPayloadFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset,
+void abra::tools::PacketBuilder::FillPayloadFromBitset(const std::shared_ptr<dynamic_bitset> &bitset, std::size_t *offset,
                                                  T *payload) {
   if (sizeof(T) != this->header_.payloadLength)
     throw Exception("Invalid structure: Payload is not the same size as the header.");

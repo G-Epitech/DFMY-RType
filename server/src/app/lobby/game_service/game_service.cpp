@@ -18,8 +18,12 @@
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
 
-GameService::GameService(const size_t& tick_rate)
-    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service"), lobbyId_(0) {}
+GameService::GameService(const size_t &tick_rate)
+    : ticksManager_{tick_rate},
+      registry_(),
+      enemyManager_(),
+      logger_("game-service"),
+      lobbyId_(0) {}
 
 void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
@@ -68,14 +72,15 @@ void GameService::HandleMessages() {
     auto playerId = message.first;
     auto &data = message.second;
 
-    if (data.messageType ==  MessageClientType::kMovement) {
+    if (data.messageType == MessageClientType::kMovement) {
       auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
       auto move = packet->GetPayload();
 
       auto player = players_.find(playerId);
       if (player != players_.end()) {
         auto &playerEntity = player->second;
-        auto rigidBody = registry_->GetComponent<zygarde::physics::components::Rigidbody2D>(playerEntity);
+        auto rigidBody =
+            registry_->GetComponent<zygarde::physics::components::Rigidbody2D>(playerEntity);
 
         // TODO @dragos
       }

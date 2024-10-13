@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "header.hpp"
-#include "message.hpp"
-#include "offset.hpp"
-#include "turn.hpp"
+#include "./header.hpp"
+#include "./message.hpp"
+#include "./offset.hpp"
+#include "./turn.hpp"
 
 constexpr unsigned int kPacketMaxBytesSize = (kPacketHeaderPropsSize + kPacketMessagePropsSize +
                                               kPacketOffsetPropsSize + kPacketTurnPropsSize / 8) +

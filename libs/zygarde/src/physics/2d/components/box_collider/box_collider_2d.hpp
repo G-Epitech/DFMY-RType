@@ -12,8 +12,8 @@
 #include "entity.hpp"
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
-#include "physics/2d/components/collider/collider_2d.hpp"
-#include "physics/2d/types/bounding_box/bounding_box_2d.hpp"
+#include "libs/zygarde/src/physics/2d/components/collider/collider_2d.hpp"
+#include "libs/zygarde/src/physics/2d/types/bounding_box/bounding_box_2d.hpp"
 
 namespace zygarde::physics::components {
 class EXPORT_ZYGARDE_API BoxCollider2D final {
@@ -29,7 +29,7 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @param size Size of the box
    * @param attached_rigidbody Pointer to the attached Rigidbody2D object
    */
-  BoxCollider2D(const core::types::Vector2f &size);
+  explicit BoxCollider2D(const core::types::Vector2f &size);
 
   /**
    * @brief Construct a new BoxCollider2D object

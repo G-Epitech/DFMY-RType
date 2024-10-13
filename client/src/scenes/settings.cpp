@@ -17,7 +17,8 @@
 
 using namespace rtype::client;
 using namespace rtype::client::components;
-using namespace zyc::components;
+using namespace rtype::client::scenes;
+using namespace zygarde::core::components;
 
 SceneSettings::SceneSettings(const GlobalContext &context) : SceneBase(context) {
   resourcesManager_->LoadFont("assets/fonts/main.ttf", "main");
@@ -325,9 +326,9 @@ void SceneSettings::CreateColorBlindnessLabel(const float &x, const float &y) co
                                     {Text{"Color settings", "main", 20}, WindowManager::View::HUD});
 }
 
-void SceneSettings::CreateColorBlindnessRadioOption(
-    const std::string &label, const std::string &value,
-    const zygarde::core::types::Vector2f &position) {
+void SceneSettings::CreateColorBlindnessRadioOption(const std::string &label,
+                                                    const std::string &value,
+                                                    const zygarde::core::types::Vector2f &pos) {
   auto label_entity = registry_->SpawnEntity();
   auto radio_entity = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
@@ -339,8 +340,7 @@ void SceneSettings::CreateColorBlindnessRadioOption(
     }
   };
 
-  registry_->AddComponent<Position>(radio_entity,
-                                    {zyc::types::Vector3f(position.x, position.y), aligns});
+  registry_->AddComponent<Position>(radio_entity, {zyc::types::Vector3f(pos.x, pos.y), aligns});
   registry_->AddComponent<Drawable>(radio_entity, {Texture{"menu", 2.5}, WindowManager::View::HUD});
 
   registry_->AddComponent<Radio>(radio_entity, {.id = "color_blindness", .value = value});
@@ -348,7 +348,7 @@ void SceneSettings::CreateColorBlindnessRadioOption(
       radio_entity,
       {.strategy = events::MouseEventTarget::kLocalTarget, .handler = on_mouse_pressed});
   registry_->AddComponent<Position>(label_entity,
-                                    {zyc::types::Vector3f(position.x + 50, position.y), aligns});
+                                    {zyc::types::Vector3f(pos.x + 50, pos.y), aligns});
   registry_->AddComponent<Drawable>(label_entity,
                                     {Text{label, "main", 13}, WindowManager::View::HUD});
   registry_->AddComponent<OnMousePressed>(

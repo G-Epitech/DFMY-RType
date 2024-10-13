@@ -9,8 +9,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "context/global_context.hpp"
+#include "context/global.hpp"
+#include "libs/game/includes/api.hpp"
 #include "managers/scenes_manager.hpp"
+#include "managers/server_connection_manager.hpp"
 #include "utils/timer.hpp"
 
 #define APP_WINDOW_WIDTH 1920
@@ -18,6 +20,9 @@
 #define APP_WINDOW_TITLE "R-Type"
 #define APP_WINDOW_FRAMERATE 60
 #define APP_WINDOW_ICON_PATH "assets/icons/R-Type.png"
+
+#define APP_IP "127.0.0.1"
+#define APP_PORT 5001
 
 namespace rtype::client {
 
@@ -70,6 +75,11 @@ class App {
   void CreateSoundManager();
 
   /**
+   * @brief Creates the server connection manager for the application.
+   */
+  void CreateServerConnectionManager();
+
+  /**
    * @brief Creates the game manager for the application.
    */
   void CreateGameManager();
@@ -82,6 +92,9 @@ class App {
 
   /// @brief The sound manager for the application.
   SoundManager::Ptr soundManager_;
+
+  /// @brief The server connection manager for the application.
+  ServerConnectionManager::Ptr serverConnectionManager_;
 
   /// @brief The game manager for the application.
   GameManager::Ptr gameManager_;

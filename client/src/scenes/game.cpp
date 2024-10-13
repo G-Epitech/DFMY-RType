@@ -1,0 +1,105 @@
+/*
+** EPITECH PROJECT, 2024
+** r-type
+** File description:
+** game.cpp
+*/
+
+#include "game.hpp"
+
+#include "components/drawable.hpp"
+#include "components/on_event.hpp"
+#include "menu.hpp"
+#include "systems/background.hpp"
+#include "systems/drawable.hpp"
+#include "systems/events/key.hpp"
+#include "systems/events/mouse/buttons.hpp"
+#include "systems/events/mouse/move.hpp"
+#include "systems/game/sync.hpp"
+#include "systems/player.hpp"
+
+using namespace rtype::client::scenes;
+using namespace rtype::client::systems;
+using namespace rtype::client::components;
+using namespace zygarde::core::components;
+
+SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
+  registry_->RegisterComponent<Drawable>();
+  registry_->RegisterComponent<Position>();
+  registry_->RegisterComponent<OnKeyPressed>();
+  registry_->RegisterComponent<OnKeyReleased>();
+  registry_->RegisterComponent<OnMousePressed>();
+  registry_->RegisterComponent<OnMouseReleased>();
+  registry_->RegisterComponent<OnMouseMoved>();
+  registry_->RegisterComponent<Tags>();
+  registry_->RegisterComponent<ServerEntityId>();
+
+  registry_->AddSystem<KeyPressEventSystem>(context_.windowManager);
+  registry_->AddSystem<KeyReleaseEventSystem>(context_.windowManager);
+  registry_->AddSystem<MousePressEventSystem>(context_.windowManager);
+  registry_->AddSystem<MouseReleaseEventSystem>(context_.windowManager);
+  registry_->AddSystem<MouseMoveEventSystem>(context_.windowManager);
+  registry_->AddSystem<DrawableSystem>(context_.windowManager, resourcesManager_);
+  registry_->AddSystem<GameSyncSystem>(context_.serverConnectionManager);
+  registry_->AddSystem<BackgroundSystem>();
+  registry_->AddSystem<PlayerSystem>(context_.windowManager, context_.gameManager);
+}
+
+void SceneGame::OnCreate() {
+  LoadResources();
+  CreateControls();
+  CreatePlayerEntity();
+}
+
+void SceneGame::CreateControls() {
+  auto keyboard_controller = registry_->SpawnEntity();
+
+  auto keypress_handler = [this](const sf::Keyboard::Key key) { return OnKeyPress(key); };
+  registry_->AddComponent<components::OnKeyPressed>(keyboard_controller,
+                                                    {.handler = keypress_handler});
+}
+
+void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {
+  switch (key) {
+    case sf::Keyboard::Key::Escape:
+      return context_.scenesManager->GoToScene<SceneMenu>();
+    default:
+      break;
+  }
+}
+
+void SceneGame::LoadResources() {
+  resourcesManager_->LoadTexture("assets/sheets/player.png", "player");
+  resourcesManager_->LoadTexture("assets/sheets/enemy.png", "enemy");
+}
+
+void SceneGame::CreatePlayerEntity() {
+  auto player = registry_->SpawnEntity();
+  auto controls_handler = [this, player](const sf::Keyboard::Key key) {
+    auto positions = registry_->GetComponents<Position>();
+    auto entity_id = static_cast<std::size_t>(player);
+
+    if ((*positions).size() <= entity_id)
+      return;
+    auto &position = (*positions)[entity_id];
+    if (key == sf::Keyboard::Left) {
+      (*position).point.x -= 10;
+    } else if (key == sf::Keyboard::Right) {
+      (*position).point.x += 10;
+    } else if (key == sf::Keyboard::Up) {
+      (*position).point.y -= 10;
+    } else if (key == sf::Keyboard::Down) {
+      (*position).point.y += 10;
+    }
+  };
+
+  static const sf::IntRect base{5, 6, 21, 36};
+
+  registry_->AddComponent<Drawable>(
+      player, {
+                  .drawable = Texture{.name = "enemy", .scale = 3, .rect = base},
+              });
+  registry_->AddComponent<Tags>(player, Tags({"player"}));
+  registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
+  registry_->AddComponent<Position>(player, {zyc::types::Vector3f{100, 100, 0}});
+}

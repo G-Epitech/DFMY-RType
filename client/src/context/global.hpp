@@ -11,6 +11,7 @@
 
 #include "managers/game_manager.hpp"
 #include "managers/scenes_manager.hpp"
+#include "managers/server_connection_manager.hpp"
 #include "managers/sound_manager.hpp"
 
 namespace rtype::client {
@@ -37,5 +38,10 @@ struct GlobalContext {
    * @brief Provide access to the game manager
    */
   GameManager::Ptr gameManager;
+
+  /**
+   * @brief Provide access to the client API
+   */
+  ServerConnectionManager::Ptr serverConnectionManager;
 };
 }  // namespace rtype::client

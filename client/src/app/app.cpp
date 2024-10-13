@@ -7,21 +7,28 @@
 
 #include "app.hpp"
 
+#include "scenes/game.hpp"
+#include "scenes/lobby.hpp"
 #include "scenes/menu.hpp"
 #include "scenes/settings.hpp"
 
 using namespace rtype::client;
+using namespace rtype::client::scenes;
 
 App::App() {
   CreateWindowManager();
   CreateScenesManager();
   CreateSoundManager();
   CreateGameManager();
+  CreateServerConnectionManager();
   InitializeGlobalContext();
 
   scenesManager_->RegisterScene<SceneMenu>();
+  scenesManager_->RegisterScene<SceneGame>();
   scenesManager_->RegisterScene<SceneSettings>();
-  scenesManager_->GoToScene<SceneSettings>();
+  scenesManager_->RegisterScene<SceneLobby>();
+
+  scenesManager_->GoToScene<SceneMenu>();
 }
 
 void App::Run() {
@@ -34,6 +41,7 @@ void App::InitializeGlobalContext() {
   globalContext_.windowManager = windowManager_;
   globalContext_.scenesManager = scenesManager_;
   globalContext_.soundManager = soundManager_;
+  globalContext_.serverConnectionManager = serverConnectionManager_;
   globalContext_.gameManager = gameManager_;
 }
 
@@ -57,4 +65,8 @@ void App::CreateSoundManager() {
 
 void App::CreateGameManager() {
   gameManager_ = GameManager::Create();
+}
+
+void App::CreateServerConnectionManager() {
+  serverConnectionManager_ = ServerConnectionManager::Create({APP_IP, APP_PORT});
 }

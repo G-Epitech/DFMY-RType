@@ -23,5 +23,6 @@ void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &
 
   zygarde::core::types::Vector3f position(0, 5000, 0);
   EnemyFactory::CreateEnemy(registry, position, sdk::game::types::EnemyType::kPata);
-  std::cout << "spawn at-----------------------------------------" << position.x << " " << position.y << std::endl;
+  std::cout << "spawn at-----------------------------------------" << position.x << " "
+            << position.y << std::endl;
 }

@@ -4,8 +4,8 @@ add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(includes)
 
-target_include_directories(abra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_include_directories(abra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../..)
+target_include_directories(abra PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(abra PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../..)
 
 include(dependencies.cmake)
 

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "combat/shoot.hpp"
-#include "lifecycle/game_end.hpp"
-#include "lifecycle/game_start.hpp"
-#include "movement/movement.hpp"
-#include "state/bullet.hpp"
-#include "state/enemy.hpp"
-#include "state/player.hpp"
+#include "./combat/shoot.hpp"
+#include "./lifecycle/game_end.hpp"
+#include "./lifecycle/game_start.hpp"
+#include "./movement/movement.hpp"
+#include "./state/bullet.hpp"
+#include "./state/enemy.hpp"
+#include "./state/player.hpp"

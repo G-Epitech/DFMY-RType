@@ -1,6 +1,4 @@
 target_sources(${CLIENT_CORE_LIB} PRIVATE
-        base.hpp
-        base.tpp
         key.hpp
         key.tpp
         mouse/buttons.hpp

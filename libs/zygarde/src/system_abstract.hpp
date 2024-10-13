@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "api.hpp"
-#include "registry.hpp"
+#include "./registry.hpp"
+#include "libs/zygarde/src/api.hpp"
 
 namespace zygarde {
 /**
@@ -29,4 +29,4 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
 };
 }  // namespace zygarde
 
-#include "system_abstract.tpp"
+#include "./system_abstract.tpp"

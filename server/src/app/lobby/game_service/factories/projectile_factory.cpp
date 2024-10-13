@@ -37,7 +37,7 @@ zygarde::Entity ProjectileFactory::CreateProjectile(
   registry->AddComponent<zygarde::physics::components::BoxCollider2D>(projectile,
                                                                       {box_size, collidesWith});
   registry->AddComponent<zygarde::core::components::Tags>(projectile,
-                                                          zygarde::core::components::Tags(tag));
+                                                          zygarde::core::components::Tags({tag}));
   CreateScript(registry, projectile);
   return projectile;
 }

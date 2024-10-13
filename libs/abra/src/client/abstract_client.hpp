@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../core.hpp"
-#include "interface_client.hpp"
+#include "./interface_client.hpp"
+#include "libs/abra/src/core.hpp"
 
 namespace abra::client {
 class EXPORT_NETWORK_SDK_API AbstractClient;

@@ -7,5 +7,5 @@
 
 #pragma once
 
-#include "connection.hpp"
-#include "join_lobby.hpp"
+#include "./connection.hpp"
+#include "./join_lobby.hpp"

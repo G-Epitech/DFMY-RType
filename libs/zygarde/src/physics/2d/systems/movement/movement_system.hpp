@@ -9,12 +9,12 @@
 
 #include <chrono>
 
-#include "api.hpp"
-#include "core/components/position/position.hpp"
-#include "core/components/transform/transform.hpp"
-#include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
-#include "system_abstract.hpp"
-#include "utils/timer/timer.hpp"
+#include "libs/zygarde/src/api.hpp"
+#include "libs/zygarde/src/core/components/position/position.hpp"
+#include "libs/zygarde/src/core/components/transform/transform.hpp"
+#include "libs/zygarde/src/physics/2d/components/rigidbody/rigidbody_2d.hpp"
+#include "libs/zygarde/src/system_abstract.hpp"
+#include "libs/zygarde/src/utils/timer/timer.hpp"
 
 namespace zygarde::physics::systems {
 

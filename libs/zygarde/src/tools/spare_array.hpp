@@ -12,7 +12,7 @@
 #include <optional>
 #include <vector>
 
-#include "../api.hpp"
+#include "libs/zygarde/src/api.hpp"
 
 namespace zygarde::tools {
 
@@ -161,4 +161,4 @@ class EXPORT_ZYGARDE_API sparse_array {
 };
 }  // namespace zygarde::tools
 
-#include "spare_array.tpp"
+#include "./spare_array.tpp"

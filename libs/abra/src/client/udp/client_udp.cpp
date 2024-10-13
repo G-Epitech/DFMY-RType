@@ -5,9 +5,9 @@
 ** ClientUDP class
 */
 
-#include "client_udp.hpp"
+#include "./client_udp.hpp"
 
-#include "tools/packet/packet_utils.hpp"
+#include "libs/abra/src/tools/packet/packet_utils.hpp"
 
 using namespace abra::client;
 using namespace boost::asio;
@@ -61,7 +61,7 @@ void ClientUDP::Close() {
 
   this->logger_.Info("Closing session");
 
-  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->socket_.shutdown(ip::udp::socket::shutdown_both);
   this->socket_.close();
 
   ioc_.stop();

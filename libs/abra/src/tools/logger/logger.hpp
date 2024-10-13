@@ -9,7 +9,7 @@
 
 #include <string>
 
-#include "../../core.hpp"
+#include "libs/abra/src/core.hpp"
 
 namespace abra::tools {
 class EXPORT_NETWORK_SDK_API Logger;

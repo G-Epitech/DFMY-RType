@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-#include "api.hpp"
+#include "libs/zygarde/src/api.hpp"
 
 namespace zygarde {
 
@@ -20,16 +20,23 @@ namespace zygarde {
 class EXPORT_ZYGARDE_API Entity {
  public:
   /**
+   * @brief Default constructor
+   */
+  ~Entity() = default;
+
+  /**
    * @brief Operator size_t
    */
   explicit operator std::size_t() const;
+
+  Entity operator=(const Entity& other) const;
 
   /**
    * @brief Operator ==
    * @param other Entity to compare
    * @return Match result
    */
-  bool operator==(const Entity &other) const;
+  bool operator==(const Entity& other) const;
 
  private:
   /// @brief Entity id

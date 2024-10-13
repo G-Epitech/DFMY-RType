@@ -47,4 +47,4 @@ class EventSystemBase : public ASystem<EventsComponent...> {
 };
 }  // namespace rtype::client::systems
 
-#include "base.tpp"
+#include "events_system_base.tpp"

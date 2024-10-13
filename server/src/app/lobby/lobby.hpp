@@ -12,8 +12,8 @@
 #include "app/context.hpp"
 #include "app/server_interface.hpp"
 #include "game_service/game_service.hpp"
-#include "props.hpp"
 #include "libs/game/includes/api.hpp"
+#include "props.hpp"
 
 namespace rtype::server {
 class Lobby final : public IServer {
@@ -33,7 +33,6 @@ class Lobby final : public IServer {
   int Run() override;
 
  private:
-
   /// @brief Lobby server context
   struct Context {
     /// @brief Name of the server

@@ -28,7 +28,7 @@ zygarde::Entity EnemyFactory::CreateEnemy(zygarde::Registry::Const_Ptr registry,
   registry->AddComponent<zygarde::physics::components::BoxCollider2D>(
       enemy, {box_size, sdk::game::constants::kEnemyCollidesWith});
   registry->AddComponent<zygarde::core::components::Tags>(
-      enemy, zygarde::core::components::Tags(sdk::game::constants::kEnemyTag));
+      enemy, zygarde::core::components::Tags({sdk::game::constants::kEnemyTag}));
   CreateScript(registry, enemy);
   return enemy;
 }

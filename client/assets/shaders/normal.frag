@@ -1,8 +1,17 @@
+#version 130
+
 uniform sampler2D texture;
+uniform bool hasTexture;
+uniform vec4 objectColor;
 
 void main()
 {
-    vec4 color = texture2D(texture, gl_TexCoord[0].xy);
+    vec4 texColor = objectColor;
 
-    gl_FragColor = vec4(color.r, color.g, color.b, color.a);
+    if (hasTexture)
+    {
+        texColor = texture2D(texture, gl_TexCoord[0].xy) * objectColor;
+    }
+
+    gl_FragColor = texColor;
 }

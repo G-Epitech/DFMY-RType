@@ -5,7 +5,7 @@
 ** Timer.cpp
 */
 
-#include "timer.hpp"
+#include "./timer.hpp"
 
 using namespace zygarde::utils;
 

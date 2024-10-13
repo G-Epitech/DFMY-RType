@@ -3,4 +3,5 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         on_event.hpp
         radio.hpp
         radio.cpp
+        server_entity_id.hpp
 )

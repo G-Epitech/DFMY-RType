@@ -5,9 +5,9 @@
 ** ClientTCP class
 */
 
-#include "client_tcp.hpp"
+#include "./client_tcp.hpp"
 
-#include "tools/packet/packet_utils.hpp"
+#include "libs/abra/src/tools/packet/packet_utils.hpp"
 
 using namespace abra::client;
 using namespace boost::asio;

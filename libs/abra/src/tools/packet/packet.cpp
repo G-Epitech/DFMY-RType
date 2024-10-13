@@ -5,6 +5,6 @@
 ** Packet class
 */
 
-#include "packet.hpp"
+#include "./packet.hpp"
 
 using namespace abra;

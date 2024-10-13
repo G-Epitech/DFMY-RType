@@ -8,7 +8,7 @@
 #pragma once
 
 #include "bases/scene_base.hpp"
-#include "context/global_context.hpp"
+#include "context/global.hpp"
 #include "core/types/vector/vector.hpp"
 
 namespace rtype::client {
@@ -86,10 +86,10 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    * @brief Create the color blindness label and radio options
    * @param label The label of the radio options.
    * @param value The value of the radio options.
-   * @param position The position of the radio options.
+   * @param pos The position of the radio options.
    */
   void CreateColorBlindnessRadioOption(const std::string &label, const std::string &value,
-                                       const zygarde::core::types::Vector2f &position);
+                                       const zygarde::core::types::Vector2f &pos);
 
   /**
    * @brief Create the color blindness label

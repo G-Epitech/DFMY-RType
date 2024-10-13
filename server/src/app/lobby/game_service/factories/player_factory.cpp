@@ -23,7 +23,7 @@ zygarde::Entity PlayerFactory::CreatePlayer(zygarde::Registry::Const_Ptr registr
   registry->AddComponent<zygarde::physics::components::BoxCollider2D>(
       player, {box_size, sdk::game::constants::kPlayerCollidesWith});
   registry->AddComponent<zygarde::core::components::Tags>(
-      player, zygarde::core::components::Tags(sdk::game::constants::kPlayerTag));
+      player, zygarde::core::components::Tags({sdk::game::constants::kPlayerTag}));
   CreateScript(registry, player);
   return player;
 }

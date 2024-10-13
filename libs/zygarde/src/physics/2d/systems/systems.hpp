@@ -7,5 +7,5 @@
 
 #pragma once
 
-#include "collision/collision_system.hpp"
-#include "movement/movement_system.hpp"
+#include "./collision/collision_system.hpp"
+#include "./movement/movement_system.hpp"

@@ -11,11 +11,11 @@
 #include <map>
 
 #include "enemy_manager/enemy_manager.hpp"
+#include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
 #include "zygarde/src/utils/registry_helper/registry_helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
-#include "libs/game/includes/api.hpp"
 
 namespace rtype::server::game {
 class GameService {

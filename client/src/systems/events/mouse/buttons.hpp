@@ -9,7 +9,7 @@
 
 #include "components/drawable.hpp"
 #include "components/on_event.hpp"
-#include "systems/events/base.hpp"
+#include "src/bases/systems/events_system_base.hpp"
 
 namespace rtype::client::systems {
 template <events::EventType EventType, typename MouseEventComponent>
@@ -22,12 +22,12 @@ class MouseButtonEventSystem
    */
   explicit MouseButtonEventSystem(WindowManager::Ptr window_manager);
 
-  ~MouseButtonEventSystem() = default;
+  ~MouseButtonEventSystem() override = default;
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   sparse_array<MouseEventComponent>::ptr components,
-                   sparse_array<components::Drawable>::ptr drawables) final;
+                   typename sparse_array<MouseEventComponent>::ptr components,
+                   sparse_array<components::Drawable>::ptr drawables) override;
 
   /**
    * @brief Handle the event for the entity

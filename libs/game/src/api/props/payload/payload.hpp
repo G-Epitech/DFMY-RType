@@ -7,5 +7,5 @@
 
 #pragma once
 
-#include "auth/auth.hpp"
-#include "game/game.hpp"
+#include "./auth/auth.hpp"
+#include "./game/game.hpp"

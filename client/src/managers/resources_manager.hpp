@@ -51,7 +51,6 @@ class ResourcesManager {
    * @brief Load a new texture in the resources manager
    * @param path Texture path to load
    * @param name Name of the texture to store
-   * @return True if the texture has been loaded, false otherwise
    */
   void LoadTexture(const std::string &path, const std::string &name);
 

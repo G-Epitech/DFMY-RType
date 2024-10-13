@@ -9,8 +9,8 @@
 
 #include <memory>
 
-#include "core/types/vector/vector_3f.hpp"
 #include "libs/zygarde/src/api.hpp"
+#include "libs/zygarde/src/core/types/vector/vector_3f.hpp"
 
 namespace zygarde::core::components {
 class EXPORT_ZYGARDE_API Transform final {

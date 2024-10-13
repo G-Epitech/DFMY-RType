@@ -28,7 +28,7 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
   void ProcessScript(Registry::Const_Ptr registry, scripting::components::Script *script);
 
   static void HandleFixedUpdate(Registry::Const_Ptr registry, scripting::components::Script *script,
-                         types::ScriptingContext &context);
+                                types::ScriptingContext &context);
 
   void HandleCollisionCallback(Registry::Const_Ptr registry, scripting::components::Script *script,
                                types::ScriptingContext &context) const;

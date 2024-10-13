@@ -5,7 +5,7 @@
 ** RegistryHelper.cpp
 */
 
-#include "registry_helper.hpp"
+#include "./registry_helper.hpp"
 
 #include <utility>
 

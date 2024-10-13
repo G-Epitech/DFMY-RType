@@ -7,17 +7,17 @@
 
 #pragma once
 
-using namespace rtype::sdk::game::api;
-using namespace abra::tools;
+namespace api = rtype::sdk::game::api;
+namespace abt = abra::tools;
 
 template <typename T>
-bool Client::SendPayloadTCP(const MessageClientType &type, const T &payload) {
-  this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
+bool api::Client::SendPayloadTCP(const MessageClientType &type, const T &payload) {
+  this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build(payload);
 
   logger_.Info("Send packet (TCP) of type " + std::to_string(type), "📦");
 
-  auto success = this->clientTCP_.Send(packet) == SendMessageStatus::kSuccess;
+  auto success = this->clientTCP_.Send(packet) == abt::SendMessageStatus::kSuccess;
   if (!success)
     logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
 
@@ -25,16 +25,16 @@ bool Client::SendPayloadTCP(const MessageClientType &type, const T &payload) {
 }
 
 template <typename T>
-bool Client::SendPayloadUDP(const MessageClientType &type, const T &payload) {
+bool api::Client::SendPayloadUDP(const MessageClientType &type, const T &payload) {
   if (!this->clientUDP_.has_value())
     return false;
 
-  this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
+  this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build(payload);
 
   logger_.Info("Send packet (UDP) of type " + std::to_string(type), "📦");
 
-  auto success = this->clientUDP_->Send(packet) == SendMessageStatus::kSuccess;
+  auto success = this->clientUDP_->Send(packet) == abt::SendMessageStatus::kSuccess;
   if (!success)
     logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
 
@@ -42,7 +42,7 @@ bool Client::SendPayloadUDP(const MessageClientType &type, const T &payload) {
 }
 
 template <typename T>
-std::vector<T> Client::ResolvePayloads(MessageServerType type, const ServerMessage &message) {
+std::vector<T> api::Client::ResolvePayloads(MessageServerType type, const ServerMessage &message) {
   if (message.messageType != type) {
     return {};
   }
@@ -57,10 +57,10 @@ std::vector<T> Client::ResolvePayloads(MessageServerType type, const ServerMessa
 }
 
 template <>
-inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
-        MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message)) {
+inline bool api::Client::WaitForMessage<api::NetworkProtocolType::kTCP>(
+    MessageServerType type, bool (Client::*handler)(const abt::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
-  MessageProps message;
+  abt::MessageProps message;
   bool success = false;
 
   logger_.Info("Waiting for message type " + std::to_string(type), "😴");
@@ -79,7 +79,8 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
         queue.pop();
         break;
       } else {
-        logger_.Warning("Receive an other message of type " + std::to_string(message.messageType), "⚠️ ");
+        logger_.Warning("Receive an other message of type " + std::to_string(message.messageType),
+                        "⚠️ ");
       }
     }
   }
@@ -88,10 +89,10 @@ inline bool Client::WaitForMessage<NetworkProtocolType::kTCP>(
 }
 
 template <>
-inline bool Client::WaitForMessage<NetworkProtocolType::kUDP>(
-        MessageServerType type, bool (Client::*handler)(const tools::MessageProps &message)) {
+inline bool api::Client::WaitForMessage<api::NetworkProtocolType::kUDP>(
+    MessageServerType type, bool (Client::*handler)(const abt::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
-  MessageProps message;
+  abt::MessageProps message;
   bool success = false;
 
   if (!this->clientUDP_.has_value())
