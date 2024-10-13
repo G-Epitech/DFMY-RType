@@ -27,23 +27,26 @@ void Registry::RunSystems() {
 }
 
 Entity Registry::SpawnEntity() {
+  std::size_t newId;
+
   if (!freeIds_.empty()) {
-    const auto id = freeIds_.top();
+    newId = freeIds_.top();
     freeIds_.pop();
-    return Entity(id);
+  } else {
+    newId = currentMaxEntityId_++;
   }
-  return Entity(currentMaxEntityId_++);
+  Entity e(newId);
+  entities_.push_back(e);
+  return e;
 }
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
-  if (idx >= currentMaxEntityId_) {
-    throw Exception("entity_from_index: Index is out of range.");
-  }
-  return Entity(idx);
+  return entities_.at(idx);
 }
 
 void Registry::KillEntity(Entity const &e) {
   freeIds_.push(static_cast<std::size_t>(e));
+  entities_.erase(entities_.begin(), std::remove(entities_.begin(), entities_.end(), e));
   for (auto &remove_function : removeFunctions_) {
     remove_function.second(*this, e);
   }

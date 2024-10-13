@@ -20,18 +20,20 @@ namespace zygarde {
 class EXPORT_ZYGARDE_API Entity {
  public:
   /**
-   * @brief Default constructor
-   */
-  ~Entity();
-
-  /**
    * @brief Operator size_t
    */
   explicit operator std::size_t() const;
 
+  /**
+   * @brief Operator ==
+   * @param other Entity to compare
+   * @return Match result
+   */
+  bool operator==(const Entity &other) const;
+
  private:
   /// @brief Entity id
-  const std::size_t id_;
+  std::size_t id_;
 
   /**
    * @brief Private constructor

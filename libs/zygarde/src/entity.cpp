@@ -11,8 +11,10 @@ using namespace zygarde;
 
 Entity::Entity(const std::size_t idx) : id_{idx} {}
 
-Entity::~Entity() = default;
-
 Entity::operator std::size_t() const {
   return id_;
+}
+
+bool Entity::operator==(const Entity& other) const {
+  return id_ == other.id_;
 }
