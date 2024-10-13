@@ -47,7 +47,7 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
 
 void SceneGame::OnCreate() {
   LoadResources();
-  //CreateControls();
+  // CreateControls();
 }
 
 void SceneGame::CreateControls() {

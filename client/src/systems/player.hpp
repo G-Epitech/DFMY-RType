@@ -18,13 +18,13 @@ class PlayerSystem final : public ASystem<> {
    * @brief Default constructor of a Player System
    * @param context The global context of the game
    */
-  explicit PlayerSystem(const GlobalContext &context);
+  explicit PlayerSystem(const GlobalContext& context);
 
   void Run(Registry::Ptr r) override;
 
  private:
   /// @brief Global context of the game
-  const GlobalContext &context_;
+  const GlobalContext& context_;
 
   /**
    * @brief Store moving up action state
