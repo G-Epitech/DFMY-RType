@@ -133,7 +133,9 @@ void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
 
   this->newPlayerHandler_(message.clientId);
 
-  logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby. Endpoint: " + ip + ":" + std::to_string(port), "🛃");
+  logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby. Endpoint: " + ip +
+                   ":" + std::to_string(port),
+               "🛃");
 }
 
 std::queue<ClientTCPMessage> Server::ExtractMainQueue() {
