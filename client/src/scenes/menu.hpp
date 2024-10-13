@@ -46,6 +46,23 @@ class SceneMenu final : public SceneBase<GlobalContext> {
   /**
    * @brief Check the server connection
    */
-  void CheckServerConnection() const;
+  void CreateServerConnectionLabel() const;
+
+  /**
+   * @brief Get the connection label color
+   * @return sf::Color The connection label color
+   */
+  [[nodiscard]] sf::Color GetConnectionLabelColor() const;
+
+  /**
+   * @brief Get the connection label text
+   * @return std::string The connection label text
+   */
+  [[nodiscard]] std::string GetConnectionLabelText() const;
+
+  /**
+   * @brief Update the connection label
+   */
+  void UpdateConnectionLabel() const;
 };
 }  // namespace rtype::client::scenes

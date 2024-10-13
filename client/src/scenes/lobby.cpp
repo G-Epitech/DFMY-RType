@@ -55,6 +55,7 @@ void SceneLobby::CreateStatusText() {
   registry_->AddComponent<Drawable>(
       secondary_text, {Text{"Secondary Status text", "main", 12}, WindowManager::View::HUD});
 }
+
 void SceneLobby::CreateGEpitechLogo() {
   const auto logo = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};

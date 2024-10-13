@@ -7,6 +7,7 @@
 
 #include "drawable.hpp"
 
+#include <iostream>
 #include <utility>
 
 namespace zyc = zygarde::core;
