@@ -19,8 +19,6 @@ int main(int ac, char **av)
 
     server.CreateLobby("Prototype game", Handler);
 
-    while (true) {
-        // wait some seconds with std
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+    // wait
+    std::this_thread::sleep_for(std::chrono::seconds(10));
 }

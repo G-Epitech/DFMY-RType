@@ -15,10 +15,10 @@
 #include "../../core.hpp"
 #include "props/message.h"
 #include "tools/bitset/dynamic_bitset.hpp"
+#include "tools/logger/logger.hpp"
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
 #include "tools/packet/props/props.hpp"
-#include "tools/logger/logger.hpp"
 
 namespace abra::server {
 class EXPORT_NETWORK_SDK_API ServerUDP;
@@ -87,6 +87,11 @@ class abra::server::ServerUDP {
    * @return The queue of messages
    */
   [[nodiscard]] std::queue<ClientUDPMessage> ExtractQueue();
+
+  /**
+   * @brief Close the server
+   */
+  void Close();
 
  private:
   /**
