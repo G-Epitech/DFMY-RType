@@ -21,14 +21,23 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
    */
   explicit GameSyncSystem(const ServerConnectionManager::Ptr &serverConnectionManager);
 
-  void Run(Registry::Ptr r,
-           sparse_array<components::ServerEntityId>::ptr component) override;
+  void Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr component) override;
 
  private:
   ServerConnectionManager::Ptr serverConnectionManager_;
 
   std::vector<Entity> entities_;
 
-  void CreatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id, const zygarde::core::types::Vector3f &pos);
+  void DeleteEntity(const std::shared_ptr<Registry> &registry, const std::size_t &id);
+
+  void CreatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id,
+                    const zygarde::core::types::Vector3f &pos);
+  void UpdatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id,
+                    const zygarde::core::types::Vector3f &pos);
+
+  void CreateMissile(const std::shared_ptr<Registry> &registry, const std::size_t &id,
+                     const zygarde::core::types::Vector3f &pos);
+  void UpdateMissile(const std::shared_ptr<Registry> &registry, const std::size_t &id,
+                     const zygarde::core::types::Vector3f &pos);
 };
 }  // namespace rtype::client::systems

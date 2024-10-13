@@ -70,6 +70,7 @@ void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {
 
 void SceneGame::LoadResources() {
   resourcesManager_->LoadTexture("assets/sheets/player.png", "player");
+  resourcesManager_->LoadTexture("assets/sheets/enemy.png", "enemy");
 }
 
 void SceneGame::CreatePlayerEntity() {
@@ -92,11 +93,11 @@ void SceneGame::CreatePlayerEntity() {
     }
   };
 
-  static const sf::IntRect base{100, 0, 32, 16};
+  static const sf::IntRect base{5, 6, 21, 36};
 
   registry_->AddComponent<Drawable>(
       player, {
-                  .drawable = Texture{.name = "player", .scale = 3, .rect = base},
+                  .drawable = Texture{.name = "enemy", .scale = 3, .rect = base},
               });
   registry_->AddComponent<Tags>(player, Tags({"player"}));
   registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
