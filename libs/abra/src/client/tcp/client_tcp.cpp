@@ -55,7 +55,11 @@ void ClientTCP::Close() {
 
   this->logger_.Info("Closing session");
 
-  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  try {
+    this->socket_.shutdown(ip::udp::socket::shutdown_both);
+  } catch (const std::exception &e) {
+    this->logger_.Warning("Error during shutdown: " + std::string(e.what()));
+  }
   this->socket_.close();
 
   this->logger_.Info("Session closed");

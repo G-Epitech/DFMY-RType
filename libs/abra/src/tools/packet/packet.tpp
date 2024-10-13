@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include "packet_utils.hpp"
 
 using namespace abra;
 
@@ -136,7 +137,7 @@ void tools::Packet<T>::AppendOffsetToBitset(const std::shared_ptr<dynamic_bitset
   bitset->Append(offset_.offset, kPacketOffsetSize, *offset);
   *offset += kPacketOffsetSize;
 
-  bitset->Append(offset_.offsetFlag, kPacketOffsetSize, *offset);
+  bitset->Append(offset_.offsetFlag, kPacketOffsetFlagSize, *offset);
   *offset += kPacketOffsetFlagSize;
 }
 
