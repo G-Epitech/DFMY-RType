@@ -16,6 +16,7 @@
 #include "systems/events/mouse/buttons.hpp"
 #include "systems/events/mouse/move.hpp"
 #include "systems/game/sync.hpp"
+#include "systems/player.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::systems;
@@ -41,6 +42,7 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->AddSystem<DrawableSystem>(context_.windowManager, resourcesManager_);
   registry_->AddSystem<GameSyncSystem>();
   registry_->AddSystem<BackgroundSystem>();
+  registry_->AddSystem<PlayerSystem>(context_.windowManager, context_.gameManager);
 }
 
 void SceneGame::OnCreate() {
