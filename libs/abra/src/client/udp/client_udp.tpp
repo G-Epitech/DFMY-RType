@@ -20,9 +20,17 @@ abra::tools::SendMessageStatus abra::client::ClientUDP::Send(
 
     if (len != vector.size()) {
       status = abra::tools::SendMessageStatus::kError;
+
+      logger_.Error("Failed to send " + std::to_string(vector.size()) + " bytes", "➡️ ");
     }
   } catch (const std::exception &e) {
     status = abra::tools::SendMessageStatus::kError;
+
+    logger_.Error("Failed to send " + std::to_string(vector.size()) + " bytes. " + std::string(e.what()), "➡️ ");
+  }
+
+  if (status == abra::tools::SendMessageStatus::kSuccess) {
+    logger_.Info("Sent " + std::to_string(vector.size()) + " bytes", "➡️ ");
   }
 
   return status;

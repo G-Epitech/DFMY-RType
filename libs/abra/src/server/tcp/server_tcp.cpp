@@ -17,7 +17,10 @@ ServerTCP::ServerTCP(const int &port,
     : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)),
       lastClientId_(0),
       middleware_(middleware),
-      logger_("server_tcp") {}
+      logger_("server_tcp") {
+  mutex_ = std::make_shared<std::mutex>();
+  queue_ = std::make_shared<std::queue<ClientTCPMessage>>();
+}
 
 ServerTCP::~ServerTCP() {
   this->Close();

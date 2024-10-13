@@ -13,7 +13,7 @@ using namespace abra::server;
 using namespace boost::asio;
 
 ServerUDP::ServerUDP(const std::uint64_t &port)
-    : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_(), logger_("server-udp") {}
+    : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_(), logger_("server_udp") {}
 
 ServerUDP::~ServerUDP() {
   this->Close();
@@ -21,6 +21,8 @@ ServerUDP::~ServerUDP() {
 
 void ServerUDP::Start() {
   ListenNewRequest();
+
+  logger_.Info("Server started on port " + std::to_string(socket_.local_endpoint().port()));
   this->ios_.run();
 }
 
@@ -38,6 +40,7 @@ void ServerUDP::ListenNewRequest() {
 
 void ServerUDP::HandleRequest(const std::size_t &size) {
   std::vector<char> buffer = std::vector<char>(buffer_.begin(), buffer_.begin() + size);
+  logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
 
   ResolveBuffer(&buffer, size);
 }
@@ -127,6 +130,7 @@ void ServerUDP::Close() {
 
   this->logger_.Info("Closing session");
 
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
   this->socket_.close();
 
   this->logger_.Info("Session closed");
