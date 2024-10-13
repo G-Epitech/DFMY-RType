@@ -15,9 +15,6 @@ abra::server::ServerUDP::Send(const std::unique_ptr<abra::tools::Packet<T>> &pac
   const auto vector = bitset->GetVector();
   auto status = abra::tools::SendMessageStatus::kSuccess;
 
-  // debug endpoint
-  std::cout << endpoint.address().to_string() << ":" << endpoint.port() << std::endl;
-
   try {
     std::size_t len = this->socket_.send_to(boost::asio::buffer(vector, vector.size()), endpoint);
 
