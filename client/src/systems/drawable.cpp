@@ -74,14 +74,20 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
         using T = std::decay_t<decltype(arg)>;
         auto shader = windowManager_->GetSelectedShader();
         if constexpr (std::is_same_v<T, components::Texture>) {
+          shader->setUniform("objectColor", sf::Glsl::Vec4(1, 1, 1, 1));
+          shader->setUniform("hasTexture", true);
+          shader->setUniform("texture", sf::Shader::CurrentTexture);
           DrawEntityTexture(arg, position, *shader);
           drawable->bounds = sprite_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Text>) {
-          shader->setUniform("addColor", sf::Glsl::Vec4(arg.color));
+          shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
+          shader->setUniform("hasTexture", true);
+          shader->setUniform("texture", sf::Shader::CurrentTexture);
           DrawEntityText(arg, position, *shader);
           drawable->bounds = text_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, components::Rectangle>) {
-          shader->setUniform("addColor", sf::Glsl::Vec4(arg.color));
+          shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
+          shader->setUniform("hasTexture", false);
           DrawEntityRectangle(arg, position, *shader);
           drawable->bounds = shape_.getGlobalBounds();
         }
