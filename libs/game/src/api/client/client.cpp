@@ -155,11 +155,22 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
 }
 
 bool Client::Shoot(const payload::Shoot &payload) {
-  return SendPayloadUDP(MessageClientType::kShoot, payload);
+  auto success = SendPayloadUDP(MessageClientType::kShoot, payload);
+  if (success) {
+    logger_.Info("Player shoot with type " + std::to_string(static_cast<double>(payload.type)),
+                 "🔫");
+  }
+
+  return success;
 }
 
 bool Client::Move(const payload::Movement &payload) {
-  return SendPayloadUDP(MessageClientType::kMovement, payload);
+  auto success = SendPayloadUDP(MessageClientType::kMovement, payload);
+  if (success) {
+    logger_.Info("Player move", "🚶🏽");
+  }
+
+  return success;
 }
 
 void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
