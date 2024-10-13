@@ -18,6 +18,7 @@
 #include "tools/message/message.hpp"
 #include "tools/packet/packet.hpp"
 #include "tools/packet/props/props.hpp"
+#include "tools/logger/logger.hpp"
 
 namespace abra::server {
 class EXPORT_NETWORK_SDK_API ServerUDP;
@@ -99,12 +100,39 @@ class abra::server::ServerUDP {
    */
   void HandleRequest(const std::size_t &size);
 
+  /**
+   * @brief Resolve the buffer (use if we receive multiple packets in one buffer)
+   * @param buffer The buffer to resolve
+   * @param len The length of the buffer
+   */
+  void ResolveBuffer(std::vector<char> *buffer, std::size_t len);
+
+  /**
+   * @brief Store a message in the queue
+   * @param bitset The bitset of the message
+   */
+  void StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset);
+
+  /// @brief The Input/Output service
   boost::asio::io_service ios_;
+
+  /// @brief The socket of the server
   boost::asio::ip::udp::socket socket_;
+
+  /// @brief The endpoint of the client (use for the receive)
   boost::asio::ip::udp::endpoint remoteEndpoint_;
+
+  /// @brief The buffer of the server (use for the receive)
   boost::array<char, kPacketMaxBytesSize> buffer_;
+
+  /// @brief The queue of client messages
   std::queue<ClientUDPMessage> queue_;
+
+  /// @brief The mutex of the queue
   std::mutex mutex_;
+
+  /// @brief The logger of the server
+  tools::Logger logger_;
 };
 
 #include "server_udp.tpp"
