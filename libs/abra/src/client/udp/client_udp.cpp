@@ -7,8 +7,6 @@
 
 #include "./client_udp.hpp"
 
-#include "libs/abra/src/tools/packet/packet_utils.hpp"
-
 using namespace abra::client;
 using namespace boost::asio;
 
@@ -20,6 +18,11 @@ ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
   this->receiverEndpoint_ = *iter;
 
   this->socket_.open(ip::udp::v4());
+  ip::udp::endpoint localEndpoint(ip::udp::v4(), 0);
+  this->socket_.bind(localEndpoint);
+  uint16_t localPort = this->socket_.local_endpoint().port();
+
+  this->logger_.Info("Client UDP started on port " + std::to_string(localPort));
 }
 
 ClientUDP::~ClientUDP() {
@@ -62,6 +65,11 @@ void ClientUDP::Close() {
   this->logger_.Info("Closing session");
 
   this->socket_.shutdown(ip::udp::socket::shutdown_both);
+  try {
+    this->socket_.shutdown(ip::udp::socket::shutdown_both);
+  } catch (const std::exception &e) {
+    this->logger_.Warning("Error during shutdown: " + std::string(e.what()));
+  }
   this->socket_.close();
 
   ioc_.stop();

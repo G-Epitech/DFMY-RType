@@ -190,7 +190,7 @@ std::vector<payload::PlayerState> Client::ResolvePlayersState(
     const Client::ServerMessage &message) {
   auto players = ResolvePayloads<payload::PlayerState>(MessageServerType::kPlayersState, message);
 
-  logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹🏽");
+  logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹");
 
   return players;
 }

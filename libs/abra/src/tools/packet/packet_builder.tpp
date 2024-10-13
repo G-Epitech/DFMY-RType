@@ -43,13 +43,15 @@ std::vector<std::unique_ptr<abra::tools::Packet<T>>> abra::tools::PacketBuilder:
     if (sizeof(payload) != sizeof(payloads[0]))
       throw Exception("Protocol error: Payloads are not the same size.");
 
-    if (offsetProps.offset == payloads.size() - 1)
+    if (offsetProps.offset == payloads.size() - 1) {
       offsetProps.offsetFlag = true;
+    }
 
     packets.push_back(std::make_unique<Packet<T>>(this->header_, this->message_, payload, offsetProps, this->turn_));
     offsetProps.offset++;
   }
 
+  this->Reset();
   return packets;
 }
 

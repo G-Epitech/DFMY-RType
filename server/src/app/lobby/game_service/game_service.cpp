@@ -82,10 +82,24 @@ void GameService::HandleMessages() {
         auto rigidBody =
             registry_->GetComponent<zygarde::physics::components::Rigidbody2D>(playerEntity);
 
-        // TODO @dragos
+        zygarde::core::types::Vector2f direction = {move.direction.x, move.direction.y};
+        rigidBody->SetVelocity(direction * 2);
       }
 
       logger_.Info("Player " + std::to_string(playerId) + " moved", "🏃‍♂️");
+    }
+    if (data.messageType == MessageClientType::kShoot) {
+      auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
+      auto move = packet->GetPayload();
+
+      auto player = players_.find(playerId);
+      if (player != players_.end()) {
+        auto &playerEntity = player->second;
+        auto position = registry_->GetComponent<zygarde::core::components::Position>(playerEntity);
+
+        ProjectileFactory::CreateProjectile(registry_, position->point, {10, 10},
+                                            sdk::game::types::GameEntityType::kPlayer);
+      }
     }
     messages.pop();
   }
