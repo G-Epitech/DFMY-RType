@@ -9,11 +9,15 @@
 
 using namespace rtype::sdk::game;
 
+void Handler(std::uint64_t id) {
+    std::cout << "New user with id: " << id << std::endl;
+}
+
 int main(int ac, char **av)
 {
     auto server = api::Server(5001);
 
-    server.CreateLobby("Prototype game");
+    server.CreateLobby("Prototype game", Handler);
 
     while (true) {
         // wait some seconds with std

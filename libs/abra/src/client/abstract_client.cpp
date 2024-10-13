@@ -73,6 +73,9 @@ void AbstractClient::HandleMultiPacketsBitset(std::shared_ptr<tools::dynamic_bit
     pendingMultiPackets_[messageId].lastMessage = &pendingMultiPackets_[messageId].messages.back();
   }
 
+  logger_.Info("Store a part of multi packet with type " + std::to_string(message.messageType) +
+               " and offset " + std::to_string(offset.offset));
+
   ResolveMultiPackets(messageId);
 }
 
@@ -101,6 +104,8 @@ void AbstractClient::ResolveMultiPackets(unsigned int messageId) {
 
     this->multiPackets_.push(pendingMultiPackets_[messageId]);
     pendingMultiPackets_.erase(messageId);
+
+    logger_.Info("Resolve multi packet with id " + std::to_string(messageId));
   }
 }
 

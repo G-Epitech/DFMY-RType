@@ -11,7 +11,7 @@ using namespace abra::server;
 
 template<typename T>
 tools::SendMessageStatus
-ServerUDP::Send(const std::shared_ptr<tools::Packet<T>> &packet, const boost::asio::ip::udp::endpoint &endpoint) {
+ServerUDP::Send(const std::unique_ptr<tools::Packet<T>> &packet, const boost::asio::ip::udp::endpoint &endpoint) {
   const auto bitset = packet->GetBitset();
   const auto vector = bitset->GetVector();
   auto status = tools::SendMessageStatus::kSuccess;
