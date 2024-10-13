@@ -9,19 +9,20 @@
 
 #include <iostream>
 
+#include "libs/game/src/types/bullet.hpp"
+
 using namespace rtype::client::systems;
 
-PlayerSystem::PlayerSystem(const WindowManager::Ptr &window_manager,
-                           const GameManager::Ptr &game_manager)
-    : windowManager_{window_manager}, gameManager_{game_manager} {}
+PlayerSystem::PlayerSystem(const GlobalContext &context) : context_{context}, ASystem() {}
 
 void PlayerSystem::Run(Registry::Ptr r) {
-  const auto events = windowManager_->GetDeferredEvents();
+  const auto events = context_.windowManager->GetDeferredEvents();
 
   // If a key is pressed, we send a message to the server
   for (const auto &event : events) {
-    const auto actionKeyBoard = gameManager_->keyMap.GetActionFromKey(event.key.code);
-    const auto actionMouse = gameManager_->keyMap.GetActionFromMouse(event.mouseButton.button);
+    const auto actionKeyBoard = context_.gameManager->keyMap.GetActionFromKey(event.key.code);
+    const auto actionMouse =
+        context_.gameManager->keyMap.GetActionFromMouse(event.mouseButton.button);
     if (event.type == sf::Event::KeyPressed) {
       UpdatePlayerActions(actionKeyBoard, true);
     } else if (event.type == sf::Event::KeyReleased) {
@@ -76,21 +77,46 @@ void PlayerSystem::ProcessPlayerActions() {
 }
 
 void PlayerSystem::ProcessPlayerMoveUp() {
-  std::cout << "Move up" << std::endl;
+  auto res = context_.serverConnectionManager->client()->Move({
+      .newPosition = {0, -1},
+  });
+  if (!res) {
+    std::cerr << "Failed to move up" << std::endl;
+  }
 }
 
 void PlayerSystem::ProcessPlayerMoveDown() {
-  std::cout << "Move down" << std::endl;
+  auto res = context_.serverConnectionManager->client()->Move({
+      .newPosition = {0, 1},
+  });
+  if (!res) {
+    std::cerr << "Failed to move down" << std::endl;
+  }
 }
 
 void PlayerSystem::ProcessPlayerMoveLeft() {
-  std::cout << "Move left" << std::endl;
+  auto res = context_.serverConnectionManager->client()->Move({
+      .newPosition = {-1, 0},
+  });
+  if (!res) {
+    std::cerr << "Failed to move left" << std::endl;
+  }
 }
 
 void PlayerSystem::ProcessPlayerMoveRight() {
-  std::cout << "Move right" << std::endl;
+  auto res = context_.serverConnectionManager->client()->Move({
+      .newPosition = {1, 0},
+  });
+  if (!res) {
+    std::cerr << "Failed to move right" << std::endl;
+  }
 }
 
 void PlayerSystem::ProcessPlayerShoot() {
-  std::cout << "Shoot" << std::endl;
+  auto res = context_.serverConnectionManager->client()->Shoot({
+      .type = sdk::game::types::BulletType::kCommon,
+  });
+  if (!res) {
+    std::cerr << "Failed to shoot" << std::endl;
+  }
 }

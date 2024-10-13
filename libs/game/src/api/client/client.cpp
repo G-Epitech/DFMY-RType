@@ -149,7 +149,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
     multiQueue.pop();
   }
 
-  logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
+  //logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
 
   return queue;
 }

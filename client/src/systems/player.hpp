@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include "context/global.hpp"
 #include "managers/game_manager.hpp"
 #include "managers/window_manager.hpp"
 #include "system_abstract.hpp"
@@ -15,23 +16,39 @@ class PlayerSystem final : public ASystem<> {
  public:
   /**
    * @brief Default constructor of a Player System
-   * @param window_manager The window manager to display the entities
-   * @param game_manager The game manager to send messages to the server
+   * @param context The global context of the game
    */
-  PlayerSystem(const WindowManager::Ptr& window_manager, const GameManager::Ptr& game_manager);
+  explicit PlayerSystem(const GlobalContext &context);
+
   void Run(Registry::Ptr r) override;
 
  private:
-  /// @brief The render window to display the entities.
-  WindowManager::Ptr windowManager_;
+  /// @brief Global context of the game
+  const GlobalContext &context_;
 
-  /// @brief The game manager to send messages to the server
-  GameManager::Ptr gameManager_;
-
+  /**
+   * @brief Store moving up action state
+   */
   bool isMovingUp_{false};
+
+  /**
+   * @brief Store moving down action state
+   */
   bool isMovingDown_{false};
+
+  /**
+   * @brief Store moving left action state
+   */
   bool isMovingLeft_{false};
+
+  /**
+   * @brief Store moving right action state
+   */
   bool isMovingRight_{false};
+
+  /**
+   * @brief Store shooting action state
+   */
   bool isShooting_{false};
 
   /**
@@ -46,10 +63,29 @@ class PlayerSystem final : public ASystem<> {
    */
   void ProcessPlayerActions();
 
+  /**
+   * @brief Process the player move up action
+   */
   void ProcessPlayerMoveUp();
+
+  /**
+   * @brief Process the player move down action
+   */
   void ProcessPlayerMoveDown();
+
+  /**
+   * @brief Process the player move left action
+   */
   void ProcessPlayerMoveLeft();
+
+  /**
+   * @brief Process the player move right action
+   */
   void ProcessPlayerMoveRight();
+
+  /**
+   * @brief Process the player shoot action
+   */
   void ProcessPlayerShoot();
 };
 }  // namespace rtype::client::systems

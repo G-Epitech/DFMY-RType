@@ -42,13 +42,12 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->AddSystem<DrawableSystem>(context_.windowManager, resourcesManager_);
   registry_->AddSystem<GameSyncSystem>(context_.serverConnectionManager);
   registry_->AddSystem<BackgroundSystem>();
-  registry_->AddSystem<PlayerSystem>(context_.windowManager, context_.gameManager);
+  registry_->AddSystem<PlayerSystem>(context_);
 }
 
 void SceneGame::OnCreate() {
   LoadResources();
-  CreateControls();
-  CreatePlayerEntity();
+  //CreateControls();
 }
 
 void SceneGame::CreateControls() {
@@ -93,7 +92,7 @@ void SceneGame::CreatePlayerEntity() {
     }
   };
 
-  static const sf::IntRect base{5, 6, 21, 36};
+  static const sf::IntRect base{0, 0, 33, 36};
 
   registry_->AddComponent<Drawable>(
       player, {
