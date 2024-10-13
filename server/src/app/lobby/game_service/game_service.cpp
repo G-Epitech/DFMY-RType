@@ -14,6 +14,7 @@
 #include "factories/enemy_factory.hpp"
 #include "factories/player_factory.hpp"
 #include "factories/projectile_factory.hpp"
+#include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
@@ -114,9 +115,21 @@ void GameService::NewPlayer(std::uint64_t playerId) {
 }
 
 void GameService::SendStates() {
-  // TODO @dragos SEND STATES
-
-  this->api_->SendPlayersState(lobbyId_, {});
-  this->api_->SendEnemiesState(lobbyId_, {});
-  this->api_->SendBulletsState(lobbyId_, {});
+  auto components = registry_->GetComponents<zygarde::core::components::Position>();
+  std::size_t i = 0;
+  std::vector<rtype::sdk::game::api::payload::PlayerState> states;
+  for (auto &component : *components) {
+    i++;
+    if (!component.has_value()) {
+      continue;
+    }
+    auto val = component.value();
+    auto ent = registry_->EntityFromIndex(i);
+    rtype::sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
+    rtype::sdk::game::api::payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
+    states.push_back(state);
+  }
+  this->api_->SendPlayersState(lobbyId_, states);
+  // this->api_->SendEnemiesState(lobbyId_, {});
+  // this->api_->SendBulletsState(lobbyId_, {});
 }
