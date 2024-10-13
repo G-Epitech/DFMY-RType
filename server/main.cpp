@@ -19,8 +19,7 @@ int main(int ac, char **av)
 
     server.CreateLobby("Prototype game", Handler);
 
-    while (true) {
-        // wait some seconds with std
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+    std::cout << "Server started" << std::endl;
+
+    auto client = api::Client("127.0.0.1", 5001);
 }

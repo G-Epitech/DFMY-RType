@@ -17,8 +17,12 @@ Client::Client(const std::string &ip, const uint32_t &port)
 }
 
 Client::~Client() {
+  this->clientTCP_.Close();
   this->threadTCP_.join();
-  this->threadUDP_.join();
+
+  if (this->isLobbyConnected_) {
+    this->threadUDP_.join();
+  }
 }
 
 void Client::InitTCP() {

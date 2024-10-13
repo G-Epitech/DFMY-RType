@@ -21,8 +21,7 @@ ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port)
 }
 
 ClientTCP::~ClientTCP() {
-  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
-  this->socket_.close();
+  this->Close();
 }
 
 void ClientTCP::Listen() {
@@ -46,4 +45,13 @@ void ClientTCP::Listen() {
 
 std::queue<tools::MessageProps> &ClientTCP::GetQueue() {
   return queue_;
+}
+
+void ClientTCP::Close() {
+  if (!this->socket_.is_open()) {
+    return;
+  }
+  
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->socket_.close();
 }
