@@ -71,8 +71,8 @@ void ServerUDP::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
   }
 
   std::vector<char> cleanBuffer(
-          buffer->begin(),
-          buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
+      buffer->begin(),
+      buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
   auto cleanBitset = std::make_shared<tools::dynamic_bitset>(*buffer);
 
   StoreMessage(cleanBitset);
@@ -125,5 +125,9 @@ void ServerUDP::Close() {
     return;
   }
 
+  this->logger_.Info("Closing session");
+
   this->socket_.close();
+
+  this->logger_.Info("Session closed");
 }

@@ -82,12 +82,16 @@ std::queue<ClientTCPMessage> ServerTCP::ExtractQueue() {
 }
 
 void ServerTCP::Close() {
+  if (!acceptor_.is_open() || ioc_.stopped()) {
+    return;
+  }
+
+  this->logger_.Info("Closing session");
+
   for (auto &client : clients_) {
     client.second->Close();
   }
-
-  if (!acceptor_.is_open()) {
-    return;
-  }
   ioc_.stop();
+
+  this->logger_.Info("Session closed");
 }

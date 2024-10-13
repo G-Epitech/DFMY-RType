@@ -20,8 +20,13 @@ Client::~Client() {
   this->clientTCP_.Close();
   this->threadTCP_.join();
 
+  logger_.Info("Client TCP thread stopped", "🛑");
+
   if (this->isLobbyConnected_) {
+    this->clientUDP_->Close();
     this->threadUDP_.join();
+
+    logger_.Info("Client UDP thread stopped", "🛑");
   }
 }
 

@@ -18,4 +18,7 @@ int main(int ac, char **av)
     auto server = api::Server(5001);
 
     server.CreateLobby("Prototype game", Handler);
+
+    // wait
+    std::this_thread::sleep_for(std::chrono::seconds(10));
 }

@@ -37,20 +37,28 @@ void SessionTCP::Start() {
 void SessionTCP::ListenNewRequest() {
   auto self(shared_from_this());
 
-  socket_.async_read_some(boost::asio::buffer(buffer_),
-                          [this, self](const boost::system::error_code &err, std::size_t size) {
-                            if (err) {
-                              logger_.Error("Error while reading data: " + err.message());
-                              return;
-                            }
-                            if (size > 0) {
-                              logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
-                              HandleRequest(size);
-                            } else {
-                              logger_.Warning("Receive empty data");
-                            }
-                            ListenNewRequest();
-                          });
+  try {
+    socket_.async_read_some(boost::asio::buffer(buffer_),
+                            [this, self](const boost::system::error_code &err, std::size_t size) {
+                              if (err) {
+                                if (err == boost::asio::error::eof) {
+                                  logger_.Info("Connection closed by peer");
+                                } else {
+                                  logger_.Error("Error while reading data: " + err.message());
+                                }
+                                return;
+                              }
+                              if (size > 0) {
+                                logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
+                                HandleRequest(size);
+                              } else {
+                                logger_.Warning("Receive empty data");
+                              }
+                              ListenNewRequest();
+                            });
+  } catch (const std::exception &e) {
+    logger_.Warning("Session closed: " + std::string(e.what()));
+  }
 }
 
 void SessionTCP::HandleRequest(const std::size_t &size) {
@@ -73,10 +81,13 @@ void SessionTCP::HandleRequest(const std::size_t &size) {
 }
 
 void SessionTCP::Close() {
-  if (!socket_.is_open()) {
+  if (!this->socket_.is_open()) {
     return;
   }
 
-  socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->logger_.Info("Closing session");
+
   socket_.close();
+
+  this->logger_.Info("Session closed");
 }

@@ -36,7 +36,8 @@ void ClientTCP::Listen() {
       logger_.Info("Connection closed cleanly by peer");
       break;
     } else if (error) {
-      throw boost::system::system_error(error);
+      logger_.Warning("Error during read: " + error.message(), "⚠️ ");
+      break;
     }
 
     ResolveBuffer(&buf, len);
@@ -51,7 +52,10 @@ void ClientTCP::Close() {
   if (!this->socket_.is_open()) {
     return;
   }
-  
-  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+
+  this->logger_.Info("Closing session");
+
   this->socket_.close();
+
+  this->logger_.Info("Session closed");
 }
