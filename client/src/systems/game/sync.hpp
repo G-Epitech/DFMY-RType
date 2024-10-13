@@ -7,14 +7,23 @@
 
 #pragma once
 
+#include "components/server_entity_id.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
+#include "managers/server_connection_manager.hpp"
 
 namespace rtype::client::systems {
-class GameSyncSystem final : public ASystem<int> {
+class GameSyncSystem final : public ASystem<components::ServerEntityId> {
  public:
-  GameSyncSystem() = default;
-  ~GameSyncSystem() final = default;
+  /**
+   * @brief Construct a new Game Sync System object
+   * @param serverConnectionManager Pointer to the server connection manager
+   */
+  explicit GameSyncSystem(const ServerConnectionManager::Ptr &serverConnectionManager);
 
-  void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr component) final;
+  void Run(std::shared_ptr<Registry> r,
+           sparse_array<components::ServerEntityId>::ptr component) override;
+
+ private:
+  ServerConnectionManager::Ptr serverConnectionManager_;
 };
 }  // namespace rtype::client::systems

@@ -32,7 +32,7 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->RegisterComponent<OnMouseReleased>();
   registry_->RegisterComponent<OnMouseMoved>();
   registry_->RegisterComponent<Tags>();
-  registry_->RegisterComponent<int>();
+  registry_->RegisterComponent<ServerEntityId>();
 
   registry_->AddSystem<KeyPressEventSystem>(context_.windowManager);
   registry_->AddSystem<KeyReleaseEventSystem>(context_.windowManager);
@@ -40,7 +40,7 @@ SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
   registry_->AddSystem<MouseReleaseEventSystem>(context_.windowManager);
   registry_->AddSystem<MouseMoveEventSystem>(context_.windowManager);
   registry_->AddSystem<DrawableSystem>(context_.windowManager, resourcesManager_);
-  registry_->AddSystem<GameSyncSystem>();
+  registry_->AddSystem<GameSyncSystem>(context_.serverConnectionManager);
   registry_->AddSystem<BackgroundSystem>();
   registry_->AddSystem<PlayerSystem>(context_.windowManager, context_.gameManager);
 }
