@@ -14,6 +14,7 @@
 #include "factories/enemy_factory.hpp"
 #include "factories/player_factory.hpp"
 #include "factories/projectile_factory.hpp"
+#include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
@@ -52,6 +53,7 @@ int GameService::Run(uint64_t lobbyId, std::shared_ptr<rtype::sdk::game::api::Se
 
     HandleMessages();
     ExecuteGameLogic();
+    SendStates();
 
     ticksManager_.WaitUntilNextTick();
   }
@@ -110,4 +112,39 @@ void GameService::NewPlayer(std::uint64_t playerId) {
 
   players_.insert({playerId, player});
   logger_.Info("Player " + std::to_string(playerId) + " joined the game", "❇️");
+}
+
+void GameService::SendStates() {
+  auto components = registry_->GetComponents<zygarde::core::components::Position>();
+  std::size_t i = 0;
+  std::vector<rtype::sdk::game::api::payload::PlayerState> states;
+  std::vector<rtype::sdk::game::api::payload::EnemyState> enemyStates;
+  std::vector<rtype::sdk::game::api::payload::BulletState> bulletStates;
+  for (auto &component : *components) {
+    i++;
+    if (!component.has_value()) {
+      continue;
+    }
+    auto val = component.value();
+    auto ent = registry_->EntityFromIndex(i);
+    rtype::sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
+    auto tags = registry_->GetComponent<zygarde::core::components::Tags>(ent);
+    if (*tags == rtype::sdk::game::constants::kPlayerTag) {
+      rtype::sdk::game::api::payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
+      states.push_back(state);
+    }
+    if (*tags == rtype::sdk::game::constants::kEnemyTag) {
+      rtype::sdk::game::api::payload::EnemyState state = {
+          static_cast<std::size_t>(ent), vec, rtype::sdk::game::types::EnemyType::kPata, 100};
+      enemyStates.push_back(state);
+    }
+    if (*tags == rtype::sdk::game::constants::kPlayerBulletTag ||
+        *tags == rtype::sdk::game::constants::kEnemyBulletTag) {
+      rtype::sdk::game::api::payload::BulletState state = {static_cast<std::size_t>(ent), vec};
+      bulletStates.push_back(state);
+    }
+  }
+  this->api_->SendPlayersState(lobbyId_, states);
+  this->api_->SendEnemiesState(lobbyId_, enemyStates);
+  this->api_->SendBulletsState(lobbyId_, bulletStates);
 }
