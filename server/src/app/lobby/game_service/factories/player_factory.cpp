@@ -48,6 +48,7 @@ void PlayerFactory::HandleCollision(const scripting::types::ScriptingContext &co
     return;
   }
   if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
+    std::cout << "Player hit by enemy bullet" << std::endl;
     playerHealth -= 10;
     context.values["health"] = playerHealth;
   }

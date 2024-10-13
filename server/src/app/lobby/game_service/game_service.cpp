@@ -10,6 +10,7 @@
 #include <iostream>
 #include <thread>
 
+#include "factories/enemy_factory.hpp"
 #include "factories/player_factory.hpp"
 #include "factories/projectile_factory.hpp"
 
@@ -21,9 +22,11 @@ void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
-  PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(-2, 0, 0), {5, 5});
   PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(0, 0, 0), {5, 5});
-  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(7, 0, 0), {5, 5});
+  EnemyFactory::CreateEnemy(registry_, core::types::Vector3f(15, 0, 0),
+                            sdk::game::types::EnemyType::kPata);
+  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(7, 0, 0), {5, 5},
+                                      sdk::game::types::GameEntityType::kPlayer);
 }
 
 void GameService::Initialize() {
