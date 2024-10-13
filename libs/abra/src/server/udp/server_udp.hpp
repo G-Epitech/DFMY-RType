@@ -88,6 +88,11 @@ class abra::server::ServerUDP {
    */
   [[nodiscard]] std::queue<ClientUDPMessage> ExtractQueue();
 
+  /**
+   * @brief Close the server
+   */
+  void Close();
+
  private:
   /**
    * @brief Listen a new request from a client

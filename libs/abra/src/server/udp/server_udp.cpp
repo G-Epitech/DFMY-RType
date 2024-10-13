@@ -16,7 +16,7 @@ ServerUDP::ServerUDP(const std::uint64_t &port)
     : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_(), logger_("server-udp") {}
 
 ServerUDP::~ServerUDP() {
-  this->ios_.stop();
+  this->Close();
 }
 
 void ServerUDP::Start() {
@@ -118,4 +118,12 @@ std::queue<ClientUDPMessage> ServerUDP::ExtractQueue() {
 
   queue_ = std::queue<ClientUDPMessage>();
   return extractedQueue;
+}
+
+void ServerUDP::Close() {
+  if (!this->socket_.is_open()) {
+    return;
+  }
+
+  this->socket_.close();
 }

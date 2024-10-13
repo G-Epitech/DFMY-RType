@@ -27,7 +27,7 @@ SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket,
       logger_("session_tcp_" + std::to_string(clientId)) {}
 
 SessionTCP::~SessionTCP() {
-  socket_.close();
+  this->Close();
 }
 
 void SessionTCP::Start() {
@@ -70,4 +70,13 @@ void SessionTCP::HandleRequest(const std::size_t &size) {
   } else {
     logger_.Info("New message handled by middleware. Type: " + std::to_string(message.messageType));
   }
+}
+
+void SessionTCP::Close() {
+  if (!socket_.is_open()) {
+    return;
+  }
+
+  socket_.shutdown(ip::tcp::socket::shutdown_both);
+  socket_.close();
 }

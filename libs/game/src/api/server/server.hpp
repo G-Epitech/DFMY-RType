@@ -30,6 +30,11 @@ class rtype::sdk::game::api::Server {
    */
   explicit Server(int port);
 
+  /**
+   * @brief Delete the Server API instance
+   */
+  ~Server();
+
   struct Client {
     std::uint64_t id;
     std::string pseudo;

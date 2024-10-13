@@ -18,8 +18,4 @@ int main(int ac, char **av)
     auto server = api::Server(5001);
 
     server.CreateLobby("Prototype game", Handler);
-
-    std::cout << "Server started" << std::endl;
-
-    auto client = api::Client("127.0.0.1", 5001);
 }

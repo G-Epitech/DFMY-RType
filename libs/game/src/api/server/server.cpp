@@ -16,6 +16,20 @@ Server::Server(int port)
   this->InitTCP();
 }
 
+Server::~Server() {
+  this->serverTCP_.Close();
+  this->threadTCP_.join();
+
+  logger_.Info("Server TCP thread stopped", "🛑");
+
+  for (auto &lobby : this->lobbies_) {
+    lobby.second.serverUDP->Close();
+    lobby.second.thread.join();
+
+    logger_.Info("Lobby [" + std::to_string(lobby.first) + "] UDP thread stopped", "🛑");
+  }
+}
+
 std::uint64_t Server::CreateLobby(const std::string &name,
                                   const std::function<void(std::uint64_t)> &newPlayerHandler) {
   std::uint64_t lobbyId = this->lobbies_.size();

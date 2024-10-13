@@ -20,7 +20,7 @@ ServerTCP::ServerTCP(const int &port,
       logger_("server_tcp") {}
 
 ServerTCP::~ServerTCP() {
-  ioc_.stop();
+  this->Close();
 }
 
 void ServerTCP::Start() {
@@ -79,4 +79,15 @@ std::queue<ClientTCPMessage> ServerTCP::ExtractQueue() {
     queue_->pop();
   }
   return extractedQueue;
+}
+
+void ServerTCP::Close() {
+  for (auto &client : clients_) {
+    client.second->Close();
+  }
+
+  if (!acceptor_.is_open()) {
+    return;
+  }
+  ioc_.stop();
 }
