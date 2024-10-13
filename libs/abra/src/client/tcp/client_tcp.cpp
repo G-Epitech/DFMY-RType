@@ -55,6 +55,7 @@ void ClientTCP::Close() {
 
   this->logger_.Info("Closing session");
 
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
   this->socket_.close();
 
   this->logger_.Info("Session closed");

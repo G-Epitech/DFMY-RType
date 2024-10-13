@@ -71,10 +71,11 @@ void SessionTCP::HandleRequest(const std::size_t &size) {
 
   auto save = this->middleware_(message);
   if (save) {
-    logger_.Info("New message saved in queue. Type: " + std::to_string(message.messageType));
-    this->mutex_->lock();
+    std::unique_lock<std::mutex> lock(*this->mutex_);
+
     this->queue_->push(message);
-    this->mutex_->unlock();
+
+    logger_.Info("New message saved in queue. Type: " + std::to_string(message.messageType));
   } else {
     logger_.Info("New message handled by middleware. Type: " + std::to_string(message.messageType));
   }
@@ -87,7 +88,8 @@ void SessionTCP::Close() {
 
   this->logger_.Info("Closing session");
 
-  socket_.close();
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->socket_.close();
 
   this->logger_.Info("Session closed");
 }

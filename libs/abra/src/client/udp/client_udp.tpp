@@ -20,9 +20,17 @@ tools::SendMessageStatus ClientUDP::Send(const std::unique_ptr<tools::Packet<T>>
 
     if (len != vector.size()) {
       status = tools::SendMessageStatus::kError;
+
+      logger_.Error("Failed to send " + std::to_string(vector.size()) + " bytes", "➡️ ");
     }
   } catch (const std::exception &e) {
     status = tools::SendMessageStatus::kError;
+
+    logger_.Error("Failed to send " + std::to_string(vector.size()) + " bytes. " + std::string(e.what()), "➡️ ");
+  }
+
+  if (status == tools::SendMessageStatus::kSuccess) {
+    logger_.Info("Sent " + std::to_string(vector.size()) + " bytes", "➡️ ");
   }
 
   return status;
