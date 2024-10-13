@@ -9,6 +9,7 @@
 
 #include <cstddef>
 
+#include "enemy_manager/enemy_manager.hpp"
 #include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
 #include "zygarde/src/utils/registry_helper/registry_helper.hpp"
@@ -35,7 +36,7 @@ class GameService {
   /**
    * @brief Execute the game logic during a tick
    */
-  void ExecuteGameLogic() const;
+  void ExecuteGameLogic();
 
   /**
    * @brief Initialize the game service
@@ -54,5 +55,7 @@ class GameService {
   TicksManager ticksManager_;
   /// @brief Registry containing all entities
   std::shared_ptr<zygarde::Registry> registry_;
+  /// @brief Enemy manager
+  EnemyManager enemyManager_;
 };
 }  // namespace rtype::server::game

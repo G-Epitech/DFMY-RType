@@ -16,7 +16,8 @@
 
 using namespace rtype::server::game;
 
-GameService::GameService(const size_t& tick_rate) : ticksManager_{tick_rate}, registry_() {}
+GameService::GameService(const size_t& tick_rate)
+    : ticksManager_{tick_rate}, registry_(), enemyManager_() {}
 
 void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
@@ -25,7 +26,7 @@ void GameService::RegistrySetup() {
   PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(0, 0, 0), {5, 5});
   EnemyFactory::CreateEnemy(registry_, core::types::Vector3f(15, 0, 0),
                             sdk::game::types::EnemyType::kPata);
-  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(7, 0, 0), {5, 5},
+  ProjectileFactory::CreateProjectile(registry_, core::types::Vector3f(5, 0, 0), {5, 5},
                                       sdk::game::types::GameEntityType::kPlayer);
 }
 
@@ -45,7 +46,8 @@ int GameService::Run() {
   return EXIT_SUCCESS;
 }
 
-void GameService::ExecuteGameLogic() const {
+void GameService::ExecuteGameLogic() {
+  enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
   registry_->RunSystems();
   registry_->CleanupDestroyedEntities();
 }

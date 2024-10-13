@@ -21,7 +21,7 @@ zygarde::Entity EnemyFactory::CreateEnemy(zygarde::Registry::Const_Ptr registry,
   zygarde::core::types::Vector2f box_size;
 
   if (enemy_type == rtype::sdk::game::types::EnemyType::kPata) {
-    box_size = {5, 5};
+    box_size = {20, 20};
   }
   registry->AddComponent<zygarde::physics::components::Rigidbody2D>(enemy, {});
   registry->AddComponent<zygarde::core::components::Position>(enemy, {position});
