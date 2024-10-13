@@ -20,11 +20,16 @@ void PlayerSystem::Run(Registry::Ptr r) {
 
   // If a key is pressed, we send a message to the server
   for (const auto &event : events) {
-    const auto action = gameManager_->keyMap.GetActionFromKey(event.key.code);
+    const auto actionKeyBoard = gameManager_->keyMap.GetActionFromKey(event.key.code);
+    const auto actionMouse = gameManager_->keyMap.GetActionFromMouse(event.mouseButton.button);
     if (event.type == sf::Event::KeyPressed) {
-      UpdatePlayerActions(action, true);
+      UpdatePlayerActions(actionKeyBoard, true);
     } else if (event.type == sf::Event::KeyReleased) {
-      UpdatePlayerActions(action, false);
+      UpdatePlayerActions(actionKeyBoard, false);
+    } else if (event.type == sf::Event::MouseButtonPressed) {
+      UpdatePlayerActions(actionMouse, true);
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+      UpdatePlayerActions(actionMouse, false);
     }
   }
   ProcessPlayerActions();
