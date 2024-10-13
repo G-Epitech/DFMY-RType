@@ -5,16 +5,19 @@
 ** main.cpp
 */
 
-#include "libs/game/includes/api.hpp"
+#include "app/app.hpp"
 
-using namespace rtype::sdk::game;
+using namespace rtype::client;
 
-int main() {
-  auto client = new api::Client("127.0.0.1", 5001);
+#ifdef _WIN32
+  #define MAIN WinMain
+#else
+  #define MAIN main
+#endif
 
-  client->Register(api::payload::Connection{.pseudo = "User1"});
-  client->JoinLobby(api::payload::JoinLobby{.lobbyId = 0});
+int MAIN() {
+  App app;
 
-  delete client;
+  app.Run();
+  return 0;
 }
-
