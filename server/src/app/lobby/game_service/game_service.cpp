@@ -126,6 +126,9 @@ void GameService::SendStates() {
       continue;
     }
     auto val = component.value();
+    if (!registry_->HasEntityAtIndex(i)) {
+      continue;
+    }
     auto ent = registry_->EntityFromIndex(i);
     rtype::sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
     auto tags = registry_->GetComponent<zygarde::core::components::Tags>(ent);
@@ -144,7 +147,11 @@ void GameService::SendStates() {
       bulletStates.push_back(state);
     }
   }
-  this->api_->SendPlayersState(lobbyId_, states);
-  this->api_->SendEnemiesState(lobbyId_, enemyStates);
-  this->api_->SendBulletsState(lobbyId_, bulletStates);
+
+  if (!states.empty())
+    this->api_->SendPlayersState(lobbyId_, states);
+  if (!states.empty())
+    this->api_->SendEnemiesState(lobbyId_, enemyStates);
+  if (!states.empty())
+    this->api_->SendBulletsState(lobbyId_, bulletStates);
 }
