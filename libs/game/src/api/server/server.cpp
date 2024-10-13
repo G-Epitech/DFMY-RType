@@ -16,14 +16,20 @@ Server::Server(int port)
   this->InitTCP();
 }
 
-void Server::CreateLobby(const std::string &name) {
+std::uint64_t Server::CreateLobby(
+    const std::string &name,
+    const std::function<void(std::uint64_t)> &newPlayerHandler) {
   std::uint64_t lobbyId = this->lobbies_.size();
   std::uint64_t port = 30000 + lobbyId;
+
+  this->newPlayerHandler_ = newPlayerHandler;
 
   this->lobbies_[lobbyId] = Lobby(
       {.id = lobbyId, .name = name, .serverUDP = std::make_unique<abra::server::ServerUDP>(port)});
   this->InitUDP(lobbyId);
+
   logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");
+  return lobbyId;
 }
 
 void Server::InitTCP() {
@@ -111,6 +117,8 @@ void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
       .id = message.clientId,
       .endpoint = this->clients_[message.clientId].endpoint,
   });
+
+  this->newPlayerHandler_(message.clientId);
 
   logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby", "🛃");
 }

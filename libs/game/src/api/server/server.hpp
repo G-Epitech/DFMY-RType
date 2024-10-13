@@ -54,8 +54,12 @@ class rtype::sdk::game::api::Server {
   /**
    * @brief Create a lobby that will generate a new UDP server
    * @param name Name of the lobby
+   * @param newPlayerHandler Handler for new player
+   * @warning The handler will be async, please use a mutex when you access to your own resources
    */
-  void CreateLobby(const std::string &name);
+  std::uint64_t CreateLobby(
+      const std::string &name,
+      const std::function<void(std::uint64_t)> &newPlayerHandler);
 
   /**
    * @brief Extract queue of messages
@@ -167,6 +171,9 @@ class rtype::sdk::game::api::Server {
 
   /// @brief Map of lobbies
   std::map<std::uint64_t, Lobby> lobbies_;
+
+  /// @brief Handler for new player (connection to lobby)
+  std::function<void(std::uint64_t)> newPlayerHandler_;
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Server::*)(const ClientTCPMessage &)> handlers_ = {
