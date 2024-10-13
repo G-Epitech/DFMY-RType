@@ -17,8 +17,17 @@ Client::Client(const std::string &ip, const uint32_t &port)
 }
 
 Client::~Client() {
+  this->clientTCP_.Close();
   this->threadTCP_.join();
-  this->threadUDP_.join();
+
+  logger_.Info("Client TCP thread stopped", "🛑");
+
+  if (this->isLobbyConnected_) {
+    this->clientUDP_->Close();
+    this->threadUDP_.join();
+
+    logger_.Info("Client UDP thread stopped", "🛑");
+  }
 }
 
 void Client::InitTCP() {
@@ -43,8 +52,8 @@ bool Client::IsConnected() const {
   return this->isConnected_;
 }
 
-bool Client::Connect(const payload::Connection &payload) {
-  auto sendSuccess = SendPayload(MessageClientType::kConnection, payload);
+bool Client::Register(const payload::Connection &payload) {
+  auto sendSuccess = SendPayloadTCP(MessageClientType::kConnection, payload);
   if (!sendSuccess)
     return false;
 
@@ -52,10 +61,10 @@ bool Client::Connect(const payload::Connection &payload) {
       MessageServerType::kConnectionInfos, &Client::HandleConnectionConfirmation);
 
   if (!waitSuccess) {
-    logger_.Error("Connection failed", "💢️");
+    logger_.Error("Register failed", "💢️");
   }
 
-  logger_.Info("Connected to server", "🛜");
+  logger_.Info("Register to server", "🛜");
 
   return this->isConnected_;
 }
@@ -67,7 +76,7 @@ bool Client::HandleConnectionConfirmation(const MessageProps &) {
 }
 
 bool Client::JoinLobby(const payload::JoinLobby &payload) {
-  auto sendSuccess = SendPayload(MessageClientType::kJoinLobby, payload);
+  auto sendSuccess = SendPayloadTCP(MessageClientType::kJoinLobby, payload);
   if (!sendSuccess)
     return false;
 
@@ -90,7 +99,7 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
                "🚪");
 
-  this->clientUDP_.emplace(payload.ip, payload.port);
+  this->clientUDP_.emplace("127.0.0.1", payload.port);
   InitUDP();
 
   auto endpoint = this->clientUDP_->GetEndpoint();
@@ -100,7 +109,7 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   strncpy(infoPayload.ip, ipPtr, 16);
   infoPayload.port = endpoint.port;
 
-  auto success = SendPayload(MessageClientType::kClientJoinLobbyInfos, infoPayload);
+  auto success = SendPayloadTCP(MessageClientType::kClientJoinLobbyInfos, infoPayload);
   if (!success) {
     logger_.Error("Joining lobby failed", "💢️");
   }
@@ -146,11 +155,22 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
 }
 
 bool Client::Shoot(const payload::Shoot &payload) {
-  return SendPayload(MessageClientType::kShoot, payload);
+  auto success = SendPayloadUDP(MessageClientType::kShoot, payload);
+  if (success) {
+    logger_.Info("Player shoot with type " + std::to_string(static_cast<double>(payload.type)),
+                 "🔫");
+  }
+
+  return success;
 }
 
 bool Client::Move(const payload::Movement &payload) {
-  return SendPayload(MessageClientType::kMovement, payload);
+  auto success = SendPayloadUDP(MessageClientType::kMovement, payload);
+  if (success) {
+    logger_.Info("Player move", "🚶🏽");
+  }
+
+  return success;
 }
 
 void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,

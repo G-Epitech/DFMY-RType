@@ -13,9 +13,9 @@
 namespace zygarde::physics::types {
 /// @brief BoundingBox2D struct
 struct BoundingBox2D {
-  float left = 0;           ///< Left bound
-  float right = 0;          ///< Right bound
-  float top = 0;            ///< Top bound
-  float bottom = 0;         ///< Bottom bound
+  float left = 0;    ///< Left bound
+  float right = 0;   ///< Right bound
+  float top = 0;     ///< Top bound
+  float bottom = 0;  ///< Bottom bound
 };
 }  // namespace zygarde::physics::types

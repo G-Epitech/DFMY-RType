@@ -27,7 +27,7 @@ SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket,
       logger_("session_tcp_" + std::to_string(clientId)) {}
 
 SessionTCP::~SessionTCP() {
-  socket_.close();
+  this->Close();
 }
 
 void SessionTCP::Start() {
@@ -37,20 +37,28 @@ void SessionTCP::Start() {
 void SessionTCP::ListenNewRequest() {
   auto self(shared_from_this());
 
-  socket_.async_read_some(boost::asio::buffer(buffer_),
-                          [this, self](const boost::system::error_code &err, std::size_t size) {
-                            if (err) {
-                              logger_.Error("Error while reading data: " + err.message());
-                              return;
-                            }
-                            if (size > 0) {
-                              logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
-                              HandleRequest(size);
-                            } else {
-                              logger_.Warning("Receive empty data");
-                            }
-                            ListenNewRequest();
-                          });
+  try {
+    socket_.async_read_some(boost::asio::buffer(buffer_),
+                            [this, self](const boost::system::error_code &err, std::size_t size) {
+                              if (err) {
+                                if (err == boost::asio::error::eof) {
+                                  logger_.Info("Connection closed by peer");
+                                } else {
+                                  logger_.Error("Error while reading data: " + err.message());
+                                }
+                                return;
+                              }
+                              if (size > 0) {
+                                logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
+                                HandleRequest(size);
+                              } else {
+                                logger_.Warning("Receive empty data");
+                              }
+                              ListenNewRequest();
+                            });
+  } catch (const std::exception &e) {
+    logger_.Warning("Session closed: " + std::string(e.what()));
+  }
 }
 
 void SessionTCP::HandleRequest(const std::size_t &size) {
@@ -63,11 +71,25 @@ void SessionTCP::HandleRequest(const std::size_t &size) {
 
   auto save = this->middleware_(message);
   if (save) {
-    logger_.Info("New message saved in queue. Type: " + std::to_string(message.messageType));
-    this->mutex_->lock();
+    std::unique_lock<std::mutex> lock(*this->mutex_);
+
     this->queue_->push(message);
-    this->mutex_->unlock();
+
+    logger_.Info("New message saved in queue. Type: " + std::to_string(message.messageType));
   } else {
     logger_.Info("New message handled by middleware. Type: " + std::to_string(message.messageType));
   }
+}
+
+void SessionTCP::Close() {
+  if (!this->socket_.is_open()) {
+    return;
+  }
+
+  this->logger_.Info("Closing session");
+
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->socket_.close();
+
+  this->logger_.Info("Session closed");
 }

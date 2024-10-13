@@ -17,10 +17,13 @@ ServerTCP::ServerTCP(const int &port,
     : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)),
       lastClientId_(0),
       middleware_(middleware),
-      logger_("server_tcp") {}
+      logger_("server_tcp") {
+  mutex_ = std::make_shared<std::mutex>();
+  queue_ = std::make_shared<std::queue<ClientTCPMessage>>();
+}
 
 ServerTCP::~ServerTCP() {
-  ioc_.stop();
+  this->Close();
 }
 
 void ServerTCP::Start() {
@@ -79,4 +82,19 @@ std::queue<ClientTCPMessage> ServerTCP::ExtractQueue() {
     queue_->pop();
   }
   return extractedQueue;
+}
+
+void ServerTCP::Close() {
+  if (!acceptor_.is_open() || ioc_.stopped()) {
+    return;
+  }
+
+  this->logger_.Info("Closing session");
+
+  for (auto &client : clients_) {
+    client.second->Close();
+  }
+  ioc_.stop();
+
+  this->logger_.Info("Session closed");
 }
