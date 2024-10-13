@@ -65,6 +65,7 @@ void ClientUDP::Close() {
 
   this->logger_.Info("Closing session");
 
+  socket_.shutdown(ip::udp::socket::shutdown_both);
   socket_.close();
   ioc_.stop();
 

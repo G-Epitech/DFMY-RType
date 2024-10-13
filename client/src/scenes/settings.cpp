@@ -340,8 +340,7 @@ void SceneSettings::CreateColorBlindnessRadioOption(const std::string &label,
     }
   };
 
-  registry_->AddComponent<Position>(radio_entity,
-                                    {zyc::types::Vector3f(pos.x, pos.y), aligns});
+  registry_->AddComponent<Position>(radio_entity, {zyc::types::Vector3f(pos.x, pos.y), aligns});
   registry_->AddComponent<Drawable>(radio_entity, {Texture{"menu", 2.5}, WindowManager::View::HUD});
 
   registry_->AddComponent<Radio>(radio_entity, {.id = "color_blindness", .value = value});

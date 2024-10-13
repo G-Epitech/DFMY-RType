@@ -9,8 +9,8 @@
 
 #include <memory>
 
-#include "managers/scenes_manager.hpp"
 #include "managers/game_manager.hpp"
+#include "managers/scenes_manager.hpp"
 #include "managers/server_connection_manager.hpp"
 #include "managers/sound_manager.hpp"
 

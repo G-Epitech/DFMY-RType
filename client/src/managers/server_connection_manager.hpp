@@ -81,7 +81,7 @@ class ServerConnectionManager {
   Properties props_;
 
   /// @brief Connection thread
-  std::thread connectionThread_;
+  std::optional<std::thread> connectionThread_;
 
   /// @brief Connection status
   ConnectionStatus connectionStatus_ = ConnectionStatus::kDisconnected;

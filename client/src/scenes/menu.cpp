@@ -11,6 +11,7 @@
 #include "components/on_event.hpp"
 #include "game.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
+#include "lobby.hpp"
 #include "settings.hpp"
 #include "systems/drawable.hpp"
 #include "systems/events/mouse/buttons.hpp"
@@ -77,8 +78,9 @@ void SceneMenu::CreatePlayButton() const {
       OnMousePressed{.strategy = events::MouseEventTarget::kLocalTarget,
                      .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                        const events::MouseEventTarget& target) {
-                       if (button == sf::Mouse::Button::Left && context_.serverConnectionManager->Connected()) {
-                         context_.scenesManager->GoToScene<SceneGame>();
+                       if (button == sf::Mouse::Button::Left &&
+                           context_.serverConnectionManager->Connected()) {
+                         context_.scenesManager->GoToScene<SceneLobby>();
                        }
                      }});
   registry_->AddComponent<OnMouseMoved>(
@@ -231,8 +233,8 @@ void SceneMenu::UpdateConnectionLabel() const {
   }
   if (entity_id >= labels->size())
     return;
-  auto &drawable = (*drawables)[entity_id];
-  auto &text = std::get<Text>(drawable->drawable);
+  auto& drawable = (*drawables)[entity_id];
+  auto& text = std::get<Text>(drawable->drawable);
   text.text = GetConnectionLabelText();
   text.color = GetConnectionLabelColor();
 }
