@@ -37,7 +37,7 @@ class TicksManager {
    * @brief Get the delta time
    * @return The delta time in Nanoseconds
    */
-  [[nodiscard]] inline const zygarde::utils::Timer::Nanoseconds &DeltaTime() {
+  [[nodiscard]] inline const zygarde::utils::Timer::Nanoseconds &DeltaTime() const noexcept {
     return timer_.GetDeltaTime();
   }
 

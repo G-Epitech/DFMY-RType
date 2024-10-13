@@ -14,6 +14,7 @@ using namespace zygarde::utils;
 void RegistryHelper::RegisterBaseComponents(const std::shared_ptr<Registry> &registry) {
   RegisterCoreComponents(registry);
   RegisterPhysicsComponents(registry);
+  RegisterScriptingComponents(registry);
 }
 
 void RegistryHelper::RegisterCoreComponents(const std::shared_ptr<Registry> &registry) {
@@ -27,13 +28,13 @@ void RegistryHelper::RegisterPhysicsComponents(const std::shared_ptr<Registry> &
   registry->RegisterComponent<physics::components::Rigidbody2D>();
 }
 
-void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
-                                         const Timer::Nanoseconds &delta_time) {
-  RegisterPhysicsSystems(registry, delta_time);
+void RegistryHelper::RegisterScriptingComponents(const std::shared_ptr<Registry> &registry) {
+  registry->RegisterComponent<scripting::components::Script>();
 }
 
-void RegistryHelper::RegisterPhysicsSystems(const std::shared_ptr<Registry> &registry,
-                                            const Timer::Nanoseconds &delta_time) {
+void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
+                                         const Timer::Nanoseconds &delta_time) {
   registry->AddSystem<physics::systems::MovementSystem>(delta_time);
   registry->AddSystem<physics::systems::CollisionSystem>();
+  registry->AddSystem<scripting::systems::ScriptExecutionSystem>(delta_time);
 }

@@ -15,7 +15,7 @@
 namespace zygarde::core::components {
 class EXPORT_ZYGARDE_API Tags final {
  public:
-  /***
+  /**
    * @brief Build a tags with a set of tags
    * @param tags Tags to add
    */
@@ -37,6 +37,8 @@ class EXPORT_ZYGARDE_API Tags final {
    * @return Match result
    */
   bool operator&(const std::string &tag) const;
+
+  bool operator==(const std::string &tag) const;
 
   /**
    * @brief Add a tag to the tag

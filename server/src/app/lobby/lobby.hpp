@@ -12,6 +12,7 @@
 #include "app/context.hpp"
 #include "app/server_interface.hpp"
 #include "game_service/game_service.hpp"
+#include "libs/game/includes/api.hpp"
 #include "props.hpp"
 
 namespace rtype::server {
@@ -44,10 +45,13 @@ class Lobby final : public IServer {
     LobbyCtxProps props;
   };
 
- private:
   /// @brief Lobby server context
   Context ctx_;
+
   /// @brief Game service
   game::GameService gameService_;
+
+  /// @brief Server network
+  std::shared_ptr<rtype::sdk::game::api::Server> api_;
 };
 }  // namespace rtype::server

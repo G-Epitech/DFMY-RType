@@ -17,6 +17,6 @@ struct Movement {
   /// @brief The entity id
   std::size_t entityId = 0;
   /// @brief The new position
-  utils::types::vector_2f newPosition;
+  utils::types::vector_2f direction;
 };
 }  // namespace rtype::sdk::game::api::payload

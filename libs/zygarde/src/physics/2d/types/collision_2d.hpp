@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "entity.hpp"
 #include "libs/zygarde/src/core/components/position/position.hpp"
 #include "libs/zygarde/src/physics/2d/components/rigidbody/rigidbody_2d.hpp"
 
@@ -25,6 +26,8 @@ struct Collision2D {
   const components::Rigidbody2D *otherRigidbody;
   /// @brief Position of the other colliding entity
   const core::components::Position *otherPosition;
+  /// @brief Entity of the other colliding entity
+  zygarde::Entity otherEntity;
 };
 
 /// @brief Colliding callback function

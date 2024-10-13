@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "libs/game/src/types/bullet.hpp"
+#include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
 
@@ -78,7 +78,7 @@ void PlayerSystem::ProcessPlayerActions() {
 
 void PlayerSystem::ProcessPlayerMoveUp() {
   auto res = context_.serverConnectionManager->client()->Move({
-      .newPosition = {0, -1},
+      .direction = {0, -1},
   });
   if (!res) {
     std::cerr << "Failed to move up" << std::endl;
@@ -87,7 +87,7 @@ void PlayerSystem::ProcessPlayerMoveUp() {
 
 void PlayerSystem::ProcessPlayerMoveDown() {
   auto res = context_.serverConnectionManager->client()->Move({
-      .newPosition = {0, 1},
+      .direction = {0, 1},
   });
   if (!res) {
     std::cerr << "Failed to move down" << std::endl;
@@ -96,7 +96,7 @@ void PlayerSystem::ProcessPlayerMoveDown() {
 
 void PlayerSystem::ProcessPlayerMoveLeft() {
   auto res = context_.serverConnectionManager->client()->Move({
-      .newPosition = {-1, 0},
+      .direction = {-1, 0},
   });
   if (!res) {
     std::cerr << "Failed to move left" << std::endl;
@@ -105,7 +105,7 @@ void PlayerSystem::ProcessPlayerMoveLeft() {
 
 void PlayerSystem::ProcessPlayerMoveRight() {
   auto res = context_.serverConnectionManager->client()->Move({
-      .newPosition = {1, 0},
+      .direction = {1, 0},
   });
   if (!res) {
     std::cerr << "Failed to move right" << std::endl;
@@ -114,7 +114,7 @@ void PlayerSystem::ProcessPlayerMoveRight() {
 
 void PlayerSystem::ProcessPlayerShoot() {
   auto res = context_.serverConnectionManager->client()->Shoot({
-      .type = sdk::game::types::BulletType::kCommon,
+      .type = sdk::game::types::ProjectileType::kPlayerCommon,
   });
   if (!res) {
     std::cerr << "Failed to shoot" << std::endl;

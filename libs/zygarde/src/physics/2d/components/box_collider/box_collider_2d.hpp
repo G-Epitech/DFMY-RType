@@ -9,6 +9,7 @@
 
 #include <stdexcept>
 
+#include "entity.hpp"
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/physics/2d/components/collider/collider_2d.hpp"
@@ -54,6 +55,12 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
   }
 
   void AddColllision(types::Collision2D collision) noexcept;
+
+  [[nodiscard]] inline bool HasCollision() const noexcept { return collider_.HasCollision(); }
+
+  [[nodiscard]] inline types::Collision2D::ptr GetNextCollision() noexcept {
+    return collider_.GetNextCollision();
+  }
 
  private:
   /// @brief Size of the box

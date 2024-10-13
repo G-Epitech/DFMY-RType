@@ -1,3 +1,5 @@
 target_sources(${GAME_SDK} PRIVATE
-    api.hpp
+        api.hpp
+        constants.hpp
+        types.hpp
 )

@@ -34,6 +34,7 @@ class EXPORT_ZYGARDE_API CollisionSystem final
     components::Rigidbody2D *rigidbody;
     core::components::Position *position;
     components::BoxCollider2D *boxCollider;
+    zygarde::Entity entity;
   };
 
  private:
@@ -43,9 +44,10 @@ class EXPORT_ZYGARDE_API CollisionSystem final
       const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) noexcept;
 
   [[nodiscard]] static ComponentsPack GetComponentsPackAtIndex(
-      size_t index, const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
+      Registry::Const_Ptr r, size_t index,
+      const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
       const tools::sparse_array<core::components::Position>::ptr &positions,
-      const tools::sparse_array<components::BoxCollider2D>::ptr &colliders) noexcept;
+      const tools::sparse_array<components::BoxCollider2D>::ptr &colliders);
 
   [[nodiscard]] static bool HaveCommonCollisionLayers(
       const components::BoxCollider2D &collider1,

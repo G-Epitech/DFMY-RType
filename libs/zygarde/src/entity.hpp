@@ -22,7 +22,7 @@ class EXPORT_ZYGARDE_API Entity {
   /**
    * @brief Default constructor
    */
-  ~Entity();
+  ~Entity() = default;
 
   /**
    * @brief Operator size_t
@@ -31,9 +31,16 @@ class EXPORT_ZYGARDE_API Entity {
 
   Entity operator=(const Entity& other) const;
 
+  /**
+   * @brief Operator ==
+   * @param other Entity to compare
+   * @return Match result
+   */
+  bool operator==(const Entity& other) const;
+
  private:
   /// @brief Entity id
-  const std::size_t id_;
+  std::size_t id_;
 
   /**
    * @brief Private constructor

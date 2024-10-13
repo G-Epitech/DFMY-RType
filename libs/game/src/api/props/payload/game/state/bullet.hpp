@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-#include "libs/game/src/types/bullet.hpp"
+#include "libs/game/src/types/projectile.hpp"
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 namespace rtype::sdk::game::api::payload {
@@ -20,6 +20,6 @@ struct BulletState {
   /// @brief The position of the enemy
   utils::types::vector_2f position;
   /// @brief The type of the bullet
-  types::BulletType bulletType = types::BulletType::kCommon;
+  types::ProjectileType bulletType = types::ProjectileType::kPlayerCommon;
 };
 }  // namespace rtype::sdk::game::api::payload
