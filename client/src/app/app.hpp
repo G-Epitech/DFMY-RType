@@ -20,6 +20,9 @@
 #define APP_WINDOW_FRAMERATE 60
 #define APP_WINDOW_ICON_PATH "assets/icons/R-Type.png"
 
+#define APP_IP "127.0.0.1"
+#define APP_PORT 5001
+
 namespace rtype::client {
 
 /**
@@ -69,6 +72,11 @@ class App {
    * @brief Creates the sound manager for the application.
    */
   void CreateSoundManager();
+
+  /**
+   * @brief Creates the client API for the application.
+   */
+  void CreateClient();
 
   /// @brief The main window for the application.
   WindowManager::Ptr windowManager_;

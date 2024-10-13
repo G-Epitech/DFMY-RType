@@ -71,7 +71,10 @@ void SceneMenu::CreatePlayButton() const {
                        .strategy = events::MouseEventTarget::kLocalTarget,
                        .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                          const events::MouseEventTarget& target) {
-                         context_.scenesManager->GoToScene<SceneGame>();
+                         const auto res = context_.client->JoinLobby({0});
+                         if (res) {
+                           context_.scenesManager->GoToScene<SceneGame>();
+                         }
                        }});
   registry_->AddComponent<components::OnMouseMoved>(
       play_button, components::OnMouseMoved{

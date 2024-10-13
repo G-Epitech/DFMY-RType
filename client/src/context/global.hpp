@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "libs/game/includes/api.hpp"
 #include "managers/scenes_manager.hpp"
 #include "managers/sound_manager.hpp"
 
@@ -31,5 +32,10 @@ struct GlobalContext {
    * @brief Provide access to the sound manager
    */
   SoundManager::Ptr soundManager;
+
+  /**
+   * @brief Provide access to the network client
+   */
+  std::shared_ptr<rtype::sdk::game::api::Client> client;
 };
 }  // namespace rtype::client

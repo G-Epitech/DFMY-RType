@@ -19,9 +19,8 @@ App::App() {
   CreateWindowManager();
   CreateScenesManager();
   CreateSoundManager();
+  CreateClient();
   InitializeGlobalContext();
-
-  client_ = std::make_shared<rtype::sdk::game::api::Client>("172.21.63.255", 5001);
 
   scenesManager_->RegisterScene<SceneMenu>();
   scenesManager_->RegisterScene<SceneGame>();
@@ -40,6 +39,7 @@ void App::InitializeGlobalContext() {
   globalContext_.windowManager = windowManager_;
   globalContext_.scenesManager = scenesManager_;
   globalContext_.soundManager = soundManager_;
+  globalContext_.client = client_;
 }
 
 void App::CreateWindowManager() {
@@ -58,4 +58,8 @@ void App::CreateScenesManager() {
 
 void App::CreateSoundManager() {
   soundManager_ = SoundManager::Create();
+}
+
+void App::CreateClient() {
+  client_ = std::make_shared<rtype::sdk::game::api::Client>(APP_IP, APP_PORT);
 }
