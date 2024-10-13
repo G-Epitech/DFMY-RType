@@ -133,7 +133,7 @@ void Server::HandleLobbyAddPlayer(const ClientTCPMessage &message) {
 
   this->newPlayerHandler_(message.clientId);
 
-  logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby", "🛃");
+  logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby. Endpoint: " + ip + ":" + std::to_string(port), "🛃");
 }
 
 std::queue<ClientTCPMessage> Server::ExtractMainQueue() {
@@ -185,7 +185,7 @@ bool Server::SendPlayersState(const uint64_t &lobbyId,
 
   auto success = this->SendPayloadsToLobby(MessageServerType::kPlayersState, state, lobbyId);
   if (success) {
-    this->logger_.Info("Players state sent to lobby " + std::to_string(lobbyId), "🦹🏽");
+    this->logger_.Info("Players state sent to lobby " + std::to_string(lobbyId), "🦹");
   }
 
   return success;
