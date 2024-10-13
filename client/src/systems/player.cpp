@@ -27,6 +27,7 @@ void PlayerSystem::Run(Registry::Ptr r) {
       UpdatePlayerActions(action, false);
     }
   }
+  ProcessPlayerActions();
 }
 
 void PlayerSystem::UpdatePlayerActions(const GameAction &action, const bool &isPressed) {
