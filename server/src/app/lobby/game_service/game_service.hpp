@@ -62,6 +62,11 @@ class GameService {
    */
   void HandleMessages();
 
+  /**
+   * @brief Send stats to the server
+   */
+  void SendStates();
+
  private:
   /// @brief Game running flag
   bool gameRunning_{true};

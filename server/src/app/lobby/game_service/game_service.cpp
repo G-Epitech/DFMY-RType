@@ -52,6 +52,7 @@ int GameService::Run(uint64_t lobbyId, std::shared_ptr<rtype::sdk::game::api::Se
 
     HandleMessages();
     ExecuteGameLogic();
+    SendStates();
 
     ticksManager_.WaitUntilNextTick();
   }
@@ -110,4 +111,12 @@ void GameService::NewPlayer(std::uint64_t playerId) {
 
   players_.insert({playerId, player});
   logger_.Info("Player " + std::to_string(playerId) + " joined the game", "❇️");
+}
+
+void GameService::SendStates() {
+  // TODO @dragos SEND STATES
+
+  this->api_->SendPlayersState(lobbyId_, {});
+  this->api_->SendEnemiesState(lobbyId_, {});
+  this->api_->SendBulletsState(lobbyId_, {});
 }
