@@ -136,14 +136,24 @@ class rtype::sdk::game::api::Client {
   void ListenUDP();
 
   /**
-   * @brief Send a payload to the server
+   * @brief Send a payload to the server TCP
    * @tparam T The payload type
    * @param type The message type
    * @param payload The payload to send
    * @return true if the packet is sent, false otherwise
    */
   template <typename T>
-  bool SendPayload(const MessageClientType &type, const T &payload);
+  bool SendPayloadTCP(const MessageClientType &type, const T &payload);
+
+  /**
+   * @brief Send a payload to the server UDP
+   * @tparam T The payload type
+   * @param type The message type
+   * @param payload The payload to send
+   * @return true if the packet is sent, false otherwise
+   */
+  template <typename T>
+  bool SendPayloadUDP(const MessageClientType &type, const T &payload);
 
   /**
    * @brief Resolve payloads from a server message

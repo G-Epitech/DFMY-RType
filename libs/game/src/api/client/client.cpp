@@ -53,7 +53,7 @@ bool Client::IsConnected() const {
 }
 
 bool Client::Register(const payload::Connection &payload) {
-  auto sendSuccess = SendPayload(MessageClientType::kConnection, payload);
+  auto sendSuccess = SendPayloadTCP(MessageClientType::kConnection, payload);
   if (!sendSuccess)
     return false;
 
@@ -76,7 +76,7 @@ bool Client::HandleConnectionConfirmation(const MessageProps &) {
 }
 
 bool Client::JoinLobby(const payload::JoinLobby &payload) {
-  auto sendSuccess = SendPayload(MessageClientType::kJoinLobby, payload);
+  auto sendSuccess = SendPayloadTCP(MessageClientType::kJoinLobby, payload);
   if (!sendSuccess)
     return false;
 
@@ -99,7 +99,7 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
                "🚪");
 
-  this->clientUDP_.emplace(payload.ip, payload.port);
+  this->clientUDP_.emplace("127.0.0.1", payload.port);
   InitUDP();
 
   auto endpoint = this->clientUDP_->GetEndpoint();
@@ -109,7 +109,7 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   strncpy(infoPayload.ip, ipPtr, 16);
   infoPayload.port = endpoint.port;
 
-  auto success = SendPayload(MessageClientType::kClientJoinLobbyInfos, infoPayload);
+  auto success = SendPayloadTCP(MessageClientType::kClientJoinLobbyInfos, infoPayload);
   if (!success) {
     logger_.Error("Joining lobby failed", "💢️");
   }
@@ -155,11 +155,11 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
 }
 
 bool Client::Shoot(const payload::Shoot &payload) {
-  return SendPayload(MessageClientType::kShoot, payload);
+  return SendPayloadUDP(MessageClientType::kShoot, payload);
 }
 
 bool Client::Move(const payload::Movement &payload) {
-  return SendPayload(MessageClientType::kMovement, payload);
+  return SendPayloadUDP(MessageClientType::kMovement, payload);
 }
 
 void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,

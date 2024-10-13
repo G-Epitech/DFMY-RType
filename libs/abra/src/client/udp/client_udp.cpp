@@ -34,17 +34,13 @@ void ClientUDP::Listen() {
 
     try {
       len = socket_.receive_from(buffer(buf), senderEndpoint);
+      logger_.Info("Received " + std::to_string(len) + " bytes", "⬅️ ");
     } catch (const std::exception &e) {
       this->logger_.Warning("Error during read: " + std::string(e.what()));
       break;
     }
 
-    auto bitset = std::make_shared<tools::dynamic_bitset>(buf);
-    tools::MessageProps message = {tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
-                                   tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
-
-    std::unique_lock<std::mutex> lock(this->Mutex);
-    this->queue_.push(message);
+    this->ResolveBuffer(&buf, len);
   }
 }
 
