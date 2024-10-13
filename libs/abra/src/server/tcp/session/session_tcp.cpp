@@ -88,7 +88,8 @@ void SessionTCP::Close() {
 
   this->logger_.Info("Closing session");
 
-  socket_.close();
+  this->socket_.shutdown(ip::tcp::socket::shutdown_both);
+  this->socket_.close();
 
   this->logger_.Info("Session closed");
 }
