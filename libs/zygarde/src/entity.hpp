@@ -29,6 +29,8 @@ class EXPORT_ZYGARDE_API Entity {
    */
   explicit operator std::size_t() const;
 
+  Entity operator=(const Entity& other) const;
+
  private:
   /// @brief Entity id
   const std::size_t id_;
