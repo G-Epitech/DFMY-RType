@@ -16,9 +16,8 @@ Server::Server(int port)
   this->InitTCP();
 }
 
-std::uint64_t Server::CreateLobby(
-    const std::string &name,
-    const std::function<void(std::uint64_t)> &newPlayerHandler) {
+std::uint64_t Server::CreateLobby(const std::string &name,
+                                  const std::function<void(std::uint64_t)> &newPlayerHandler) {
   std::uint64_t lobbyId = this->lobbies_.size();
   std::uint64_t port = 30000 + lobbyId;
 
@@ -161,4 +160,49 @@ std::queue<std::pair<std::uint64_t, ClientUDPMessage>> Server::ExtractLobbyQueue
   }
 
   return extractedQueue;
+}
+
+bool Server::SendPlayersState(const uint64_t &lobbyId,
+                              const std::vector<payload::PlayerState> &state) {
+  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
+    logger_.Warning("Try send packets to invalid lobby queue", "🧟‍♂️");
+    return {};
+  }
+
+  auto success = this->SendPayloadsToLobby(MessageServerType::kPlayersState, state, lobbyId);
+  if (success) {
+    this->logger_.Info("Players state sent to lobby " + std::to_string(lobbyId), "🦹🏽");
+  }
+
+  return success;
+}
+
+bool Server::SendEnemiesState(const uint64_t &lobbyId,
+                              const std::vector<payload::EnemyState> &state) {
+  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
+    logger_.Warning("Try send packets to invalid lobby queue", "🧟‍♂️");
+    return {};
+  }
+
+  auto success = this->SendPayloadsToLobby(MessageServerType::kEnemiesState, state, lobbyId);
+  if (success) {
+    this->logger_.Info("Enemies state sent to lobby " + std::to_string(lobbyId), "🧌");
+  }
+
+  return success;
+}
+
+bool Server::SendBulletsState(const uint64_t &lobbyId,
+                              const std::vector<payload::BulletState> &state) {
+  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
+    logger_.Warning("Try send packets to invalid lobby queue", "🧟‍♂️");
+    return {};
+  }
+
+  auto success = this->SendPayloadsToLobby(MessageServerType::kBulletsState, state, lobbyId);
+  if (success) {
+    this->logger_.Info("Bullets state sent to lobby " + std::to_string(lobbyId), "💥");
+  }
+
+  return success;
 }
