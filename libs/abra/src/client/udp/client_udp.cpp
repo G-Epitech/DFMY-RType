@@ -64,7 +64,6 @@ void ClientUDP::Close() {
 
   this->logger_.Info("Closing session");
 
-  this->socket_.shutdown(ip::udp::socket::shutdown_both);
   try {
     this->socket_.shutdown(ip::udp::socket::shutdown_both);
   } catch (const std::exception &e) {

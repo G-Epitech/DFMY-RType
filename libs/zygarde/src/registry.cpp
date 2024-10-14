@@ -38,20 +38,26 @@ Entity Registry::SpawnEntity() {
     newId = currentMaxEntityId_++;
   }
   Entity e(newId);
-  entities_.push_back(e);
+  entities_.emplace_back(e);
   return e;
 }
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
-  if (idx >= entities_.size()) {
-    return Entity(-1);
+  if (entities_.empty()) {
+    throw Exception("Entity not found");
   }
-  return entities_.at(idx);
+  if (entities_.size() < idx) {
+    throw Exception("Entity not found");
+  }
+  if (!entities_.at(idx).has_value()) {
+    throw Exception("Entity not found");
+  }
+  return entities_.at(idx).value();
 }
 
 void Registry::KillEntity(Entity const &e) {
   freeIds_.push(static_cast<std::size_t>(e));
-  entities_.erase(entities_.begin(), std::remove(entities_.begin(), entities_.end(), e));
+  entities_.at(IndexFromEntity(e)) = std::nullopt;
   for (auto &remove_function : removeFunctions_) {
     remove_function.second(*this, e);
   }
@@ -77,7 +83,7 @@ void Registry::CleanupDestroyedEntities() {
   }
 }
 bool Registry::HasEntityAtIndex(std::size_t idx) const {
-  return idx < entities_.size();
+  return idx < entities_.size() && entities_.at(idx).has_value();
 }
 
 Registry::Exception::Exception(std::string message) : message_(std::move(message)) {}

@@ -64,3 +64,44 @@ TEST(BitsetTest, ConvertBitsetToPacket) {
   EXPECT_EQ(convertedPayload.b, payload.b);
   EXPECT_EQ(convertedPayload.c, payload.c);
 }
+
+TEST(BitsetTest, SuspiciousPacket) {
+  tools::PacketBuilder packetBuilder;
+  struct payloadStruct {
+    std::size_t id;
+    struct {
+      float x;
+      float y;
+    } position;
+    std::size_t health;
+  };
+
+  packetBuilder.SetPayloadType(tools::PayloadType::kCustom);
+  packetBuilder.SetMessageType(5);
+
+  std::vector<struct payloadStruct> payload = {
+      {1, {1.0f, 2.0f}, 100},
+  };
+
+  auto packet = packetBuilder.Build<payloadStruct>(payload);
+  EXPECT_EQ(packet[0]->GetHeader().offsetFlag, 1);
+
+  auto bitset = packet[0]->GetBitset();
+
+  auto header = tools::PacketUtils::ExportHeaderFromBitset(bitset);
+  EXPECT_EQ(header.offsetFlag, 1);
+
+  auto convertedPacket = packetBuilder.Build<payloadStruct>(bitset);
+
+  EXPECT_EQ(convertedPacket->GetHeader().payloadType, static_cast<unsigned>(tools::PayloadType::kCustom));
+  EXPECT_EQ(convertedPacket->GetHeader().payloadLength, sizeof(payloadStruct));
+  EXPECT_EQ(convertedPacket->GetHeader().offsetFlag, 1);
+  EXPECT_EQ(convertedPacket->GetHeader().turnFlag, 0);
+
+  EXPECT_EQ(convertedPacket->GetMessage().messageType, 5);
+
+  auto convertedPayload = convertedPacket->GetPayload();
+  EXPECT_EQ(convertedPayload.id, payload[0].id);
+  EXPECT_EQ(convertedPayload.position.x, payload[0].position.x);
+  EXPECT_EQ(convertedPayload.health, payload[0].health);
+}

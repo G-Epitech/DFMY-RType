@@ -29,7 +29,8 @@ void ScriptExecutionSystem::Run(Registry::Ptr r,
 
 void ScriptExecutionSystem::ProcessScript(Registry::Const_Ptr registry,
                                           scripting::components::Script* script) {
-  types::ScriptingContext context = CreateContext(registry, script);
+  std::shared_ptr<types::ScriptingContext> context =
+      std::make_shared<types::ScriptingContext>(CreateContext(registry, script));
 
   HandleFixedUpdate(registry, script, context);
   HandleCollisionCallback(registry, script, context);
@@ -42,7 +43,7 @@ scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
 
 void ScriptExecutionSystem::HandleCollisionCallback(
     Registry::Const_Ptr registry, scripting::components::Script* script,
-    scripting::types::ScriptingContext& context) const {
+    types::ScriptingContext::ConstPtr context) const {
   if (!script->onCollisionEnter.has_value()) {
     return;
   }
@@ -57,9 +58,9 @@ void ScriptExecutionSystem::HandleCollisionCallback(
   }
 }
 
-void ScriptExecutionSystem::HandleFixedUpdate(Registry::Const_Ptr registry,
-                                              scripting::components::Script* script,
-                                              scripting::types::ScriptingContext& context) {
+void ScriptExecutionSystem::HandleFixedUpdate(
+    Registry::Const_Ptr registry, scripting::components::Script* script,
+    scripting::types::ScriptingContext::ConstPtr context) {
   if (script->fixedUpdate.has_value()) {
     script->fixedUpdate.value()(context);
   }
