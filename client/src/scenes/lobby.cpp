@@ -104,7 +104,7 @@ void SceneLobby::JoinLobby() {
     status_ = LobbyStatus::kFailed;
     return;
   }
-  usleep(1200000);
+  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
   status_ = LobbyStatus::kRegistered;
   mainMessage_ = "Joining the lobby";
   secondaryMessage_ = "Please wait...";
@@ -117,7 +117,7 @@ void SceneLobby::JoinLobby() {
   }
   mainMessage_ = "Success";
   secondaryMessage_ = "You are now in the lobby. The game will start soon";
-  usleep(1200000);
+  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
   status_ = LobbyStatus::kIn;
 }
 

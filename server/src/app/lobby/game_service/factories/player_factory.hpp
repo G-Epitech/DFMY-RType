@@ -28,7 +28,7 @@ class PlayerFactory {
  private:
   static void CreateScript(zygarde::Registry::Const_Ptr registry, const zygarde::Entity &entity);
 
-  static void HandleCollision(const zygarde::scripting::types::ScriptingContext &context,
+  static void HandleCollision(zygarde::scripting::types::ScriptingContext::ConstPtr context,
                               const physics::types::Collision2D::ptr &collision);
 };
 }  // namespace rtype::server::game

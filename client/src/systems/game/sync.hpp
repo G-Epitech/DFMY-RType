@@ -89,7 +89,7 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
    * @param pos The position of the enemy
    */
   void CreateEnemy(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+                   const zygarde::core::types::Vector3f &pos);
 
   /**
    * @brief Update an enemy

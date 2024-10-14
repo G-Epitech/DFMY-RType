@@ -27,8 +27,8 @@
 
 namespace zygarde::scripting::types {
 /// @brief Fixed Update callback function
-using FixedUpdateFunction = std::function<void(const ScriptingContext &)>;
+using FixedUpdateFunction = std::function<void(ScriptingContext::ConstPtr)>;
 /// @brief Colliding callback function
 using Collision2DFunction =
-    std::function<void(const ScriptingContext &, physics::types::Collision2D::ptr)>;
+    std::function<void(ScriptingContext::ConstPtr, physics::types::Collision2D::ptr)>;
 }  // namespace zygarde::scripting::types
