@@ -150,7 +150,7 @@ std::uint64_t Server::FindUserByEndpoint(std::uint64_t lobbyId,
   }
 
   for (auto &client : this->lobbies_[lobbyId].clients) {
-    if (client.endpoint == endpoint) {
+    if (client.endpoint.port() == endpoint.port()) {
       return client.id;
     }
   }
