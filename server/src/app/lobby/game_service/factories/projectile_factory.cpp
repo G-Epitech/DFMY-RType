@@ -53,7 +53,6 @@ void ProjectileFactory::CreateScript(zygarde::Registry::Const_Ptr registry, cons
 
 void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                         const physics::types::Collision2D::ptr& collision) {
-
   auto entity = collision->otherEntity;
   auto otherEntityTag = context->registry->GetComponent<zygarde::core::components::Tags>(entity);
   if (!otherEntityTag) {
@@ -64,7 +63,7 @@ void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::Cons
   }
   if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
     return;
-  }          
+  }
   context->registry->DestroyEntity(context->me);
   std::cout << "I died" << std::endl;
 }

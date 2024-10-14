@@ -20,7 +20,7 @@ enum CollisionLayers {
 };
 
 /// @brief Player collision layers
-static const std::vector<int> kPlayerCollidesWith = {kEnemy, kEnemyBullet, kPowerUp};
+static const std::vector<int> kPlayerCollidesWith = {kEnemy, kEnemyBullet, kPowerUp, kPlayer};
 
 /// @brief Enemy collision layers
 static const std::vector<int> kEnemyCollidesWith = {kPlayer, kPlayerBullet};
