@@ -21,6 +21,6 @@ void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &
   std::mt19937 gen(rd());
   std::uniform_real_distribution<float> dist(80.0f, 1000.0f);
 
-  zygarde::core::types::Vector3f position(1300, dist(gen), 0);
+  zygarde::core::types::Vector3f position(2000, dist(gen), 0);
   EnemyFactory::CreateEnemy(registry, position, sdk::game::types::EnemyType::kPata);
 }

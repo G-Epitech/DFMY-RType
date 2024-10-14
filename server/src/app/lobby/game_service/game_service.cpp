@@ -84,7 +84,7 @@ void GameService::HandleMessages() {
         }
 
         zygarde::core::types::Vector2f direction = {move.direction.x, move.direction.y};
-        rigidBody->SetVelocity(direction * 50);
+        rigidBody->SetVelocity(direction * 200);
       }
 
       logger_.Info("Player " + std::to_string(playerId) + " moved", "🏃‍");

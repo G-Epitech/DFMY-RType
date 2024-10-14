@@ -42,7 +42,7 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, con
                           core::components::VerticalAlign::kTop}});
   registry->AddComponent<components::Drawable>(
       player, {
-                  .drawable = components::Texture{.name = "player", .scale = 5, .rect = base},
+                  .drawable = components::Texture{.name = "player", .scale = 3, .rect = base},
               });
 
   std::cout << "Player created" << std::endl;
@@ -99,7 +99,7 @@ void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, con
 void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                  const zygarde::core::types::Vector3f& pos) {
   auto enemy = registry->SpawnEntity();
-  static const sf::IntRect base{0, 0, 33, 36};
+  static const sf::IntRect base{5, 6, 21, 36};
 
   registry->AddComponent<components::ServerEntityId>(enemy, {.id = id});
   registry->AddComponent<zygarde::core::components::Position>(

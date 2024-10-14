@@ -54,7 +54,7 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
     return collider_.collisionLayers_;
   }
 
-  void AddColllision(types::Collision2D collision) noexcept;
+  void AddCollision(types::Collision2D collision) noexcept;
 
   [[nodiscard]] inline bool HasCollision() const noexcept { return collider_.HasCollision(); }
 

@@ -21,7 +21,7 @@ zygarde::Entity EnemyFactory::CreateEnemy(zygarde::Registry::Const_Ptr registry,
   zygarde::core::types::Vector2f box_size;
 
   if (enemy_type == rtype::sdk::game::types::EnemyType::kPata) {
-    box_size = {20, 20};
+    box_size = {61, 108};
   }
   registry->AddComponent<zygarde::physics::components::Rigidbody2D>(enemy, {});
   registry->AddComponent<zygarde::core::components::Position>(enemy, {position});
@@ -88,9 +88,9 @@ void EnemyFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr cont
   }
   float verticalSpeed = 20.0f;
   if (goingUp) {
-    rb->SetVelocity({-3.0f, verticalSpeed});
+    rb->SetVelocity({-100.0f, verticalSpeed});
   } else {
-    rb->SetVelocity({-3.0f, -verticalSpeed});
+    rb->SetVelocity({-100.0f, -verticalSpeed});
   }
   (*context->values)["goingUp"] = goingUp;
 }

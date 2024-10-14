@@ -40,7 +40,7 @@ class EXPORT_ZYGARDE_API CollisionSystem final
  private:
   // TODO(sdragos): Remove this functions since it's a very bad hotfix
   [[nodiscard]] static bool HotfixCheckTags(Registry::Const_Ptr r, std::size_t firstIndex,
-                              std::size_t secondIndex) noexcept;
+                                            std::size_t secondIndex) noexcept;
 
   [[nodiscard]] static bool IndexHasRequiredComponents(
       size_t index, const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
@@ -66,5 +66,7 @@ class EXPORT_ZYGARDE_API CollisionSystem final
 
   [[nodiscard]] static types::Collision2D BuildCollision2D(const ComponentsPack &pack1,
                                                            const ComponentsPack &pack2) noexcept;
+
+  void KillEntity(Registry::Ptr r, const CollisionSystem::ComponentsPack &pack) noexcept;
 };
 }  // namespace zygarde::physics::systems

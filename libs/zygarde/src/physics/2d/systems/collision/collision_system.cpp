@@ -47,6 +47,7 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
       if (AreColliding(*componentsPack.boxCollider, *componentsPack.position,
                        *otherComponentsPack.boxCollider, *otherComponentsPack.position)) {
         ProcessCollision(componentsPack, otherComponentsPack);
+        KillEntity(r, componentsPack);
       }
     }
   }
@@ -106,8 +107,8 @@ void CollisionSystem::ProcessCollision(const CollisionSystem::ComponentsPack &pa
     pack2.rigidbody->CancelVelocity();
   }
 
-  pack1.boxCollider->AddColllision(BuildCollision2D(pack1, pack2));
-  pack2.boxCollider->AddColllision(BuildCollision2D(pack2, pack1));
+  pack1.boxCollider->AddCollision(BuildCollision2D(pack1, pack2));
+  pack2.boxCollider->AddCollision(BuildCollision2D(pack2, pack1));
 }
 
 physics::types::Collision2D CollisionSystem::BuildCollision2D(
@@ -135,4 +136,14 @@ bool CollisionSystem::HotfixCheckTags(Registry::Const_Ptr r, std::size_t firstIn
     return true;
   }
   return false;
+}
+
+void CollisionSystem::KillEntity(Registry::Ptr r,
+                                 const CollisionSystem::ComponentsPack &pack) noexcept {
+  if (pack.boxCollider->HasCollision()) {
+    auto entiy = pack.entity;
+    std::cout << "Entity " << static_cast<std::size_t>(entiy) << " destroying" << std::endl;
+    r->DestroyEntity(entiy);
+    std::cout << "Entity " << static_cast<std::size_t>(entiy) << " destroyed" << std::endl;
+  }
 }

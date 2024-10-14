@@ -97,6 +97,10 @@ void AbstractClient::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset,
 }
 
 void AbstractClient::ResolveMultiPackets(unsigned int messageId) {
+  if (!pendingMultiPackets_.contains(messageId)) {
+    pendingMultiPackets_ = {};
+    return;
+  }
   if (pendingMultiPackets_[messageId].lastMessage.has_value() &&
       pendingMultiPackets_[messageId].messages.size() ==
           pendingMultiPackets_[messageId].lastMessage.value()->offset + 1) {

@@ -25,6 +25,6 @@ void BoxCollider2D::SetSize(const core::types::Vector2f& size) {
   size_ = size;
 }
 
-void BoxCollider2D::AddColllision(types::Collision2D collision) noexcept {
+void BoxCollider2D::AddCollision(types::Collision2D collision) noexcept {
   collider_.collisionQueue_.push(std::make_shared<types::Collision2D>(collision));
 }
