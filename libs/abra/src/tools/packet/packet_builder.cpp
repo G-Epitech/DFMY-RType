@@ -98,6 +98,8 @@ void tools::PacketBuilder::SetHeaderFromBitset(const std::shared_ptr<dynamic_bit
 
   this->header_.payloadLength = payloadLength;
   this->header_.payloadType = payloadType;
+  this->header_.offsetFlag = offsetFlag;
+  this->header_.turnFlag = turnFlag;
 }
 
 void tools::PacketBuilder::SetMessageFromBitset(const std::shared_ptr<dynamic_bitset> &bitset,
