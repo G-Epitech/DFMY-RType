@@ -88,7 +88,7 @@ void GameService::HandleMessages() {
         rigidBody->SetVelocity(direction * 2);
       }
 
-      logger_.Info("Player " + std::to_string(playerId) + " moved", "🏃‍♂️");
+      logger_.Info("Player " + std::to_string(playerId) + " moved", "🏃‍");
     }
     if (data.messageType == MessageClientType::kShoot) {
       auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
@@ -134,6 +134,7 @@ void GameService::SendStates() {
     auto tags = registry_->GetComponent<zygarde::core::components::Tags>(ent);
     if (*tags == rtype::sdk::game::constants::kPlayerTag) {
       rtype::sdk::game::api::payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
+      std::cout << "====> PLAYER POSITION" << vec.x << " " << vec.y << std::endl;
       states.push_back(state);
     }
     if (*tags == rtype::sdk::game::constants::kEnemyTag) {

@@ -87,8 +87,8 @@ void ServerUDP::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
 
 void ServerUDP::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset) {
   ClientUDPMessage message = {this->remoteEndpoint_,
-                              tools::PacketUtils::ExportMessageIdFromBitset(bitset),
-                              tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
+                              tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
+                              tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};
 
   this->mutex_.lock();
   queue_.push(message);
