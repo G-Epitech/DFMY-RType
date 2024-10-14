@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <iostream>
 
+#include "core/components/tags/tags.hpp"
+#include "libs/game/src/constants/tags.hpp"
+
 using namespace zygarde::physics::systems;
 
 void CollisionSystem::Run(std::shared_ptr<Registry> r,
@@ -36,6 +39,9 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
 
       if (!HaveCommonCollisionLayers(*componentsPack.boxCollider,
                                      *otherComponentsPack.boxCollider)) {
+        continue;
+      }
+      if (HotfixCheckTags(r, i, j)) {
         continue;
       }
       if (AreColliding(*componentsPack.boxCollider, *componentsPack.position,
@@ -108,4 +114,25 @@ physics::types::Collision2D CollisionSystem::BuildCollision2D(
     const CollisionSystem::ComponentsPack &pack1,
     const CollisionSystem::ComponentsPack &pack2) noexcept {
   return {pack1.rigidbody, pack1.position, pack2.rigidbody, pack2.position, pack2.entity};
+}
+
+bool CollisionSystem::HotfixCheckTags(Registry::Const_Ptr r, std::size_t firstIndex,
+                                      std::size_t secondIndex) noexcept {
+  if (!r->HasEntityAtIndex(firstIndex) || !r->HasEntityAtIndex(secondIndex)) {
+    return false;
+  }
+  auto ent = r->EntityFromIndex(firstIndex);
+  auto ent2 = r->EntityFromIndex(secondIndex);
+  auto tags1 = r->GetComponent<core::components::Tags>(ent);
+  auto tags2 = r->GetComponent<core::components::Tags>(ent2);
+  if (!tags1 || !tags2) {
+    return false;
+  }
+  if ((*tags1 == rtype::sdk::game::constants::kPlayerBulletTag ||
+       *tags1 == rtype::sdk::game::constants::kEnemyBulletTag) &&
+      (*tags2 == rtype::sdk::game::constants::kPlayerBulletTag ||
+       *tags2 == rtype::sdk::game::constants::kEnemyBulletTag)) {
+    return true;
+  }
+  return false;
 }

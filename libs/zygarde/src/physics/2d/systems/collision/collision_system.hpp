@@ -38,6 +38,11 @@ class EXPORT_ZYGARDE_API CollisionSystem final
   };
 
  private:
+  // TODO: Remove this functions since it's a very bad hotfix instead a proper collision layer
+  // system should be implemented
+  [[nodiscard]] static bool HotfixCheckTags(Registry::Const_Ptr r, std::size_t firstIndex,
+                              std::size_t secondIndex) noexcept;
+
   [[nodiscard]] static bool IndexHasRequiredComponents(
       size_t index, const tools::sparse_array<components::Rigidbody2D>::ptr &rigidbodies,
       const tools::sparse_array<core::components::Position>::ptr &positions,
