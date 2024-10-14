@@ -10,12 +10,14 @@
 using namespace rtype::client;
 
 #if (defined(_WIN32) && !defined(DEBUG))
-  #define MAIN WinMain
+  #include <windows.h>
+  #define MAIN \
+    WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #else
-  #define MAIN main
+  #define MAIN main()
 #endif
 
-int MAIN() {
+int MAIN {
   try {
     App app;
 
