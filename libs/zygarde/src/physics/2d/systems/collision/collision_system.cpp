@@ -17,6 +17,9 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
                           tools::sparse_array<core::components::Position>::ptr positions,
                           tools::sparse_array<components::BoxCollider2D>::ptr colliders) {
   for (size_t i = 0; i < positions->size(); i++) {
+    if (!r->HasEntityAtIndex(i)) {
+      continue;
+    }
     if (!IndexHasRequiredComponents(i, rigidbodies, positions, colliders)) {
       continue;
     }

@@ -49,6 +49,9 @@ Entity Registry::EntityFromIndex(const std::size_t idx) const {
   if (entities_.size() < idx) {
     throw Exception("Entity not found");
   }
+  if (!entities_.at(idx).has_value()) {
+    throw Exception("Entity not found");
+  }
   return entities_.at(idx).value();
 }
 
