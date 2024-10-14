@@ -40,8 +40,8 @@ void EnemyFactory::CreateScript(zygarde::Registry::Const_Ptr registry, const Ent
   valuesMap["basePosition"] = basePosition->point;
   valuesMap["health"] = 50;
   valuesMap["goingUp"] = true;
-  valuesMap["upperLimit"] = basePosition->point.y + 10.0f;
-  valuesMap["lowerLimit"] = basePosition->point.y - 10.0f;
+  valuesMap["upperLimit"] = basePosition->point.x + 30.0f;
+  valuesMap["lowerLimit"] = basePosition->point.x - 30.0f;
 
   scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
   scripting::types::FixedUpdateFunction fixedUpdate = FixedUpdate;
@@ -81,16 +81,16 @@ void EnemyFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr cont
   if (!position || !rb) {
     return;
   }
-  if (position->point.y >= upperLimit) {
+  if (position->point.x >= upperLimit) {
     goingUp = false;
-  } else if (position->point.y <= lowerLimit) {
+  } else if (position->point.x <= lowerLimit) {
     goingUp = true;
   }
-  float verticalSpeed = 5.0f;
+  float verticalSpeed = 20.0f;
   if (goingUp) {
-    rb->SetVelocity({0, verticalSpeed});
+    rb->SetVelocity({verticalSpeed, 0});
   } else {
-    rb->SetVelocity({0, -verticalSpeed});
+    rb->SetVelocity({-verticalSpeed, 0});
   }
   (*context->values)["goingUp"] = goingUp;
 }

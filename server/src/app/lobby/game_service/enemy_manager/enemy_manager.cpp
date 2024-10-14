@@ -13,14 +13,14 @@
 void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &deltaTime,
                                                zygarde::Registry::Const_Ptr registry) {
   accumulatedTime_ += deltaTime;
-  if (accumulatedTime_ < std::chrono::milliseconds(1000)) {
+  if (accumulatedTime_ < std::chrono::milliseconds(4000)) {
     return;
   }
   accumulatedTime_ = std::chrono::milliseconds(0);
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<float> dist(100.0f, 800.0f);
+  std::uniform_real_distribution<float> dist(80.0f, 1000.0f);
 
-  zygarde::core::types::Vector3f position(500, dist(gen), 0);
+  zygarde::core::types::Vector3f position(1400, dist(gen), 0);
   EnemyFactory::CreateEnemy(registry, position, sdk::game::types::EnemyType::kPata);
 }

@@ -56,7 +56,7 @@ int GameService::Run(uint64_t lobbyId, std::shared_ptr<rtype::sdk::game::api::Se
 }
 
 void GameService::ExecuteGameLogic() {
-  // enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+  enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
   registry_->RunSystems();
   registry_->CleanupDestroyedEntities();
 }
@@ -135,7 +135,6 @@ void GameService::SendStates() {
     auto tags = registry_->GetComponent<zygarde::core::components::Tags>(ent);
     if (*tags == rtype::sdk::game::constants::kPlayerTag) {
       rtype::sdk::game::api::payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
-      std::cout << "====> PLAYER POSITION" << vec.x << " " << vec.y << std::endl;
       states.push_back(state);
     }
     if (*tags == rtype::sdk::game::constants::kEnemyTag) {
