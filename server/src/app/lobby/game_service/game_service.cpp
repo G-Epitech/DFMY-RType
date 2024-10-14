@@ -108,7 +108,8 @@ void GameService::HandleMessages() {
 }
 
 void GameService::NewPlayer(std::uint64_t playerId) {
-  Entity player = PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(487, 100, 0), {96, 48});
+  Entity player =
+      PlayerFactory::CreatePlayer(registry_, core::types::Vector3f(487, 100, 0), {96, 48});
 
   players_.insert({playerId, player});
   logger_.Info("Player " + std::to_string(playerId) + " joined the game", "❇️");
