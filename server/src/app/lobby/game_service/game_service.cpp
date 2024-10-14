@@ -127,10 +127,12 @@ void GameService::SendStates() {
     }
     auto val = component.value();
     if (!registry_->HasEntityAtIndex(i)) {
-      continue;
+      break;
     }
     auto ent = registry_->EntityFromIndex(i);
     rtype::sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
+    std::cout << "Entity: " << static_cast<std::size_t>(ent) << " Position: " << vec.x << " "
+              << vec.y << std::endl;
     auto tags = registry_->GetComponent<zygarde::core::components::Tags>(ent);
     if (*tags == rtype::sdk::game::constants::kPlayerTag) {
       rtype::sdk::game::api::payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};

@@ -180,7 +180,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   size_t currentMaxEntityId_ = 0;
 
   /// @brief Entities stored
-  std::vector<Entity> entities_;
+  std::vector<std::optional<Entity>> entities_;
 
   /// @brief Free ids available for entities
   std::stack<std::size_t> freeIds_;
