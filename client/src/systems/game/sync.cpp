@@ -76,7 +76,7 @@ void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry, con
                           core::components::VerticalAlign::kTop}});
   registry->AddComponent<components::Drawable>(
       bullet, {
-                  .drawable = components::Texture{.name = "bullet", .scale = 3, .rect = base},
+                  .drawable = components::Texture{.name = "enemy", .scale = 3, .rect = base},
               });
   bullets_.insert_or_assign(id, bullet);
 }

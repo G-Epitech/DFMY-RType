@@ -32,7 +32,7 @@ zygarde::Entity ProjectileFactory::CreateProjectile(
   }
 
   registry->AddComponent<zygarde::physics::components::Rigidbody2D>(
-      projectile, zygarde::physics::components::Rigidbody2D(direction));
+      projectile, zygarde::physics::components::Rigidbody2D(direction * 70));
   registry->AddComponent<zygarde::core::components::Position>(projectile, {position});
   registry->AddComponent<zygarde::physics::components::BoxCollider2D>(projectile,
                                                                       {box_size, collidesWith});
@@ -53,6 +53,18 @@ void ProjectileFactory::CreateScript(zygarde::Registry::Const_Ptr registry, cons
 
 void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                         const physics::types::Collision2D::ptr& collision) {
+
+  auto entity = collision->otherEntity;
+  auto otherEntityTag = context->registry->GetComponent<zygarde::core::components::Tags>(entity);
+  if (!otherEntityTag) {
+    return;
+  }
+  if (*otherEntityTag == rtype::sdk::game::constants::kPlayerBulletTag) {
+    return;
+  }
+  if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
+    return;
+  }          
   context->registry->DestroyEntity(context->me);
   std::cout << "I died" << std::endl;
 }
