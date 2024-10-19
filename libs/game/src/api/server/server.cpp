@@ -223,3 +223,7 @@ bool Server::SendBulletsState(const uint64_t &lobbyId,
 
   return success;
 }
+
+void Server::Join() {
+  this->threadTCP_.join();
+}

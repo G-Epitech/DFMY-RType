@@ -11,7 +11,7 @@
 
 using namespace rtype::server;
 
-Master::Master(const BaseContext& ctx) : ctx_() {
+Master::Master(const BaseContext &ctx) : ctx_(), api_(static_cast<int>(ctx_.port)) {
   ctx_ = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,
@@ -19,10 +19,6 @@ Master::Master(const BaseContext& ctx) : ctx_() {
 }
 
 int Master::Run() {
-  std::cout << ctx_.name << std::endl;
-  std::cout << ctx_.port << std::endl;
-  std::cout << ctx_.type << std::endl;
-  std::cout << ctx_.props.ticks << std::endl;
-  std::cout << ctx_.props.maxGames << std::endl;
+  api_.Join();
   return EXIT_SUCCESS;
 }

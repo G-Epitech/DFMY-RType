@@ -110,6 +110,11 @@ class rtype::sdk::game::api::Server {
   bool SendBulletsState(const std::uint64_t &lobbyId,
                         const std::vector<payload::BulletState> &state);
 
+  /**
+   * @biref Wait the end of threads
+   */
+  void Join();
+
  private:
   /**
    * @brief Initialize the TCP connection
