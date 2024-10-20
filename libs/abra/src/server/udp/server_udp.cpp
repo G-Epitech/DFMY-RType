@@ -12,8 +12,12 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-ServerUDP::ServerUDP(const std::uint64_t &port)
-    : socket_(ios_, ip::udp::endpoint(ip::udp::v4(), port)), buffer_(), logger_("server_udp") {}
+ServerUDP::ServerUDP()
+    : socket_(ios_), buffer_(), logger_("server_udp") {
+  this->socket_.open(ip::udp::v4());
+  ip::udp::endpoint localEndpoint(ip::udp::v4(), 0);
+  this->socket_.bind(localEndpoint);
+}
 
 ServerUDP::~ServerUDP() {
   this->Close();
