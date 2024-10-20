@@ -23,6 +23,10 @@ enum MessageServerType {
   kServerJoinLobbyInfos,  ///< Join lobby infos message (udp endpoint) - TCP
   kGameStart,             ///< Game start message - TCP
   kGameEnd,               ///< Game end message - TCP
+};
+
+/// @brief Enum representing the packet messages types (lobby messages)
+enum MessageLobbyType {
   kEnemiesState,          ///< Enemy state message (list) - UDP
   kPlayersState,          ///< Player state message (list) - UDP
   kBulletsState,          ///< Bullet state message (list) - UDP

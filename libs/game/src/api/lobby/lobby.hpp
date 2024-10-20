@@ -42,33 +42,11 @@ class rtype::sdk::game::api::Lobby {
   };
 
   /**
-   * @brief Initialize the TCP connection
-   */
-  void InitTCP();
-
-  /**
-   * @brief Start the TCP connection (run the IO service)
-   */
-  void ListenTCP();
-
-  /**
-   * @brief Initialize the UDP connection
-   */
-  void InitUDP();
-
-  /**
-   * @brief Start the UDP connection (run the IO context)
-   */
-  void ListenUDP();
-
-  /**
    * @brief Extract queue of messages
    * @warning The queue is cleared after the extraction
-   * @param id The lobby id
    * @return The queue of messages
    */
-  [[nodiscard]] std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> ExtractQueue(
-      std::uint64_t id);
+  [[nodiscard]] std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> ExtractQueue();
 
   /**
    * @brief Send state of players to all clients in a lobby
@@ -92,11 +70,67 @@ class rtype::sdk::game::api::Lobby {
   bool SendBulletsState(const std::vector<payload::BulletState> &state);
 
  private:
+  /**
+   * @brief Initialize the TCP connection
+   */
+  void InitTCP();
+
+  /**
+   * @brief Start the TCP connection (run the IO service)
+   */
+  void ListenTCP();
+
+  /**
+   * @brief Initialize the UDP connection
+   */
+  void InitUDP();
+
+  /**
+   * @brief Start the UDP connection (run the IO context)
+   */
+  void ListenUDP();
+
+  /**
+   * @brief Handle the incoming TCP messages
+   * @return true if the message must be added to the queue (false if the message is handled)
+   */
+  [[nodiscard]] bool SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Find a user by endpoint
+   * @param endpoint The endpoint of the user
+   * @return The user id
+   */
+  [[nodiscard]] std::uint64_t FindUserByEndpoint(const boost::asio::ip::udp::endpoint &endpoint);
+
+  /**
+   * @brief Send a payload to the main server (TCP)
+   * @tparam T The type of the payload
+   * @param type The type of the message
+   * @param payload The payload to send
+   * @return true if the message is sent
+   */
+  template <typename T>
+  bool SendPayloadTCP(const MessageLobbyType &type, const T &payload);
+
+  /**
+   * @brief Send a payload to all clients (UDP)
+   * @tparam T The type of the payload
+   * @param type The type of the message
+   * @param payload The payload to send
+   * @return true if the message is sent
+   */
+  template <typename T>
+  bool SendPayloadsUDP(const MessageLobbyType &type, const T &payload);
+
   /// @brief The ABRA Server TCP instance
   abra::server::ServerTCP serverTCP_;
 
   /// @brief The TCP thread
   std::thread threadTCP_;
+
+  /// @brief The master server id (for TCP communication)
+  std::uint64_t masterId_;
 
   /// @brief The ABRA Server UDP instance for game communication
   abra::server::ServerUDP serverUDP_;
@@ -104,9 +138,14 @@ class rtype::sdk::game::api::Lobby {
   /// @brief The UDP thread
   std::thread threadUDP_;
 
+  /// @brief Packet builder
+  abra::tools::PacketBuilder packetBuilder_;
+
   /// @brief The list of clients connected to the lobby
-  std::vector<LobbyClient> clients;
+  std::vector<LobbyClient> clients_;
 
   /// @brief The logger
   abra::tools::Logger logger_;
 };
+
+#include "libs/game/src/api/lobby/lobby.tpp"
