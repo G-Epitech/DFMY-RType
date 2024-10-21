@@ -13,6 +13,7 @@
 #include "factories/player_factory.hpp"
 #include "factories/projectile_factory.hpp"
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
+#include "libs/zygarde/src/scripting/components/script/script.hpp"
 
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
@@ -47,7 +48,7 @@ int GameService::Run(const uint64_t lobby_id, std::shared_ptr<Server> api) {
 }
 
 void GameService::ExecuteGameLogic() {
-  enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+  // enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
   registry_->RunSystems();
   registry_->CleanupDestroyedEntities();
 }
@@ -56,43 +57,52 @@ void GameService::HandleMessages() {
   auto messages = api_->ExtractLobbyQueue(lobbyId_);
 
   while (!messages.empty()) {
-    auto &message = messages.front();
-    auto playerId = message.first;
-    auto &data = message.second;
+    auto &[playerId, data] = messages.front();
 
-    if (data.messageType == MessageClientType::kMovement) {
-      auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
-      auto move = packet->GetPayload();
-
-      auto player = players_.find(playerId);
-      if (player != players_.end()) {
-        auto &playerEntity = player->second;
-        auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
-
-        if (!rigidBody) {
-          continue;
-        }
-
-        core::types::Vector2f direction = {move.direction.x, move.direction.y};
-        rigidBody->SetVelocity(direction * 200);
-      }
-
-      logger_.Info("Player " + std::to_string(playerId) + " moved", "🏃‍");
-    }
-
-    if (data.messageType == MessageClientType::kShoot) {
-      auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
-
-      auto player = players_.find(playerId);
-      if (player != players_.end()) {
-        auto &playerEntity = player->second;
-        auto position = registry_->GetComponent<core::components::Position>(playerEntity);
-
-        ProjectileFactory::CreateProjectile(registry_, position->point, {10, 10},
-                                            sdk::game::types::GameEntityType::kPlayer);
-      }
-    }
+    HandlePlayerMessage(playerId, data);
     messages.pop();
+  }
+}
+
+void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
+                                      const abra::server::ClientUDPMessage &data) {
+  if (data.messageType == kMovement) {
+    HandlePlayerMoveMessage(player_id, data);
+  }
+  if (data.messageType == kShoot) {
+    HandlePlayerShootMessage(player_id, data);
+  }
+}
+
+void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
+                                          const abra::server::ClientUDPMessage &data) {
+  const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
+  auto &[entityId, direction] = packet->GetPayload();
+
+  if (const auto player = players_.find(player_id); player != players_.end()) {
+    const auto &playerEntity = player->second;
+    const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
+
+    if (!rigidBody) {
+      return;
+    }
+
+    const core::types::Vector2f newDir = {direction.x, direction.y};
+    rigidBody->SetVelocity(newDir * 200);
+  }
+
+  logger_.Info("Player " + std::to_string(player_id) + " moved", "🏃‍");
+}
+
+void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
+                                           const abra::server::ClientUDPMessage &data) {
+  auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
+
+  if (const auto player = players_.find(player_id); player != players_.end()) {
+    const auto &playerEntity = player->second;
+    const auto script = registry_->GetComponent<scripting::components::Script>(playerEntity);
+
+    script->SetValue("shoot", true);
   }
 }
 

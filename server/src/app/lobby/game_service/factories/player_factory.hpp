@@ -28,5 +28,7 @@ class PlayerFactory {
 
   static void HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                               const physics::types::Collision2D::ptr &collision);
+
+  static void FixedUpdate(scripting::types::ScriptingContext::ConstPtr context);
 };
 }  // namespace rtype::server::game

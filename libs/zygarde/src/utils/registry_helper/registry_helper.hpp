@@ -10,12 +10,7 @@
 #include <memory>
 
 #include "api.hpp"
-#include "core/components/components.hpp"
-#include "physics/2d/components/components.hpp"
-#include "physics/2d/systems/systems.hpp"
 #include "registry.hpp"
-#include "scripting/components/script/script.hpp"
-#include "scripting/systems/execution/script_execution_system.hpp"
 #include "utils/timer/timer.hpp"
 
 namespace zygarde::utils {
@@ -37,7 +32,7 @@ class EXPORT_ZYGARDE_API RegistryHelper final {
    * @param delta_time Reference to the delta time
    */
   static void RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
-                                  const utils::Timer::Nanoseconds &delta_time);
+                                  const Timer::Nanoseconds &delta_time);
 
  private:
   /**

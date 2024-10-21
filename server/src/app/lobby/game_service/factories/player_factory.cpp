@@ -10,7 +10,10 @@
 #include <iostream>
 
 #include "game/includes/constants.hpp"
+#include "game/includes/stats.hpp"
+#include "projectile_factory.hpp"
 #include "scripting/components/script/script.hpp"
+#include "types/weapons.hpp"
 
 using namespace rtype::server::game;
 
@@ -34,10 +37,17 @@ void PlayerFactory::CreateScript(Registry::Const_Ptr registry, const Entity &ent
   scripting::types::ValuesMap valuesMap;
 
   valuesMap["health"] = 100;
+  valuesMap["equippedWeapon"] = sdk::game::types::WeaponType::kBasic;
+  valuesMap["shootCooldown"] = duration_cast<std::chrono::nanoseconds>(
+      std::chrono::duration<float>(sdk::game::stats::WeaponBasic::fireRate));
+  valuesMap["lastShootTime"] = std::chrono::nanoseconds::zero();
+  valuesMap["shoot"] = false;
+
+  scripting::types::FixedUpdateFunction fixedUpdate = FixedUpdate;
   scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
 
-  registry->AddComponent<scripting::components::Script>(
-      entity, {onCollisionEnter, std::nullopt, valuesMap});
+  registry->AddComponent<scripting::components::Script>(entity,
+                                                        {onCollisionEnter, fixedUpdate, valuesMap});
 }
 
 void PlayerFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
@@ -57,4 +67,27 @@ void PlayerFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr
   if (playerHealth <= 0) {
     context->registry->DestroyEntity(context->me);
   }
+}
+
+void PlayerFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr context) {
+  auto shoot = std::any_cast<bool>(context->values->at("shoot"));
+  auto lastShootTime =
+      std::any_cast<std::chrono::nanoseconds>(context->values->at("lastShootTime"));
+  auto shootCooldown =
+      std::any_cast<std::chrono::nanoseconds>(context->values->at("shootCooldown"));
+
+  auto position = context->registry->GetComponent<core::components::Position>(context->me);
+  lastShootTime += context->deltaTime;
+
+  std::cout << "shoot: " << shoot << " lastShootTime: " << lastShootTime.count()
+            << " shootCooldown: " << shootCooldown.count() << std::endl;
+
+  if (shoot && lastShootTime >= shootCooldown) {
+    lastShootTime = utils::Timer::Nanoseconds::zero();
+    (*context->values)["shoot"] = false;
+    ProjectileFactory::CreateProjectile(context->registry, position->point, {5, 5},
+                                        sdk::game::types::GameEntityType::kPlayer);
+    return;
+  }
+  (*context->values)["lastShootTime"] = lastShootTime;
 }

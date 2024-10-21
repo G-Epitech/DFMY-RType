@@ -62,6 +62,15 @@ class GameService {
    */
   void HandleMessages();
 
+  void HandlePlayerMessage(const std::uint64_t &player_id,
+                           const abra::server::ClientUDPMessage &data);
+
+  void HandlePlayerMoveMessage(const std::uint64_t &player_id,
+                               const abra::server::ClientUDPMessage &data);
+
+  void HandlePlayerShootMessage(const std::uint64_t &player_id,
+                                const abra::server::ClientUDPMessage &data);
+
   /**
    * @brief Send stats to the server
    */
