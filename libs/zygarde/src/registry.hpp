@@ -35,7 +35,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   using Ptr = std::shared_ptr<Registry>;
   using Const_Ptr = const std::shared_ptr<Registry> &;
 
- public:
   explicit Registry(Private);
 
   /**
@@ -90,8 +89,18 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    */
   [[nodiscard]] Entity EntityFromIndex(std::size_t idx) const;
 
-  bool HasEntityAtIndex(std::size_t idx) const;
+  /**
+   * @brief Check if an entity exists at an index
+   * @param idx Index to check
+   * @return bool
+   */
+  [[nodiscard]] bool HasEntityAtIndex(std::size_t idx) const;
 
+  /**
+   * @brief Get the index of an entity
+   * @param e Entity to get the index from
+   * @return std::size_t
+   */
   [[nodiscard]] std::size_t IndexFromEntity(Entity const &e) const;
 
   /**

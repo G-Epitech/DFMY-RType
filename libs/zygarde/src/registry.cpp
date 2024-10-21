@@ -64,12 +64,14 @@ void Registry::KillEntity(Entity const &e) {
 }
 
 std::size_t Registry::IndexFromEntity(const Entity &e) const {
-  for (std::size_t i = 0; i < entities_.size(); i++) {
-    if (entities_.at(i) == e) {
-      return i;
-    }
+  const auto index = e.GetId();
+  if (index >= entities_.size()) {
+    throw Exception("Entity not found");
   }
-  throw Exception("Entity not found");
+  if (!entities_.at(index).has_value()) {
+    throw Exception("Entity not found");
+  }
+  return index;
 }
 
 void Registry::DestroyEntity(const Entity &e) {
