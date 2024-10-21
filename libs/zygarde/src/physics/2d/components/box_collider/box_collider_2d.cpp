@@ -15,8 +15,9 @@ BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size) : size_(size), c
   core::types::Vector2f::throw_if_negative(size);
 }
 
-BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size, std::vector<int> collision_layers)
-    : size_(size), collider_(std::move(collision_layers)) {
+BoxCollider2D::BoxCollider2D(const core::types::Vector2f& size, std::vector<int> collision_layers,
+                             std::vector<int> include_layers)
+    : size_(size), collider_(std::move(collision_layers), std::move(include_layers)) {
   core::types::Vector2f::throw_if_negative(size);
 }
 

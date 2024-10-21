@@ -9,12 +9,13 @@
 
 #include <utility>
 
+#include "constants/tags.hpp"
 #include "factories/player_factory.hpp"
 #include "factories/projectile_factory.hpp"
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 using namespace rtype::server::game;
-using namespace sdk::game::api;
+using namespace rtype::sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
     : ticksManager_{tick_rate}, enemyManager_(), lobbyId_(0), logger_("game-service") {}

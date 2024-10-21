@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "game/includes/constants.hpp"
 #include "zygarde/src/core/components/components.hpp"
 #include "zygarde/src/entity.hpp"
 #include "zygarde/src/physics/2d/components/components.hpp"
@@ -21,14 +20,13 @@ class PlayerFactory {
   PlayerFactory() = delete;
   ~PlayerFactory() = delete;
 
-  static zygarde::Entity CreatePlayer(zygarde::Registry::Const_Ptr registry,
-                                      const zygarde::core::types::Vector3f &position,
-                                      const zygarde::core::types::Vector2f &box_size);
+  static Entity CreatePlayer(Registry::Const_Ptr registry, const core::types::Vector3f &position,
+                             const core::types::Vector2f &box_size);
 
  private:
-  static void CreateScript(zygarde::Registry::Const_Ptr registry, const zygarde::Entity &entity);
+  static void CreateScript(Registry::Const_Ptr registry, const Entity &entity);
 
-  static void HandleCollision(zygarde::scripting::types::ScriptingContext::ConstPtr context,
+  static void HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                               const physics::types::Collision2D::ptr &collision);
 };
 }  // namespace rtype::server::game

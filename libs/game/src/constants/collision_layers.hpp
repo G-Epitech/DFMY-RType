@@ -20,8 +20,19 @@ enum CollisionLayers {
 };
 
 /// @brief Player collision layers
-static const std::vector<int> kPlayerCollidesWith = {kEnemy, kEnemyBullet, kPowerUp, kPlayer};
+static const std::vector<int> kPlayerCollisionLayers = {kPlayer};
+static const std::vector<int> kPlayerIncludeLayers = {kEnemy, kEnemyBullet, kPowerUp};
 
 /// @brief Enemy collision layers
-static const std::vector<int> kEnemyCollidesWith = {kPlayer, kPlayerBullet};
+static const std::vector<int> kEnemyCollisionLayers = {kEnemy};
+static const std::vector<int> kEnemyIncludeLayers = {kPlayer, kPlayerBullet};
+
+/// @brief Enemy bullet collision layers
+static const std::vector<int> kEnemyBulletCollisionLayers = {kEnemyBullet};
+static const std::vector<int> kEnemyBulletIncludeLayers = {kPlayer};
+
+/// @brief Player bullet collision layers
+static const std::vector<int> kPlayerBulletCollisionLayers = {kPlayerBullet};
+static const std::vector<int> kPlayerBulletIncludeLayers = {kEnemy};
+
 }  // namespace rtype::sdk::game::constants

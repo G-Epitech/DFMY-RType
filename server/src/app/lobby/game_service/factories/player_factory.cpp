@@ -9,32 +9,34 @@
 
 #include <iostream>
 
+#include "game/includes/constants.hpp"
 #include "scripting/components/script/script.hpp"
 
 using namespace rtype::server::game;
 
-zygarde::Entity PlayerFactory::CreatePlayer(zygarde::Registry::Const_Ptr registry,
-                                            const zygarde::core::types::Vector3f &position,
-                                            const zygarde::core::types::Vector2f &box_size) {
+Entity PlayerFactory::CreatePlayer(Registry::Const_Ptr registry,
+                                   const core::types::Vector3f &position,
+                                   const core::types::Vector2f &box_size) {
   Entity player = registry->SpawnEntity();
 
-  registry->AddComponent<zygarde::physics::components::Rigidbody2D>(player, {});
-  registry->AddComponent<zygarde::core::components::Position>(player, {position});
-  registry->AddComponent<zygarde::physics::components::BoxCollider2D>(
-      player, {box_size, sdk::game::constants::kPlayerCollidesWith});
-  registry->AddComponent<zygarde::core::components::Tags>(
-      player, zygarde::core::components::Tags({sdk::game::constants::kPlayerTag}));
+  registry->AddComponent<physics::components::Rigidbody2D>(player, {});
+  registry->AddComponent<core::components::Position>(player, {position});
+  registry->AddComponent<physics::components::BoxCollider2D>(
+      player, {box_size, sdk::game::constants::kPlayerCollisionLayers,
+               sdk::game::constants::kPlayerIncludeLayers});
+  registry->AddComponent<core::components::Tags>(
+      player, core::components::Tags({sdk::game::constants::kPlayerTag}));
   CreateScript(registry, player);
   return player;
 }
 
-void PlayerFactory::CreateScript(zygarde::Registry::Const_Ptr registry, const Entity &entity) {
-  zygarde::scripting::types::ValuesMap valuesMap;
+void PlayerFactory::CreateScript(Registry::Const_Ptr registry, const Entity &entity) {
+  scripting::types::ValuesMap valuesMap;
 
   valuesMap["health"] = 100;
   scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
 
-  registry->AddComponent<zygarde::scripting::components::Script>(
+  registry->AddComponent<scripting::components::Script>(
       entity, {onCollisionEnter, std::nullopt, valuesMap});
 }
 
@@ -43,7 +45,7 @@ void PlayerFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr
   auto playerHealth = std::any_cast<int>(context->values->at("health"));
   auto rb = collision.get()->otherRigidbody;
   auto entity = collision.get()->otherEntity;
-  auto otherEntityTag = context->registry->GetComponent<zygarde::core::components::Tags>(entity);
+  auto otherEntityTag = context->registry->GetComponent<core::components::Tags>(entity);
   if (!otherEntityTag) {
     return;
   }
