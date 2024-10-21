@@ -32,7 +32,7 @@ std::uint64_t Server::CreateLobby(const std::string &name, uint64_t port) {
              .clientTCP = std::make_unique<abra::client::ClientTCP>(kLocalhost, port)});
 
   payload::RegisterLobby registerPayload = {
-          .lobbyId = static_cast<unsigned int>(lobbyId),
+      .lobbyId = static_cast<unsigned int>(lobbyId),
   };
   if (SendPayloadLobbyTCP(MessageServerType::kRegisterLobby, registerPayload, lobbyId)) {
     logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");

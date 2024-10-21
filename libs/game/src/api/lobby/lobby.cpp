@@ -9,16 +9,19 @@
 
 using namespace rtype::sdk::game::api;
 
-Lobby::Lobby(int port)
+Lobby::Lobby(int port, std::function<void(std::uint64_t)> &newPlayerHandler)
     : serverTCP_(port,
                  [this](const abra::server::ClientTCPMessage &message) {
                    return this->SystemTCPMessagesMiddleware(message);
                  }),
       serverUDP_(),
       logger_("lobbyAPI"),
-      masterId_(0) {
+      masterId_(0),
+      lobbyId_(0) {
   this->InitTCP();
   this->InitUDP();
+
+  this->newPlayerHandler_ = newPlayerHandler;
 }
 
 Lobby::~Lobby() {
@@ -89,5 +92,40 @@ bool Lobby::SendBulletsState(const std::vector<payload::BulletState> &state) {
 }
 
 bool Lobby::SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message) {
-  return true;
+  if (handlers_.find(message.messageType) == handlers_.end()) {
+    return true;
+  }
+
+  logger_.Info("Handling message (middleware catch)", "🔧");
+  (this->*(handlers_[message.messageType]))(message);
+
+  return false;
+}
+
+void Lobby::HandleMasterConnection(const server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RegisterLobby>(message.bitset);
+
+  this->masterId_ = message.clientId;
+  this->lobbyId_ = packet->GetPayload().lobbyId;
+
+  auto port = this->serverUDP_.GetEndpoint().port;
+  payload::LobbyInfos lobbyInfos = {.port = port};
+
+  SendPayloadTCP(MessageLobbyType::kLobbyInfos, lobbyInfos);
+
+  logger_.Info("Master connected", "👑");
+}
+
+void Lobby::HandleNewUser(const server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::UserJoinLobby>(message.bitset);
+  auto ip = packet->GetPayload().ip;
+  auto port = packet->GetPayload().port;
+
+  this->clients_.push_back({.id = message.clientId,
+                            .endpoint = boost::asio::ip::udp::endpoint(
+                                boost::asio::ip::address::from_string(ip), port)});
+
+  this->newPlayerHandler_(message.clientId);
+
+  logger_.Info("New user connected: " + std::to_string(message.clientId), "👤");
 }

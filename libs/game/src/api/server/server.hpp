@@ -104,7 +104,7 @@ class rtype::sdk::game::api::Server {
    */
   template <typename T>
   bool SendPayloadLobbyTCP(const MessageServerType &type, const T &payload,
-                      const std::uint64_t &lobbyId);
+                           const std::uint64_t &lobbyId);
 
   /**
    * @brief Handle the incoming TCP messages

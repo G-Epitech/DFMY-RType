@@ -27,8 +27,9 @@ class rtype::sdk::game::api::Lobby {
   /**
    * @brief Construct a new Lobby API instance
    * @param port The port of the lobby (tcp communication with the master server)
+   * @param newPlayerHandler The handler for new players
    */
-  explicit Lobby(int port);
+  Lobby(int port, std::function<void(std::uint64_t)> &newPlayerHandler);
 
   /**
    * @brief Delete the Lobby API instance
@@ -123,6 +124,18 @@ class rtype::sdk::game::api::Lobby {
   template <typename T>
   bool SendPayloadsUDP(const MessageLobbyType &type, const T &payload);
 
+  /**
+   * @brief Handle the master connection
+   * @param message The message of the master
+   */
+  void HandleMasterConnection(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle a new user
+   * @param message The message of the master
+   */
+  void HandleNewUser(const abra::server::ClientTCPMessage &message);
+
   /// @brief The ABRA Server TCP instance
   abra::server::ServerTCP serverTCP_;
 
@@ -146,6 +159,19 @@ class rtype::sdk::game::api::Lobby {
 
   /// @brief The logger
   abra::tools::Logger logger_;
+
+  /// @brief This lobby id
+  std::uint64_t lobbyId_;
+
+  /// @brief Handler for new player (connection to lobby)
+  std::function<void(std::uint64_t)> newPlayerHandler_;
+
+  /// @brief Map of handlers for the TCP messages
+  static inline std::map<unsigned int, void (Lobby::*)(const abra::server::ClientTCPMessage &)>
+      handlers_ = {
+          {MessageServerType::kRegisterLobby, &Lobby::HandleMasterConnection},
+          {MessageServerType::kUserJoinLobby, &Lobby::HandleNewUser},
+  };
 };
 
 #include "libs/game/src/api/lobby/lobby.tpp"
