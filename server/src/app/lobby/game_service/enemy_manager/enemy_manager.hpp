@@ -17,7 +17,7 @@ class EnemyManager {
   EnemyManager() = default;
   ~EnemyManager() = default;
 
-  void Update(const zygarde::utils::Timer::Nanoseconds &deltaTime,
+  void Update(const zygarde::utils::Timer::Nanoseconds &delta_time,
               zygarde::Registry::Const_Ptr registry);
 
  private:

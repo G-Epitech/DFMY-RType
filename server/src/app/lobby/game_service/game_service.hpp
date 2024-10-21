@@ -33,13 +33,13 @@ class GameService {
    * @brief Run the game service
    * @return Status code
    */
-  int Run(uint64_t lobbyId, std::shared_ptr<rtype::sdk::game::api::Server> api);
+  int Run(const uint64_t lobby_id, std::shared_ptr<Server> api);
 
   /**
    * @brief Add a new player to the game
-   * @param playerId The player id
+   * @param player_id The player id
    */
-  void NewPlayer(std::uint64_t playerId);
+  void NewPlayer(std::uint64_t player_id);
 
  private:
   /**
@@ -65,7 +65,7 @@ class GameService {
   /**
    * @brief Send stats to the server
    */
-  void SendStates();
+  void SendStates() const;
 
  private:
   /// @brief Game running flag
@@ -73,18 +73,18 @@ class GameService {
   /// @brief Ticks manager for the game
   TicksManager ticksManager_;
   /// @brief Registry containing all entities
-  std::shared_ptr<zygarde::Registry> registry_;
+  std::shared_ptr<Registry> registry_;
   /// @brief Enemy manager
   EnemyManager enemyManager_;
   /// @brief Server network
-  std::shared_ptr<rtype::sdk::game::api::Server> api_;
+  std::shared_ptr<Server> api_;
   /// @brief Lobby id
   uint64_t lobbyId_;
   /// @brief Player list
-  std::map<std::uint64_t, zygarde::Entity> players_;
+  std::map<std::uint64_t, Entity> players_;
   /// @brief Packet builder
-  abra::tools::PacketBuilder packetBuilder_;
+  PacketBuilder packetBuilder_;
   /// @brief Logger
-  abra::tools::Logger logger_;
+  Logger logger_;
 };
 }  // namespace rtype::server::game

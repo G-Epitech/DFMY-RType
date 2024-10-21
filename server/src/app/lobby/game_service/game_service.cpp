@@ -7,27 +7,20 @@
 
 #include "game_service.hpp"
 
-#include <iostream>
-#include <thread>
 #include <utility>
 
-#include "factories/enemy_factory.hpp"
 #include "factories/player_factory.hpp"
 #include "factories/projectile_factory.hpp"
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 using namespace rtype::server::game;
-using namespace rtype::sdk::game::api;
+using namespace sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
-    : ticksManager_{tick_rate},
-      registry_(),
-      enemyManager_(),
-      logger_("game-service"),
-      lobbyId_(0) {}
+    : ticksManager_{tick_rate}, enemyManager_(), lobbyId_(0), logger_("game-service") {}
 
 void GameService::RegistrySetup() {
-  registry_ = zygarde::Registry::create();
+  registry_ = Registry::create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
 }
@@ -37,19 +30,16 @@ void GameService::Initialize() {
   RegistrySetup();
 }
 
-int GameService::Run(uint64_t lobbyId, std::shared_ptr<rtype::sdk::game::api::Server> api) {
-  this->lobbyId_ = lobbyId;
+int GameService::Run(const uint64_t lobby_id, std::shared_ptr<Server> api) {
+  this->lobbyId_ = lobby_id;
   this->api_ = std::move(api);
 
   Initialize();
-
   while (gameRunning_) {
     ticksManager_.Update();
-
     HandleMessages();
     ExecuteGameLogic();
     SendStates();
-
     ticksManager_.WaitUntilNextTick();
   }
   return EXIT_SUCCESS;
@@ -76,14 +66,13 @@ void GameService::HandleMessages() {
       auto player = players_.find(playerId);
       if (player != players_.end()) {
         auto &playerEntity = player->second;
-        auto rigidBody =
-            registry_->GetComponent<zygarde::physics::components::Rigidbody2D>(playerEntity);
+        auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
 
         if (!rigidBody) {
           continue;
         }
 
-        zygarde::core::types::Vector2f direction = {move.direction.x, move.direction.y};
+        core::types::Vector2f direction = {move.direction.x, move.direction.y};
         rigidBody->SetVelocity(direction * 200);
       }
 
@@ -92,12 +81,11 @@ void GameService::HandleMessages() {
 
     if (data.messageType == MessageClientType::kShoot) {
       auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
-      auto move = packet->GetPayload();
 
       auto player = players_.find(playerId);
       if (player != players_.end()) {
         auto &playerEntity = player->second;
-        auto position = registry_->GetComponent<zygarde::core::components::Position>(playerEntity);
+        auto position = registry_->GetComponent<core::components::Position>(playerEntity);
 
         ProjectileFactory::CreateProjectile(registry_, position->point, {10, 10},
                                             sdk::game::types::GameEntityType::kPlayer);
@@ -107,45 +95,44 @@ void GameService::HandleMessages() {
   }
 }
 
-void GameService::NewPlayer(std::uint64_t playerId) {
+void GameService::NewPlayer(std::uint64_t player_id) {
   Entity player = PlayerFactory::CreatePlayer(
-      registry_, core::types::Vector3f(487.0f, 100.0f + (100.0f * playerId), 0), {96, 48});
+      registry_, core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0), {96, 48});
 
-  players_.insert({playerId, player});
-  logger_.Info("Player " + std::to_string(playerId) + " joined the game", "❇️");
+  players_.insert({player_id, player});
+  logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
 }
 
-void GameService::SendStates() {
-  auto components = registry_->GetComponents<zygarde::core::components::Position>();
+void GameService::SendStates() const {
+  const auto components = registry_->GetComponents<core::components::Position>();
   std::size_t i = 0;
-  std::vector<rtype::sdk::game::api::payload::PlayerState> states;
-  std::vector<rtype::sdk::game::api::payload::EnemyState> enemyStates;
-  std::vector<rtype::sdk::game::api::payload::BulletState> bulletStates;
+  std::vector<payload::PlayerState> states;
+  std::vector<payload::EnemyState> enemyStates;
+  std::vector<payload::BulletState> bulletStates;
+
   for (auto &component : *components) {
     if (!component.has_value()) {
       continue;
     }
-    auto val = component.value();
+    const auto val = component.value();
     if (!registry_->HasEntityAtIndex(i)) {
       break;
     }
     auto ent = registry_->EntityFromIndex(i);
-    rtype::sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
-    std::cout << "Entity: " << static_cast<std::size_t>(ent) << " Position: " << vec.x << " "
-              << vec.y << std::endl;
-    auto tags = registry_->GetComponent<zygarde::core::components::Tags>(ent);
-    if (*tags == rtype::sdk::game::constants::kPlayerTag) {
-      rtype::sdk::game::api::payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
+    const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
+    const auto tags = registry_->GetComponent<core::components::Tags>(ent);
+    if (*tags == sdk::game::constants::kPlayerTag) {
+      payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
       states.push_back(state);
     }
-    if (*tags == rtype::sdk::game::constants::kEnemyTag) {
-      rtype::sdk::game::api::payload::EnemyState state = {
-          static_cast<std::size_t>(ent), vec, rtype::sdk::game::types::EnemyType::kPata, 100};
+    if (*tags == sdk::game::constants::kEnemyTag) {
+      payload::EnemyState state = {static_cast<std::size_t>(ent), vec,
+                                   sdk::game::types::EnemyType::kPata, 100};
       enemyStates.push_back(state);
     }
-    if (*tags == rtype::sdk::game::constants::kPlayerBulletTag ||
-        *tags == rtype::sdk::game::constants::kEnemyBulletTag) {
-      rtype::sdk::game::api::payload::BulletState state = {static_cast<std::size_t>(ent), vec};
+    if (*tags == sdk::game::constants::kPlayerBulletTag ||
+        *tags == sdk::game::constants::kEnemyBulletTag) {
+      payload::BulletState state = {static_cast<std::size_t>(ent), vec};
       bulletStates.push_back(state);
     }
     i++;

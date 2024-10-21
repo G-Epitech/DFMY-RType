@@ -121,6 +121,10 @@ void Server::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message)
   auto ip = packet->GetPayload().ip;
   auto port = packet->GetPayload().port;
 
+  if (strcmp(ip, "0.0.0.0") == 0) {
+    ip = "127.0.0.1";
+  }
+
   this->clients_[message.clientId].inLobby = true;
   this->clients_[message.clientId].endpoint =
       boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ip), port);

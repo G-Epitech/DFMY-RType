@@ -21,8 +21,13 @@ ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
   ip::udp::endpoint localEndpoint(ip::udp::v4(), 0);
   this->socket_.bind(localEndpoint);
   uint16_t localPort = this->socket_.local_endpoint().port();
+  ip::udp::endpoint assignedEndpoint = socket_.local_endpoint();
 
-  this->logger_.Info("Client UDP started on port " + std::to_string(localPort));
+  std::string assignedAddress = assignedEndpoint.address().to_string();
+
+  // Log the assigned endpoint
+  this->logger_.Info("Bound to local endpoint: " + assignedAddress + ":");
+  this->logger_.Info("Client UDP started on port " + std::to_string(localPort) + "and adress");
 }
 
 ClientUDP::~ClientUDP() {
