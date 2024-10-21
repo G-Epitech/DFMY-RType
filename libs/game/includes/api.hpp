@@ -9,3 +9,4 @@
 
 #include "libs/game/src/api/server/server.hpp"
 #include "libs/game/src/api/client/client.hpp"
+#include "libs/game/src/api/lobby/lobby.hpp"

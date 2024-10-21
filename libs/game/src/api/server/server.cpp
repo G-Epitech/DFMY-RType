@@ -34,7 +34,8 @@ std::uint64_t Server::CreateLobby(const std::string &name, uint64_t port) {
         return this->SystemClientTCPMessagesMiddleware(message, lobbyId);
       });
 
-  this->lobbies_[lobbyId] = Lobby({.id = lobbyId, .name = name, .clientTCP = std::move(clientTCP), .enabled = false});
+  this->lobbies_[lobbyId] =
+      Lobby({.id = lobbyId, .name = name, .clientTCP = std::move(clientTCP), .enabled = false});
 
   payload::RegisterLobby registerPayload = {
       .lobbyId = static_cast<unsigned int>(lobbyId),
@@ -77,7 +78,8 @@ bool Server::SystemServerTCPMessagesMiddleware(const abra::server::ClientTCPMess
   return false;
 }
 
-bool Server::SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message, std::uint64_t lobbyId) {
+bool Server::SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message,
+                                               std::uint64_t lobbyId) {
   if (clientHandlers_.find(message.messageType) == clientHandlers_.end()) {
     return true;
   }

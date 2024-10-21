@@ -11,7 +11,7 @@
 
 using namespace rtype::server;
 
-Master::Master(const BaseContext &ctx) : ctx_(), api_(static_cast<int>(ctx_.port)) {
+Master::Master(const BaseContext &ctx) : ctx_(), api_(static_cast<int>(ctx.port)) {
   ctx_ = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,
@@ -19,6 +19,9 @@ Master::Master(const BaseContext &ctx) : ctx_(), api_(static_cast<int>(ctx_.port
 }
 
 int Master::Run() {
+  // LOBBY TEST UNTIL NODE SYSTEM (PLEASE START A LOBBY SERVER BEFORE)
+  api_.CreateLobby("lobby1", 30000);
+
   api_.Join();
   return EXIT_SUCCESS;
 }

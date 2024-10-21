@@ -9,7 +9,7 @@
 
 using namespace rtype::sdk::game::api;
 
-Lobby::Lobby(int port, std::function<void(std::uint64_t)> &newPlayerHandler)
+Lobby::Lobby(int port, const std::function<void(std::uint64_t)> &newPlayerHandler)
     : serverTCP_(port,
                  [this](const abra::server::ClientTCPMessage &message) {
                    return this->SystemTCPMessagesMiddleware(message);

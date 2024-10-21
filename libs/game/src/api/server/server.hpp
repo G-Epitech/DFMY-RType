@@ -132,7 +132,8 @@ class rtype::sdk::game::api::Server {
    * @brief Handle the incoming TCP messages
    * @return true if the message must be added to the queue (false if the message is handled)
    */
-  [[nodiscard]] bool SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message, std::uint64_t lobbyId);
+  [[nodiscard]] bool SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message,
+                                                       std::uint64_t lobbyId);
 
   /**
    * @brief Handle a client connection
@@ -192,7 +193,8 @@ class rtype::sdk::game::api::Server {
   };
 
   /// @brief Map of handlers for the TCP messages
-  static inline std::map<unsigned int, void (Server::*)(const abra::tools::MessageProps &, std::uint64_t lobbyId)>
+  static inline std::map<unsigned int,
+                         void (Server::*)(const abra::tools::MessageProps &, std::uint64_t lobbyId)>
       clientHandlers_ = {
           {MessageLobbyType::kLobbyInfos, &Server::HandleLobbyInfos},
   };

@@ -29,7 +29,7 @@ class rtype::sdk::game::api::Lobby {
    * @param port The port of the lobby (tcp communication with the master server)
    * @param newPlayerHandler The handler for new players
    */
-  Lobby(int port, std::function<void(std::uint64_t)> &newPlayerHandler);
+  Lobby(int port, const std::function<void(std::uint64_t)> &newPlayerHandler);
 
   /**
    * @brief Delete the Lobby API instance
