@@ -20,10 +20,7 @@ using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
-    : ticksManager_{tick_rate},
-      registry_(),
-      enemyManager_(),
-      logger_("game-service") {}
+    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {}
 
 void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::create();
