@@ -120,7 +120,7 @@ void Server::HandleLobbyJoin(const abra::server::ClientTCPMessage &message) {
   this->clients_[message.clientId].lobbyId = id;
 
   payload::JoinLobbyInfos joinInfos{};
-  strcpy(joinInfos.ip, this->lobbies_[id].ip);
+  snprintf(joinInfos.ip, sizeof(joinInfos.ip), "%s", this->lobbies_[id].ip);
   joinInfos.port = this->lobbies_[id].port;
 
   this->SendPayloadTCP(MessageServerType::kServerJoinLobbyInfos, joinInfos, message.clientId);
@@ -142,7 +142,7 @@ void Server::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message)
   payload::UserJoinLobby userJoinPayload = {
       .userId = static_cast<unsigned int>(message.clientId),
   };
-  strcpy(userJoinPayload.ip, ip);
+  snprintf(userJoinPayload.ip, sizeof(userJoinPayload.ip), "%s", ip);
   userJoinPayload.port = port;
 
   SendPayloadLobbyTCP(MessageServerType::kUserJoinLobby, userJoinPayload, lobbyId);
@@ -166,6 +166,6 @@ void Server::HandleLobbyInfos(const abra::tools::MessageProps &message, std::uin
   auto &infos = packet->GetPayload();
 
   lobby.enabled = true;
-  strcpy(lobby.ip, lobby.clientTCP->GetRemoteAddress().c_str());
+  snprintf(lobby.ip, sizeof(lobby.ip), "%s", lobby.clientTCP->GetRemoteAddress().c_str());
   lobby.port = infos.port;
 }
