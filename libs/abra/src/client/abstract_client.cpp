@@ -93,7 +93,7 @@ void AbstractClient::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset,
                                    tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
     logger_.Info("Store message with type " + std::to_string(message.messageType));
 
-    if (this->middleware_ != nullptr && this->middleware_(message)) {
+    if (this->middleware_ == nullptr || this->middleware_(message)) {
       std::unique_lock<std::mutex> lock(this->Mutex);
       this->queue_.push(message);
     }
