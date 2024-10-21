@@ -7,6 +7,7 @@
 
 #include "app/app.hpp"
 
+
 using namespace rtype::client;
 
 #if (defined(_WIN32) && !defined(DEBUG))

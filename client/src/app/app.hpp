@@ -104,8 +104,5 @@ class App {
 
   /// @brief App timer
   utils::Timer timer_;
-
-  /// @brief App logo
-  sf::Image logo_;
 };
 }  // namespace rtype::client
