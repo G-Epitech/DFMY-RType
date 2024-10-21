@@ -166,7 +166,7 @@ class rtype::sdk::game::api::Client {
    * @return The list of payloads
    */
   template <typename T>
-  std::vector<T> ResolvePayloads(MessageServerType type, const ServerMessage &message);
+  std::vector<T> ResolvePayloads(MessageLobbyType type, const ServerMessage &message);
 
   /**
    * @brief Wait for a message from the server

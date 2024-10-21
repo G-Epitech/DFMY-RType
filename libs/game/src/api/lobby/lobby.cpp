@@ -36,6 +36,24 @@ Lobby::~Lobby() {
   logger_.Info("Server UDP thread stopped", "🛑");
 }
 
+void Lobby::InitTCP() {
+  this->threadTCP_ = std::thread(&Lobby::ListenTCP, this);
+  logger_.Info("Server TCP thread started", "🚀");
+}
+
+void Lobby::ListenTCP() {
+  this->serverTCP_.Start();
+}
+
+void Lobby::InitUDP() {
+  this->threadUDP_ = std::thread(&Lobby::ListenUDP, this);
+  logger_.Info("Server UDP thread started", "🚀");
+}
+
+void Lobby::ListenUDP() {
+  this->serverUDP_.Start();
+}
+
 std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Lobby::ExtractQueue() {
   auto queue = this->serverUDP_.ExtractQueue();
   std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> extractedQueue;

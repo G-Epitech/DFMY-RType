@@ -42,7 +42,7 @@ bool api::Client::SendPayloadUDP(const MessageClientType &type, const T &payload
 }
 
 template <typename T>
-std::vector<T> api::Client::ResolvePayloads(MessageServerType type, const ServerMessage &message) {
+std::vector<T> api::Client::ResolvePayloads(MessageLobbyType type, const ServerMessage &message) {
   if (message.messageType != type) {
     return {};
   }

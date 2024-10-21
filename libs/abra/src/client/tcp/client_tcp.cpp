@@ -12,12 +12,15 @@
 using namespace abra::client;
 using namespace boost::asio;
 
-ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port)
+ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port,
+                     const std::function<bool(const tools::MessageProps &)> &middleware)
     : AbstractClient("client_tcp"), socket_(ios_) {
   ip::tcp::endpoint endpoint(ip::address::from_string(ip), port);
 
   socket_.connect(endpoint);
   logger_.Info("Connected to " + ip + ":" + std::to_string(port));
+
+  this->middleware_ = middleware;
 }
 
 ClientTCP::~ClientTCP() {
@@ -63,4 +66,8 @@ void ClientTCP::Close() {
   this->socket_.close();
 
   this->logger_.Info("Session closed");
+}
+
+std::string ClientTCP::GetRemoteAddress() const {
+  return socket_.remote_endpoint().address().to_string();
 }

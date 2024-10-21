@@ -49,6 +49,10 @@ class rtype::sdk::game::api::Server {
     std::uint64_t id;
     std::string name;
     std::unique_ptr<abra::client::ClientTCP> clientTCP;
+    std::thread thread;
+    bool enabled;
+    char ip[16];
+    std::uint64_t port;
   };
 
   /**
@@ -75,12 +79,23 @@ class rtype::sdk::game::api::Server {
   /**
    * @brief Initialize the TCP connection
    */
-  void InitTCP();
+  void InitServerTCP();
 
   /**
    * @brief Start the TCP connection (run the IO service)
    */
-  void ListenTCP();
+  void ListenServerTCP();
+
+  /**
+   * @brief Initialize the TCP connection (for a lobby)
+   * @param id The id of the lobby
+   */
+  void InitClientTCP(std::uint64_t id);
+
+  /**
+   * @brief Start the TCP connection (run the IO service) (for a lobby)
+   */
+  void ListenClientTCP(std::uint64_t id);
 
   /**
    * @brief Send a payload to a specific client (TCP)
@@ -110,7 +125,14 @@ class rtype::sdk::game::api::Server {
    * @brief Handle the incoming TCP messages
    * @return true if the message must be added to the queue (false if the message is handled)
    */
-  [[nodiscard]] bool SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message);
+  [[nodiscard]] bool SystemServerTCPMessagesMiddleware(
+      const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the incoming TCP messages
+   * @return true if the message must be added to the queue (false if the message is handled)
+   */
+  [[nodiscard]] bool SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message, std::uint64_t lobbyId);
 
   /**
    * @brief Handle a client connection
@@ -129,6 +151,12 @@ class rtype::sdk::game::api::Server {
    * @param message The message of the client
    */
   void HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the lobby infos
+   * @param message The message of the lobby
+   */
+  void HandleLobbyInfos(const abra::tools::MessageProps &message, std::uint64_t lobbyId);
 
   /**
    * @brief Add a new client to the server
@@ -157,10 +185,16 @@ class rtype::sdk::game::api::Server {
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Server::*)(const abra::server::ClientTCPMessage &)>
-      handlers_ = {
+      serverHandlers_ = {
           {MessageClientType::kConnection, &Server::HandleClientConnection},
           {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin},
           {MessageClientType::kClientJoinLobbyInfos, &Server::HandleLobbyAddPlayer},
+  };
+
+  /// @brief Map of handlers for the TCP messages
+  static inline std::map<unsigned int, void (Server::*)(const abra::tools::MessageProps &, std::uint64_t lobbyId)>
+      clientHandlers_ = {
+          {MessageLobbyType::kLobbyInfos, &Server::HandleLobbyInfos},
   };
 };
 
