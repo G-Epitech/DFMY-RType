@@ -18,6 +18,8 @@
 #include "libs/game/src/api/props/payload/payload.hpp"
 #include "libs/game/src/core.hpp"
 
+constexpr const char *kLocalhost = "127.0.0.1";
+
 namespace rtype::sdk::game::api {
 class EXPORT_GAME_SDK_API Server;
 }
@@ -46,14 +48,16 @@ class rtype::sdk::game::api::Server {
   struct Lobby {
     std::uint64_t id;
     std::string name;
+    std::unique_ptr<abra::client::ClientTCP> clientTCP;
   };
 
   /**
    * @brief Create a lobby that will generate a new UDP server
    * @param name Name of the lobby
+   * @param port TCP port of the lobby
    * @warning The handler will be async, please use a mutex when you access to your own resources
    */
-  std::uint64_t CreateLobby(const std::string &name);
+  std::uint64_t CreateLobby(const std::string &name, uint64_t port);
 
   /**
    * @brief Extract queue of messages
@@ -89,6 +93,18 @@ class rtype::sdk::game::api::Server {
   template <typename T>
   bool SendPayloadTCP(const MessageServerType &type, const T &payload,
                       const std::uint64_t &clientId);
+
+  /**
+   * @brief Send a payload to a specific lobby (TCP)
+   * @tparam T The type of the payload
+   * @param type The type of the message
+   * @param payload The payload to send
+   * @param lobbyId The lobby id
+   * @return true if the message is sent
+   */
+  template <typename T>
+  bool SendPayloadLobbyTCP(const MessageServerType &type, const T &payload,
+                      const std::uint64_t &lobbyId);
 
   /**
    * @brief Handle the incoming TCP messages

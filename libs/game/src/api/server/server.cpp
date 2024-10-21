@@ -23,12 +23,21 @@ Server::~Server() {
   logger_.Info("Server TCP thread stopped", "🛑");
 }
 
-std::uint64_t Server::CreateLobby(const std::string &name) {
+std::uint64_t Server::CreateLobby(const std::string &name, uint64_t port) {
   std::uint64_t lobbyId = this->lobbies_.size();
 
-  this->lobbies_[lobbyId] = Lobby({.id = lobbyId, .name = name});
+  this->lobbies_[lobbyId] =
+      Lobby({.id = lobbyId,
+             .name = name,
+             .clientTCP = std::make_unique<abra::client::ClientTCP>(kLocalhost, port)});
 
-  logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");
+  payload::RegisterLobby registerPayload = {
+          .lobbyId = static_cast<unsigned int>(lobbyId),
+  };
+  if (SendPayloadLobbyTCP(MessageServerType::kRegisterLobby, registerPayload, lobbyId)) {
+    logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");
+  }
+
   return lobbyId;
 }
 

@@ -9,9 +9,14 @@
 
 using namespace rtype::sdk::game::api;
 
-Lobby::Lobby(int port) : serverTCP_(port, [this](const abra::server::ClientTCPMessage &message) {
-  return this->SystemTCPMessagesMiddleware(message);
-}), serverUDP_(), logger_("lobbyAPI"), masterId_(0) {
+Lobby::Lobby(int port)
+    : serverTCP_(port,
+                 [this](const abra::server::ClientTCPMessage &message) {
+                   return this->SystemTCPMessagesMiddleware(message);
+                 }),
+      serverUDP_(),
+      logger_("lobbyAPI"),
+      masterId_(0) {
   this->InitTCP();
   this->InitUDP();
 }
@@ -43,9 +48,8 @@ std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Lobby::Extr
   return extractedQueue;
 }
 
-
 std::uint64_t Lobby::FindUserByEndpoint(const boost::asio::ip::udp::endpoint &endpoint) {
-  for (auto &client: this->clients_) {
+  for (auto &client : this->clients_) {
     if (client.endpoint.address().to_string() == endpoint.address().to_string() &&
         client.endpoint.port() == endpoint.port()) {
       return client.id;
