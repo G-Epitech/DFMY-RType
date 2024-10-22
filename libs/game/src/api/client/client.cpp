@@ -102,7 +102,12 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
                "🚪");
 
-  this->clientUDP_.emplace("127.0.0.1", payload.port);
+  std::string ip = payload.ip;
+  if (ip == "0.0.0.0") {
+    ip = kLocalhost;
+  }
+
+  this->clientUDP_.emplace(ip, payload.port);
   InitUDP();
 
   auto endpoint = this->clientUDP_->GetEndpoint();
