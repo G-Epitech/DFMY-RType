@@ -33,7 +33,7 @@ class GameService {
    * @brief Run the game service
    * @return Status code
    */
-  int Run(const uint64_t lobby_id, std::shared_ptr<Server> api);
+  int Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api);
 
   /**
    * @brief Add a new player to the game
@@ -79,20 +79,25 @@ class GameService {
  private:
   /// @brief Game running flag
   bool gameRunning_{true};
+
   /// @brief Ticks manager for the game
   TicksManager ticksManager_;
+
   /// @brief Registry containing all entities
-  std::shared_ptr<Registry> registry_;
+  std::shared_ptr<zygarde::Registry> registry_;
+
   /// @brief Enemy manager
   EnemyManager enemyManager_;
+
   /// @brief Server network
-  std::shared_ptr<Server> api_;
-  /// @brief Lobby id
-  uint64_t lobbyId_;
+  std::shared_ptr<rtype::sdk::game::api::Lobby> api_;
+
   /// @brief Player list
-  std::map<std::uint64_t, Entity> players_;
+  std::map<std::uint64_t, zygarde::Entity> players_;
+
   /// @brief Packet builder
-  PacketBuilder packetBuilder_;
+  abra::tools::PacketBuilder packetBuilder_;
+
   /// @brief Logger
   Logger logger_;
 };

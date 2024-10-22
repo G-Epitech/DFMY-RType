@@ -17,7 +17,7 @@ using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
-    : ticksManager_{tick_rate}, enemyManager_(), lobbyId_(0), logger_("game-service") {}
+    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {}
 
 void GameService::RegistrySetup() {
   registry_ = Registry::create();
@@ -30,8 +30,7 @@ void GameService::Initialize() {
   RegistrySetup();
 }
 
-int GameService::Run(const uint64_t lobby_id, std::shared_ptr<Server> api) {
-  this->lobbyId_ = lobby_id;
+int GameService::Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api) {
   this->api_ = std::move(api);
 
   Initialize();
@@ -52,7 +51,7 @@ void GameService::ExecuteGameLogic() {
 }
 
 void GameService::HandleMessages() {
-  auto messages = api_->ExtractLobbyQueue(lobbyId_);
+  auto messages = api_->ExtractQueue();
 
   while (!messages.empty()) {
     auto &[playerId, data] = messages.front();
@@ -148,9 +147,9 @@ void GameService::SendStates() const {
   }
 
   if (!states.empty())
-    this->api_->SendPlayersState(lobbyId_, states);
+    this->api_->SendPlayersState(states);
   if (!enemyStates.empty())
-    this->api_->SendEnemiesState(lobbyId_, enemyStates);
+    this->api_->SendEnemiesState(enemyStates);
   if (!bulletStates.empty())
-    this->api_->SendBulletsState(lobbyId_, bulletStates);
+    this->api_->SendBulletsState(bulletStates);
 }

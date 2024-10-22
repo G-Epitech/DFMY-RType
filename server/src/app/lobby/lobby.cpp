@@ -5,21 +5,17 @@
 ** lobby.cpp
 */
 
-#include "lobby.hpp"
+#include "./lobby.hpp"
 
 #include <iostream>
 
-using namespace rtype::server;
-
-Lobby::Lobby(const BaseContext &ctx)
+rtype::server::Lobby::Lobby(const BaseContext &ctx)
     : ctx_({ctx.name, ctx.port, ctx.type, std::get<LobbyCtxProps>(ctx.props)}),
-      api_(std::make_shared<rtype::sdk::game::api::Server>(ctx_.port)),
+      api_(std::make_shared<rtype::sdk::game::api::Lobby>(
+          ctx_.port, [this](std::uint64_t id) { this->gameService_.NewPlayer(id); })),
       gameService_(ctx_.props.ticks) {}
 
-int Lobby::Run() {
-  auto id =
-      api_->CreateLobby(ctx_.name, [this](std::uint64_t id) { this->gameService_.NewPlayer(id); });
-
-  gameService_.Run(id, api_);
+int rtype::server::Lobby::Run() {
+  gameService_.Run(api_);
   return EXIT_SUCCESS;
 }

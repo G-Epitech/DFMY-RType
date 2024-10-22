@@ -11,11 +11,14 @@
 
 #include "app/context.hpp"
 #include "app/server_interface.hpp"
+#include "libs/game/includes/api.hpp"
 #include "props.hpp"
 
 namespace rtype::server {
+class Master;
+}
 
-class Master final : public IServer {
+class rtype::server::Master final : public IServer {
  public:
   /**
    * @brief Construct a new Master object
@@ -44,8 +47,9 @@ class Master final : public IServer {
     MasterCtxProps props;
   };
 
- private:
   /// @brief Master server context
   Context ctx_;
+
+  /// @brief Server network
+  rtype::sdk::game::api::Server api_;
 };
-}  // namespace rtype::server

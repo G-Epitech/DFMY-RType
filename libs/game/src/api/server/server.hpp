@@ -18,6 +18,8 @@
 #include "libs/game/src/api/props/payload/payload.hpp"
 #include "libs/game/src/core.hpp"
 
+constexpr const char *kLocalhost = "127.0.0.1";
+
 namespace rtype::sdk::game::api {
 class EXPORT_GAME_SDK_API Server;
 }
@@ -43,95 +45,57 @@ class rtype::sdk::game::api::Server {
     boost::asio::ip::udp::endpoint endpoint;
   };
 
-  struct LobbyClient {
-    std::uint64_t id;
-    boost::asio::ip::udp::endpoint endpoint;
-  };
-
   struct Lobby {
     std::uint64_t id;
     std::string name;
-    std::unique_ptr<abra::server::ServerUDP> serverUDP;
-    std::vector<LobbyClient> clients;
+    std::unique_ptr<abra::client::ClientTCP> clientTCP;
     std::thread thread;
+    bool enabled;
+    char ip[16];
+    std::uint64_t port;
   };
 
   /**
    * @brief Create a lobby that will generate a new UDP server
    * @param name Name of the lobby
-   * @param newPlayerHandler Handler for new player
+   * @param port TCP port of the lobby
    * @warning The handler will be async, please use a mutex when you access to your own resources
    */
-  std::uint64_t CreateLobby(const std::string &name,
-                            const std::function<void(std::uint64_t)> &newPlayerHandler);
+  std::uint64_t CreateLobby(const std::string &name, uint64_t port);
 
   /**
    * @brief Extract queue of messages
-   * It's a mix of TCP and UDP messages
    * @warning The queue is cleared after the extraction
    * @return The queue of messages
    */
   [[nodiscard]] std::queue<abra::server::ClientTCPMessage> ExtractMainQueue();
 
   /**
-   * @brief Extract queue of messages of a lobby
-   * It's a mix of TCP and UDP messages
-   * @warning The queue is cleared after the extraction
-   * @param id The lobby id
-   * @return The queue of messages
+   * @biref Wait the end of threads
    */
-  [[nodiscard]] std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>>
-  ExtractLobbyQueue(std::uint64_t id);
-
-  /**
-   * @brief Send state of players to all clients in a lobby
-   * @param lobbyId The lobby id
-   * @param state The state of the players
-   * @return true if the message is sent
-   */
-  bool SendPlayersState(const std::uint64_t &lobbyId,
-                        const std::vector<payload::PlayerState> &state);
-
-  /**
-   * @brief Send state of players to all clients in a lobby
-   * @param lobbyId The lobby id
-   * @param state The state of the players
-   * @return true if the message is sent
-   */
-  bool SendEnemiesState(const std::uint64_t &lobbyId,
-                        const std::vector<payload::EnemyState> &state);
-
-  /**
-   * @brief Send state of players to all clients in a lobby
-   * @param lobbyId The lobby id
-   * @param state The state of the players
-   * @return true if the message is sent
-   */
-  bool SendBulletsState(const std::uint64_t &lobbyId,
-                        const std::vector<payload::BulletState> &state);
+  void Join();
 
  private:
   /**
    * @brief Initialize the TCP connection
    */
-  void InitTCP();
+  void InitServerTCP();
 
   /**
    * @brief Start the TCP connection (run the IO service)
    */
-  void ListenTCP();
+  void ListenServerTCP();
 
   /**
-   * @brief Initialize the UDP connection
-   * @param id The lobby id
+   * @brief Initialize the TCP connection (for a lobby)
+   * @param id The id of the lobby
    */
-  void InitUDP(std::uint64_t id);
+  void InitClientTCP(std::uint64_t id);
 
   /**
-   * @brief Start the UDP connection (run the IO context)
-   * @param id The lobby id
+   * @brief Start the TCP connection (run the IO service) (for a lobby)
    */
-  void ListenUDP(std::uint64_t id);
+  void ListenClientTCP(std::uint64_t id);
 
   /**
    * @brief Send a payload to a specific client (TCP)
@@ -145,15 +109,31 @@ class rtype::sdk::game::api::Server {
   bool SendPayloadTCP(const MessageServerType &type, const T &payload,
                       const std::uint64_t &clientId);
 
+  /**
+   * @brief Send a payload to a specific lobby (TCP)
+   * @tparam T The type of the payload
+   * @param type The type of the message
+   * @param payload The payload to send
+   * @param lobbyId The lobby id
+   * @return true if the message is sent
+   */
   template <typename T>
-  bool SendPayloadsToLobby(const MessageServerType &type, const std::vector<T> &payload,
+  bool SendPayloadLobbyTCP(const MessageServerType &type, const T &payload,
                            const std::uint64_t &lobbyId);
 
   /**
    * @brief Handle the incoming TCP messages
    * @return true if the message must be added to the queue (false if the message is handled)
    */
-  [[nodiscard]] bool SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message);
+  [[nodiscard]] bool SystemServerTCPMessagesMiddleware(
+      const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the incoming TCP messages
+   * @return true if the message must be added to the queue (false if the message is handled)
+   */
+  [[nodiscard]] bool SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message,
+                                                       std::uint64_t lobbyId);
 
   /**
    * @brief Handle a client connection
@@ -174,20 +154,17 @@ class rtype::sdk::game::api::Server {
   void HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message);
 
   /**
+   * @brief Handle the lobby infos
+   * @param message The message of the lobby
+   */
+  void HandleLobbyInfos(const abra::tools::MessageProps &message, std::uint64_t lobbyId);
+
+  /**
    * @brief Add a new client to the server
    * @param clientId The client id
    * @param pseudo The pseudo of the client
    */
   void AddNewClient(std::uint64_t clientId, const std::string &pseudo);
-
-  /**
-   * @brief Find a user by its endpoint
-   * @param lobbyId The lobby id
-   * @param endpoint The endpoint of the user
-   * @return The user id
-   */
-  [[nodiscard]] std::uint64_t FindUserByEndpoint(std::uint64_t lobbyId,
-                                                 const boost::asio::ip::udp::endpoint &endpoint);
 
   /// @brief The ABRA Server TCP instance (monitor)
   abra::server::ServerTCP serverTCP_;
@@ -207,15 +184,19 @@ class rtype::sdk::game::api::Server {
   /// @brief Map of lobbies
   std::map<std::uint64_t, Lobby> lobbies_;
 
-  /// @brief Handler for new player (connection to lobby)
-  std::function<void(std::uint64_t)> newPlayerHandler_;
-
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Server::*)(const abra::server::ClientTCPMessage &)>
-      handlers_ = {
+      serverHandlers_ = {
           {MessageClientType::kConnection, &Server::HandleClientConnection},
           {MessageClientType::kJoinLobby, &Server::HandleLobbyJoin},
           {MessageClientType::kClientJoinLobbyInfos, &Server::HandleLobbyAddPlayer},
+  };
+
+  /// @brief Map of handlers for the TCP messages
+  static inline std::map<unsigned int,
+                         void (Server::*)(const abra::tools::MessageProps &, std::uint64_t lobbyId)>
+      clientHandlers_ = {
+          {MessageLobbyType::kLobbyInfos, &Server::HandleLobbyInfos},
   };
 };
 

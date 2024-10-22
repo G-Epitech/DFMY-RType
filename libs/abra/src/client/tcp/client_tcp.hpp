@@ -22,7 +22,8 @@ class abra::client::ClientTCP final : public abra::client::AbstractClient {
    * @param ip The IP of the server (host)
    * @param port The port of the server
    */
-  ClientTCP(const std::string &ip, const std::uint32_t &port);
+  ClientTCP(const std::string &ip, const std::uint32_t &port,
+            const std::function<bool(const tools::MessageProps &)> &middleware);
 
   ~ClientTCP() override;
 
@@ -49,6 +50,12 @@ class abra::client::ClientTCP final : public abra::client::AbstractClient {
    * @brief Close the connection
    */
   void Close();
+
+  /**
+   * @brief Get the remote address
+   * @return The remote address (ip)
+   */
+  std::string GetRemoteAddress() const;
 
  private:
   /// @brief The Input Output Service

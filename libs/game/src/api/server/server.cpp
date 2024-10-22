@@ -11,65 +11,81 @@ using namespace rtype::sdk::game::api;
 
 Server::Server(int port)
     : logger_("serverAPI"), serverTCP_(port, [this](const abra::server::ClientTCPMessage &message) {
-        return this->SystemTCPMessagesMiddleware(message);
+        return this->SystemServerTCPMessagesMiddleware(message);
       }) {
-  this->InitTCP();
+  this->InitServerTCP();
 }
 
 Server::~Server() {
   this->serverTCP_.Close();
   this->threadTCP_.join();
 
-  logger_.Info("Server TCP thread stopped", "🛑");
-
   for (auto &lobby : this->lobbies_) {
-    lobby.second.serverUDP->Close();
-    lobby.second.thread.join();
-
-    logger_.Info("Lobby [" + std::to_string(lobby.first) + "] UDP thread stopped", "🛑");
+    lobby.second.clientTCP->Close();
   }
+
+  logger_.Info("Server TCP thread stopped", "🛑");
 }
 
-std::uint64_t Server::CreateLobby(const std::string &name,
-                                  const std::function<void(std::uint64_t)> &newPlayerHandler) {
+std::uint64_t Server::CreateLobby(const std::string &name, uint64_t port) {
   std::uint64_t lobbyId = this->lobbies_.size();
-  std::uint64_t port = 30000 + lobbyId;
+  auto clientTCP = std::make_unique<abra::client::ClientTCP>(
+      kLocalhost, port, [this, lobbyId](const abra::tools::MessageProps &message) {
+        return this->SystemClientTCPMessagesMiddleware(message, lobbyId);
+      });
 
-  this->newPlayerHandler_ = newPlayerHandler;
+  this->lobbies_[lobbyId] =
+      Lobby({.id = lobbyId, .name = name, .clientTCP = std::move(clientTCP), .enabled = false});
 
-  this->lobbies_[lobbyId] = Lobby(
-      {.id = lobbyId, .name = name, .serverUDP = std::make_unique<abra::server::ServerUDP>(port)});
-  this->InitUDP(lobbyId);
+  payload::RegisterLobby registerPayload = {
+      .lobbyId = static_cast<unsigned int>(lobbyId),
+  };
+  if (SendPayloadLobbyTCP(MessageServerType::kRegisterLobby, registerPayload, lobbyId)) {
+    logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");
+  }
 
-  logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");
+  InitClientTCP(lobbyId);
+
   return lobbyId;
 }
 
-void Server::InitTCP() {
-  this->threadTCP_ = std::thread(&Server::ListenTCP, this);
+void Server::InitServerTCP() {
+  this->threadTCP_ = std::thread(&Server::ListenServerTCP, this);
   logger_.Info("Server TCP thread started", "🚀");
 }
 
-void Server::ListenTCP() {
+void Server::ListenServerTCP() {
   this->serverTCP_.Start();
 }
 
-void Server::InitUDP(std::uint64_t id) {
-  this->lobbies_[id].thread = std::thread(&Server::ListenUDP, this, id);
-  logger_.Info("Lobby [" + std::to_string(id) + "] UDP thread started", "🚀");
+void Server::InitClientTCP(std::uint64_t id) {
+  this->lobbies_[id].thread = std::thread(&Server::ListenClientTCP, this, id);
+  logger_.Info("Server TCP thread started", "🚀");
 }
 
-void Server::ListenUDP(std::uint64_t id) {
-  this->lobbies_[id].serverUDP->Start();
+void Server::ListenClientTCP(std::uint64_t id) {
+  this->lobbies_[id].clientTCP->Listen();
 }
 
-bool Server::SystemTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message) {
-  if (handlers_.find(message.messageType) == handlers_.end()) {
+bool Server::SystemServerTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message) {
+  if (serverHandlers_.find(message.messageType) == serverHandlers_.end()) {
     return true;
   }
 
-  logger_.Info("Handling message (middleware catch)", "🔧");
-  (this->*(handlers_[message.messageType]))(message);
+  logger_.Info("Handling message (server middleware catch)", "🔧");
+  (this->*(serverHandlers_[message.messageType]))(message);
+
+  return false;
+}
+
+bool Server::SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message,
+                                               std::uint64_t lobbyId) {
+  if (clientHandlers_.find(message.messageType) == clientHandlers_.end()) {
+    return true;
+  }
+
+  logger_.Info("Handling message (client middleware catch)", "🔧");
+  (this->*(clientHandlers_[message.messageType]))(message, lobbyId);
 
   return false;
 }
@@ -103,12 +119,9 @@ void Server::HandleLobbyJoin(const abra::server::ClientTCPMessage &message) {
 
   this->clients_[message.clientId].lobbyId = id;
 
-  auto endpoint = this->lobbies_[id].serverUDP->GetEndpoint();
   payload::JoinLobbyInfos joinInfos{};
-
-  const char *ipPtr = endpoint.ip.c_str();
-  strncpy(joinInfos.ip, ipPtr, 16);
-  joinInfos.port = endpoint.port;
+  snprintf(joinInfos.ip, sizeof(joinInfos.ip), "%s", this->lobbies_[id].ip);
+  joinInfos.port = this->lobbies_[id].port;
 
   this->SendPayloadTCP(MessageServerType::kServerJoinLobbyInfos, joinInfos, message.clientId);
   logger_.Info(
@@ -130,12 +143,13 @@ void Server::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message)
       boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ip), port);
 
   auto lobbyId = this->clients_[message.clientId].lobbyId;
-  this->lobbies_[lobbyId].clients.push_back({
-      .id = message.clientId,
-      .endpoint = this->clients_[message.clientId].endpoint,
-  });
+  payload::UserJoinLobby userJoinPayload = {
+      .userId = static_cast<unsigned int>(message.clientId),
+  };
+  snprintf(userJoinPayload.ip, sizeof(userJoinPayload.ip), "%s", ip);
+  userJoinPayload.port = port;
 
-  this->newPlayerHandler_(message.clientId);
+  SendPayloadLobbyTCP(MessageServerType::kUserJoinLobby, userJoinPayload, lobbyId);
 
   logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby. Endpoint: " + ip +
                    ":" + std::to_string(port),
@@ -146,84 +160,16 @@ std::queue<abra::server::ClientTCPMessage> Server::ExtractMainQueue() {
   return this->serverTCP_.ExtractQueue();
 }
 
-std::uint64_t Server::FindUserByEndpoint(std::uint64_t lobbyId,
-                                         const boost::asio::ip::udp::endpoint &endpoint) {
-  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
-    logger_.Warning("Try to extract an invalid lobby queue", "🧟‍♂️");
-    return 0;
-  }
-
-  for (auto &client : this->lobbies_[lobbyId].clients) {
-    if (client.endpoint.port() == endpoint.port()) {
-      return client.id;
-    }
-  }
-
-  return 0;
+void Server::Join() {
+  this->threadTCP_.join();
 }
 
-std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Server::ExtractLobbyQueue(
-    std::uint64_t id) {
-  if (this->lobbies_.find(id) == this->lobbies_.end()) {
-    logger_.Warning("Try to extract an invalid lobby queue", "🧟‍♂️");
-    return {};
-  }
+void Server::HandleLobbyInfos(const abra::tools::MessageProps &message, std::uint64_t lobbyId) {
+  auto &lobby = this->lobbies_[lobbyId];
+  auto packet = this->packetBuilder_.Build<payload::LobbyInfos>(message.data);
+  auto &infos = packet->GetPayload();
 
-  auto queue = this->lobbies_[id].serverUDP->ExtractQueue();
-  std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> extractedQueue;
-
-  while (!queue.empty()) {
-    auto message = queue.front();
-    auto userId = this->FindUserByEndpoint(id, message.endpoint);
-
-    extractedQueue.emplace(userId, queue.front());
-    queue.pop();
-  }
-
-  return extractedQueue;
-}
-
-bool Server::SendPlayersState(const uint64_t &lobbyId,
-                              const std::vector<payload::PlayerState> &state) {
-  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
-    logger_.Warning("Try send packets to invalid lobby queue", "🧟‍♂️");
-    return {};
-  }
-
-  auto success = this->SendPayloadsToLobby(MessageServerType::kPlayersState, state, lobbyId);
-  if (success) {
-    this->logger_.Info("Players state sent to lobby " + std::to_string(lobbyId), "🦹");
-  }
-
-  return success;
-}
-
-bool Server::SendEnemiesState(const uint64_t &lobbyId,
-                              const std::vector<payload::EnemyState> &state) {
-  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
-    logger_.Warning("Try send packets to invalid lobby queue", "🧟‍♂️");
-    return {};
-  }
-
-  auto success = this->SendPayloadsToLobby(MessageServerType::kEnemiesState, state, lobbyId);
-  if (success) {
-    this->logger_.Info("Enemies state sent to lobby " + std::to_string(lobbyId), "🧌");
-  }
-
-  return success;
-}
-
-bool Server::SendBulletsState(const uint64_t &lobbyId,
-                              const std::vector<payload::BulletState> &state) {
-  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
-    logger_.Warning("Try send packets to invalid lobby queue", "🧟‍♂️");
-    return {};
-  }
-
-  auto success = this->SendPayloadsToLobby(MessageServerType::kBulletsState, state, lobbyId);
-  if (success) {
-    this->logger_.Info("Bullets state sent to lobby " + std::to_string(lobbyId), "💥");
-  }
-
-  return success;
+  lobby.enabled = true;
+  snprintf(lobby.ip, sizeof(lobby.ip), "%s", lobby.clientTCP->GetRemoteAddress().c_str());
+  lobby.port = infos.port;
 }

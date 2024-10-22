@@ -25,23 +25,22 @@ bool Server::SendPayloadTCP(const MessageServerType &type, const T &payload, con
 }
 
 template<typename T>
-bool Server::SendPayloadsToLobby(const rtype::sdk::game::api::MessageServerType &type, const std::vector<T> &payload,
+bool Server::SendPayloadLobbyTCP(const rtype::sdk::game::api::MessageServerType &type, const T &payload,
                                  const std::uint64_t &lobbyId) {
-  this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
-  auto packets = this->packetBuilder_.Build(payload);
-
-  logger_.Info("Send " + std::to_string(packets.size()) + " packets to " +
-               std::to_string(this->lobbies_[lobbyId].clients.size()) + " players in lobby " + std::to_string(lobbyId),
-               "📦");
-
-  for (const auto &player: this->lobbies_[lobbyId].clients) {
-    for (const auto &packet: packets) {
-      auto success = this->lobbies_[lobbyId].serverUDP->Send(packet, player.endpoint) == SendMessageStatus::kSuccess;
-      if (!success) {
-        logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
-      }
-    }
+  if (this->lobbies_.find(lobbyId) == this->lobbies_.end()) {
+    logger_.Warning("Failed to send packet to lobby " + std::to_string(lobbyId) + " (lobby not found)", "⚠️ ");
+    return false;
   }
 
-  return true;
+  auto &socket = this->lobbies_[lobbyId].clientTCP;
+  this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
+  auto packet = this->packetBuilder_.Build(payload);
+
+  logger_.Info("Send TCP packet of type " + std::to_string(type) + " to lobby " + std::to_string(lobbyId), "📦");
+
+  auto success = socket->Send(packet) == SendMessageStatus::kSuccess;
+  if (!success)
+    logger_.Warning("Failed to send packet of type " + std::to_string(type) + " to lobby " + std::to_string(lobbyId), "⚠️ ");
+
+  return success;
 }
