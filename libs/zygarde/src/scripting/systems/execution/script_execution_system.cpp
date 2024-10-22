@@ -30,10 +30,10 @@ void ScriptExecutionSystem::ProcessScript(Registry::Const_Ptr registry,
   std::shared_ptr<types::ScriptingContext> context =
       std::make_shared<types::ScriptingContext>(CreateContext(registry, script));
 
-  if (script->fixedUpdate != std::nullopt) {
+  if (script->fixedUpdate.has_value()) {
     HandleFixedUpdate(registry, script, context);
   }
-  if (script->onCollisionEnter != std::nullopt && script->onCollisionEnter.has_value()) {
+  if (script->onCollisionEnter.has_value()) {
     HandleCollisionCallback(registry, script, context);
   }
 }

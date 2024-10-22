@@ -8,6 +8,7 @@
 #include "enemy_factory.hpp"
 
 #include "game/includes/constants.hpp"
+#include "projectile_factory.hpp"
 #include "scripting/components/script/script.hpp"
 #include "scripting/types/callbacks.hpp"
 
@@ -42,6 +43,7 @@ void EnemyFactory::CreateScript(Registry::Const_Ptr registry, const Entity& enti
   valuesMap["goingUp"] = true;
   valuesMap["upperLimit"] = basePosition->point.y + 30.0f;
   valuesMap["lowerLimit"] = basePosition->point.y - 30.0f;
+  valuesMap["lastShootTime"] = utils::Timer::Nanoseconds::zero();
 
   scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
   scripting::types::FixedUpdateFunction fixedUpdate = FixedUpdate;
@@ -76,7 +78,17 @@ void EnemyFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr cont
   auto rb = context->registry->GetComponent<physics::components::Rigidbody2D>(context->me);
   auto upperLimit = std::any_cast<float>(context->values->at("upperLimit"));
   auto lowerLimit = std::any_cast<float>(context->values->at("lowerLimit"));
+  auto lastShootTime =
+      std::any_cast<std::chrono::nanoseconds>(context->values->at("lastShootTime"));
 
+  lastShootTime += context->deltaTime;
+  if (lastShootTime >= std::chrono::seconds(1)) {
+    (*context->values)["lastShootTime"] = utils::Timer::Nanoseconds::zero();
+    auto bullet = ProjectileFactory::CreateProjectile(context->registry, position->point, {32, 15},
+                                                      sdk::game::types::GameEntityType::kEnemy);
+  } else {
+    (*context->values)["lastShootTime"] = lastShootTime;
+  }
   if (!position || !rb) {
     return;
   }

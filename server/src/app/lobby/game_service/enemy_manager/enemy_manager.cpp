@@ -13,7 +13,7 @@ void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &
                                                Registry::Const_Ptr registry) {
   accumulatedTime_ += delta_time;
 
-  if (accumulatedTime_ < std::chrono::milliseconds(4000)) {
+  if (accumulatedTime_ < std::chrono::milliseconds(1500)) {
     return;
   }
   accumulatedTime_ = std::chrono::milliseconds(0);

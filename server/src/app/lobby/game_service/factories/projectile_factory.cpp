@@ -23,21 +23,24 @@ Entity ProjectileFactory::CreateProjectile(Registry::Const_Ptr registry,
   std::string tag;
   std::vector<int> collisionLayers;
   std::vector<int> includeLayers;
+  float speedMagnifier;
 
   if (shooter == sdk::game::types::GameEntityType::kPlayer) {
     direction = core::types::Vector2f::right();
     tag = sdk::game::constants::kPlayerBulletTag;
     collisionLayers = sdk::game::constants::kPlayerBulletCollisionLayers;
     includeLayers = sdk::game::constants::kPlayerBulletIncludeLayers;
+    speedMagnifier = 700;
   } else {
     direction = core::types::Vector2f::left();
     tag = sdk::game::constants::kEnemyBulletTag;
     collisionLayers = sdk::game::constants::kEnemyBulletCollisionLayers;
     includeLayers = sdk::game::constants::kEnemyBulletIncludeLayers;
+    speedMagnifier = 300;
   }
 
   registry->AddComponent<physics::components::Rigidbody2D>(
-      projectile, physics::components::Rigidbody2D(direction * 200));
+      projectile, physics::components::Rigidbody2D(direction * speedMagnifier));
   registry->AddComponent<core::components::Position>(projectile, {position});
   registry->AddComponent<physics::components::BoxCollider2D>(
       projectile, {box_size, collisionLayers, includeLayers});
@@ -54,6 +57,9 @@ void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity&
       [](scripting::types::ScriptingContext::ConstPtr context) {
         const auto posComponent =
             context->registry->GetComponent<core::components::Position>(context->me);
+        if (!posComponent) {
+          return;
+        }
         if (posComponent->point.x > 2000 || posComponent->point.x < -200) {
           context->registry->DestroyEntity(context->me);
           std::cout << "I died because I'm out of bounds\n";

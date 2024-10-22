@@ -58,6 +58,7 @@ void GameService::HandleMessages() {
 
   while (!messages.empty()) {
     auto &[playerId, data] = messages.front();
+    std::cout << "CACA - Handling message from player " << playerId << std::endl;
 
     HandlePlayerMessage(playerId, data);
     messages.pop();
@@ -80,6 +81,8 @@ void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
   auto &[entityId, direction] = packet->GetPayload();
 
   if (const auto player = players_.find(player_id); player != players_.end()) {
+    std::cout << "Moving player " << player_id << " to " << direction.x << ", " << direction.y
+              << std::endl;
     const auto &playerEntity = player->second;
     const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
 
@@ -96,16 +99,11 @@ void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
                                            const abra::server::ClientUDPMessage &data) {
-  std::cout << "PLAYER " << player_id << " SAID SHOOT\n";
   auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
   const auto player = players_.find(player_id);
   if (player != players_.end()) {
-    std::cout << "PLAYER will shoot\n";
     const auto &playerEntity = player->second;
     const auto script = registry_->GetComponent<scripting::components::Script>(playerEntity);
-    if (!script) {
-      std::cerr << "Player does not have a script component" << std::endl;
-    }
     script->SetValue("shoot", true);
   }
 }

@@ -18,7 +18,6 @@ namespace zygarde::scripting::components {
 class EXPORT_ZYGARDE_API Script final {
  public:
   Script() = default;
-  ~Script() = default;
 
   Script(std::optional<types::Collision2DFunction> on_collision_enter,
          std::optional<types::FixedUpdateFunction> fixed_update, const types::ValuesMap& values);

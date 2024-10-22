@@ -33,6 +33,6 @@ static const std::vector<int> kEnemyBulletIncludeLayers = {kPlayer, kPlayerBulle
 
 /// @brief Player bullet collision layers
 static const std::vector<int> kPlayerBulletCollisionLayers = {kPlayerBullet};
-static const std::vector<int> kPlayerBulletIncludeLayers = {kEnemy};
+static const std::vector<int> kPlayerBulletIncludeLayers = {kEnemy, kEnemyBullet};
 
 }  // namespace rtype::sdk::game::constants
