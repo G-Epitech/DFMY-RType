@@ -115,6 +115,14 @@ class DependenciesHandler final : public std::enable_shared_from_this<Dependenci
   template <typename T>
   std::shared_ptr<T> GetOrThrow();
 
+  /**
+   * @brief Check if the provider has a service
+   * @tparam T Type of the service
+   * @return Service existence status
+   */
+  template <typename T>
+  bool Has() const;
+
  protected:
   /// @brief Map of managers
   typedef std::map<std::type_index, std::shared_ptr<void>> ManagersMap;
@@ -147,6 +155,6 @@ class DependenciesHandler final : public std::enable_shared_from_this<Dependenci
   template <typename T>
   std::shared_ptr<T> BuildInstance();
 };
-}  // namespace mew::di
+}  // namespace porygon
 
 #include "./handler.tpp"

@@ -111,3 +111,16 @@ TEST_F(DependenciesHandlerTests, Get) {
     auto svc = handler->Get<ServiceWithDeps>();
     ASSERT_EQ(svc, instance);
 }
+
+TEST_F(DependenciesHandlerTests, HasService) {
+    auto handler = DependenciesHandler::Create();
+    handler->Add<ServiceWithDeps>();
+
+    ASSERT_TRUE(handler->Has<ServiceWithDeps>());
+}
+
+TEST_F(DependenciesHandlerTests, HasNoService) {
+    auto handler = DependenciesHandler::Create();
+
+    ASSERT_FALSE(handler->Has<ServiceWithDeps>());
+}

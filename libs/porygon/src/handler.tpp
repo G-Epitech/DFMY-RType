@@ -70,6 +70,11 @@ std::shared_ptr<T> DependenciesHandler::GetOrThrow() {
 }
 
 template <typename T>
+bool DependenciesHandler::Has() const {
+  return instances_.find(std::type_index(typeid(T))) != instances_.end();
+}
+
+template <typename T>
 std::shared_ptr<T> DependenciesHandler::GetInstance() {
   auto it = instances_.find(std::type_index(typeid(T)));
   if (it != instances_.end()) {
