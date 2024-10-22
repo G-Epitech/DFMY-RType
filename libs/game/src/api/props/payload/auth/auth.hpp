@@ -9,3 +9,4 @@
 
 #include "./connection.hpp"
 #include "./join_lobby.hpp"
+#include "./register_lobby.hpp"

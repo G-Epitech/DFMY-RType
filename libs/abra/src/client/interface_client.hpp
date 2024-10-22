@@ -73,4 +73,7 @@ class abra::client::InterfaceClient {
 
   /// @brief The map of messages for multi packets
   std::map<unsigned, tools::MultipleMessagesProps> pendingMultiPackets_;
+
+  /// @brief Middleware
+  std::function<bool(const tools::MessageProps &)> middleware_;
 };

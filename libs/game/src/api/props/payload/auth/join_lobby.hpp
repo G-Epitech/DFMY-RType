@@ -18,4 +18,14 @@ struct JoinLobbyInfos {
   char ip[16];    // Ip of the client/server to join (udp)
   unsigned port;  // Port of the client/server to join (udp)
 };
+
+struct UserJoinLobby {
+  unsigned userId;  // Id of the user that joins the lobby
+  char ip[16];      // Ip of the user that joins the lobby
+  unsigned port;    // Port of the user that joins the lobby
+};
+
+struct LobbyInfos {
+  unsigned port;  // Port of the lobby (udp)
+};
 }  // namespace rtype::sdk::game::api::payload
