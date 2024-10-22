@@ -40,11 +40,11 @@ class zipper {
 
  private:
   /// @brief Begin iterator tuple
-  iterator_tuple _begin;
+  iterator_tuple begin_;
   /// @brief End iterator tuple
-  iterator_tuple _end;
+  iterator_tuple end_;
   /// @brief Size of the zipper
-  std::size_t _size;
+  std::size_t size_;
 };
 }  // namespace zygarde::tools
 

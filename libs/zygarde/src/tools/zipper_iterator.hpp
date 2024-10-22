@@ -72,8 +72,9 @@ class zipper_iterator {
    * @return true If the iterators are equal
    * @return false If the iterators are not equal
    */
+  // This function can't be in a separate tpp file because it's a friend function
   friend bool operator==(zipper_iterator const &lhs, zipper_iterator const &rhs) {
-    return lhs._current == rhs._current;
+    return lhs.current_ == rhs.current_;
   }
 
   /**
@@ -83,21 +84,22 @@ class zipper_iterator {
    * @return true If the iterators are not equal
    * @return false If the iterators are equal
    */
+  // This function can't be in a separate tpp file because it's a friend function
   friend bool operator!=(zipper_iterator const &lhs, zipper_iterator const &rhs) {
     return !(lhs == rhs);
   }
 
  private:
   /// @brief The current iterator tuple
-  iterator_tuple _current;
+  iterator_tuple current_;
   /// @brief The end iterator tuple
-  iterator_tuple _end;
+  iterator_tuple end_;
   /// @brief The maximum number of elements to iterate
-  std::size_t _max;
+  std::size_t max_;
   /// @brief The current index
-  std::size_t _idx;
+  std::size_t idx_;
   /// @brief The index sequence
-  static constexpr auto _seq = std::index_sequence_for<Containers...>{};
+  static constexpr auto seq_ = std::index_sequence_for<Containers...>{};
 
   /**
    * @brief Increment all iterators

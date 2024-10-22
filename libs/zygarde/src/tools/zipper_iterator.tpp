@@ -13,8 +13,8 @@ template <class... Containers>
 zygarde::tools::zipper_iterator<Containers...>::zipper_iterator(iterator_tuple const &it_tuple,
                                                                 iterator_tuple const &end_tuple,
                                                                 std::size_t max)
-    : _current(it_tuple), _end(end_tuple), _max(max), _idx(0) {
-  if (!all_set(_seq)) {
+    : current_(it_tuple), end_(end_tuple), max_(max), idx_(0) {
+  if (!all_set(seq_)) {
     ++(*this);
   }
 }
@@ -25,13 +25,13 @@ zygarde::tools::zipper_iterator<Containers...>::zipper_iterator(zipper_iterator 
 template <class... Containers>
 zygarde::tools::zipper_iterator<Containers...> &
 zygarde::tools::zipper_iterator<Containers...>::operator++() {
-  if (_current == _end) {
+  if (current_ == end_) {
     return *this;
   }
   do {
-    incr_all(_seq);
-    ++_idx;
-  } while (_idx < _max && !all_set(_seq));
+    incr_all(seq_);
+    ++idx_;
+  } while (idx_ < max_ && !all_set(seq_));
   return *this;
 }
 
@@ -46,25 +46,25 @@ zygarde::tools::zipper_iterator<Containers...>::operator++(int) {
 template <class... Containers>
 typename zygarde::tools::zipper_iterator<Containers...>::value_type
 zygarde::tools::zipper_iterator<Containers...>::operator*() {
-  return to_value(_seq);
+  return to_value(seq_);
 }
 
 template <class... Containers>
 template <std::size_t... Is>
 void zygarde::tools::zipper_iterator<Containers...>::incr_all(std::index_sequence<Is...>) {
-  (++std::get<Is>(_current), ...);
+  (++std::get<Is>(current_), ...);
 }
 
 template <class... Containers>
 template <std::size_t... Is>
 bool zygarde::tools::zipper_iterator<Containers...>::all_set(std::index_sequence<Is...>) {
   return (... &&
-          (std::get<Is>(_current) != std::get<Is>(_end) && (*std::get<Is>(_current)).has_value()));
+          (std::get<Is>(current_) != std::get<Is>(end_) && (*std::get<Is>(current_)).has_value()));
 }
 
 template <class... Containers>
 template <std::size_t... Is>
 typename zygarde::tools::zipper_iterator<Containers...>::value_type
 zygarde::tools::zipper_iterator<Containers...>::to_value(std::index_sequence<Is...>) {
-  return std::make_tuple(std::get<Is>(_current)->value()...);
+  return std::make_tuple(std::get<Is>(current_)->value()...);
 }
