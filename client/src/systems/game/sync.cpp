@@ -67,7 +67,7 @@ void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, con
 void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                   const zygarde::core::types::Vector3f& pos) {
   const auto bullet = registry->SpawnEntity();
-  static const sf::IntRect base{5, 6, 21, 36};
+  static const sf::IntRect base{200, 120, 32, 15};
 
   registry->AddComponent<components::ServerEntityId>(bullet, {.id = id});
   registry->AddComponent<zygarde::core::components::Position>(
@@ -76,7 +76,7 @@ void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry, con
                           core::components::VerticalAlign::kTop}});
   registry->AddComponent<components::Drawable>(
       bullet, {
-                  .drawable = components::Texture{.name = "enemy", .scale = 3, .rect = base},
+                  .drawable = components::Texture{.name = "player", .scale = 2, .rect = base},
               });
   bullets_.insert_or_assign(id, bullet);
 }
