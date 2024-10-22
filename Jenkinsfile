@@ -16,11 +16,16 @@ LIBS_TARGETS = [
     'zygarde': [
         'target': 'zygarde',
         'type': 'shared'
+    ],
+    'porygon': [
+        'target': 'porygon',
+        'type': 'shared'
     ]
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
     'zygarde': 'zygarde_tests'
+    'porygon': 'porygon_tests'
 ]
 ARTIFACTS_FILES_EXTENSIONS = [
     'windows': ['exe', 'zip'],
