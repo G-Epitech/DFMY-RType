@@ -80,11 +80,14 @@ void PlayerFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr con
   auto position = context->registry->GetComponent<core::components::Position>(context->me);
 
   lastShootTime += context->deltaTime;
+  std::cout << "shoot: " << shoot << " lastShootTime: " << lastShootTime.count()
+            << " shootCooldown: " << shootCooldown.count() << std::endl;
 
   if (shoot && lastShootTime >= shootCooldown) {
+    std::cout << "Player shoot" << std::endl;
     (*context->values)["lastShootTime"] = utils::Timer::Nanoseconds::zero();
     (*context->values)["shoot"] = false;
-    ProjectileFactory::CreateProjectile(context->registry, position->point, {5, 5},
+    ProjectileFactory::CreateProjectile(context->registry, position->point, {61, 108},
                                         sdk::game::types::GameEntityType::kPlayer);
     return;
   }

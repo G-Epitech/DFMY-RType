@@ -39,7 +39,9 @@ int GameService::Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api) {
     HandleMessages();
     ExecuteGameLogic();
     SendStates();
+    registry_->CleanupDestroyedEntities();
     ticksManager_.WaitUntilNextTick();
+    std::cout << "TICK END -------------------" << std::endl;
   }
   return EXIT_SUCCESS;
 }
@@ -47,7 +49,6 @@ int GameService::Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api) {
 void GameService::ExecuteGameLogic() {
   enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
   registry_->RunSystems();
-  registry_->CleanupDestroyedEntities();
 }
 
 void GameService::HandleMessages() {
@@ -93,12 +94,16 @@ void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
                                            const abra::server::ClientUDPMessage &data) {
+  std::cout << "PLAYER " << player_id << " SAID SHOOT\n";
   auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
-
-  if (const auto player = players_.find(player_id); player != players_.end()) {
+  const auto player = players_.find(player_id);
+  if (player != players_.end()) {
+    std::cout << "PLAYER will shoot\n";
     const auto &playerEntity = player->second;
     const auto script = registry_->GetComponent<scripting::components::Script>(playerEntity);
-
+    if (!script) {
+      std::cerr << "Player does not have a script component" << std::endl;
+    }
     script->SetValue("shoot", true);
   }
 }
@@ -120,11 +125,13 @@ void GameService::SendStates() const {
 
   for (auto &component : *components) {
     if (!component.has_value()) {
+      i++;
       continue;
     }
     const auto val = component.value();
     if (!registry_->HasEntityAtIndex(i)) {
-      break;
+      i++;
+      continue;
     }
     auto ent = registry_->EntityFromIndex(i);
     const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
@@ -150,6 +157,8 @@ void GameService::SendStates() const {
     this->api_->SendPlayersState(states);
   if (!enemyStates.empty())
     this->api_->SendEnemiesState(enemyStates);
-  if (!bulletStates.empty())
+  if (!bulletStates.empty()) {
+    std::cout << "sending " << bulletStates.size() << " bullets" << std::endl;
     this->api_->SendBulletsState(bulletStates);
+  }
 }

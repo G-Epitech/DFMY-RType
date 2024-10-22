@@ -58,17 +58,6 @@ void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity&
 
 void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                         const physics::types::Collision2D::ptr& collision) {
-  const auto entity = collision->otherEntity;
-  const auto otherEntityTag = context->registry->GetComponent<core::components::Tags>(entity);
-  if (!otherEntityTag) {
-    return;
-  }
-  if (*otherEntityTag == sdk::game::constants::kPlayerBulletTag) {
-    return;
-  }
-  if (*otherEntityTag == sdk::game::constants::kEnemyBulletTag) {
-    return;
-  }
   context->registry->DestroyEntity(context->me);
   std::cout << "I died\n";
 }
