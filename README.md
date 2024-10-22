@@ -20,7 +20,7 @@ team of enthusiasts aiming to recreate the core gameplay experience with modern 
 
 ## Download
 
-Go to the [releases](./releases) page and download the latest version of the game for your platform.
+Go to the [releases](https://github.com/G-Epitech/DFMY-RType/releases) page and download the latest version of the game for your platform.
 
 ### Binaries
 
@@ -49,7 +49,7 @@ your platform.
 
 ### Windows (x64)
 
-1. Download the Windows binaries from the [releases](./releases) page.
+1. Download the Windows binaries from the [releases](https://github.com/G-Epitech/DFMY-RType/releases) page.
 2. Execute the `R-Type-client-X.X.X.exe` or `R-Type-server-X.X.X.exe` file depending on what you've
    downloaded.
 3. Follow the installation wizard instructions.
@@ -58,7 +58,7 @@ your platform.
 
 ### Debian - Ubuntu (x64)
 
-1. Download the Debian - Ubuntu binaries from the [releases](./releases) page.
+1. Download the Debian - Ubuntu binaries from the [releases](https://github.com/G-Epitech/DFMY-RType/releases) page.
 2. Install the `.deb` package:
     - From **command line**: `sudo dpkg -i rtype-client_X.X.X.deb` or
       `sudo dpkg -i rtype-server_X.X.X.deb` depending on what you've downloaded.
@@ -68,7 +68,7 @@ your platform.
 
 ### Other Linux distributions (x64)
 
-1. Download the Linux binaries from the [releases](./releases) page as a `.tar.gz` archive.
+1. Download the Linux binaries from the [releases](https://github.com/G-Epitech/DFMY-RType/releases) page as a `.tar.gz` archive.
 2. Extract the archive to a directory of your choice.
    ```sh
    # Replace X.X.X with the version you've downloaded
@@ -107,6 +107,7 @@ The project is divided into several modules, each responsible for a specific asp
     * **zygarde**: Our Entity-Component-System (ECS) library
     * **abra**: Our networking library
     * **game**: Shared game logic and data structures
+    * **porygon**: Our Dependency Injection (DI) library
 
 ## Contributing
 
