@@ -15,7 +15,7 @@ using namespace zygarde;
 
 TEST(SystemTests, CreateBasicSystem) {
   class BasicSystem : public ASystem<int> {
-  public:
+   public:
     BasicSystem() = default;
 
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
@@ -31,7 +31,7 @@ TEST(SystemTests, CreateBasicSystem) {
 
 TEST(SystemTests, CreateMultipleSystem) {
   class IntSystem : public ASystem<int> {
-  public:
+   public:
     IntSystem() = default;
 
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
@@ -40,14 +40,15 @@ TEST(SystemTests, CreateMultipleSystem) {
     }
   };
   class FloatSystem : public ASystem<float, int> {
-  public:
+   public:
     FloatSystem() = default;
 
     void Run(std::shared_ptr<Registry> r, sparse_array<float>::ptr floats,
              sparse_array<int>::ptr ints) override {
       (void) r;
-      for (auto &&[f, i]: zipper(floats, ints)) {
-        std::cout << f.value() << " " << i.value() << std::endl;
+      for (auto &&[f, i] : zipper(floats, ints)) {
+        (void) f;
+        (void) i;
       }
     }
   };
@@ -69,7 +70,7 @@ TEST(SystemTests, CreateMultipleSystem) {
 
 TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   class IntSystem : public ASystem<int> {
-  public:
+   public:
     IntSystem() = default;
 
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
@@ -78,7 +79,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
     }
   };
   class FloatSystem : public ASystem<int> {
-  public:
+   public:
     FloatSystem() = default;
 
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {

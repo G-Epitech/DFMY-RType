@@ -153,7 +153,8 @@ TEST(RegisterTests, EntityFromIndex) {
 
 TEST(RegisterTests, EntityFromIndexOutOfRange) {
   const auto registry = Registry::create();
-  ASSERT_THROW(registry->EntityFromIndex(0), Registry::Exception);
+  ASSERT_THROW([[maybe_unused]] const auto entity = registry->EntityFromIndex(0),
+               Registry::Exception);
 }
 
 TEST(RegistryTests, EntityHasComponent) {
@@ -179,4 +180,23 @@ TEST(RegistryTests, EntityHasComponentFailed) {
   auto floatComponent = registry->GetComponents<float>();
   auto hasIntComponent = registry->GetComponent<float>(entity);
   ASSERT_FALSE(hasIntComponent);
+}
+
+TEST(RegisterTests, IterateOnOneComponent) {
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  const auto entity = registry->SpawnEntity();
+  const auto entity2 = registry->SpawnEntity();
+  const auto entity3 = registry->SpawnEntity();
+  const auto entity4 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->AddComponent<int>(entity2, 43);
+  registry->AddComponent<int>(entity3, 44);
+  registry->AddComponent<int>(entity4, 45);
+  auto component = registry->GetComponents<int>();
+  std::size_t count = 0;
+  for (const auto &value : *component) {
+    count++;
+  }
+  ASSERT_EQ(count, 4);
 }
