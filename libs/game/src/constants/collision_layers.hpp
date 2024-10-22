@@ -29,7 +29,7 @@ static const std::vector<int> kEnemyIncludeLayers = {kPlayer, kPlayerBullet};
 
 /// @brief Enemy bullet collision layers
 static const std::vector<int> kEnemyBulletCollisionLayers = {kEnemyBullet};
-static const std::vector<int> kEnemyBulletIncludeLayers = {kPlayer};
+static const std::vector<int> kEnemyBulletIncludeLayers = {kPlayer, kPlayerBullet};
 
 /// @brief Player bullet collision layers
 static const std::vector<int> kPlayerBulletCollisionLayers = {kPlayerBullet};

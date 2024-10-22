@@ -47,7 +47,9 @@ int GameService::Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api) {
 }
 
 void GameService::ExecuteGameLogic() {
-  enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+  if (!players_.empty()) {
+    enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+  }
   registry_->RunSystems();
 }
 

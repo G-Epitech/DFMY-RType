@@ -43,7 +43,6 @@ Entity ProjectileFactory::CreateProjectile(Registry::Const_Ptr registry,
       projectile, {box_size, collisionLayers, includeLayers});
   registry->AddComponent<core::components::Tags>(projectile, core::components::Tags({tag}));
   CreateScript(registry, projectile);
-  std::cout << "Projectile created\n";
   return projectile;
 }
 
@@ -51,9 +50,18 @@ void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity&
   scripting::types::ValuesMap valuesMap;
 
   scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
+  scripting::types::FixedUpdateFunction onFixedUpdate =
+      [](scripting::types::ScriptingContext::ConstPtr context) {
+        const auto posComponent =
+            context->registry->GetComponent<core::components::Position>(context->me);
+        if (posComponent->point.x > 2000 || posComponent->point.x < -200) {
+          context->registry->DestroyEntity(context->me);
+          std::cout << "I died because I'm out of bounds\n";
+        }
+      };
 
   registry->AddComponent<scripting::components::Script>(
-      entity, {onCollisionEnter, std::nullopt, valuesMap});
+      entity, {onCollisionEnter, onFixedUpdate, valuesMap});
 }
 
 void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
