@@ -98,3 +98,11 @@ void ServerTCP::Close() {
 
   this->logger_.Info("Session closed");
 }
+
+std::string ServerTCP::GetRemoteAddress(std::uint64_t clientId) const {
+  if (clients_.find(clientId) == clients_.end()) {
+    logger_.Warning("Client not found when trying to get remote address");
+    return "";
+  }
+  return clients_.at(clientId)->GetRemoteAddress();
+}

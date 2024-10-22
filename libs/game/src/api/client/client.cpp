@@ -112,9 +112,6 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
 
   auto endpoint = this->clientUDP_->GetEndpoint();
   payload::JoinLobbyInfos infoPayload{};
-
-  const char *ipPtr = endpoint.ip.c_str();
-  strncpy(infoPayload.ip, ipPtr, 16);
   infoPayload.port = endpoint.port;
 
   auto success = SendPayloadTCP(MessageClientType::kClientJoinLobbyInfos, infoPayload);
