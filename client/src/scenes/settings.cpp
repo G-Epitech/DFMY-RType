@@ -33,7 +33,7 @@ SceneSettings::SceneSettings(DependenciesHandler::Ptr services) : SceneBase(std:
 
 void SceneSettings::OnCreate() {
   constexpr auto left = 600;
-  const auto right = managers_.window->width_ - 600;
+  const auto right = managers_.window->GetWidth() - 600;
 
   CreateTitle();
   CreateBackButton();
@@ -74,7 +74,7 @@ void SceneSettings::CreateMainEntity() const {
 
 void SceneSettings::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, 150);
+  const auto point = Vector3f(managers_.window->GetWidth() / 2, 150);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(title, {point, aligns});
@@ -85,7 +85,7 @@ void SceneSettings::CreateTitle() const {
 void SceneSettings::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ - 50);
+  const auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() - 50);
 
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,

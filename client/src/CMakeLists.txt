@@ -1,3 +1,4 @@
+add_subdirectory(builder)
 add_subdirectory(game)
 add_subdirectory(systems)
 add_subdirectory(services)

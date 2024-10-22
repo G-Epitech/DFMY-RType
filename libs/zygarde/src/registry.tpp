@@ -107,8 +107,8 @@ Entity Registry::SpawnEntity(Args &&...args) {
   if (newId >= entities_.size()) {
     entities_.resize(newId + 1);
   }
-  T e(newId, GetShared(), std::forward<Args>(args)...);
+  T e(newId, GetShared());
   entities_.at(newId) = e;
-  e.OnSpawn();
+  e.OnSpawn(std::forward<Args>(args)...);
   return e;
 }

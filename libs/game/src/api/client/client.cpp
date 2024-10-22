@@ -10,7 +10,6 @@
 using namespace rtype::sdk::game::api;
 using namespace abra::client;
 using namespace abra::tools;
-
 Client::Client(const std::string &ip, const uint32_t &port)
     : clientTCP_(ip, port, nullptr),
       isConnected_(false),
@@ -271,7 +270,7 @@ std::vector<payload::BulletState> Client::ResolveBulletsState(
 }
 
 bool api::Client::WaitForMessage(MasterToClientMsgType type,
-                                 bool (Client::*handler)(const abt::MessageProps &message)) {
+                                 bool (Client:: *handler)(const abt::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
   abt::MessageProps message;
   bool success = false;
