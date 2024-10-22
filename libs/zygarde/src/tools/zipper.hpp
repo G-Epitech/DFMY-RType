@@ -45,13 +45,6 @@ class zipper {
   iterator_tuple _end;
   /// @brief Size of the zipper
   std::size_t _size;
-
-  /**
-   * @brief Compute the size of the zipper
-   * @param containers Containers
-   * @return std::size_t
-   */
-  static std::size_t _compute_size(Containers &...containers);
 };
 }  // namespace zygarde::tools
 
