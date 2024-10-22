@@ -99,10 +99,12 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.data);
   auto payload = packet->GetPayload();
 
-  logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
-               "🚪");
-
   std::string ip = payload.ip;
+  if (ip == kLocalhost || ip == kIpNull) {
+    ip = this->clientTCP_.GetRemoteAddress();
+  }
+
+  logger_.Info("Joining lobby " + std::string(ip) + ":" + std::to_string(payload.port), "🚪");
 
   this->clientUDP_.emplace(ip, payload.port);
   InitUDP();
