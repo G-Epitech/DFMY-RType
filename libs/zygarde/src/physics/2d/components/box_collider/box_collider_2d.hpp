@@ -54,7 +54,7 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
    * @return collision layer array
    */
   [[nodiscard]] const std::vector<int> &GetIncludeLayers() const noexcept {
-    return collider_.collisionLayers_;
+    return collider_.includeLayers_;
   }
 
   void AddCollision(types::Collision2D collision) noexcept;

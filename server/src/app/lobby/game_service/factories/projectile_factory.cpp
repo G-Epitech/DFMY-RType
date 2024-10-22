@@ -37,12 +37,13 @@ Entity ProjectileFactory::CreateProjectile(Registry::Const_Ptr registry,
   }
 
   registry->AddComponent<physics::components::Rigidbody2D>(
-      projectile, physics::components::Rigidbody2D(direction * 70));
+      projectile, physics::components::Rigidbody2D(direction * 200));
   registry->AddComponent<core::components::Position>(projectile, {position});
   registry->AddComponent<physics::components::BoxCollider2D>(
       projectile, {box_size, collisionLayers, includeLayers});
   registry->AddComponent<core::components::Tags>(projectile, core::components::Tags({tag}));
   CreateScript(registry, projectile);
+  std::cout << "Projectile created\n";
   return projectile;
 }
 

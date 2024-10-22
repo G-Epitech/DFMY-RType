@@ -46,7 +46,7 @@ int GameService::Run(const uint64_t lobby_id, std::shared_ptr<Server> api) {
 }
 
 void GameService::ExecuteGameLogic() {
-  // enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+  enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
   registry_->RunSystems();
   registry_->CleanupDestroyedEntities();
 }

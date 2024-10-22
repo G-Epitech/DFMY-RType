@@ -67,7 +67,7 @@ void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, con
 void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                   const zygarde::core::types::Vector3f& pos) {
   const auto bullet = registry->SpawnEntity();
-  static const sf::IntRect base{337, 255, 12, 4};
+  static const sf::IntRect base{5, 6, 21, 36};
 
   registry->AddComponent<components::ServerEntityId>(bullet, {.id = id});
   registry->AddComponent<zygarde::core::components::Position>(
@@ -179,6 +179,7 @@ void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
   if (bullets_.contains(state.entityId)) {
     UpdateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   } else {
+    std::cout << "CREATING BULLET" << std::endl;
     CreateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   }
   handled->insert(state.entityId);
@@ -209,10 +210,13 @@ void GameSyncSystem::HandleEnemyState(const Registry::Ptr& registry,
 void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
                                     const std::set<std::size_t>& handled,
                                     std::map<std::size_t, Entity>* entities) {
-  for (const auto& [id, entity] : *entities) {
+  for (auto it = entities->begin(); it != entities->end(); ) {
+    const auto& [id, entity] = *it;
     if (handled.find(id) == handled.end()) {
       registry->KillEntity(entity);
-      entities->erase(id);
+      it = entities->erase(it);
+    } else {
+      ++it;
     }
   }
 }
