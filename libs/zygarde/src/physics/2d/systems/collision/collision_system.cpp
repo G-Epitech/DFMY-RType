@@ -70,7 +70,7 @@ bool CollisionSystem::HaveCommonCollisionLayers(
   auto &collisionLayers2 = collider2.GetCollisionLayers();
 
   for (const auto &layer : includeLayers1) {
-    const auto findRes = std::ranges::find(collisionLayers2.begin(), collisionLayers2.end(), layer);
+    const auto findRes = std::find(collisionLayers2.begin(), collisionLayers2.end(), layer);
     if (findRes != collisionLayers2.end()) {
       return true;
     }

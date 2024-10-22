@@ -78,10 +78,8 @@ void PlayerFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr con
       std::any_cast<std::chrono::nanoseconds>(context->values->at("shootCooldown"));
 
   auto position = context->registry->GetComponent<core::components::Position>(context->me);
-  lastShootTime += context->deltaTime;
 
-  std::cout << "shoot: " << shoot << " lastShootTime: " << lastShootTime.count()
-            << " shootCooldown: " << shootCooldown.count() << "\n";
+  lastShootTime += context->deltaTime;
 
   if (shoot && lastShootTime >= shootCooldown) {
     (*context->values)["lastShootTime"] = utils::Timer::Nanoseconds::zero();

@@ -7,6 +7,5 @@
     "boost-program-options",
     "gtest",
     "sfml"
-  ],
-  "builtin-baseline": "cacf5994341f27e9a14a7b8724b0634b138ecb30"
+  ]
 }

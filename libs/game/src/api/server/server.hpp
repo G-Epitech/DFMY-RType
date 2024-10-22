@@ -18,8 +18,6 @@
 #include "libs/game/src/api/props/payload/payload.hpp"
 #include "libs/game/src/core.hpp"
 
-constexpr const char *kLocalhost = "127.0.0.1";
-
 namespace rtype::sdk::game::api {
 class EXPORT_GAME_SDK_API Server;
 }

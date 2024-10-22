@@ -99,17 +99,18 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.data);
   auto payload = packet->GetPayload();
 
-  logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
-               "🚪");
+  std::string ip = payload.ip;
+  if (ip == kLocalhost || ip == kIpNull) {
+    ip = this->clientTCP_.GetRemoteAddress();
+  }
 
-  this->clientUDP_.emplace("127.0.0.1", payload.port);
+  logger_.Info("Joining lobby " + std::string(ip) + ":" + std::to_string(payload.port), "🚪");
+
+  this->clientUDP_.emplace(ip, payload.port);
   InitUDP();
 
   auto endpoint = this->clientUDP_->GetEndpoint();
   payload::JoinLobbyInfos infoPayload{};
-
-  const char *ipPtr = endpoint.ip.c_str();
-  strncpy(infoPayload.ip, ipPtr, 16);
   infoPayload.port = endpoint.port;
 
   auto success = SendPayloadTCP(MessageClientType::kClientJoinLobbyInfos, infoPayload);

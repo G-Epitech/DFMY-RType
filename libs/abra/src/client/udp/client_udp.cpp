@@ -22,7 +22,7 @@ ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
   this->socket_.bind(localEndpoint);
   uint16_t localPort = this->socket_.local_endpoint().port();
 
-  this->logger_.Info("Client UDP started on port " + std::to_string(localPort) + "and adress");
+  this->logger_.Info("Client UDP started on port " + std::to_string(localPort));
 }
 
 ClientUDP::~ClientUDP() {

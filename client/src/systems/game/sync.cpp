@@ -179,7 +179,6 @@ void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
   if (bullets_.contains(state.entityId)) {
     UpdateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   } else {
-    std::cout << "CREATING BULLET" << std::endl;
     CreateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   }
   handled->insert(state.entityId);
