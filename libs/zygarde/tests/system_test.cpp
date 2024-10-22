@@ -9,13 +9,15 @@
 
 #include "registry.hpp"
 #include "system_abstract.hpp"
+#include "tools/zipper.hpp"
 
 using namespace zygarde;
 
 TEST(SystemTests, CreateBasicSystem) {
   class BasicSystem : public ASystem<int> {
-   public:
+  public:
     BasicSystem() = default;
+
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
@@ -29,19 +31,24 @@ TEST(SystemTests, CreateBasicSystem) {
 
 TEST(SystemTests, CreateMultipleSystem) {
   class IntSystem : public ASystem<int> {
-   public:
+  public:
     IntSystem() = default;
+
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
     }
   };
-  class FloatSystem : public ASystem<float> {
-   public:
+  class FloatSystem : public ASystem<float, int> {
+  public:
     FloatSystem() = default;
-    void Run(std::shared_ptr<Registry> r, sparse_array<float>::ptr nb) override {
+
+    void Run(std::shared_ptr<Registry> r, sparse_array<float>::ptr floats,
+             sparse_array<int>::ptr ints) override {
       (void) r;
-      (void) nb;
+      for (auto &&[f, i]: zipper(floats, ints)) {
+        std::cout << f.value() << " " << i.value() << std::endl;
+      }
     }
   };
   const auto registry = Registry::create();
@@ -49,21 +56,31 @@ TEST(SystemTests, CreateMultipleSystem) {
   registry->RegisterComponent<float>();
   registry->AddSystem<IntSystem>();
   registry->AddSystem<FloatSystem>();
+  auto entity = registry->SpawnEntity();
+  registry->AddComponent<float>(entity, 1.0f);
+  registry->AddComponent<int>(entity, 1);
+  auto entity2 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity2, 2);
+  auto entity3 = registry->SpawnEntity();
+  registry->AddComponent<int>(entity3, 3);
+  registry->AddComponent<float>(entity3, 3.0f);
   registry->RunSystems();
 }
 
 TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   class IntSystem : public ASystem<int> {
-   public:
+  public:
     IntSystem() = default;
+
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;
     }
   };
   class FloatSystem : public ASystem<int> {
-   public:
+  public:
     FloatSystem() = default;
+
     void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
       (void) r;
       (void) nb;

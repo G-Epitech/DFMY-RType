@@ -5,9 +5,7 @@
 ** RegistryHelper.cpp
 */
 
-#include "./registry_helper.hpp"
-
-#include <utility>
+#include "./helper.hpp"
 
 using namespace zygarde::utils;
 

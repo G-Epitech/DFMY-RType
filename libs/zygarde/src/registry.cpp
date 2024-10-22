@@ -93,3 +93,7 @@ Registry::Exception::Exception(std::string message) : message_(std::move(message
 const char *Registry::Exception::what() const noexcept {
   return message_.c_str();
 }
+
+std::vector<std::optional<Entity>> &Registry::GetEntities() {
+  return entities_;
+}

@@ -60,14 +60,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   /**
    * @brief Get the components
    * @tparam Component Component to get
-   * @return sparse_array<Component>&
-   */
-  template <typename Component>
-  typename sparse_array<Component>::ptr GetComponents();
-
-  /**
-   * @brief Get the components
-   * @tparam Component Component to get
    * @return const sparse_array<Component>&
    */
   template <typename Component>
@@ -114,6 +106,21 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @param e Entity to destroy
    */
   void DestroyEntity(Entity const &e);
+
+  /**
+   * @brief Get the entities
+   * @return std::vector<std::optional<Entity>>&
+   */
+  [[nodiscard]] std::vector<std::optional<Entity>> &GetEntities();
+
+  /**
+   * @brief Check if an entity has a component
+   * @tparam Component Component(s) to check
+   * @param e Entity to check
+   * @return bool
+   */
+  template <typename... Component>
+  bool HasComponents(Entity const &e);
 
   /**
    * @brief Cleanup destroyed entities

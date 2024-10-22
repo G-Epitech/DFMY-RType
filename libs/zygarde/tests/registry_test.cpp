@@ -155,3 +155,28 @@ TEST(RegisterTests, EntityFromIndexOutOfRange) {
   const auto registry = Registry::create();
   ASSERT_THROW(registry->EntityFromIndex(0), Registry::Exception);
 }
+
+TEST(RegistryTests, EntityHasComponent) {
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  registry->RegisterComponent<float>();
+  const auto entity = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  registry->AddComponent<float>(entity, 42.0f);
+  auto intComponent = registry->GetComponents<int>();
+  auto floatComponent = registry->GetComponents<float>();
+  auto hasIntComponent = registry->HasComponents<int, float>(entity);
+  ASSERT_TRUE(hasIntComponent);
+}
+
+TEST(RegistryTests, EntityHasComponentFailed) {
+  auto registry = Registry::create();
+  registry->RegisterComponent<int>();
+  registry->RegisterComponent<float>();
+  const auto entity = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 42);
+  auto intComponent = registry->GetComponents<int>();
+  auto floatComponent = registry->GetComponents<float>();
+  auto hasIntComponent = registry->GetComponent<float>(entity);
+  ASSERT_FALSE(hasIntComponent);
+}
