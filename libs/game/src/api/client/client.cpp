@@ -103,9 +103,6 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
                "🚪");
 
   std::string ip = payload.ip;
-  if (ip == "0.0.0.0") {
-    ip = kLocalhost;
-  }
 
   this->clientUDP_.emplace(ip, payload.port);
   InitUDP();

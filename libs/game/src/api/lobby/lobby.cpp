@@ -139,9 +139,14 @@ void Lobby::HandleNewUser(const server::ClientTCPMessage &message) {
   auto ip = packet->GetPayload().ip;
   auto port = packet->GetPayload().port;
 
+  std::string realIp = ip;
+  if (ip == kLocalhost || ip == kIpNull) {
+    realIp = serverTCP_.GetRemoteAddress(this->masterId_);
+  }
+
   this->clients_.push_back({.id = message.clientId,
                             .endpoint = boost::asio::ip::udp::endpoint(
-                                boost::asio::ip::address::from_string(ip), port)});
+                                boost::asio::ip::address::from_string(realIp), port)});
 
   this->newPlayerHandler_(message.clientId);
 

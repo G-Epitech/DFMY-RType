@@ -7,6 +7,7 @@
 
 #pragma once
 
+constexpr const char *kIpNull = "0.0.0.0";
 constexpr const char *kLocalhost = "127.0.0.1";
 
 namespace rtype::sdk::game::api {
