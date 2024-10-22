@@ -11,6 +11,7 @@
 
 #include "game/includes/constants.hpp"
 #include "game/includes/stats.hpp"
+#include "game/src/utils/projectiles/fire_rate.hpp"
 #include "projectile_factory.hpp"
 #include "scripting/components/script/script.hpp"
 #include "types/weapons.hpp"
@@ -38,8 +39,8 @@ void PlayerFactory::CreateScript(Registry::Const_Ptr registry, const Entity &ent
 
   valuesMap["health"] = 100;
   valuesMap["equippedWeapon"] = sdk::game::types::WeaponType::kBasic;
-  valuesMap["shootCooldown"] = duration_cast<std::chrono::nanoseconds>(
-      std::chrono::duration<float>(sdk::game::stats::WeaponBasic::fireRate));
+  valuesMap["shootCooldown"] =
+      sdk::game::utils::GetFireRate(sdk::game::stats::WeaponBasic::fireRate);
   valuesMap["lastShootTime"] = std::chrono::nanoseconds::zero();
   valuesMap["shoot"] = false;
 
@@ -80,14 +81,15 @@ void PlayerFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr con
   lastShootTime += context->deltaTime;
 
   std::cout << "shoot: " << shoot << " lastShootTime: " << lastShootTime.count()
-            << " shootCooldown: " << shootCooldown.count() << std::endl;
+            << " shootCooldown: " << shootCooldown.count() << "\n";
 
   if (shoot && lastShootTime >= shootCooldown) {
-    lastShootTime = utils::Timer::Nanoseconds::zero();
+    (*context->values)["lastShootTime"] = utils::Timer::Nanoseconds::zero();
     (*context->values)["shoot"] = false;
     ProjectileFactory::CreateProjectile(context->registry, position->point, {5, 5},
                                         sdk::game::types::GameEntityType::kPlayer);
     return;
   }
+  (*context->values)["shoot"] = false;
   (*context->values)["lastShootTime"] = lastShootTime;
 }

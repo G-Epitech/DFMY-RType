@@ -11,8 +11,6 @@
 
 #include "constants/tags.hpp"
 #include "factories/player_factory.hpp"
-#include "factories/projectile_factory.hpp"
-#include "libs/game/src/utils/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/scripting/components/script/script.hpp"
 
 using namespace rtype::server::game;
