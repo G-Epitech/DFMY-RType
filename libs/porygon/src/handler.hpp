@@ -13,6 +13,7 @@
 #include <memory>
 #include <typeindex>
 
+#include "libs/porygon/src/api.h"
 #include "libs/porygon/src/utils/symbols.hpp"
 
 namespace porygon {
@@ -22,7 +23,8 @@ template <typename T, typename... Args>
 concept ConstructibleWithDependenciesHandlerPtr =
     std::is_constructible_v<T, std::shared_ptr<DependenciesHandler>, Args...>;
 
-class DependenciesHandler final : public std::enable_shared_from_this<DependenciesHandler> {
+class EXPORT_PORYGON_API DependenciesHandler final
+    : public std::enable_shared_from_this<DependenciesHandler> {
  private:
   struct Private {
     Private() = default;
