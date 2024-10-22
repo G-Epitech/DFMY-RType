@@ -131,8 +131,8 @@ void Server::HandleLobbyJoin(const abra::server::ClientTCPMessage &message) {
 
 void Server::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.bitset);
-  auto ip = packet->GetPayload().ip;
   auto port = packet->GetPayload().port;
+  auto ip = this->serverTCP_.GetRemoteAddress(message.clientId);
 
   this->clients_[message.clientId].inLobby = true;
   this->clients_[message.clientId].endpoint =
@@ -142,7 +142,7 @@ void Server::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message)
   payload::UserJoinLobby userJoinPayload = {
       .userId = static_cast<unsigned int>(message.clientId),
   };
-  snprintf(userJoinPayload.ip, sizeof(userJoinPayload.ip), "%s", ip);
+  snprintf(userJoinPayload.ip, sizeof(userJoinPayload.ip), "%s", ip.c_str());
   userJoinPayload.port = port;
 
   SendPayloadLobbyTCP(MessageServerType::kUserJoinLobby, userJoinPayload, lobbyId);

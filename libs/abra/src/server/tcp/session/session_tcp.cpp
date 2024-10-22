@@ -97,3 +97,7 @@ void SessionTCP::Close() {
 
   this->logger_.Info("Session closed");
 }
+
+std::string SessionTCP::GetRemoteAddress() const {
+  return this->socket_.remote_endpoint().address().to_string();
+}

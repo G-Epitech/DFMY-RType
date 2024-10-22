@@ -58,6 +58,12 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    */
   void Close();
 
+  /**
+   * @brief Get the remote address
+   * @return The remote address (ip)
+   */
+  std::string GetRemoteAddress() const;
+
  private:
   /**
    * @brief Listen the new request of the client
