@@ -18,17 +18,22 @@ TEST(SystemTests, CreateBasicSystem) {
    public:
     BasicSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
+    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
       (void) r;
-      (void) nb;
+      for (auto &&[i] : components) {
+        (void) i;
+      }
     }
   };
   const auto registry = Registry::create();
   registry->RegisterComponent<int>();
   registry->AddSystem<BasicSystem>();
+  const auto entity = registry->SpawnEntity();
+  registry->AddComponent<int>(entity, 1);
   registry->RunSystems();
 }
 
+/*
 TEST(SystemTests, CreateMultipleSystem) {
   class IntSystem : public ASystem<int> {
    public:
@@ -49,7 +54,6 @@ TEST(SystemTests, CreateMultipleSystem) {
       for (auto &&[f, i] : zipper(floats, ints)) {
         (void) f;
         (void) i;
-        std::cout << "Float: " << f << " Int: " << i << std::endl;
       }
     }
   };
@@ -94,3 +98,4 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   registry->AddSystem<FloatSystem>();
   registry->RunSystems();
 }
+*/

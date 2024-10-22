@@ -8,6 +8,7 @@
 #pragma once
 
 #include "./registry.hpp"
+#include "./tools/zipper.hpp"
 #include "libs/zygarde/src/api.hpp"
 
 namespace zygarde {
@@ -25,7 +26,8 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
    * @param r The registry
    * @param components The components
    */
-  virtual void Run(std::shared_ptr<Registry> r, sparse_array<Components>::ptr... components) = 0;
+  virtual void Run(std::shared_ptr<Registry> r,
+                   zipper<typename sparse_array<Components>::ptr...> components) = 0;
 };
 }  // namespace zygarde
 

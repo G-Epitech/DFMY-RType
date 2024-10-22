@@ -24,7 +24,7 @@ class zipper {
    * @brief Construct a new zipper object
    * @param cs Containers
    */
-  explicit zipper(Containers &...cs);
+  explicit zipper(Containers &&...cs);
 
   /**
    * @brief Get the begin iterator

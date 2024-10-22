@@ -10,6 +10,6 @@
 using namespace zygarde;
 
 template <class... Components>
-void ASystem<Components...>::operator()(std::shared_ptr<Registry> r) {
-  Run(r, r->GetComponents<Components>()...);
+void ASystem<Components...>::operator()(const std::shared_ptr<Registry> r) {
+  Run(r, zipper<typename sparse_array<Components>::ptr...>(r->GetComponents<Components>()...));
 }

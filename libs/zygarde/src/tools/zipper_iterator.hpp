@@ -19,8 +19,13 @@ class zipper_iterator {
   template <class Container>
   using it_reference_t = typename iterator_t<Container>::reference;
 
-  template <typename T>
+  template <typename T, typename = void>
   struct unwrapped {
+    using type = T;
+  };
+
+  template <typename T>
+  struct unwrapped<T, std::void_t<typename T::value_type>> {
     using type = typename T::value_type::value_type;
   };
 
