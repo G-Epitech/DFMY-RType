@@ -49,6 +49,7 @@ TEST(SystemTests, CreateMultipleSystem) {
       for (auto &&[f, i] : zipper(floats, ints)) {
         (void) f;
         (void) i;
+        std::cout << "Float: " << f << " Int: " << i << std::endl;
       }
     }
   };

@@ -19,9 +19,22 @@ class zipper_iterator {
   template <class Container>
   using it_reference_t = typename iterator_t<Container>::reference;
 
+  template <typename T>
+  struct unwrapped {
+    using type = typename T::value_type::value_type;
+  };
+
+  template <typename T>
+  struct unwrapped<std::shared_ptr<T>> {
+    using type = typename T::value_type::value_type;
+  };
+
+  template <class T>
+  using unwrapped_t = typename unwrapped<T>::type;
+
  public:
   /// @brief The value type of the iterator
-  using value_type = std::tuple<typename std::remove_reference_t<it_reference_t<Containers>>...>;
+  using value_type = std::tuple<unwrapped_t<Containers>...>;
   /// @brief The reference type of the iterator
   using reference = value_type;
   /// @brief The pointer type of the iterator
