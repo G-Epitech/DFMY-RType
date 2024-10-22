@@ -71,9 +71,14 @@ std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Lobby::Extr
 
 std::uint64_t Lobby::FindUserByEndpoint(const boost::asio::ip::udp::endpoint &endpoint) {
   for (auto &client : this->clients_) {
-    if (client.endpoint.address().to_string() == endpoint.address().to_string() &&
-        client.endpoint.port() == endpoint.port()) {
-      return client.id;
+    if (client.endpoint.port() == endpoint.port()) {
+      if (client.endpoint.address().to_string() == kIpNull ||
+          client.endpoint.address().to_string() == kLocalhost) {
+        return client.id;
+      }
+      if (client.endpoint.address().to_string() == endpoint.address().to_string()) {
+        return client.id;
+      }
     }
   }
 
@@ -138,17 +143,18 @@ void Lobby::HandleNewUser(const server::ClientTCPMessage &message) {
   auto packet = this->packetBuilder_.Build<payload::UserJoinLobby>(message.bitset);
   auto ip = packet->GetPayload().ip;
   auto port = packet->GetPayload().port;
+  auto userId = packet->GetPayload().userId;
 
   std::string realIp = ip;
   if (ip == kLocalhost || ip == kIpNull) {
     realIp = serverTCP_.GetRemoteAddress(this->masterId_);
   }
 
-  this->clients_.push_back({.id = message.clientId,
+  this->clients_.push_back({.id = userId,
                             .endpoint = boost::asio::ip::udp::endpoint(
                                 boost::asio::ip::address::from_string(realIp), port)});
 
-  this->newPlayerHandler_(message.clientId);
+  this->newPlayerHandler_(userId);
 
-  logger_.Info("New user connected: " + std::to_string(message.clientId), "👤");
+  logger_.Info("New user connected: " + std::to_string(userId), "👤");
 }
