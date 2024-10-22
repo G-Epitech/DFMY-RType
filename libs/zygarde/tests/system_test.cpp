@@ -33,25 +33,24 @@ TEST(SystemTests, CreateBasicSystem) {
   registry->RunSystems();
 }
 
-/*
 TEST(SystemTests, CreateMultipleSystem) {
   class IntSystem : public ASystem<int> {
    public:
     IntSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
+    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
       (void) r;
-      (void) nb;
+      (void) components;
     }
   };
   class FloatSystem : public ASystem<float, int> {
    public:
     FloatSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, sparse_array<float>::ptr floats,
-             sparse_array<int>::ptr ints) override {
+    void Run(std::shared_ptr<Registry> r,
+             zipper<sparse_array<float>::ptr, sparse_array<int>::ptr> components) override {
       (void) r;
-      for (auto &&[f, i] : zipper(floats, ints)) {
+      for (auto &&[f, i] : components) {
         (void) f;
         (void) i;
       }
@@ -78,18 +77,18 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
    public:
     IntSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
+    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
       (void) r;
-      (void) nb;
+      (void) components;
     }
   };
   class FloatSystem : public ASystem<int> {
    public:
     FloatSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, sparse_array<int>::ptr nb) override {
+    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
       (void) r;
-      (void) nb;
+      (void) components;
     }
   };
   const auto registry = Registry::create();
@@ -98,4 +97,3 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   registry->AddSystem<FloatSystem>();
   registry->RunSystems();
 }
-*/
