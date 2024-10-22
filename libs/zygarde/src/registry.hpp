@@ -92,8 +92,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
 
   bool HasEntityAtIndex(std::size_t idx) const;
 
-  [[nodiscard]] std::size_t IndexFromEntity(Entity const &e) const;
-
   /**
    * @brief Kill an entity
    * @param e Entity to kill
