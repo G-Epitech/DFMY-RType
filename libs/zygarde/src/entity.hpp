@@ -15,6 +15,7 @@
 namespace zygarde {
 
 class Registry;
+
 /**
  * @brief Entity class
  * This class is used to represent an entity in the ECS system
@@ -57,6 +58,14 @@ class EXPORT_ZYGARDE_API Entity {
    */
   bool operator==(const Entity& other) const;
 
+  /**
+   * @brief Get the component
+   * @tparam Component Component to get
+   * @return Component*
+   */
+  template <typename Component>
+  Component* GetComponent();
+
  protected:
   /// @brief Entity id
   std::size_t id_;
@@ -81,6 +90,7 @@ class EXPORT_ZYGARDE_API Entity {
   friend class Registry;
 };
 
+/// @brief Entity type concept
 template <class T>
 concept EntityType = std::is_base_of_v<Entity, T>;
 

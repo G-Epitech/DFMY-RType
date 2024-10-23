@@ -214,3 +214,12 @@ TEST(RegistryTests, AddOwnEntity) {
   const auto entity = registry->SpawnEntity<MyBestEntity>(42);
   registry->AddComponent<int>(entity, 42);
 }
+
+TEST(RegistryTests, GetEntityComponent) {
+  const auto registry = Registry::Create();
+  auto entity = registry->SpawnEntity();
+  registry->RegisterComponent<int>();
+  registry->AddComponent<int>(entity, 42);
+  const auto component = entity.GetComponent<int>();
+  ASSERT_EQ(*component, 42);
+}

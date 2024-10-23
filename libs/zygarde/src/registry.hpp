@@ -226,4 +226,5 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
 };
 }  // namespace zygarde
 
-#include "registry.tpp"
+#include "./entity.tpp"
+#include "./registry.tpp"
