@@ -12,23 +12,23 @@
 #include "libs/mew/src/managers/window_manager.hpp"
 
 using namespace mew::managers;
-using namespace mew::app;
+using namespace mew::game;
 
-AppBuilder::AppBuilder() {
+GameBuilder::GameBuilder() {
   services_ = DependenciesHandler::Create();
 }
 
-AppBuilder &AppBuilder::WithWindowProperties(
+GameBuilder &GameBuilder::WithWindowProperties(
     const managers::WindowManager::Properties &properties) {
   windowProperties_ = properties;
   return *this;
 }
 
-App AppBuilder::Build() {
+Game GameBuilder::Build() {
   return {services_, BuildDefaultManagers()};
 }
 
-DefaultManagers AppBuilder::BuildDefaultManagers() {
+DefaultManagers GameBuilder::BuildDefaultManagers() {
   if (!windowProperties_)
     throw std::runtime_error("Window properties are required");
   WithService<WindowManager>(*windowProperties_);

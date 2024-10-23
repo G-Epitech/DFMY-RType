@@ -10,17 +10,19 @@
 #include <utility>
 
 #include "libs/mew/src/sets/events/events.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
 
 using namespace mew::scenes;
 using namespace mew::managers;
 using namespace mew::sets;
 using namespace porygon;
+namespace zyc = zygarde::core;
 
 SceneBase::SceneBase(DependenciesHandler::Ptr services) : services_(std::move(services)) {
-  defaultManagers_ = {.window = services->GetOrThrow<WindowManager>(),
-                      .scenes = services->GetOrThrow<ScenesManager>(),
-                      .sound = services->GetOrThrow<SoundManager>(),
-                      .resources = services->GetOrThrow<ResourcesManager>()};
+  defaultManagers_ = {.window = services_->GetOrThrow<WindowManager>(),
+                      .scenes = services_->GetOrThrow<ScenesManager>(),
+                      .sound = services_->GetOrThrow<SoundManager>(),
+                      .resources = services_->GetOrThrow<ResourcesManager>()};
   InitializeRegistry();
 }
 
@@ -55,6 +57,7 @@ void SceneBase::AddDefaultSystems() {
 
 void SceneBase::RegisterDefaultComponents() {
   registry_->RegisterComponent<drawable::Drawable>();
+  registry_->RegisterComponent<zyc::components::Position>();
   registry_->RegisterComponent<events::OnMousePressed>();
   registry_->RegisterComponent<events::OnMouseReleased>();
   registry_->RegisterComponent<events::OnMouseScrolled>();

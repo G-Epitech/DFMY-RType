@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rtype
 ** File description:
-** app
+** game
 */
 
 #pragma once
@@ -14,9 +14,9 @@
 #include "libs/porygon/src/handler.hpp"
 #include "libs/zygarde/src/utils/timer/timer.hpp"
 
-namespace mew::app {
+namespace mew::game {
 
-class AppBuilder;
+class GameBuilder;
 
 /**
  * @class App
@@ -26,15 +26,15 @@ class AppBuilder;
  * the necessary methods to initialize and Run the application.
  */
 
-class App final {
-  friend class AppBuilder;
+class Game final {
+  friend class GameBuilder;
 
  public:
   /**
    * @brief Default destructor for the App class.
    * Cleans up any resources used by the App class.
    */
-  ~App() = default;
+  ~Game() = default;
 
   /**
    * @brief Runs the client-side application.
@@ -66,12 +66,12 @@ class App final {
 
  private:
   /**
-   * @brief Default constructor for the App class.
-   * Initializes a new instance of the App class.
+   * @brief Default constructor for the Game class.
+   * Initializes a new instance of the Game.
    * @param service The services provider to use for the application.
    * @param default_managers The default managers to use for the application.
    */
-  App(porygon::DependenciesHandler::Ptr service, managers::DefaultManagers default_managers);
+  Game(porygon::DependenciesHandler::Ptr service, managers::DefaultManagers default_managers);
 
   /**
    * @brief Store the services provider.
@@ -86,4 +86,4 @@ class App final {
   /// @brief Timer
   zygarde::utils::Timer timer_;
 };
-}  // namespace mew::app
+}  // namespace mew::game

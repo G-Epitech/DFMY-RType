@@ -5,17 +5,17 @@
 ** factory.cpp
 */
 
-namespace mew::app {
+namespace mew::game {
 template <typename T, typename... Args>
-AppBuilder &AppBuilder::WithService(Args &&...args) {
+GameBuilder &GameBuilder::WithService(Args &&...args) {
   services_->Add<T>(std::forward<Args>(args)...);
   return *this;
 }
 
 template <typename T>
-AppBuilder &AppBuilder::WithServiceInstance(std::shared_ptr<T> instance) {
+GameBuilder &GameBuilder::WithServiceInstance(std::shared_ptr<T> instance) {
   services_->AddInstance<T>(instance);
   return *this;
 }
 
-}  // namespace mew::app
+}  // namespace mew::game

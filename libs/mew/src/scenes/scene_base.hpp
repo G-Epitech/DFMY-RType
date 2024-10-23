@@ -13,6 +13,9 @@
 #include "libs/zygarde/src/registry.hpp"
 
 namespace mew::scenes {
+
+using namespace porygon;
+
 class SceneBase : public IScene {
  public:
   /**

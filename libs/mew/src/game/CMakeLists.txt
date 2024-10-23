@@ -1,6 +1,6 @@
 target_sources(mew PRIVATE
-        app.cpp
-        app.hpp
+        game.cpp
+        game.hpp
         builder.hpp
         builder.cpp
         builder.tpp

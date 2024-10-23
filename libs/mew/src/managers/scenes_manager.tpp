@@ -22,7 +22,7 @@ void ScenesManager::RegisterScene() {
 template <scenes::SceneType T>
 scenes::IScene::Ptr ScenesManager::CreateScene() {
   auto type = std::type_index(typeid(T));
-  auto scene = scenesMap_[type] = std::make_shared<T>();
+  auto scene = scenesMap_[type] = services_->MakeSharedWithDependencies<T>();
 
   if (!scene)
     throw Exception("Failed to Create scene: " + utils::GetTypeName<T>());

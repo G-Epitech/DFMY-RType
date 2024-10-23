@@ -9,28 +9,28 @@
 
 #include <optional>
 
-#include "./app.hpp"
+#include "./game.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/porygon/src/handler.hpp"
 
-namespace mew::app {
+namespace mew::game {
 
 using namespace porygon;
 
-class AppBuilder {
+class GameBuilder {
  public:
   /**
    * @brief Construct a new App Builder object
    */
-  AppBuilder();
-  ~AppBuilder() = default;
+  GameBuilder();
+  ~GameBuilder() = default;
 
   /**
    * @brief Set the properties of the window manager to be created
    * @param properties Properties of the window manager
    * @return Current builder
    */
-  AppBuilder &WithWindowProperties(const managers::WindowManager::Properties &properties);
+  GameBuilder &WithWindowProperties(const managers::WindowManager::Properties &properties);
 
   /**
    * @brief Add a manager to the provider
@@ -40,7 +40,7 @@ class AppBuilder {
    * @return Current builder
    */
   template <typename T, typename... Args>
-  AppBuilder &WithService(Args &&...args);
+  GameBuilder &WithService(Args &&...args);
 
   /**
    * @brief Add a manager instance to the provider
@@ -49,13 +49,13 @@ class AppBuilder {
    * @return Current builder
    */
   template <typename T>
-  AppBuilder &WithServiceInstance(std::shared_ptr<T> instance);
+  GameBuilder &WithServiceInstance(std::shared_ptr<T> instance);
 
   /**
    * @brief Build the application
    * @return Built application
    */
-  App Build();
+  Game Build();
 
  private:
   /**
@@ -69,6 +69,6 @@ class AppBuilder {
   /// @brief Managers provider
   DependenciesHandler::Ptr services_;
 };
-}  // namespace mew::app
+}  // namespace mew::game
 
 #include "./builder.tpp"
