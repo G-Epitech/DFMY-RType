@@ -78,15 +78,6 @@ class GameService {
   void HandlePlayerShootMessage(const std::uint64_t &player_id,
                                 const abra::server::ClientUDPMessage &data);
 
-  /**
-   * @brief Send stats to the server
-   */
-  void BroadcastEntityStates() const;
-
-  void GatherEntityStates(const std::unique_ptr<EntityStates> &states) const;
-
-  void SendStates(const std::unique_ptr<EntityStates> &states) const;
-
  private:
   /// @brief Game running flag
   bool gameRunning_{true};

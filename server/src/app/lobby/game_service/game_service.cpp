@@ -12,6 +12,7 @@
 #include "constants/tags.hpp"
 #include "factories/player_factory.hpp"
 #include "libs/zygarde/src/scripting/components/script/script.hpp"
+#include "state_broadcaster/state_broadcaster.hpp"
 
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
@@ -38,7 +39,7 @@ int GameService::Run(std::shared_ptr<Lobby> api) {
     ticksManager_.Update();
     HandleMessages();
     ExecuteGameLogic();
-    BroadcastEntityStates();
+    StateBroadcaster::Run(registry_, api_);
     ticksManager_.WaitUntilNextTick();
   }
   return EXIT_SUCCESS;
@@ -108,61 +109,4 @@ void GameService::NewPlayer(std::uint64_t player_id) {
 
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
-}
-
-void GameService::BroadcastEntityStates() const {
-  std::unique_ptr<EntityStates> entityStates = std::make_unique<EntityStates>();
-
-  GatherEntityStates(entityStates);
-  SendStates(entityStates);
-}
-
-void GameService::GatherEntityStates(const std::unique_ptr<EntityStates> &states) const {
-  const auto components = registry_->GetComponents<core::components::Position>();
-  std::size_t i = 0;
-
-  for (auto &component : *components) {
-    if (!registry_->HasEntityAtIndex(i) || !component.has_value()) {
-      i++;
-      continue;
-    }
-
-    const auto val = component.value();
-    auto ent = registry_->EntityFromIndex(i);
-    const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
-    const auto tags = registry_->GetComponent<core::components::Tags>(ent);
-
-    if (*tags == sdk::game::constants::kPlayerTag) {
-      payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
-      states->playerStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kEnemyTag) {
-      payload::EnemyState state = {static_cast<std::size_t>(ent), vec,
-                                   sdk::game::types::EnemyType::kPata, 100};
-      states->enemyStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kPlayerBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
-                                    sdk::game::types::ProjectileType::kPlayerCommon};
-      states->bulletStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kEnemyBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
-                                    sdk::game::types::ProjectileType::kEnemyCommon};
-      states->bulletStates.push_back(state);
-    }
-    i++;
-  }
-}
-
-void GameService::SendStates(const std::unique_ptr<EntityStates> &states) const {
-  if (!states->playerStates.empty()) {
-    this->api_->SendPlayersState(states->playerStates);
-  }
-  if (!states->enemyStates.empty()) {
-    this->api_->SendEnemiesState(states->enemyStates);
-  }
-  if (!states->bulletStates.empty()) {
-    this->api_->SendBulletsState(states->bulletStates);
-  }
 }
