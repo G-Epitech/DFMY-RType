@@ -14,15 +14,15 @@ using namespace zygarde::scripting::systems;
 ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& deltaTime)
     : deltaTime_{deltaTime} {}
 
-void ScriptExecutionSystem::Run(Registry::Ptr r,
-                                sparse_array<scripting::components::Script>::ptr scripts) {
-  std::cout << "Scripts size " << scripts->size() << std::endl;
-  for (currentScriptIndex_; currentScriptIndex_ < scripts->size(); currentScriptIndex_++) {
-    auto& scriptComponent = (*scripts)[currentScriptIndex_];
-    if (!scriptComponent.has_value() || !r->HasEntityAtIndex(currentScriptIndex_)) {
-      continue;
-    }
-    ProcessScript(r, &scriptComponent.value());
+void ScriptExecutionSystem::Run(
+    Registry::Ptr r, zipper<sparse_array<scripting::components::Script>::ptr> components) {
+  const auto start = components.begin();
+  const auto end = components.end();
+  for (auto it = start; it != end; ++it) {
+    auto&& [index, values] = ~it;
+    auto&& [scripts] = values;
+    currentScriptIndex_ = index;
+    ProcessScript(r, &scripts);
   }
   currentScriptIndex_ = 0;
 }
