@@ -13,27 +13,28 @@
 using namespace zygarde::physics::systems;
 
 void CollisionSystem::Run(std::shared_ptr<Registry> r,
-                          tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
-                          tools::sparse_array<core::components::Position>::ptr positions,
-                          tools::sparse_array<components::BoxCollider2D>::ptr colliders) {
-  for (size_t i = 0; i < positions->size(); i++) {
-    if (!r->HasEntityAtIndex(i)) {
-      continue;
-    }
-    if (!IndexHasRequiredComponents(i, rigidbodies, positions, colliders)) {
-      continue;
-    }
-    auto componentsPack = GetComponentsPackAtIndex(r, i, rigidbodies, positions, colliders);
+                          zipper<sparse_array<components::Rigidbody2D>::ptr,
+                                 sparse_array<core::components::Position>::ptr,
+                                 sparse_array<components::BoxCollider2D>::ptr>
+                              components) {
+  const auto start = components.begin();
+  const auto end = components.end();
+  for (auto it = start; it != end; ++it) {
+    auto &&[index, values] = ~it;
+    auto &&[rigidbodies, positions, colliders] = values;
+    ComponentsPack componentsPack = {&rigidbodies, &positions, &colliders,
+                                     r->EntityFromIndex(index)};
 
-    for (size_t j = i + 1; j < positions->size(); j++) {
-      if (!IndexHasRequiredComponents(j, rigidbodies, positions, colliders)) {
+    const auto startOther = it + 1;
+    const auto endOther = components.end();
+    for (auto itOther = startOther; itOther != endOther; ++itOther) {
+      auto &&[indexOther, valuesOther] = ~itOther;
+      auto &&[rigidbodiesOther, positionsOther, collidersOther] = valuesOther;
+      if (index == indexOther) {
         continue;
       }
-      if (!r->HasEntityAtIndex(j)) {
-        break;
-      }
-      auto otherComponentsPack = GetComponentsPackAtIndex(r, j, rigidbodies, positions, colliders);
-
+      ComponentsPack otherComponentsPack = {&rigidbodiesOther, &positionsOther, &collidersOther,
+                                            r->EntityFromIndex(indexOther)};
       if (!HaveCommonCollisionLayers(*componentsPack.boxCollider,
                                      *otherComponentsPack.boxCollider)) {
         continue;

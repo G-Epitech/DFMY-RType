@@ -40,7 +40,6 @@ TEST(SystemTests, CreateBasicSystem) {
   registry->RunSystems();
 }
 
-/*
 TEST(SystemTests, CreateMultipleSystem) {
   class IntSystem : public ASystem<int> {
    public:
@@ -105,4 +104,3 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
   registry->AddSystem<FloatSystem>();
   registry->RunSystems();
 }
-*/

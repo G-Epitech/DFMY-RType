@@ -44,6 +44,16 @@ zygarde::tools::zipper_iterator<Containers...>::operator++(int) {
 }
 
 template <class... Containers>
+zygarde::tools::zipper_iterator<Containers...>
+zygarde::tools::zipper_iterator<Containers...>::operator+(const int n) {
+  zipper_iterator tmp = *this;
+  for (int i = 0; i < n && tmp.current_ != tmp.end_; ++i) {
+    ++tmp;
+  }
+  return tmp;
+}
+
+template <class... Containers>
 typename zygarde::tools::zipper_iterator<Containers...>::value_type
 zygarde::tools::zipper_iterator<Containers...>::operator*() {
   return to_value(seq_);
@@ -65,12 +75,12 @@ template <class... Containers>
 template <std::size_t... Is>
 bool zygarde::tools::zipper_iterator<Containers...>::all_set(std::index_sequence<Is...>) {
   return (... &&
-          (std::get<Is>(current_) != std::get<Is>(end_) && (*std::get<Is>(current_)).has_value()));
+          (std::get<Is>(current_) != std::get<Is>(end_) && (std::get<Is>(current_))->has_value()));
 }
 
 template <class... Containers>
 template <std::size_t... Is>
 typename zygarde::tools::zipper_iterator<Containers...>::value_type
 zygarde::tools::zipper_iterator<Containers...>::to_value(std::index_sequence<Is...>) {
-  return std::make_tuple(std::get<Is>(current_)->value()...);
+  return std::make_tuple(std::ref(**std::get<Is>(current_))...);
 }

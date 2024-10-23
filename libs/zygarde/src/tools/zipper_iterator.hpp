@@ -42,7 +42,7 @@ class zipper_iterator {
 
   /// @brief The unwrapped type of the container
   template <class T>
-  using unwrapped_t = typename unwrapped<T>::type;
+  using unwrapped_t = typename unwrapped<T>::type &;
 
   /// @brief Struct used to store the index and the value of the iterator
   template <typename T>
@@ -92,6 +92,13 @@ class zipper_iterator {
    * @return zipper_iterator The incremented iterator
    */
   zipper_iterator operator++(int);
+
+  /**
+   * @brief Increment the iterator
+   * @param n The number of elements to increment
+   * @return zipper_iterator The incremented iterator
+   */
+  zipper_iterator operator+(int);
 
   /**
    * @brief Get the value of the iterator
