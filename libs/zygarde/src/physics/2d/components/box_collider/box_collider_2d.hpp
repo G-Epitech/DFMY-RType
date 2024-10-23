@@ -18,7 +18,6 @@ class EXPORT_ZYGARDE_API BoxCollider2D final {
 
  public:
   BoxCollider2D() = delete;
-  ~BoxCollider2D() = default;
 
   /**
    * @brief Construct a new BoxCollider2D object

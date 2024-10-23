@@ -12,6 +12,7 @@
 
 #include "components/drawable.hpp"
 #include "libs/zygarde/src/core/components/position/position.hpp"
+#include "texture_mapper/texture_mapper.hpp"
 
 using namespace rtype::client::systems;
 using namespace rtype::client::components;
@@ -64,21 +65,21 @@ void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, con
   }
 }
 
-void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const zygarde::core::types::Vector3f& pos) {
+void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
+                                  const sdk::game::api::payload::BulletState& state) {
   const auto bullet = registry->SpawnEntity();
-  static const sf::IntRect base{200, 120, 32, 15};
+  const core::types::Vector3f pos(state.position.x, state.position.y, 0);
 
-  registry->AddComponent<components::ServerEntityId>(bullet, {.id = id});
+  registry->AddComponent<components::ServerEntityId>(bullet, {.id = state.entityId});
   registry->AddComponent<zygarde::core::components::Position>(
       bullet, {.point = pos,
                .aligns = {core::components::HorizontalAlign::kLeft,
                           core::components::VerticalAlign::kTop}});
   registry->AddComponent<components::Drawable>(
       bullet, {
-                  .drawable = components::Texture{.name = "player", .scale = 2, .rect = base},
+                  .drawable = TextureMapper::MapBulletType(state.bulletType),
               });
-  bullets_.insert_or_assign(id, bullet);
+  bullets_.insert_or_assign(state.entityId, bullet);
 }
 
 void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
@@ -179,7 +180,7 @@ void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
   if (bullets_.contains(state.entityId)) {
     UpdateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   } else {
-    CreateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    CreateBullet(registry, state);
   }
   handled->insert(state.entityId);
 }
@@ -209,7 +210,7 @@ void GameSyncSystem::HandleEnemyState(const Registry::Ptr& registry,
 void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
                                     const std::set<std::size_t>& handled,
                                     std::map<std::size_t, Entity>* entities) {
-  for (auto it = entities->begin(); it != entities->end(); ) {
+  for (auto it = entities->begin(); it != entities->end();) {
     const auto& [id, entity] = *it;
     if (handled.find(id) == handled.end()) {
       registry->KillEntity(entity);

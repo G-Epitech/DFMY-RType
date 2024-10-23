@@ -141,9 +141,14 @@ void GameService::GatherEntityStates(const std::unique_ptr<EntityStates> &states
                                    sdk::game::types::EnemyType::kPata, 100};
       states->enemyStates.push_back(state);
     }
-    if (*tags == sdk::game::constants::kPlayerBulletTag ||
-        *tags == sdk::game::constants::kEnemyBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec};
+    if (*tags == sdk::game::constants::kPlayerBulletTag) {
+      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
+                                    sdk::game::types::ProjectileType::kPlayerCommon};
+      states->bulletStates.push_back(state);
+    }
+    if (*tags == sdk::game::constants::kEnemyBulletTag) {
+      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
+                                    sdk::game::types::ProjectileType::kEnemyCommon};
       states->bulletStates.push_back(state);
     }
     i++;
