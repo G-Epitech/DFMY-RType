@@ -7,21 +7,18 @@
 
 #pragma once
 
-#include "interfaces/scene_interface.hpp"
+#include "./scene_interface.hpp"
 #include "libs/zygarde/src/registry.hpp"
-#include "managers/game_manager.hpp"
-#include "managers/resources_manager.hpp"
-#include "managers/sound_manager.hpp"
+#include "managers/provider.hpp"
 
-namespace rtype::client {
-template <typename ContextType>
+namespace mew::scenes {
 class SceneBase : public IScene {
  protected:
   /**
    * @brief Build common scene with global context
    * @param context Context provided by the scenes manager
    */
-  explicit SceneBase(const ContextType &context);
+  explicit SceneBase(const managers::DependenciesHandler &context);
 
   /**
    * @brief Destroy the scene
@@ -70,6 +67,6 @@ class SceneBase : public IScene {
    */
   void OnDeactivate() override;
 };
-}  // namespace rtype::client
+}  // namespace mew::scenes
 
 #include "scene_base.tpp"

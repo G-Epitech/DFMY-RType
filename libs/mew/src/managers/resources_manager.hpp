@@ -13,9 +13,11 @@
 #include <memory>
 #include <string>
 
-namespace rtype::client {
+#include "./manager_base.hpp"
 
-class ResourcesManager {
+namespace mew::managers {
+
+class ResourcesManager : public ManagerBase {
  public:
   /// @brief Pointer type of the resources manager
   using Ptr = std::shared_ptr<ResourcesManager>;
@@ -24,15 +26,10 @@ class ResourcesManager {
   using FontPtr = std::shared_ptr<sf::Font>;
 
   /**
-   * @brief Create a new resources manager
-   * @return Created shared pointer of resources manager
-   */
-  static Ptr Create();
-
-  /**
    * @brief Construct a new Resources Manager object
+   * @param services Managers provider
    */
-  ResourcesManager();
+  explicit ResourcesManager(DependenciesHandler::Ptr services);
 
   /**
    * @brief Destroy the Resources Manager object
@@ -95,4 +92,4 @@ class ResourcesManager {
   /// @brief Map of resources
   ResourcesMap resourcesMap_;
 };
-}  // namespace rtype::client
+}  // namespace mew::managers

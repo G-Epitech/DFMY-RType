@@ -1,4 +1,4 @@
-target_sources(mew PRIVATE
-        foo.cpp
-        foo.hpp
-)
+add_subdirectory(app)
+add_subdirectory(managers)
+add_subdirectory(utils)
+add_subdirectory(scenes)

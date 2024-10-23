@@ -60,7 +60,7 @@ void SceneLobby::CreateStatusText() {
   const auto secondary_text = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto base =
-      Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height_ / 2 + 250);
+      Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height / 2 + 250);
 
   registry_->AddComponent<Position>(main_text, {base, aligns});
   registry_->AddComponent<Tags>(main_text, Tags({"main_status_text"}));
@@ -76,7 +76,7 @@ void SceneLobby::CreateGEpitechLogo() {
   const auto logo = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
-                                          context_.windowManager->height_ / 2 - 150);
+                                          context_.windowManager->height / 2 - 150);
   const auto rect = sf::IntRect{0, 0, 927, 927};
   registry_->AddComponent<Position>(logo, {point, aligns});
   registry_->AddComponent<Drawable>(

@@ -12,29 +12,21 @@
 #include <string>
 #include <typeindex>
 
-#include "interfaces/scene_interface.hpp"
-#include "window_manager.hpp"
+#include "./manager_base.hpp"
+#include "./window_manager.hpp"
+#include "libs/mew/src/scenes/scene_interface.hpp"
 
-namespace rtype::client {
+namespace mew::managers {
 
-template <typename ContextType>
-class ScenesManager {
+class ScenesManager : public ManagerBase {
  public:
   /// @brief Pointer type of the scenes manager
   typedef std::shared_ptr<ScenesManager> Ptr;
 
   /**
-   * @brief Create a new scenes manager
-   * @param window_manager Window manager
-   * @param context Context of the app
-   * @return Created scenes manager
-   */
-  static Ptr Create(WindowManager::Ptr window_manager, const ContextType &context);
-
-  /**
    * @brief Construct a new Scenes Manager object
    */
-  explicit ScenesManager(WindowManager::Ptr window_manager, const ContextType &context);
+  explicit ScenesManager(DependenciesHandler::Ptr services);
 
   /**
    * @brief Destroy the Scenes Manager object
@@ -45,21 +37,21 @@ class ScenesManager {
    * @brief Register a scene
    * @tparam T Scene to register
    */
-  template <SceneType T>
+  template <scenes::SceneType T>
   void RegisterScene();
 
   /**
    * @brief Go to a scene
    * @tparam T Scene to go to
    */
-  template <SceneType T>
+  template <scenes::SceneType T>
   void GoToScene();
 
   /**
    * @brief Update the current scene
    * @param delta_time Delta time
    */
-  void Update(client::utils::DeltaTime delta_time);
+  void Update(zygarde::utils::Timer::Nanoseconds delta_time);
 
   /**
    * @brief Quit the application
@@ -89,13 +81,10 @@ class ScenesManager {
 
  private:
   /// @brief Map of scenes
-  using ScenesMap = std::map<std::type_index, IScene::Ptr>;
+  using ScenesMap = std::map<std::type_index, scenes::IScene::Ptr>;
 
   /// @brief Map of scenes
   ScenesMap scenesMap_;
-
-  /// @brief Global context of the app
-  const ContextType &context_;
 
   /// @brief Window manager
   WindowManager::Ptr windowManager_;
@@ -104,27 +93,22 @@ class ScenesManager {
   bool active_ = true;
 
   /// @brief Current scene
-  IScene::Ptr currentScene_ = nullptr;
+  scenes::IScene::Ptr currentScene_ = nullptr;
 
   /**
    * @brief Switch to a scene
    * @param new_scene New scene to switch to
    */
-  void SwitchToScene(IScene::Ptr new_scene);
+  void SwitchToScene(scenes::IScene::Ptr new_scene);
 
   /**
    * @brief Create a scene of a specific type
    * @tparam T Scene type to create
    * @return Created scene
    */
-  template <SceneType T>
-  IScene::Ptr CreateScene();
+  template <scenes::SceneType T>
+  scenes::IScene::Ptr CreateScene();
 };
-template <typename ContextType>
-ScenesManager<ContextType>::Ptr ScenesManager<ContextType>::Create(
-    WindowManager::Ptr window_manager, const ContextType &context) {
-  return std::make_shared<ScenesManager>(window_manager, context);
-}
-}  // namespace rtype::client
+}  // namespace mew::managers
 
-#include "scenes_manager.tpp"
+#include "./scenes_manager.tpp"

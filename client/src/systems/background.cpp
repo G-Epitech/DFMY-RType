@@ -10,9 +10,9 @@
 #include <iostream>
 #include <random>
 
-#include "app/app.hpp"
 #include "components/drawable.hpp"
 #include "core/components/position/position.hpp"
+#include "libs/mew/src/app/app.hpp"
 
 using namespace rtype::client::systems;
 using namespace rtype::client::components;

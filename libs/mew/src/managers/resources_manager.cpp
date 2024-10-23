@@ -5,15 +5,14 @@
 ** resources_manager.cpp
 */
 
-#include "resources_manager.hpp"
+#include "./resources_manager.hpp"
 
-using namespace rtype::client;
+#include <utility>
 
-ResourcesManager::Ptr ResourcesManager::Create() {
-  return std::make_shared<ResourcesManager>();
-}
+using namespace mew::managers;
 
-ResourcesManager::ResourcesManager() = default;
+ResourcesManager::ResourcesManager(DependenciesHandler::Ptr services)
+    : ManagerBase(std::move(services)) {}
 
 ResourcesManager::~ResourcesManager() = default;
 

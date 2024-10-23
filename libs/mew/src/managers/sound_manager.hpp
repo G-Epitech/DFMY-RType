@@ -13,22 +13,20 @@
 #include <memory>
 #include <queue>
 
-namespace rtype::client {
-class SoundManager {
+#include "manager_base.hpp"
+
+namespace mew::managers {
+
+class SoundManager : public ManagerBase {
  public:
   /// @brief Pointer to a sound manager
   using Ptr = std::shared_ptr<SoundManager>;
 
   /**
-   * @brief Create a new sound manager
-   * @return Pointer to the sound manager
-   */
-  static Ptr Create();
-
-  /**
    * @brief Construct a new Window Manager object
+   * @param services Services provider
    */
-  SoundManager();
+  explicit SoundManager(DependenciesHandler::Ptr services);
 
   /**
    * @brief Construct a new Window Manager object
@@ -103,4 +101,4 @@ class SoundManager {
   /// @brief Volume of the music
   float musicVolume_ = 100;
 };
-}  // namespace rtype::client
+}  // namespace mew::managers

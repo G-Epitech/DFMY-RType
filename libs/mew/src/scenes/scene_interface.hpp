@@ -11,9 +11,9 @@
 #include <chrono>
 #include <memory>
 
-#include "utils/time.hpp"
+#include "libs/zygarde/src/utils/timer/timer.hpp"
 
-namespace rtype::client {
+namespace mew::scenes {
 class IScene {
  public:
   /// @brief Pointer type
@@ -50,7 +50,7 @@ class IScene {
    * @brief Update the scene
    * @param delta_time Time since the last update
    */
-  virtual void Update(client::utils::DeltaTime delta_time) = 0;
+  virtual void Update(zygarde::utils::Timer::Nanoseconds delta_time) = 0;
 };
 
 /**
@@ -59,4 +59,4 @@ class IScene {
  */
 template <class T>
 concept SceneType = std::is_base_of_v<IScene, T>;
-}  // namespace rtype::client
+}  // namespace mew::scenes

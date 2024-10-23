@@ -5,18 +5,15 @@
 ** sound_manager.cpp
 */
 
-#include "sound_manager.hpp"
+#include "./sound_manager.hpp"
 
 #include <SFML/Audio/Sound.hpp>
 #include <iostream>
 
-using namespace rtype::client;
+using namespace mew::managers;
 
-SoundManager::SoundManager() = default;
-
-SoundManager::Ptr SoundManager::Create() {
-  return std::make_shared<SoundManager>();
-}
+SoundManager::SoundManager(DependenciesHandler::Ptr services)
+    : ManagerBase(std::move(services)) {}
 
 void SoundManager::LoadSoundBuffer(const std::string &path, const std::string &name) {
   if (soundBuffers_.contains(name)) {

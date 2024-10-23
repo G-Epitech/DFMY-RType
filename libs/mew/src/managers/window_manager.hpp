@@ -12,8 +12,10 @@
 #include <memory>
 #include <optional>
 
-namespace rtype::client {
-class WindowManager {
+#include "manager_base.hpp"
+
+namespace mew::managers {
+class WindowManager : public ManagerBase {
  public:
   /// @brief Deferred events
   typedef std::list<sf::Event> EventsDeferrer;
@@ -37,17 +39,11 @@ class WindowManager {
   };
 
   /**
-   * @brief Create a new window manager
-   * @param props Properties of the window
-   * @return Pointer to the window manager
-   */
-  static Ptr Create(Properties &&props);
-
-  /**
    * @brief Construct a new Window Manager object
+   * @param services Managers provider
    * @param props Properties of the window
    */
-  explicit WindowManager(Properties &&props);
+  WindowManager(DependenciesHandler::Ptr services, const Properties &props);
 
   /**
    * @brief Construct a new Window Manager object
@@ -146,4 +142,4 @@ class WindowManager {
    */
   void HandleResize(const sf::Event &event);
 };
-}  // namespace rtype::client
+}  // namespace mew::managers

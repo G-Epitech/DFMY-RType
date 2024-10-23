@@ -9,15 +9,17 @@
 
 #include <iostream>
 
-using namespace rtype::client;
+using namespace mew::managers;
 
 void WindowManager::ClearEvents() noexcept {
   deferredEvents_.clear();
 }
 
-WindowManager::WindowManager(WindowManager::Properties&& props) : props_(props) {
-  window_ = std::make_shared<sf::RenderWindow>(props.videoMode, props.title, props.style,
-                                               props.contextSettings);
+WindowManager::WindowManager(DependenciesHandler::Ptr services,
+                             const WindowManager::Properties& props)
+    : ManagerBase(std::move(services)), props_(props) {
+  window_ = std::make_shared<sf::RenderWindow>(props_.videoMode, props_.title, props_.style,
+                                               props_.contextSettings);
   if (props.iconPath) {
     if (icon_.loadFromFile(*props.iconPath)) {
       window_->setIcon(icon_.getSize().x, icon_.getSize().y, icon_.getPixelsPtr());
@@ -44,10 +46,6 @@ WindowManager::WindowManager(WindowManager::Properties&& props) : props_(props) 
   tritanopiaShader->loadFromFile("assets/shaders/tritanopia.frag", sf::Shader::Fragment);
   shaders_["tritanopia"] = tritanopiaShader;
   selectedShader_ = normalShader;
-}
-
-WindowManager::Ptr WindowManager::Create(WindowManager::Properties&& props) {
-  return std::make_shared<WindowManager>(std::move(props));
 }
 
 void WindowManager::DeferEvents() {
@@ -84,7 +82,7 @@ void WindowManager::HandleResize(const sf::Event& event) {
   if (widthRatio < heightRatio) {
     hudView_.zoom(width_ / width);
   } else {
-    hudView_.zoom(height_ / height);
+    hudView_.zoom(height / height);
   }
 }
 

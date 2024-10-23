@@ -114,8 +114,8 @@ void SceneSettings::CreateTitle() const {
 void SceneSettings::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
-                                          context_.windowManager->height_ - 50);
+  const auto point =
+      zyc::types::Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height - 50);
 
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,

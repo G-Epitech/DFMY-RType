@@ -58,7 +58,7 @@ void SceneMenu::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
-                                          context_.windowManager->height_ / 2 - 250);
+                                          context_.windowManager->height / 2 - 250);
 
   registry_->AddComponent<Position>(title, {point, aligns});
   registry_->AddComponent<Drawable>(title, {Text{"R-TYPE", "main", 84}, WindowManager::View::HUD});
@@ -67,7 +67,7 @@ void SceneMenu::CreateTitle() const {
 void SceneMenu::CreatePlayButton() const {
   const auto play_button = registry_->SpawnEntity();
   const auto point =
-      zyc::types::Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height_ / 2);
+      zyc::types::Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height / 2);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(play_button, {point, aligns});
@@ -111,7 +111,7 @@ void SceneMenu::CreatePlayButton() const {
 void SceneMenu::CreateSettingsButton() const {
   const auto settings_button = registry_->SpawnEntity();
   const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
-                                          context_.windowManager->height_ / 2 + 75);
+                                          context_.windowManager->height / 2 + 75);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(settings_button, {point, aligns});
@@ -154,7 +154,7 @@ void SceneMenu::CreateSettingsButton() const {
 void SceneMenu::CreateExitButton() const {
   const auto exit_button = registry_->SpawnEntity();
   const auto point = zyc::types::Vector3f(context_.windowManager->width_ / 2,
-                                          context_.windowManager->height_ / 2 + 110);
+                                          context_.windowManager->height / 2 + 110);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,
@@ -197,7 +197,7 @@ void SceneMenu::CreateServerConnectionLabel() const {
   const auto label = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto point =
-      Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height_ - 100);
+      Vector3f(context_.windowManager->width_ / 2, context_.windowManager->height - 100);
 
   registry_->AddComponent<Position>(label, {point, aligns});
   registry_->AddComponent<Tags>(label, Tags({"connection_label"}));
