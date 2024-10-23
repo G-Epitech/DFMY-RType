@@ -12,8 +12,8 @@
 
 using namespace zygarde::physics::components;
 
-Collider2D::Collider2D(std::vector<int> collision_layers)
-    : collisionLayers_(std::move(collision_layers)), collisionQueue_() {}
+Collider2D::Collider2D(std::vector<int> collision_layers, std::vector<int> include_layers)
+    : collisionLayers_(std::move(collision_layers)), includeLayers_(std::move(include_layers)) {}
 
 zygarde::physics::types::Collision2D::ptr Collider2D::GetNextCollision() noexcept {
   auto collision = collisionQueue_.front();
