@@ -11,6 +11,7 @@ TESTS_SERVER_NAME 	= r-type_server_tests
 TESTS_CLIENT_NAME 	= r-type_client_tests
 TESTS_ABRA_NAME 	= abra_tests
 TESTS_ZYGARDE_NAME 	= zygrade_tests
+TESTS_PORYGON_NAME 	= porygon_tests
 BUILD_PATH 			= $(shell pwd)/build
 
 COVERAGE_IGNORE_TARGETS = 	tests \
@@ -24,6 +25,7 @@ LINT_DIRS = client/src \
 			libs/abra/src \
 			libs/game/src \
 			libs/zygarde/src \
+			libs/porygon/src \
 			server/src
 LINT_FILES = $(shell find $(LINT_DIRS) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.cc' -o -name '*.cxx' \))
 
@@ -67,17 +69,23 @@ generate_tests:
 		@cmake -B $(BUILD_PATH) -DCOVERAGE=ON $(TOOLCHAIN_FLAG) -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(BUILD_PATH)
 
 tests_run: generate_tests
-	@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_ZYGARDE_NAME)
+	@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_ZYGARDE_NAME) $(TESTS_PORYGON_NAME)
 	@$(BUILD_PATH)/$(TESTS_CLIENT_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_SERVER_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_ABRA_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_ZYGARDE_NAME) --gtest_brief=1
+	@$(BUILD_PATH)/$(TESTS_PORYGON_NAME) --gtest_brief=1
 .PHONY: tests_run
 
 tests_run_server:
 		@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME)
 		@$(BUILD_PATH)/$(TESTS_SERVER_NAME) --gtest_brief=1
 .PHONY: tests_run_server
+
+tests_run_porygon:
+		@cmake --build $(BUILD_PATH) --target $(TESTS_PORYGON_NAME)
+		@$(BUILD_PATH)/$(TESTS_PORYGON_NAME) --gtest_brief=1
+.PHONY: tests_run_porygon
 
 tests_run_client:
 		@cmake --build $(BUILD_PATH) --target $(TESTS_CLIENT_NAME)
