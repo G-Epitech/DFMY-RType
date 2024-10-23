@@ -12,11 +12,9 @@
 #include "libs/game/src/types/projectile.hpp"
 
 namespace rtype::sdk::game::api::payload {
-/// @brief Shoot payload
+/// @brief Shoot payload - Link to ClientToRoomMsgType::kMsgTypeCTRPlayerShoot
 struct Shoot {
-  /// @brief Entity id
-  std::size_t entityId;
-  /// @brief Shoot type
-  types::ProjectileType type;
+  std::size_t entityId;        ///< @brief Entity id
+  types::ProjectileType type;  ///< @brief Shoot type
 };
 }  // namespace rtype::sdk::game::api::payload

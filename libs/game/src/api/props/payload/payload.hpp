@@ -7,5 +7,7 @@
 
 #pragma once
 
-#include "./auth/auth.hpp"
 #include "./game/game.hpp"
+#include "./infos/infos.hpp"
+#include "./register/register.hpp"
+#include "./room/room.hpp"

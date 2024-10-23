@@ -3,4 +3,6 @@ target_sources(${GAME_SDK} PRIVATE
 )
 
 add_subdirectory(game)
-add_subdirectory(auth)
+add_subdirectory(infos)
+add_subdirectory(room)
+add_subdirectory(register)

@@ -1,15 +1,17 @@
 /*
 ** EPITECH PROJECT, 2024
-** register.hpp
+** join.hpp
 ** File description:
-** register class
+** join class
 */
 
 #pragma once
 
+#include <cstdint>
+
 namespace rtype::sdk::game::api::payload {
-/// @brief Connection payload
-struct RegisterLobby {
-  unsigned lobbyId;  // Id of the lobby that is registered
+/// @brief Join room - Link to ClientToMasterMsgType::kMsgTypeCTMJoinRoom
+struct JoinRoom {
+  std::uint64_t id;
 };
 }  // namespace rtype::sdk::game::api::payload
