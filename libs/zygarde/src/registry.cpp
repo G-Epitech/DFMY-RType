@@ -34,7 +34,7 @@ Entity Registry::EntityFromIndex(const std::size_t idx) const {
   if (entities_.empty()) {
     throw Exception("Entity not found");
   }
-  if (entities_.size() < idx) {
+  if (entities_.size() <= idx) {
     throw Exception("Entity not found");
   }
   if (!entities_.at(idx).has_value()) {
@@ -44,22 +44,14 @@ Entity Registry::EntityFromIndex(const std::size_t idx) const {
 }
 
 void Registry::KillEntity(Entity const &e) {
+  if (std::find(entities_.begin(), entities_.end(), e) == entities_.end()) {
+    return;
+  }
   freeIds_.push(static_cast<std::size_t>(e));
-  entities_.at(IndexFromEntity(e)) = std::nullopt;
+  entities_.at(e.id_) = std::nullopt;
   for (auto &remove_function : removeFunctions_) {
     remove_function.second(*this, e);
   }
-}
-
-std::size_t Registry::IndexFromEntity(const Entity &e) const {
-  const auto index = e.GetId();
-  if (index >= entities_.size()) {
-    throw Exception("Entity not found");
-  }
-  if (!entities_.at(index).has_value()) {
-    throw Exception("Entity not found");
-  }
-  return index;
 }
 
 void Registry::DestroyEntity(const Entity &e) {

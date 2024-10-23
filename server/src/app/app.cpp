@@ -16,7 +16,7 @@
 using namespace rtype::server;
 
 int App::Run(int ac, char **av) {
-  int status = ParseArguments(ac, av);
+  const int status = ParseArguments(ac, av);
 
   if (!cliResult_.has_value()) {
     return status;

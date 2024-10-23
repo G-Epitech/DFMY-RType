@@ -12,7 +12,10 @@ using namespace abra::client;
 using namespace abra::tools;
 
 Client::Client(const std::string &ip, const uint32_t &port)
-    : clientTCP_(ip, port), isConnected_(false), isLobbyConnected_(false), logger_("clientAPI") {
+    : clientTCP_(ip, port, nullptr),
+      isConnected_(false),
+      isLobbyConnected_(false),
+      logger_("clientAPI") {
   InitTCP();
 }
 
@@ -96,17 +99,18 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
   auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.data);
   auto payload = packet->GetPayload();
 
-  logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
-               "🚪");
+  std::string ip = payload.ip;
+  if (ip == kLocalhost || ip == kIpNull) {
+    ip = this->clientTCP_.GetRemoteAddress();
+  }
 
-  this->clientUDP_.emplace("127.0.0.1", payload.port);
+  logger_.Info("Joining lobby " + std::string(ip) + ":" + std::to_string(payload.port), "🚪");
+
+  this->clientUDP_.emplace(ip, payload.port);
   InitUDP();
 
   auto endpoint = this->clientUDP_->GetEndpoint();
   payload::JoinLobbyInfos infoPayload{};
-
-  const char *ipPtr = endpoint.ip.c_str();
-  strncpy(infoPayload.ip, ipPtr, 16);
   infoPayload.port = endpoint.port;
 
   auto success = SendPayloadTCP(MessageClientType::kClientJoinLobbyInfos, infoPayload);
@@ -188,7 +192,7 @@ void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
 
 std::vector<payload::PlayerState> Client::ResolvePlayersState(
     const Client::ServerMessage &message) {
-  auto players = ResolvePayloads<payload::PlayerState>(MessageServerType::kPlayersState, message);
+  auto players = ResolvePayloads<payload::PlayerState>(MessageLobbyType::kPlayersState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹");
 
@@ -196,7 +200,7 @@ std::vector<payload::PlayerState> Client::ResolvePlayersState(
 }
 
 std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::ServerMessage &message) {
-  auto players = ResolvePayloads<payload::EnemyState>(MessageServerType::kEnemiesState, message);
+  auto players = ResolvePayloads<payload::EnemyState>(MessageLobbyType::kEnemiesState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " enemies states", "🧌");
 
@@ -205,7 +209,7 @@ std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::Serve
 
 std::vector<payload::BulletState> Client::ResolveBulletsState(
     const Client::ServerMessage &message) {
-  auto players = ResolvePayloads<payload::BulletState>(MessageServerType::kBulletsState, message);
+  auto players = ResolvePayloads<payload::BulletState>(MessageLobbyType::kBulletsState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " bullets states", "💥");
 

@@ -77,6 +77,13 @@ class abra::server::ServerTCP {
    */
   void Close();
 
+  /**
+   * @brief Get the remote address
+   * @param clientId The client id
+   * @return The remote address (ip)
+   */
+  std::string GetRemoteAddress(std::uint64_t clientId) const;
+
  private:
   /**
    * @brief Accept a new connection

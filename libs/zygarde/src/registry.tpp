@@ -47,10 +47,8 @@ Component *Registry::GetComponent(const Entity &e) {
     return nullptr;
   }
 
-  const auto entityIndex = IndexFromEntity(e);
-
-  if (components->size() > entityIndex) {
-    auto &optionalComponent = (*components)[entityIndex];
+  if (components->size() > e.id_) {
+    auto &optionalComponent = (*components)[e.id_];
     if (optionalComponent) {
       return &(*optionalComponent);
     }
@@ -105,8 +103,11 @@ Entity Registry::SpawnEntity(Args &&...args) {
   } else {
     newId = currentMaxEntityId_++;
   }
+  if (newId >= entities_.size()) {
+    entities_.resize(newId + 1);
+  }
   T e(newId, *this, std::forward<Args>(args)...);
-  entities_.emplace_back(e);
+  entities_.at(newId) = e;
   e.OnSpawn();
   return e;
 }

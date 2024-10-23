@@ -71,7 +71,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   /**
    * @brief Get the components
    * @tparam Component Component to get
-   * @return sparse_array<Component>&
+   * @return const sparse_array<Component>&
    */
   template <typename Component>
   Component *GetComponent(Entity const &e);
@@ -103,13 +103,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @return bool
    */
   [[nodiscard]] bool HasEntityAtIndex(std::size_t idx) const;
-
-  /**
-   * @brief Get the index of an entity
-   * @param e Entity to get the index from
-   * @return std::size_t
-   */
-  [[nodiscard]] std::size_t IndexFromEntity(Entity const &e) const;
 
   /**
    * @brief Kill an entity
@@ -222,6 +215,8 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
 
   /// @brief remove functions used to remove components
   using component_destroyer = std::function<void(Registry &, Entity const &)>;
+
+  /// @brief remove functions used to remove components
   std::map<std::type_index, component_destroyer> removeFunctions_;
 };
 }  // namespace zygarde

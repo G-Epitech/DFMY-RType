@@ -30,8 +30,12 @@ void ScriptExecutionSystem::ProcessScript(Registry::Const_Ptr registry,
   std::shared_ptr<types::ScriptingContext> context =
       std::make_shared<types::ScriptingContext>(CreateContext(registry, script));
 
-  HandleFixedUpdate(registry, script, context);
-  HandleCollisionCallback(registry, script, context);
+  if (script->fixedUpdate.has_value()) {
+    HandleFixedUpdate(registry, script, context);
+  }
+  if (script->onCollisionEnter.has_value()) {
+    HandleCollisionCallback(registry, script, context);
+  }
 }
 
 scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
@@ -42,9 +46,6 @@ scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
 void ScriptExecutionSystem::HandleCollisionCallback(
     Registry::Const_Ptr registry, scripting::components::Script* script,
     types::ScriptingContext::ConstPtr context) const {
-  if (!script->onCollisionEnter.has_value()) {
-    return;
-  }
   zygarde::Entity entity = registry->EntityFromIndex(currentScriptIndex_);
   auto collider = registry->GetComponent<physics::components::BoxCollider2D>(entity);
   if (!collider) {
@@ -59,7 +60,5 @@ void ScriptExecutionSystem::HandleCollisionCallback(
 void ScriptExecutionSystem::HandleFixedUpdate(
     Registry::Const_Ptr registry, scripting::components::Script* script,
     scripting::types::ScriptingContext::ConstPtr context) {
-  if (script->fixedUpdate.has_value()) {
-    script->fixedUpdate.value()(context);
-  }
+  script->fixedUpdate.value()(context);
 }

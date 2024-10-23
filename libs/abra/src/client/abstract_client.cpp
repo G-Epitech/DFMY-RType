@@ -11,7 +11,9 @@
 
 using namespace abra::client;
 
-AbstractClient::AbstractClient(const std::string &name) : logger_(name) {}
+AbstractClient::AbstractClient(const std::string &name) : logger_(name) {
+  this->middleware_ = nullptr;
+}
 
 void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
   if (buffer->size() < kPacketHeaderPropsSize / 8) {
@@ -91,8 +93,10 @@ void AbstractClient::StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset,
                                    tools::PacketUtils::ExportMessageTypeFromBitset(bitset), bitset};
     logger_.Info("Store message with type " + std::to_string(message.messageType));
 
-    std::unique_lock<std::mutex> lock(this->Mutex);
-    this->queue_.push(message);
+    if (this->middleware_ == nullptr || this->middleware_(message)) {
+      std::unique_lock<std::mutex> lock(this->Mutex);
+      this->queue_.push(message);
+    }
   }
 }
 

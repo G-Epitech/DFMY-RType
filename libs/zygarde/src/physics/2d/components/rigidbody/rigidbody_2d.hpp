@@ -48,17 +48,15 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
    * @brief Get velocity of the Rigidbody2D object
    * @param velocity Vector2f object
    */
-  [[nodiscard]] inline const core::types::Vector2f &GetVelocity() const noexcept {
-    return velocity_;
-  }
+  [[nodiscard]] const core::types::Vector2f &GetVelocity() const noexcept { return velocity_; }
 
-  inline void SetVelocity(const core::types::Vector2f &velocity) noexcept { velocity_ = velocity; }
+  void SetVelocity(const core::types::Vector2f &velocity) noexcept { velocity_ = velocity; }
 
   constexpr void CancelVelocity() noexcept { velocity_ = core::types::Vector2f::zero(); }
 
-  inline void SetKinematic(bool isKinematic) noexcept { isKinematic_ = isKinematic; }
+  void SetKinematic(bool isKinematic) noexcept { isKinematic_ = isKinematic; }
 
-  [[nodiscard]] inline bool IsKinematic() const noexcept { return isKinematic_; }
+  [[nodiscard]] bool IsKinematic() const noexcept { return isKinematic_; }
 
  private:
   /// @brief Velocity vector

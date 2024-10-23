@@ -52,6 +52,6 @@ class Lobby final : public IServer {
   game::GameService gameService_;
 
   /// @brief Server network
-  std::shared_ptr<rtype::sdk::game::api::Server> api_;
+  std::shared_ptr<rtype::sdk::game::api::Lobby> api_;
 };
 }  // namespace rtype::server

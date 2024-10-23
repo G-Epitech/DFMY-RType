@@ -33,13 +33,20 @@ class GameService {
    * @brief Run the game service
    * @return Status code
    */
-  int Run(uint64_t lobbyId, std::shared_ptr<rtype::sdk::game::api::Server> api);
+  int Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api);
 
   /**
    * @brief Add a new player to the game
-   * @param playerId The player id
+   * @param player_id The player id
    */
-  void NewPlayer(std::uint64_t playerId);
+  void NewPlayer(std::uint64_t player_id);
+
+ private:
+  struct EntityStates {
+    std::vector<payload::PlayerState> playerStates;
+    std::vector<payload::EnemyState> enemyStates;
+    std::vector<payload::BulletState> bulletStates;
+  };
 
  private:
   /**
@@ -62,29 +69,47 @@ class GameService {
    */
   void HandleMessages();
 
+  void HandlePlayerMessage(const std::uint64_t &player_id,
+                           const abra::server::ClientUDPMessage &data);
+
+  void HandlePlayerMoveMessage(const std::uint64_t &player_id,
+                               const abra::server::ClientUDPMessage &data);
+
+  void HandlePlayerShootMessage(const std::uint64_t &player_id,
+                                const abra::server::ClientUDPMessage &data);
+
   /**
    * @brief Send stats to the server
    */
-  void SendStates();
+  void BroadcastEntityStates() const;
+
+  void GatherEntityStates(const std::unique_ptr<EntityStates> &states) const;
+
+  void SendStates(const std::unique_ptr<EntityStates> &states) const;
 
  private:
   /// @brief Game running flag
   bool gameRunning_{true};
+
   /// @brief Ticks manager for the game
   TicksManager ticksManager_;
+
   /// @brief Registry containing all entities
   std::shared_ptr<zygarde::Registry> registry_;
+
   /// @brief Enemy manager
   EnemyManager enemyManager_;
+
   /// @brief Server network
-  std::shared_ptr<rtype::sdk::game::api::Server> api_;
-  /// @brief Lobby id
-  uint64_t lobbyId_;
+  std::shared_ptr<rtype::sdk::game::api::Lobby> api_;
+
   /// @brief Player list
   std::map<std::uint64_t, zygarde::Entity> players_;
+
   /// @brief Packet builder
   abra::tools::PacketBuilder packetBuilder_;
+
   /// @brief Logger
-  abra::tools::Logger logger_;
+  Logger logger_;
 };
 }  // namespace rtype::server::game
