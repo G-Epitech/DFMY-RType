@@ -62,7 +62,6 @@ void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity&
         }
         if (posComponent->point.x > 2000 || posComponent->point.x < -200) {
           context->registry->DestroyEntity(context->me);
-          std::cout << "I died because I'm out of bounds\n";
         }
       };
 
@@ -73,5 +72,4 @@ void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity&
 void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                         const physics::types::Collision2D::ptr& collision) {
   context->registry->DestroyEntity(context->me);
-  std::cout << "I died\n";
 }

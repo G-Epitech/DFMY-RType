@@ -42,6 +42,13 @@ class GameService {
   void NewPlayer(std::uint64_t player_id);
 
  private:
+  struct EntityStates {
+    std::vector<payload::PlayerState> playerStates;
+    std::vector<payload::EnemyState> enemyStates;
+    std::vector<payload::BulletState> bulletStates;
+  };
+
+ private:
   /**
    * @brief Execute the game logic during a tick
    */
@@ -74,7 +81,11 @@ class GameService {
   /**
    * @brief Send stats to the server
    */
-  void SendStates() const;
+  void BroadcastEntityStates() const;
+
+  void GatherEntityStates(const std::unique_ptr<EntityStates> &states) const;
+
+  void SendStates(const std::unique_ptr<EntityStates> &states) const;
 
  private:
   /// @brief Game running flag

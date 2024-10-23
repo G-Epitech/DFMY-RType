@@ -30,7 +30,7 @@ void GameService::Initialize() {
   RegistrySetup();
 }
 
-int GameService::Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api) {
+int GameService::Run(std::shared_ptr<Lobby> api) {
   this->api_ = std::move(api);
 
   Initialize();
@@ -38,10 +38,8 @@ int GameService::Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api) {
     ticksManager_.Update();
     HandleMessages();
     ExecuteGameLogic();
-    SendStates();
-    registry_->CleanupDestroyedEntities();
+    BroadcastEntityStates();
     ticksManager_.WaitUntilNextTick();
-    std::cout << "TICK END -------------------" << std::endl;
   }
   return EXIT_SUCCESS;
 }
@@ -51,6 +49,7 @@ void GameService::ExecuteGameLogic() {
     enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
   }
   registry_->RunSystems();
+  registry_->CleanupDestroyedEntities();
 }
 
 void GameService::HandleMessages() {
@@ -58,8 +57,6 @@ void GameService::HandleMessages() {
 
   while (!messages.empty()) {
     auto &[playerId, data] = messages.front();
-    std::cout << "CACA - Handling message from player " << playerId << std::endl;
-
     HandlePlayerMessage(playerId, data);
     messages.pop();
   }
@@ -81,11 +78,8 @@ void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
   auto &[entityId, direction] = packet->GetPayload();
 
   if (const auto player = players_.find(player_id); player != players_.end()) {
-    std::cout << "Moving player " << player_id << " to " << direction.x << ", " << direction.y
-              << std::endl;
     const auto &playerEntity = player->second;
     const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
-
     if (!rigidBody) {
       return;
     }
@@ -116,49 +110,54 @@ void GameService::NewPlayer(std::uint64_t player_id) {
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
 }
 
-void GameService::SendStates() const {
+void GameService::BroadcastEntityStates() const {
+  std::unique_ptr<EntityStates> entityStates = std::make_unique<EntityStates>();
+
+  GatherEntityStates(entityStates);
+  SendStates(entityStates);
+}
+
+void GameService::GatherEntityStates(const std::unique_ptr<EntityStates> &states) const {
   const auto components = registry_->GetComponents<core::components::Position>();
   std::size_t i = 0;
-  std::vector<payload::PlayerState> states;
-  std::vector<payload::EnemyState> enemyStates;
-  std::vector<payload::BulletState> bulletStates;
 
   for (auto &component : *components) {
-    if (!component.has_value()) {
+    if (!registry_->HasEntityAtIndex(i) || !component.has_value()) {
       i++;
       continue;
     }
+
     const auto val = component.value();
-    if (!registry_->HasEntityAtIndex(i)) {
-      i++;
-      continue;
-    }
     auto ent = registry_->EntityFromIndex(i);
     const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
     const auto tags = registry_->GetComponent<core::components::Tags>(ent);
+
     if (*tags == sdk::game::constants::kPlayerTag) {
       payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
-      states.push_back(state);
+      states->playerStates.push_back(state);
     }
     if (*tags == sdk::game::constants::kEnemyTag) {
       payload::EnemyState state = {static_cast<std::size_t>(ent), vec,
                                    sdk::game::types::EnemyType::kPata, 100};
-      enemyStates.push_back(state);
+      states->enemyStates.push_back(state);
     }
     if (*tags == sdk::game::constants::kPlayerBulletTag ||
         *tags == sdk::game::constants::kEnemyBulletTag) {
       payload::BulletState state = {static_cast<std::size_t>(ent), vec};
-      bulletStates.push_back(state);
+      states->bulletStates.push_back(state);
     }
     i++;
   }
+}
 
-  if (!states.empty())
-    this->api_->SendPlayersState(states);
-  if (!enemyStates.empty())
-    this->api_->SendEnemiesState(enemyStates);
-  if (!bulletStates.empty()) {
-    std::cout << "sending " << bulletStates.size() << " bullets" << std::endl;
-    this->api_->SendBulletsState(bulletStates);
+void GameService::SendStates(const std::unique_ptr<EntityStates> &states) const {
+  if (!states->playerStates.empty()) {
+    this->api_->SendPlayersState(states->playerStates);
+  }
+  if (!states->enemyStates.empty()) {
+    this->api_->SendEnemiesState(states->enemyStates);
+  }
+  if (!states->bulletStates.empty()) {
+    this->api_->SendBulletsState(states->bulletStates);
   }
 }

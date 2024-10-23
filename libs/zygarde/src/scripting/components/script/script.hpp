@@ -29,7 +29,7 @@ class EXPORT_ZYGARDE_API Script final {
   std::optional<types::Collision2DFunction> onCollisionEnter;
   std::optional<types::FixedUpdateFunction> fixedUpdate;
 
-  void SetValue(const std::string& key, const std::any& value) { (*values_)[key] = value; }
+  void SetValue(const std::string& key, const std::any& value);
 
   friend class systems::ScriptExecutionSystem;
 
