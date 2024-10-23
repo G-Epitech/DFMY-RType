@@ -39,12 +39,6 @@ class EXPORT_ZYGARDE_API Entity {
   explicit operator std::size_t() const;
 
   /**
-   * @brief Get the entity id
-   * @return Entity id
-   */
-  [[nodiscard]] std::size_t GetId() const;
-
-  /**
    * @brief Operator =
    * @param other Entity to copy
    * @return Copied entity

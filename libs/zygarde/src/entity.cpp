@@ -19,10 +19,6 @@ Entity::operator std::size_t() const {
   return id_;
 }
 
-std::size_t Entity::GetId() const {
-  return id_;
-}
-
 Entity& Entity::operator=(const Entity& other) {
   id_ = other.id_;
   return *this;

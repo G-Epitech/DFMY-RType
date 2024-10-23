@@ -25,7 +25,7 @@ void MouseScrollEventSystem::HandleEvent(
 
   if (!window)
     return;
-  for (auto&& [component] : components) {
-    component.handler(position, event.mouseWheelScroll.delta);
+  for (auto&& [mouseScroll] : components) {
+    mouseScroll.handler(position, event.mouseWheelScroll.delta);
   }
 }

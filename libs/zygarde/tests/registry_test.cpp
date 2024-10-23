@@ -223,3 +223,10 @@ TEST(RegistryTests, GetEntityComponent) {
   const auto component = entity.GetComponent<int>();
   ASSERT_EQ(*component, 42);
 }
+
+TEST(RegistryTests, CopyEntity) {
+  const auto registry = Registry::Create();
+  const auto entity = registry->SpawnEntity();
+  const Entity &entity2 = entity;
+  ASSERT_EQ(entity, entity2);
+}
