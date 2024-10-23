@@ -13,9 +13,9 @@
 
 #include "libs/abra/includes/network.hpp"
 #include "libs/abra/includes/packet.hpp"
-#include "libs/game/src/core.hpp"
-#include "libs/game/src/api/props/payload/payload.hpp"
 #include "libs/game/src/api/props/message.hpp"
+#include "libs/game/src/api/props/payload/payload.hpp"
+#include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
 class EXPORT_GAME_SDK_API Node;
@@ -50,7 +50,8 @@ class rtype::sdk::game::api::Node {
   /**
    * @brief Start the node and send register message to the master
    */
-  void Start();
+  void Start(const std::function<bool(std::uint64_t roomId, std::size_t maxPlayers,
+                                      std::size_t difficulty)> &createRoomHandler);
 
  private:
   /**
@@ -70,7 +71,7 @@ class rtype::sdk::game::api::Node {
    * @param payload The payload
    * @return Success of the send
    */
-  template<typename T>
+  template <typename T>
   bool SendToMaster(NodeToMasterMsgType type, const T &payload);
 
   /**
@@ -78,6 +79,19 @@ class rtype::sdk::game::api::Node {
    * @return Success of the registration
    */
   bool RegisterToMaster();
+
+  /**
+   * @brief Middleware to handle master messages
+   * @param message The message of the master (MasterToNodeMsgType)
+   * @return True if the message must be push in the queue of messages
+   */
+  bool MasterMessageMiddleware(const abra::tools::MessageProps &message);
+
+  /**
+   * @brief Handle room creation
+   * @param message The message of the master (MasterToNodeMsgType::kMsgTypeMTNCreateRoom)
+   */
+  void HandleRoomCreation(const abra::tools::MessageProps &message);
 
   /// @brief Name of the node
   std::string name_;
@@ -108,6 +122,15 @@ class rtype::sdk::game::api::Node {
 
   /// @brief Packet builder
   abra::tools::PacketBuilder packetBuilder_;
+
+  /// @brief Creation of room handler
+  std::function<bool(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty)>
+      createRoomHandler_;
+
+  static inline std::map<unsigned int, void (Node::*)(const abra::tools::MessageProps &message)>
+      masterMessageHandlers_ = {
+          {MasterToNodeMsgType::kMsgTypeMTNCreateRoom, &Node::HandleRoomCreation},
+  };
 };
 
 #include "./node.tpp"
