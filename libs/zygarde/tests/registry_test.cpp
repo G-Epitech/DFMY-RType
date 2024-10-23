@@ -200,3 +200,14 @@ TEST(RegisterTests, IterateOnOneComponent) {
   }
   ASSERT_EQ(count, 4);
 }
+
+TEST(RegistryTests, AddOwnEntity) {
+  class MyBestEntity : public Entity {
+   public:
+    MyBestEntity(const std::size_t id, Registry &registry) : Entity(id, registry) {}
+    void OnSpawn() override { std::cout << "I'm the best entity" << std::endl; }
+  };
+
+  const auto registry = Registry::Create();
+  const auto entity = registry->SpawnEntity<MyBestEntity>();
+}

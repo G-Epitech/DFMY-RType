@@ -37,7 +37,7 @@ Entity Registry::SpawnEntity() {
   } else {
     newId = currentMaxEntityId_++;
   }
-  Entity e(newId);
+  Entity e(newId, *this);
   entities_.emplace_back(e);
   return e;
 }
