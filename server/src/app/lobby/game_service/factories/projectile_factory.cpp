@@ -44,7 +44,8 @@ Entity ProjectileFactory::CreateProjectile(Registry::Const_Ptr registry,
   registry->AddComponent<core::components::Position>(projectile, {position});
   registry->AddComponent<physics::components::BoxCollider2D>(
       projectile, {box_size, collisionLayers, includeLayers});
-  registry->AddComponent<core::components::Tags>(projectile, core::components::Tags({tag}));
+  registry->AddComponent<core::components::Tags>(
+      projectile, core::components::Tags({tag, sdk::game::constants::kBulletTag}));
   CreateScript(registry, projectile);
   return projectile;
 }

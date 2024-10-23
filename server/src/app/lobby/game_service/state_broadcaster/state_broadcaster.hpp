@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "core/components/tags/tags.hpp"
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 
@@ -26,9 +27,13 @@ class StateBroadcaster final {
                   const std::shared_ptr<rtype::sdk::game::api::Lobby> &api);
 
  private:
+  /// @brief Struct to store the entity states
   struct EntityStates {
+    /// @brief Player states
     std::vector<payload::PlayerState> playerStates;
+    /// @brief Enemy states
     std::vector<payload::EnemyState> enemyStates;
+    /// @brief Bullet states
     std::vector<payload::BulletState> bulletStates;
   };
 
@@ -41,6 +46,41 @@ class StateBroadcaster final {
   static void GatherEntityStates(const std::shared_ptr<zygarde::Registry> &registry,
                                  const std::unique_ptr<EntityStates> &states) noexcept;
 
+  /**
+   * Process the entity and store the states in the EntityStates object
+   * @param states EntityStates object to store the states
+   * @param entity Entity to process
+   * @param vec Position of the entity
+   * @param tags Tags of the entity
+   */
+  static void ProcessEntity(const std::unique_ptr<EntityStates> &states,
+                            const zygarde::Entity &entity,
+                            const sdk::game::utils::types::vector_2f &vec,
+                            const core::components::Tags *tags) noexcept;
+
+  /**
+   * Gather the enemy states according to their tags
+   * @param states EntityStates object to store the states
+   * @param entity Entity to process
+   * @param vec Position of the entity
+   * @param tags Tags of the entity
+   */
+  static void GatherEnemyState(const std::unique_ptr<EntityStates> &states,
+                               const zygarde::Entity &entity,
+                               const sdk::game::utils::types::vector_2f &vec,
+                               const core::components::Tags *tags) noexcept;
+
+  /**
+   * Gather the projectile states according to their tags
+   * @param states EntityStates object to store the states
+   * @param entity Entity to process
+   * @param vec Position of the entity
+   * @param tags Tags of the entity
+   */
+  static void GatherProjectileState(const std::unique_ptr<EntityStates> &states,
+                                    const zygarde::Entity &entity,
+                                    const sdk::game::utils::types::vector_2f &vec,
+                                    const core::components::Tags *tags) noexcept;
   /**
    * Sends the states to the clients of the lobby
    * @param api API of the lobby

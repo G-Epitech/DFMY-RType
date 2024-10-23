@@ -9,7 +9,6 @@
 
 #include "constants/tags.hpp"
 #include "core/components/position/position.hpp"
-#include "core/components/tags/tags.hpp"
 
 using namespace rtype::server::game;
 
@@ -36,27 +35,24 @@ void StateBroadcaster::GatherEntityStates(const std::shared_ptr<zygarde::Registr
     auto ent = registry->EntityFromIndex(i);
     const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
     const auto tags = registry->GetComponent<core::components::Tags>(ent);
-
-    if (*tags == sdk::game::constants::kPlayerTag) {
-      payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
-      states->playerStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kEnemyTag) {
-      payload::EnemyState state = {static_cast<std::size_t>(ent), vec,
-                                   sdk::game::types::EnemyType::kPata, 100};
-      states->enemyStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kPlayerBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
-                                    sdk::game::types::ProjectileType::kPlayerCommon};
-      states->bulletStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kEnemyBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
-                                    sdk::game::types::ProjectileType::kEnemyCommon};
-      states->bulletStates.push_back(state);
-    }
+    ProcessEntity(states, ent, vec, tags);
     i++;
+  }
+}
+
+void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states,
+                                     const Entity& entity,
+                                     const rtype::sdk::game::utils::types::vector_2f& vec,
+                                     const core::components::Tags* tags) noexcept {
+  if (*tags == sdk::game::constants::kPlayerTag) {
+    payload::PlayerState state = {static_cast<std::size_t>(entity), vec, 100};
+    states->playerStates.push_back(state);
+  }
+  if (*tags == sdk::game::constants::kEnemyTag) {
+    GatherEnemyState(states, entity, vec, tags);
+  }
+  if (*tags == sdk::game::constants::kBulletTag) {
+    GatherProjectileState(states, entity, vec, tags);
   }
 }
 
@@ -70,5 +66,31 @@ void StateBroadcaster::SendStates(const std::shared_ptr<rtype::sdk::game::api::L
   }
   if (!states->bulletStates.empty()) {
     api->SendBulletsState(states->bulletStates);
+  }
+}
+void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& states,
+                                        const zygarde::Entity& entity,
+                                        const sdk::game::utils::types::vector_2f& vec,
+                                        const core::components::Tags* tags) noexcept {
+  if (*tags == sdk::game::constants::kPataTag) {
+    payload::EnemyState state = {static_cast<std::size_t>(entity), vec,
+                                 sdk::game::types::EnemyType::kPata, 100};
+    states->enemyStates.push_back(state);
+  }
+}
+
+void StateBroadcaster::GatherProjectileState(const std::unique_ptr<EntityStates>& states,
+                                             const zygarde::Entity& entity,
+                                             const sdk::game::utils::types::vector_2f& vec,
+                                             const core::components::Tags* tags) noexcept {
+  if (*tags == sdk::game::constants::kPlayerBulletTag) {
+    payload::BulletState state = {static_cast<std::size_t>(entity), vec,
+                                  sdk::game::types::ProjectileType::kPlayerCommon};
+    states->bulletStates.push_back(state);
+  }
+  if (*tags == sdk::game::constants::kEnemyBulletTag) {
+    payload::BulletState state = {static_cast<std::size_t>(entity), vec,
+                                  sdk::game::types::ProjectileType::kEnemyCommon};
+    states->bulletStates.push_back(state);
   }
 }

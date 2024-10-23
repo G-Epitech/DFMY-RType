@@ -29,7 +29,8 @@ Entity EnemyFactory::CreateEnemy(Registry::Const_Ptr registry,
       enemy, {box_size, sdk::game::constants::kEnemyCollisionLayers,
               sdk::game::constants::kEnemyBulletIncludeLayers});
   registry->AddComponent<core::components::Tags>(
-      enemy, core::components::Tags({sdk::game::constants::kEnemyTag}));
+      enemy,
+      core::components::Tags({sdk::game::constants::kEnemyTag, sdk::game::constants::kPataTag}));
   CreateScript(registry, enemy);
   return enemy;
 }
