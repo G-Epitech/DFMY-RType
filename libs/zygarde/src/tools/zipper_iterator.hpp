@@ -13,34 +13,42 @@
 namespace zygarde::tools {
 template <class... Containers>
 class zipper_iterator {
+  /// @brief The iterator type of the container
   template <class Container>
   using iterator_t = typename std::decay_t<decltype(*std::declval<Container>())>::iterator;
 
+  /// @brief The reference type of the iterator
   template <class Container>
   using it_reference_t = typename iterator_t<Container>::reference;
 
+  /// @brief Struct used to get the unwrapped type of container
   template <typename T, typename = void>
   struct unwrapped {
-    using type = T;
+    using type = T;  ///< The unwrapped type of the container
   };
 
+  /// @brief Struct used to get the unwrapped type of container
   template <typename T>
   struct unwrapped<T, std::void_t<typename T::value_type>> {
-    using type = typename T::value_type::value_type;
+    using type = typename T::value_type::value_type;  ///< The unwrapped type of the container
   };
 
+  /// @brief Struct used to get the unwrapped type of a shared pointer container
   template <typename T>
   struct unwrapped<std::shared_ptr<T>> {
-    using type = typename T::value_type::value_type;
+    using type =
+        typename T::value_type::value_type;  ///< The unwrapped type of the shared pointer container
   };
 
+  /// @brief The unwrapped type of the container
   template <class T>
   using unwrapped_t = typename unwrapped<T>::type;
 
+  /// @brief Struct used to store the index and the value of the iterator
   template <typename T>
   struct indexed_value {
-    std::size_t index;
-    T values;
+    std::size_t index;  ///< The index of the iterator
+    T values;           ///< The value of the iterator
   };
 
  public:
@@ -86,16 +94,16 @@ class zipper_iterator {
   zipper_iterator operator++(int);
 
   /**
-   * @brief Dereference the iterator
+   * @brief Get the value of the iterator
    * @return value_type The value of the iterator
    */
   value_type operator*();
 
   /**
-   * @brief Dereference the iterator
+   * @brief Get the index and the value of the iterator
    * @return value_type_with_index The value of the iterator with index
    */
-  value_type_with_index operator~() { return {idx_, operator*()}; }
+  value_type_with_index operator~();
 
   /**
    * @brief Check if two iterators are equal

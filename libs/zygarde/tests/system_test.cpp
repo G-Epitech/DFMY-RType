@@ -21,15 +21,14 @@ TEST(SystemTests, CreateBasicSystem) {
     void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
       (void) r;
       for (auto &&[nb] : components) {
-        std::cout << "nb = " << nb << std::endl;
+        (void) nb;
       }
       const auto beg = components.begin();
       const auto end = components.end();
       for (auto it = beg; it != end; ++it) {
         auto &&[index, values] = ~it;
         auto &&[nb] = values;
-        auto a = ~it;
-        std::cout << "[" << index << "] = " << nb << std::endl;
+        (void) nb;
       }
     }
   };

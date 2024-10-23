@@ -50,6 +50,12 @@ zygarde::tools::zipper_iterator<Containers...>::operator*() {
 }
 
 template <class... Containers>
+typename zygarde::tools::zipper_iterator<Containers...>::value_type_with_index
+zygarde::tools::zipper_iterator<Containers...>::operator~() {
+  return {idx_, **this};
+}
+
+template <class... Containers>
 template <std::size_t... Is>
 void zygarde::tools::zipper_iterator<Containers...>::incr_all(std::index_sequence<Is...>) {
   (++std::get<Is>(current_), ...);
