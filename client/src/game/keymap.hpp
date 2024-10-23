@@ -9,7 +9,8 @@
 
 #include <variant>
 
-#include "systems/events/key.hpp"
+#include "libs/mew/src/sets/events/events.hpp"
+
 namespace rtype::client {
 enum class GameAction {
   kNone = 0,     ///< No action

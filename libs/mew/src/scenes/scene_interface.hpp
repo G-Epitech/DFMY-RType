@@ -19,6 +19,9 @@ class IScene {
   /// @brief Pointer type
   using Ptr = std::shared_ptr<IScene>;
 
+  /// @brief Alias for delta time
+  using DeltaTime = zygarde::utils::Timer::Nanoseconds;
+
   /**
    * @brief Destroy the IScene object
    */
@@ -50,7 +53,7 @@ class IScene {
    * @brief Update the scene
    * @param delta_time Time since the last update
    */
-  virtual void Update(zygarde::utils::Timer::Nanoseconds delta_time) = 0;
+  virtual void Update(DeltaTime delta_time) = 0;
 };
 
 /**

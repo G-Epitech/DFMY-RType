@@ -12,18 +12,18 @@
 using namespace zygarde;
 
 TEST(RegistryTests, CreateEmptyRegistry) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
 }
 
 TEST(RegistryTests, SpawnEntity) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   const auto entity = registry->SpawnEntity();
   const auto id = static_cast<std::size_t>(entity);
   ASSERT_EQ(id, 0);
 }
 
 TEST(RegistryTests, AddComponent) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   const auto entity = registry->SpawnEntity();
   registry->AddComponent<int>(entity, 42);
@@ -33,7 +33,7 @@ TEST(RegistryTests, AddComponent) {
 }
 
 TEST(RegistryTests, RemoveComponent) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   const auto entity = registry->SpawnEntity();
   registry->AddComponent<int>(entity, 42);
@@ -44,7 +44,7 @@ TEST(RegistryTests, RemoveComponent) {
 }
 
 TEST(RegistryTests, AddMultipleComponents) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->RegisterComponent<float>();
   const auto entity = registry->SpawnEntity();
@@ -59,7 +59,7 @@ TEST(RegistryTests, AddMultipleComponents) {
 }
 
 TEST(RegistryTests, AddMultipleEntities) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   const auto entity = registry->SpawnEntity();
   const auto entity2 = registry->SpawnEntity();
@@ -76,7 +76,7 @@ TEST(RegistryTests, AddMultipleEntities) {
 }
 
 TEST(RegistryTests, AddMultipleEntitiesMultipleComponents) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->RegisterComponent<float>();
   const auto entity = registry->SpawnEntity();
@@ -102,7 +102,7 @@ TEST(RegistryTests, AddMultipleEntitiesMultipleComponents) {
 }
 
 TEST(RegistryTests, AddMultipleEntitiesAndRemoveSomeAndCreateNewOnes) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   const auto entity = registry->SpawnEntity();
   const auto entity2 = registry->SpawnEntity();
@@ -134,7 +134,7 @@ TEST(RegistryTests, AddMultipleEntitiesAndRemoveSomeAndCreateNewOnes) {
 }
 
 TEST(RegisterTests, EntityFromIndex) {
-  auto registry = Registry::create();
+  auto registry = Registry::Create();
   const auto entity = registry->SpawnEntity();
   const auto entity2 = registry->SpawnEntity();
   const auto entity3 = registry->SpawnEntity();
@@ -152,6 +152,6 @@ TEST(RegisterTests, EntityFromIndex) {
 }
 
 TEST(RegisterTests, EntityFromIndexOutOfRange) {
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   ASSERT_THROW(registry->EntityFromIndex(0), Registry::Exception);
 }

@@ -103,7 +103,7 @@ class ScenesManager : public ManagerBase {
 
   /**
    * @brief Create a scene of a specific type
-   * @tparam T Scene type to create
+   * @tparam T Scene type to Create
    * @return Created scene
    */
   template <scenes::SceneType T>

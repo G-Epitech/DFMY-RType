@@ -1,5 +1,5 @@
 target_sources(mew PRIVATE
         scene_interface.hpp
         scene_base.hpp
-        scene_base.tpp
+        scene_base.cpp
 )

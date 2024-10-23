@@ -21,7 +21,7 @@ TEST(SystemTests, CreateBasicSystem) {
       (void) nb;
     }
   };
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->AddSystem<BasicSystem>();
   registry->RunSystems();
@@ -44,7 +44,7 @@ TEST(SystemTests, CreateMultipleSystem) {
       (void) nb;
     }
   };
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->RegisterComponent<float>();
   registry->AddSystem<IntSystem>();
@@ -69,7 +69,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
       (void) nb;
     }
   };
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->AddSystem<IntSystem>();
   registry->AddSystem<FloatSystem>();

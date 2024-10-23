@@ -12,8 +12,7 @@
 
 using namespace mew::managers;
 
-SoundManager::SoundManager(DependenciesHandler::Ptr services)
-    : ManagerBase(std::move(services)) {}
+SoundManager::SoundManager(DependenciesHandler::Ptr services) : ManagerBase(std::move(services)) {}
 
 void SoundManager::LoadSoundBuffer(const std::string &path, const std::string &name) {
   if (soundBuffers_.contains(name)) {

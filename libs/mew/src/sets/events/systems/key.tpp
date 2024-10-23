@@ -7,14 +7,14 @@
 
 #pragma once
 
-using namespace rtype::client::systems;
+namespace mew::sets::events {
 
-template <events::EventType EventType, typename KeyEventComponent>
+template <EventType EventType, typename KeyEventComponent>
 KeyEventSystemBase<EventType, KeyEventComponent>::KeyEventSystemBase(
-    WindowManager::Ptr window_manager)
+    managers::WindowManager::Ptr window_manager)
     : EventSystemBase<EventType, KeyEventComponent>(window_manager) {}
 
-template <events::EventType EventType, typename KeyEventComponent>
+template <EventType EventType, typename KeyEventComponent>
 void KeyEventSystemBase<EventType, KeyEventComponent>::HandleEvent(
     const sf::Event& event, Registry::Ptr r, sparse_array<KeyEventComponent>::ptr components) {
   for (auto& component : (*components)) {
@@ -22,3 +22,4 @@ void KeyEventSystemBase<EventType, KeyEventComponent>::HandleEvent(
       component->handler(event.key.code);
   }
 }
+}  // namespace mew::sets::events

@@ -5,7 +5,7 @@ sidebar_position: 1
 # Packet
 
 A packet is a class used by the API to represent a message sent or received by the server.\
-The good practice to create a packet is to use the **[PacketBuilder](packet-builder)** class.
+The good practice to Create a packet is to use the **[PacketBuilder](packet-builder)** class.
 
 The class can be used to send a packet to a client or a server (the class will be exploited by the API) or when you receive a new packet.
 
@@ -24,7 +24,7 @@ The header is mainly used by the API to determine the packet type and the payloa
 You can use it by calling the `GetHeaderProps` method from the packet class.
 
 :::warning
-If you manually create a packet, you must set the header properties correctly.
+If you manually Create a packet, you must set the header properties correctly.
 All the properties are documented with Bit Fields
 :::
 

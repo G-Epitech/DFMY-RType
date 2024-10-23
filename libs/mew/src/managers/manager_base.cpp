@@ -11,7 +11,6 @@
 
 using namespace mew::managers;
 
-ManagerBase::ManagerBase(DependenciesHandler::Ptr services)
-    : services_{std::move(services)} {}
+ManagerBase::ManagerBase(DependenciesHandler::Ptr services) : services_{std::move(services)} {}
 
 ManagerBase::~ManagerBase() = default;

@@ -9,12 +9,11 @@
 
 #include <SFML/Graphics/Rect.hpp>
 
-#include "components/drawable.hpp"
-#include "components/on_event.hpp"
+#include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/transform/transform.hpp"
 #include "libs/zygarde/src/tools/spare_array.hpp"
 
-namespace rtype::client::systems {
+namespace mew::sets::events {
 class MouseStrategyUtils {
  public:
   /**
@@ -25,10 +24,11 @@ class MouseStrategyUtils {
    * @param entityId Entity id to get the position from
    */
   template <typename MouseEventComponent>
-  static events::MouseEventTarget GetCurrentTarget(
-      const sf::Vector2f &mouse, const MouseEventComponent &component,
-      const sparse_array<components::Drawable>::ptr &drawables, std::size_t entityId);
+  static MouseEventTarget GetCurrentTarget(const sf::Vector2f &mouse,
+                                           const MouseEventComponent &component,
+                                           const sparse_array<drawable::Drawable>::ptr &drawables,
+                                           std::size_t entityId);
 };
-}  // namespace rtype::client::systems
+}  // namespace mew::sets::events
 
-#include "strategy_utils.tpp"
+#include "./strategy_utils.tpp"

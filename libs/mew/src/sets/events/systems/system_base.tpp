@@ -7,21 +7,21 @@
 
 #pragma once
 
-#include "components/on_event.hpp"
+#include "libs/mew/src/sets/events/constants.hpp"
 
-using namespace rtype::client;
-using namespace rtype::client::systems;
+namespace mew::sets::events {
 
-template <events::EventType EventType, class... EventComponents>
-EventSystemBase<EventType, EventComponents...>::EventSystemBase(WindowManager::Ptr window_manager)
-    : ASystem<EventComponents...>() {
+template <EventType EventType, class... Components>
+EventSystemBase<EventType, Components...>::EventSystemBase(
+    managers::WindowManager::Ptr window_manager)
+    : ASystem<Components...>() {
   windowManager_ = std::move(window_manager);
 }
 
-template <events::EventType EventType, class... EventComponents>
+template <EventType EventType, class... EventComponents>
 void EventSystemBase<EventType, EventComponents...>::Run(
     Registry::Ptr r, sparse_array<EventComponents>::ptr... components) {
-  auto type_to_handle = events::EventTypeMapper<EventType>::type;
+  auto type_to_handle = EventTypeMapper<EventType>::type;
   auto& events = windowManager_->GetDeferredEvents();
 
   for (const auto& event : events) {
@@ -29,3 +29,4 @@ void EventSystemBase<EventType, EventComponents...>::Run(
       HandleEvent(event, r, components...);
   }
 }
+}  // namespace mew::sets::events

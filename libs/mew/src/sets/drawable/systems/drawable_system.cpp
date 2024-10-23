@@ -5,21 +5,22 @@
 ** drawable_system.cpp
 */
 
-#include "drawable.hpp"
+#include "./drawable_system.hpp"
 
 #include <iostream>
 #include <utility>
 
+using namespace mew::sets::drawable;
+using namespace mew::managers;
 namespace zyc = zygarde::core;
-using namespace rtype::client::systems;
 
 DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
-                               std::shared_ptr<ResourcesManager> resources_manager)
+                               ResourcesManager::Ptr resources_manager)
     : resourcesManager_{std::move(resources_manager)} {
   windowManager_ = std::move(window_manager);
 }
 
-void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
+void DrawableSystem::Run(Registry::Ptr r, sparse_array<Drawable>::ptr drawables,
                          sparse_array<zyc::components::Position>::ptr positions) {
   const auto window = windowManager_->window();
   window->clear();
@@ -67,25 +68,24 @@ std::tuple<float, float> DrawableSystem::GetOrigin(const zyc::components::Positi
   return {originX, originY};
 }
 
-void DrawableSystem::DrawEntity(components::Drawable* drawable,
-                                const zyc::components::Position& position) {
+void DrawableSystem::DrawEntity(Drawable* drawable, const zyc::components::Position& position) {
   std::visit(
       [this, position, drawable](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
         auto shader = windowManager_->GetSelectedShader();
-        if constexpr (std::is_same_v<T, components::Texture>) {
+        if constexpr (std::is_same_v<T, Texture>) {
           shader->setUniform("objectColor", sf::Glsl::Vec4(1, 1, 1, 1));
           shader->setUniform("hasTexture", true);
           shader->setUniform("texture", sf::Shader::CurrentTexture);
           DrawEntityTexture(arg, position, *shader);
           drawable->bounds = sprite_.getGlobalBounds();
-        } else if constexpr (std::is_same_v<T, components::Text>) {
+        } else if constexpr (std::is_same_v<T, Text>) {
           shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
           shader->setUniform("hasTexture", true);
           shader->setUniform("texture", sf::Shader::CurrentTexture);
           DrawEntityText(arg, position, *shader);
           drawable->bounds = text_.getGlobalBounds();
-        } else if constexpr (std::is_same_v<T, components::Rectangle>) {
+        } else if constexpr (std::is_same_v<T, Rectangle>) {
           shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
           shader->setUniform("hasTexture", false);
           DrawEntityRectangle(arg, position, *shader);
@@ -95,7 +95,7 @@ void DrawableSystem::DrawEntity(components::Drawable* drawable,
       drawable->drawable);
 }
 
-void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
+void DrawableSystem::DrawEntityTexture(const Texture& texture,
                                        const zyc::components::Position& position,
                                        const sf::Shader& shader) {
   const auto saved_texture = resourcesManager_->GetTexture(texture.name);
@@ -112,8 +112,7 @@ void DrawableSystem::DrawEntityTexture(const components::Texture& texture,
   windowManager_->window()->draw(sprite_, &shader);
 }
 
-void DrawableSystem::DrawEntityText(const components::Text& text,
-                                    const zyc::components::Position& position,
+void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Position& position,
                                     const sf::Shader& shader) {
   const auto saved_font = resourcesManager_->GetFont(text.fontName);
 
@@ -133,7 +132,7 @@ void DrawableSystem::DrawEntityText(const components::Text& text,
   windowManager_->window()->draw(text_, &shader);
 }
 
-void DrawableSystem::DrawEntityRectangle(const components::Rectangle& rectangle,
+void DrawableSystem::DrawEntityRectangle(const Rectangle& rectangle,
                                          const zyc::components::Position& position,
                                          const sf::Shader& shader) {
   shape_.setFillColor(rectangle.color);

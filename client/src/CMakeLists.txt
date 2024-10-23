@@ -1,9 +1,7 @@
-add_subdirectory(utils)
-add_subdirectory(context)
+#[[add_subdirectory(utils)
 add_subdirectory(bases)
 add_subdirectory(components)
 add_subdirectory(systems)
-add_subdirectory(interfaces)
 add_subdirectory(managers)
-add_subdirectory(scenes)
-add_subdirectory(game)
+add_subdirectory(game)]]
+#[[add_subdirectory(scenes)]]

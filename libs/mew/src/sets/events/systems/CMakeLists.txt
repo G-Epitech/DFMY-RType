@@ -1,4 +1,4 @@
-target_sources(${CLIENT_CORE_LIB} PRIVATE
+target_sources(mew PRIVATE
         key.hpp
         key.tpp
         mouse/buttons.hpp
@@ -9,5 +9,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         mouse/move.hpp
         mouse/strategy_utils.hpp
         mouse/strategy_utils.tpp
-        events.hpp
+        system_base.tpp
+        system_base.hpp
 )

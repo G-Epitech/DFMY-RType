@@ -25,7 +25,7 @@ scenes::IScene::Ptr ScenesManager::CreateScene() {
   auto scene = scenesMap_[type] = std::make_shared<T>();
 
   if (!scene)
-    throw Exception("Failed to create scene: " + utils::GetTypeName<T>());
+    throw Exception("Failed to Create scene: " + utils::GetTypeName<T>());
   scene->OnCreate();
   return scene;
 }

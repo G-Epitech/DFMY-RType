@@ -34,7 +34,7 @@ if (COVERAGE)
     target_link_libraries(${CLIENT_CORE_LIB} PRIVATE gcov)
 endif ()
 
-#[[add_subdirectory(src)
-add_subdirectory(tests)]]
+#[[add_subdirectory(tests)]]
+add_subdirectory(src)
 
 file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

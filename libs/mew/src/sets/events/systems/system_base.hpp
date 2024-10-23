@@ -9,13 +9,13 @@
 
 #include <SFML/Window/Event.hpp>
 
-#include "components/on_event.hpp"
+#include "libs/mew/src/managers/window_manager.hpp"
+#include "libs/mew/src/sets/events/constants.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
-#include "managers/window_manager.hpp"
 
-namespace rtype::client::systems {
-template <events::EventType, class... EventsComponent>
-class EventSystemBase : public ASystem<EventsComponent...> {
+namespace mew::sets::events {
+template <EventType, class... Components>
+class EventSystemBase : public ASystem<Components...> {
  public:
   ~EventSystemBase() override = default;
 
@@ -24,17 +24,17 @@ class EventSystemBase : public ASystem<EventsComponent...> {
    * @param r Registry to use
    * @param components Components to use
    */
-  void Run(Registry::Ptr r, sparse_array<EventsComponent>::ptr... components) final;
+  void Run(Registry::Ptr r, sparse_array<Components>::ptr... components) final;
 
  protected:
   /**
    * @brief Construct a new Event System Base object
    * @param event_deferrer Event deferrer to encapsulate
    */
-  explicit EventSystemBase(WindowManager::Ptr window_manager);
+  explicit EventSystemBase(managers::WindowManager::Ptr window_manager);
 
   /// @brief Window manager
-  WindowManager::Ptr windowManager_;
+  managers::WindowManager::Ptr windowManager_;
 
   /**
    * @brief Handle logic for current event
@@ -43,8 +43,8 @@ class EventSystemBase : public ASystem<EventsComponent...> {
    * @param components Components to use
    */
   virtual void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                           sparse_array<EventsComponent>::ptr... components) = 0;
+                           sparse_array<Components>::ptr... components) = 0;
 };
-}  // namespace rtype::client::systems
+}  // namespace mew::sets::events
 
-#include "events_system_base.tpp"
+#include "./system_base.tpp"

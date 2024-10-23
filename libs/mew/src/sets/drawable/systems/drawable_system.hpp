@@ -7,35 +7,36 @@
 
 #pragma once
 
-#include "components/drawable.hpp"
+#include "libs/mew/src/managers/resources_manager.hpp"
+#include "libs/mew/src/managers/window_manager.hpp"
+#include "libs/mew/src/sets/drawable/components/components.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
-#include "managers/resources_manager.hpp"
-#include "managers/window_manager.hpp"
 
-namespace zyc = zygarde::core;
-
-namespace rtype::client::systems {
+namespace mew::sets::drawable {
 
 /**
  * @brief Drawable System class
  */
-class DrawableSystem final : public ASystem<components::Drawable, zyc::components::Position> {
+class DrawableSystem final : public ASystem<Drawable, zygarde::core::components::Position> {
  public:
   /**
    * @brief Default constructor of a Drawable System
    * @param window_manager The window manager to display the entities
    * @param resources_manager The resources manager to get the textures and fonts
    */
-  explicit DrawableSystem(WindowManager::Ptr window_manager,
-                          std::shared_ptr<ResourcesManager> resources_manager);
+  explicit DrawableSystem(managers::WindowManager::Ptr window_manager,
+                          managers::ResourcesManager::Ptr resources_manager);
 
-  void Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
-           sparse_array<zyc::components::Position>::ptr positions) override;
+  void Run(Registry::Ptr r, sparse_array<Drawable>::ptr drawables,
+           sparse_array<zygarde::core::components::Position>::ptr positions) override;
 
  private:
   /// @brief The render window to display the entities.
-  WindowManager::Ptr windowManager_;
+  managers::WindowManager::Ptr windowManager_;
+
+  /// @brief The resources manager to get the textures and fonts.
+  managers::ResourcesManager::Ptr resourcesManager_;
 
   /// @brief This Sprite is a utils that avoid us to recreate a new sprite each time we want to
   /// display a new entity.
@@ -49,15 +50,12 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
   /// display a new entity.
   sf::RectangleShape shape_;
 
-  /// @brief The resources manager to get the textures and fonts.
-  ResourcesManager::Ptr resourcesManager_;
-
   /**
    * @brief Draw an entity
    * @param drawable The drawable component of the entity
    * @param position The position component of the entity
    */
-  void DrawEntity(components::Drawable *drawable, const zyc::components::Position &position);
+  void DrawEntity(Drawable *drawable, const zygarde::core::components::Position &position);
 
   /**
    * @brief Draw a texture
@@ -65,8 +63,9 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @param position The position component of the entity
    * @param shader The shader to apply to the texture
    */
-  void DrawEntityTexture(const components::Texture &texture,
-                         const zyc::components::Position &position, const sf::Shader &shader);
+  void DrawEntityTexture(const Texture &texture,
+                         const zygarde::core::components::Position &position,
+                         const sf::Shader &shader);
 
   /**
    * @brief Draw a text
@@ -74,7 +73,7 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @param position The position component of the entity
    * @param shader The shader to apply to the text
    */
-  void DrawEntityText(const components::Text &text, const zyc::components::Position &position,
+  void DrawEntityText(const Text &text, const zygarde::core::components::Position &position,
                       const sf::Shader &shader);
 
   /**
@@ -83,11 +82,18 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
    * @param position The position component of the entity
    * @param shader The shader to apply to the rectangle
    */
-  void DrawEntityRectangle(const components::Rectangle &rectangle,
-                           const zyc::components::Position &position, const sf::Shader &shader);
+  void DrawEntityRectangle(const Rectangle &rectangle,
+                           const zygarde::core::components::Position &position,
+                           const sf::Shader &shader);
 
-  static std::tuple<float, float> GetOrigin(const zyc::components::Position &position,
+  /**
+   * @brief Get the origin of the entity
+   * @param position Position of the entity
+   * @param bounds Bounds of the entity
+   * @return Position of the origin
+   */
+  static std::tuple<float, float> GetOrigin(const zygarde::core::components::Position &position,
                                             const sf::FloatRect &bounds);
 };
 
-}  // namespace rtype::client::systems
+}  // namespace mew::sets::drawable

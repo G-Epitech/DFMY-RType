@@ -61,7 +61,7 @@ class AppBuilder {
   /**
    * @brief Add the default managers to the provider
    */
-  App::DefaultManagers BuildDefaultManagers();
+  managers::DefaultManagers BuildDefaultManagers();
 
   /// @brief Store the properties of the window manager to be created
   std::optional<managers::WindowManager::Properties> windowProperties_;

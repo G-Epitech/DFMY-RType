@@ -10,9 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-#include "libs/mew/src/managers/scenes_manager.hpp"
-#include "libs/mew/src/managers/sound_manager.hpp"
-#include "libs/mew/src/managers/window_manager.hpp"
+#include "libs/mew/src/managers/managers.hpp"
 #include "libs/porygon/src/handler.hpp"
 #include "libs/zygarde/src/utils/timer/timer.hpp"
 
@@ -67,30 +65,13 @@ class App final {
   const managers::SoundManager::Ptr &soundManager;
 
  private:
-  struct DefaultManagers {
-    /**
-     * @brief Store the window manager.
-     */
-    managers::WindowManager::Ptr window;
-
-    /**
-     * @brief Store the scenes manager.
-     */
-    managers::ScenesManager::Ptr scenes;
-
-    /**
-     * @brief Store the sound manager.
-     */
-    managers::SoundManager::Ptr sound;
-  };
-
   /**
    * @brief Default constructor for the App class.
    * Initializes a new instance of the App class.
    * @param service The services provider to use for the application.
    * @param default_managers The default managers to use for the application.
    */
-  App(porygon::DependenciesHandler::Ptr service, DefaultManagers default_managers);
+  App(porygon::DependenciesHandler::Ptr service, managers::DefaultManagers default_managers);
 
   /**
    * @brief Store the services provider.
@@ -100,7 +81,7 @@ class App final {
   /**
    * @brief Store the default managers.
    */
-  DefaultManagers defaultManagers_;
+  managers::DefaultManagers defaultManagers_;
 
   /// @brief Timer
   zygarde::utils::Timer timer_;

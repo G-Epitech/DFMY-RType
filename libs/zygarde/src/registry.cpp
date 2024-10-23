@@ -13,7 +13,7 @@ using namespace zygarde;
 
 Registry::Registry(Private) {}
 
-std::shared_ptr<Registry> Registry::create() {
+std::shared_ptr<Registry> Registry::Create() {
   return std::make_shared<Registry>(Private());
 }
 

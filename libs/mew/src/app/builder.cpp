@@ -11,6 +11,7 @@
 #include "libs/mew/src/managers/sound_manager.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 
+using namespace mew::managers;
 using namespace mew::app;
 
 AppBuilder::AppBuilder() {
@@ -27,15 +28,17 @@ App AppBuilder::Build() {
   return {services_, BuildDefaultManagers()};
 }
 
-App::DefaultManagers AppBuilder::BuildDefaultManagers() {
+DefaultManagers AppBuilder::BuildDefaultManagers() {
   if (!windowProperties_)
     throw std::runtime_error("Window properties are required");
-  WithService<managers::WindowManager>(*windowProperties_);
-  WithService<managers::ScenesManager>();
-  WithService<managers::SoundManager>();
+  WithService<WindowManager>(*windowProperties_);
+  WithService<ScenesManager>();
+  WithService<SoundManager>();
+  WithService<ResourcesManager>();
   return {
-      services_->Get<managers::WindowManager>(),
-      services_->Get<managers::ScenesManager>(),
-      services_->Get<managers::SoundManager>(),
+      services_->Get<WindowManager>(),
+      services_->Get<ScenesManager>(),
+      services_->Get<SoundManager>(),
+      services_->Get<ResourcesManager>(),
   };
 }

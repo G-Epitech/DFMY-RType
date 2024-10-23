@@ -42,7 +42,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @brief Create a new registry.
    * @return std::shared_ptr<Registry>
    */
-  static std::shared_ptr<Registry> create();
+  static std::shared_ptr<Registry> Create();
 
   /**
    * @brief Get the shared pointer of this registry.

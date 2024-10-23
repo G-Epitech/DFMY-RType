@@ -1,4 +1,5 @@
 target_sources(mew PRIVATE
+        default_managers.hpp
         scenes_manager.hpp
         scenes_manager.tpp
         scenes_manager.cpp
@@ -10,4 +11,5 @@ target_sources(mew PRIVATE
         sound_manager.cpp
         manager_base.cpp
         manager_base.hpp
+        managers.hpp
 )

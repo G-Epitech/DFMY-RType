@@ -6,11 +6,11 @@ sidebar_position: 2
 
 ![zygarde.png](./img/zygarde.png)
 
-The zygarde ECS SDK is a collection of tools with a useful API that allows you to create and manage entities, components, and systems.
+The zygarde ECS SDK is a collection of tools with a useful API that allows you to Create and manage entities, components, and systems.
 
 ## Usage
 
-The registry is the main class of the zygarde ECS SDK. It is used to create entities, components, and systems.
+The registry is the main class of the zygarde ECS SDK. It is used to Create entities, components, and systems.
 
 :::info
 The ECS SDK is available in the `zygrade` namespace.
@@ -49,7 +49,7 @@ struct controllable {
 };
 ```
 
-Now, we can create a registry, register the components, and create an entity:
+Now, we can Create a registry, register the components, and Create an entity:
 
 ```cpp
 zygrade::registry registry;
@@ -71,7 +71,7 @@ registry.add_component<drawable>(entity, {false});
 registry.add_component<controllable>(entity, {false, false, false, false});
 ```
 
-Now, we can create a system that will display the position and velocity of the entity:
+Now, we can Create a system that will display the position and velocity of the entity:
 
 ```cpp
 
@@ -144,7 +144,7 @@ class LoggingSystem final : public ASystem<position, velocity> {
 };
 
 int main() {
-  auto registry = zygarde::Registry::create();
+  auto registry = zygarde::Registry::Create();
 
   registry->RegisterComponent<position>();
   registry->RegisterComponent<velocity>();

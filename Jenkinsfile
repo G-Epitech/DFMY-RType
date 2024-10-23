@@ -255,7 +255,7 @@ pipeline {
                             echo "Release ${releaseId} created successfully"
                             RELEASE_ID = releaseId
                         } else {
-                            error "Failed to create release"
+                            error "Failed to Create release"
                         }
                     }
                 }

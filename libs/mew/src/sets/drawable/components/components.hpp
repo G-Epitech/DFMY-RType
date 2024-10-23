@@ -10,9 +10,9 @@
 #include <SFML/Graphics.hpp>
 #include <variant>
 
-#include "managers/window_manager.hpp"
+#include "libs/mew/src/managers/managers.hpp"
 
-namespace rtype::client::components {
+namespace mew::sets::drawable {
 
 /// @brief Text Component use in an ECS
 struct Text {
@@ -38,8 +38,9 @@ struct Rectangle {
 
 /// @brief Drawable Component use in an ECS
 struct Drawable {
-  std::variant<Texture, Text, Rectangle> drawable;       ///< Drawable to display
-  WindowManager::View view = WindowManager::View::GAME;  ///< View of the drawable
-  sf::FloatRect bounds = {0, 0, 0, 0};                   ///< Bounds of the drawable
+  std::variant<Texture, Text, Rectangle> drawable;  ///< Drawable to display
+  managers::WindowManager::View view =
+      managers::WindowManager::View::GAME;  ///< View of the drawable
+  sf::FloatRect bounds = {0, 0, 0, 0};      ///< Bounds of the drawable
 };
-}  // namespace rtype::client::components
+}  // namespace mew::sets::drawable
