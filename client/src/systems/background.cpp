@@ -19,32 +19,34 @@ using namespace rtype::client::components;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 
-BackgroundSystem::BackgroundSystem() {
+BackgroundSystem::BackgroundSystem() : starsCount_(0) {
   clock_.restart();
 }
 
-void BackgroundSystem::Run(const std::shared_ptr<Registry> r, const sparse_array<Tags>::ptr tags,
-                           const sparse_array<Position>::ptr positions) {
+void BackgroundSystem::Run(
+    const std::shared_ptr<Registry> r,
+    zipper<sparse_array<Tags>::ptr, sparse_array<Position>::ptr> components) {
   const float deltaTime = clock_.restart().asSeconds();
-  if (tags->size() < 50) {
+  if (starsCount_ < 50) {
     SpawnStar(r);
+    starsCount_ += 1;
   }
 
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<float> speedDist(100.0f, 200.0f);
 
-  for (size_t i = 0; i < tags->size() && i < positions->size(); ++i) {
-    if ((*positions)[i] && ((*tags)[i] && (*tags)[i].value() & "background")) {
-      auto& position = (*positions)[i].value();
-      const float speed = speedDist(gen);
+  for (auto&& [tag, position] : components) {
+    if (!(tag & "background")) {
+      continue;
+    }
+    const float speed = speedDist(gen);
 
-      position.point.x -= speed * deltaTime;
+    position.point.x -= speed * deltaTime;
 
-      if (position.point.x < -100) {
-        position.point.x = static_cast<float>(2000 + (gen() % 200));
-        position.point.y = static_cast<float>(gen() % APP_WINDOW_HEIGHT);
-      }
+    if (position.point.x < -100) {
+      position.point.x = static_cast<float>(2000 + (gen() % 200));
+      position.point.y = static_cast<float>(gen() % APP_WINDOW_HEIGHT);
     }
   }
 }

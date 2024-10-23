@@ -19,18 +19,15 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
   windowManager_ = std::move(window_manager);
 }
 
-void DrawableSystem::Run(Registry::Ptr r, sparse_array<components::Drawable>::ptr drawables,
-                         sparse_array<zyc::components::Position>::ptr positions) {
+void DrawableSystem::Run(
+    Registry::Ptr r,
+    zipper<sparse_array<components::Drawable>::ptr, sparse_array<zyc::components::Position>::ptr>
+        components) {
   const auto window = windowManager_->window();
   window->clear();
-  for (size_t i = 0; i < drawables->size() && i < positions->size(); ++i) {
-    if ((*drawables)[i] && (*positions)[i]) {
-      const auto drawable = &((*drawables)[i].value());
-      auto& position = (*positions)[i].value();
-
-      windowManager_->SetView(drawable->view);
-      DrawEntity(drawable, position);
-    }
+  for (auto&& [drawable, position] : components) {
+    windowManager_->SetView(drawable.view);
+    DrawEntity(&drawable, position);
   }
   window->display();
 }

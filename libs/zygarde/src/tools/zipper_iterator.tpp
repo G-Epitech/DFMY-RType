@@ -28,6 +28,10 @@ zygarde::tools::zipper_iterator<Containers...>::operator++() {
   if (current_ == end_) {
     return *this;
   }
+  if (any_end_reached()) {
+    current_ = end_;
+    return *this;
+  }
   do {
     incr_all(seq_);
     ++idx_;

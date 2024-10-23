@@ -24,7 +24,8 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
    */
   explicit GameSyncSystem(ServerConnectionManager::Ptr serverConnectionManager);
 
-  void Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr component) override;
+  void Run(Registry::Ptr r,
+           zipper<sparse_array<components::ServerEntityId>::ptr> components) override;
 
  private:
   /**

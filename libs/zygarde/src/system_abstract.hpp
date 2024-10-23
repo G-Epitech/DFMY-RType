@@ -27,7 +27,18 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
    * @param components The components
    */
   virtual void Run(std::shared_ptr<Registry> r,
-                   zipper<typename sparse_array<Components>::ptr...> components) = 0;
+                   zipper<typename sparse_array<Components>::ptr...> components);
+};
+
+/**
+ * Specialization for no components
+ */
+template <>
+class EXPORT_ZYGARDE_API ASystem<> : public ISystem {
+ public:
+  void operator()(std::shared_ptr<Registry> r) override;
+
+  virtual void Run(std::shared_ptr<Registry> r);
 };
 }  // namespace zygarde
 

@@ -121,7 +121,7 @@ class zipper_iterator {
    */
   // This function can't be in a separate tpp file because it's a friend function
   friend bool operator==(zipper_iterator const &lhs, zipper_iterator const &rhs) {
-    return lhs.current_ == rhs.current_;
+    return lhs.any_end_reached() || (lhs.current_ == rhs.current_);
   }
 
   /**
@@ -171,6 +171,13 @@ class zipper_iterator {
    */
   template <std::size_t... Is>
   value_type to_value(std::index_sequence<Is...>);
+
+  [[nodiscard]] bool any_end_reached() const { return any_end_reached(seq_); }
+
+  template <std::size_t... Is>
+  [[nodiscard]] bool any_end_reached(std::index_sequence<Is...>) const {
+    return (... || (std::get<Is>(current_) == std::get<Is>(end_)));
+  }
 };
 }  // namespace zygarde::tools
 
