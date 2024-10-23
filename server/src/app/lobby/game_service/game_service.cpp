@@ -27,7 +27,7 @@ GameService::GameService(const size_t &tick_rate)
       lobbyId_(0) {}
 
 void GameService::RegistrySetup() {
-  registry_ = zygarde::Registry::create();
+  registry_ = zygarde::Registry::Create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
 }

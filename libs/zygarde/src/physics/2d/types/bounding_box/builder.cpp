@@ -23,16 +23,16 @@ void BoundingBox2DBuilder::ResolveVerticalBounds(
     zygarde::core::types::Vector2f size) noexcept {
   switch (position.aligns.horizontal) {
     case core::components::HorizontalAlign::kLeft:
-      bounding_box->left = position.point.x;
-      bounding_box->right = position.point.x + size.x;
+      bounding_box->left = position.point.y;
+      bounding_box->right = position.point.y + size.y;
       break;
     case core::components::HorizontalAlign::kCenter:
-      bounding_box->left = position.point.x - size.x / 2;
-      bounding_box->right = position.point.x + size.x / 2;
+      bounding_box->left = position.point.y - size.y / 2;
+      bounding_box->right = position.point.y + size.y / 2;
       break;
     default:
-      bounding_box->left = position.point.x - size.x;
-      bounding_box->right = position.point.x;
+      bounding_box->left = position.point.y - size.y;
+      bounding_box->right = position.point.y;
       break;
   }
 }

@@ -32,7 +32,7 @@ TEST(SystemTests, CreateBasicSystem) {
       }
     }
   };
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->AddSystem<BasicSystem>();
   const auto entity = registry->SpawnEntity();
@@ -63,7 +63,7 @@ TEST(SystemTests, CreateMultipleSystem) {
       }
     }
   };
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->RegisterComponent<float>();
   registry->AddSystem<IntSystem>();
@@ -98,7 +98,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
       (void) components;
     }
   };
-  const auto registry = Registry::create();
+  const auto registry = Registry::Create();
   registry->RegisterComponent<int>();
   registry->AddSystem<IntSystem>();
   registry->AddSystem<FloatSystem>();
