@@ -18,6 +18,7 @@ void WindowManager::ClearEvents() noexcept {
 WindowManager::WindowManager(DependenciesHandler::Ptr services,
                              const WindowManager::Properties& props)
     : ManagerBase(std::move(services)), props_(props) {
+  deferredEvents_.reserve(kEventsAverageLength);
   window_ = std::make_shared<sf::RenderWindow>(props_.videoMode, props_.title, props_.style,
                                                props_.contextSettings);
   if (props.iconPath) {

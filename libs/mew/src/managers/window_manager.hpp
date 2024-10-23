@@ -18,7 +18,7 @@ namespace mew::managers {
 class WindowManager : public ManagerBase {
  public:
   /// @brief Deferred events
-  typedef std::list<sf::Event> EventsDeferrer;
+  typedef std::vector<sf::Event> EventsDeferrer;
 
   /// @brief Pointer to a window manager
   typedef std::shared_ptr<WindowManager> Ptr;
@@ -112,6 +112,9 @@ class WindowManager : public ManagerBase {
   float height_;
 
  private:
+  /// @brief Average length of the events list
+  static constexpr const int kEventsAverageLength = 5;
+
   /// @brief Current window
   std::shared_ptr<sf::RenderWindow> window_;
 
@@ -134,6 +137,7 @@ class WindowManager : public ManagerBase {
   /// @brief Map of shaders
   std::map<std::string, std::shared_ptr<sf::Shader>> shaders_;
 
+  /// @brief Selected shader
   std::shared_ptr<sf::Shader> selectedShader_;
 
   /**
