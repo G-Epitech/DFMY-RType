@@ -104,3 +104,44 @@ void Node::HandleRoomCreation(const abra::tools::MessageProps &message) {
 
   this->logger_.Info("Handle the creation of a new room", "🏠");
 }
+
+void Node::HandlePlayerJoin(const abra::tools::MessageProps &message) {
+  auto packet = this->packetBuilder_.Build<payload::PlayerJoin>(message.data);
+  auto &payload = packet->GetPayload();
+  uint64_t socketId = 0;
+
+  try {
+    auto &room = FindRoomById(payload.id);
+
+    room.nbPlayers++;
+    socketId = room.socketId;
+  } catch(std::out_of_range &) {
+    this->logger_.Info("Room not found", "❌");
+    return;
+  }
+
+  auto success = SendToRoom(socketId, NodeToRoomMsgType::kMsgTypeNTRPlayerJoin, payload);
+  if (success) {
+    this->logger_.Info("Handle a new player join a room", "👥");
+  }
+}
+
+Node::RoomProps &Node::FindRoomById(std::uint64_t id) {
+  for (auto &room : this->rooms_) {
+    if (room.id == id) {
+      return room;
+    }
+  }
+
+  throw std::runtime_error("Room not found");
+}
+
+Node::RoomProps &Node::FindRoomBySocketId(std::uint64_t id) {
+  for (auto &room : this->rooms_) {
+    if (room.socketId == id) {
+      return room;
+    }
+  }
+
+  throw std::runtime_error("Room not found");
+}

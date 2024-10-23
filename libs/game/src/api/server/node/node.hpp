@@ -75,6 +75,17 @@ class rtype::sdk::game::api::Node {
   bool SendToMaster(NodeToMasterMsgType type, const T &payload);
 
   /**
+   * @brief Send message to room
+   * @tparam T The type of the payload
+   * @param socketId The socket id of the room
+   * @param type Type of message
+   * @param payload The payload
+   * @return Success of the send
+   */
+  template <typename T>
+  bool SendToRoom(std::uint64_t socketId, NodeToRoomMsgType type, const T &payload);
+
+  /**
    * @brief Register the node to the master
    * @return Success of the registration
    */
@@ -92,6 +103,26 @@ class rtype::sdk::game::api::Node {
    * @param message The message of the master (MasterToNodeMsgType::kMsgTypeMTNCreateRoom)
    */
   void HandleRoomCreation(const abra::tools::MessageProps &message);
+
+  /**
+   * @brief Handle new player join a room
+   * @param message The message of the master (MasterToNodeMsgType::kMsgTypeMTNPlayerJoin)
+   */
+  void HandlePlayerJoin(const abra::tools::MessageProps &message);
+
+  /**
+   * @brief Find a room by id
+   * @param id The id of the room
+   * @return The room props
+   */
+  RoomProps &FindRoomById(std::uint64_t id);
+
+  /**
+   * @brief Find a room by socket id
+   * @param id The socket id of the room
+   * @return The room props
+   */
+  RoomProps &FindRoomBySocketId(std::uint64_t id);
 
   /// @brief Name of the node
   std::string name_;
@@ -130,6 +161,7 @@ class rtype::sdk::game::api::Node {
   static inline std::map<unsigned int, void (Node::*)(const abra::tools::MessageProps &message)>
       masterMessageHandlers_ = {
           {MasterToNodeMsgType::kMsgTypeMTNCreateRoom, &Node::HandleRoomCreation},
+          {MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, &Node::HandlePlayerJoin},
   };
 };
 
