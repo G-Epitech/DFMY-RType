@@ -7,8 +7,6 @@
 
 #include "./registry.hpp"
 
-#include <iostream>
-
 using namespace zygarde;
 
 Registry::Registry(Private) {}
@@ -29,17 +27,7 @@ void Registry::RunSystems() {
 }
 
 Entity Registry::SpawnEntity() {
-  std::size_t newId;
-
-  if (!freeIds_.empty()) {
-    newId = freeIds_.top();
-    freeIds_.pop();
-  } else {
-    newId = currentMaxEntityId_++;
-  }
-  Entity e(newId, *this);
-  entities_.emplace_back(e);
-  return e;
+  return SpawnEntity<Entity>();
 }
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {

@@ -8,7 +8,6 @@
 #include "collision_system.hpp"
 
 #include <algorithm>
-#include <iostream>
 
 using namespace zygarde::physics::systems;
 

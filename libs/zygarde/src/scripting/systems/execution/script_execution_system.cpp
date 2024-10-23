@@ -7,8 +7,6 @@
 
 #include "script_execution_system.hpp"
 
-#include <iostream>
-
 using namespace zygarde::scripting::systems;
 
 ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& deltaTime)

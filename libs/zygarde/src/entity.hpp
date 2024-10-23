@@ -57,13 +57,6 @@ class EXPORT_ZYGARDE_API Entity {
    */
   bool operator==(const Entity& other) const;
 
-  /**
-   * @brief OnSpawn method
-   * This method is called when the entity is spawned.
-   * This method is virtual and can be overridden
-   */
-  virtual void OnSpawn();
-
  protected:
   /// @brief Entity id
   std::size_t id_;
@@ -77,6 +70,13 @@ class EXPORT_ZYGARDE_API Entity {
    * @param registry Registry reference
    */
   explicit Entity(std::size_t idx, Registry& registry);
+
+  /**
+   * @brief OnSpawn method
+   * This method is called when the entity is spawned.
+   * This method is virtual and can be overridden
+   */
+  virtual void OnSpawn();
 
   friend class Registry;
 };

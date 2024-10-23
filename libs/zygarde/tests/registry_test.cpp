@@ -204,10 +204,13 @@ TEST(RegisterTests, IterateOnOneComponent) {
 TEST(RegistryTests, AddOwnEntity) {
   class MyBestEntity : public Entity {
    public:
-    MyBestEntity(const std::size_t id, Registry &registry) : Entity(id, registry) {}
-    void OnSpawn() override { std::cout << "I'm the best entity" << std::endl; }
+    MyBestEntity(const std::size_t id, Registry &registry, std::size_t nb) : Entity(id, registry) {
+      (void) nb;
+    }
+    void OnSpawn() override { registry_.RegisterComponent<int>(); }
   };
 
   const auto registry = Registry::Create();
-  const auto entity = registry->SpawnEntity<MyBestEntity>();
+  const auto entity = registry->SpawnEntity<MyBestEntity>(42);
+  registry->AddComponent<int>(entity, 42);
 }

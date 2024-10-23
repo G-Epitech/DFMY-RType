@@ -87,8 +87,8 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @tparam T Type of the entity
    * @return Entity
    */
-  template <EntityType T>
-  Entity SpawnEntity();
+  template <EntityType T, typename... Args>
+  Entity SpawnEntity(Args &&...args);
 
   /**
    * @brief Get an entity from an index

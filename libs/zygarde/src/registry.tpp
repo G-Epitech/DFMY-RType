@@ -95,9 +95,8 @@ bool Registry::HasComponents(Entity const &e) {
   return (... && (GetComponent<Components>(e) != nullptr));
 }
 
-#include <iostream>
-template <EntityType T>
-Entity Registry::SpawnEntity() {
+template <EntityType T, typename... Args>
+Entity Registry::SpawnEntity(Args &&...args) {
   std::size_t newId;
 
   if (!freeIds_.empty()) {
@@ -106,7 +105,7 @@ Entity Registry::SpawnEntity() {
   } else {
     newId = currentMaxEntityId_++;
   }
-  T e(newId, *this);
+  T e(newId, *this, std::forward<Args>(args)...);
   entities_.emplace_back(e);
   e.OnSpawn();
   return e;
