@@ -37,9 +37,17 @@ class zipper_iterator {
   template <class T>
   using unwrapped_t = typename unwrapped<T>::type;
 
+  template <typename T>
+  struct indexed_value {
+    std::size_t index;
+    T values;
+  };
+
  public:
   /// @brief The value type of the iterator
   using value_type = std::tuple<unwrapped_t<Containers>...>;
+  /// @brief The value type with index of the iterator
+  using value_type_with_index = indexed_value<value_type>;
   /// @brief The reference type of the iterator
   using reference = value_type;
   /// @brief The pointer type of the iterator
@@ -82,6 +90,12 @@ class zipper_iterator {
    * @return value_type The value of the iterator
    */
   value_type operator*();
+
+  /**
+   * @brief Dereference the iterator
+   * @return value_type_with_index The value of the iterator with index
+   */
+  value_type_with_index operator~() { return {idx_, operator*()}; }
 
   /**
    * @brief Check if two iterators are equal
