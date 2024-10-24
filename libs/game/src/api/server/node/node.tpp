@@ -26,13 +26,13 @@ bool Node::SendToMaster(NodeToMasterMsgType type, const T &payload) {
 }
 
 template<typename T>
-bool Node::SendToRoom(std::uint64_t roomId, NodeToRoomMsgType type, const T &payload) {
+bool Node::SendToRoom(std::uint64_t socketId, NodeToRoomMsgType type, const T &payload) {
   this->packetBuilder_.SetMessageType(type).SetPayloadType(PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build(payload);
 
-  logger_.Info("Send packet to the room " + std::to_string(roomId) + " of type " + std::to_string(type), "📦");
+  logger_.Info("Send packet to the room " + std::to_string(socketId) + " of type " + std::to_string(type), "📦");
 
-  auto success = this->roomsSocket_.Send(packet, roomId) == SendMessageStatus::kSuccess;
+  auto success = this->roomsSocket_.Send(packet, socketId) == SendMessageStatus::kSuccess;
   if (!success) {
     logger_.Warning("Failed to send packet to a room of type " + std::to_string(type), "⚠️ ");
   }

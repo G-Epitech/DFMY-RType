@@ -42,8 +42,8 @@ class rtype::sdk::game::api::Node {
     uint64_t id;
     uint64_t socketId;
     std::string name;
-    std::size_t maxPlayers;
-    std::size_t nbPlayers;
+    unsigned int maxPlayers;
+    unsigned int nbPlayers;
     unsigned int difficulty;
   };
 
@@ -92,11 +92,25 @@ class rtype::sdk::game::api::Node {
   bool RegisterToMaster();
 
   /**
+   * @brief Register a new room from a room call
+   * @param socketId The room socket id
+   * @param registerPayload The payload of the room
+   */
+  void RegisterNewRoom(uint64_t socketId, const payload::RegisterRoom &registerPayload);
+
+  /**
    * @brief Middleware to handle master messages
    * @param message The message of the master (MasterToNodeMsgType)
    * @return True if the message must be push in the queue of messages
    */
   bool MasterMessageMiddleware(const abra::tools::MessageProps &message);
+
+  /**
+   * @brief Middleware to handle rooms messages
+   * @param message The message of the room (RoomToNodeMsgType)
+   * @return True if the message must be push in the queue of messages
+   */
+  bool RoomsMessageMiddleware(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Handle room creation
@@ -111,6 +125,31 @@ class rtype::sdk::game::api::Node {
   void HandlePlayerJoin(const abra::tools::MessageProps &message);
 
   /**
+   * @brief Handle new room register
+   * @param message The message of the room (RoomToNodeMsgType::kMsgTypeRTNRegisterRoom)
+   */
+  void HandleRoomRegister(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle a game started
+   * @param message The message of the room (RoomToNodeMsgType::kMsgTypeRTNGameStarted)
+   */
+  void HandleGameStarted(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle a game ended
+   * @param message The message of the room (RoomToNodeMsgType::kMsgTypeRTNGameEnded)
+   */
+  void HandleGameEnded(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Execute the logic of the end of a game
+   * @param endPayload The end payload
+   * @param room The room props
+   */
+  void EndGame(const payload::GameEnd &endPayload, const RoomProps &room);
+
+  /**
    * @brief Find a room by id
    * @param id The id of the room
    * @return The room props
@@ -123,6 +162,12 @@ class rtype::sdk::game::api::Node {
    * @return The room props
    */
   RoomProps &FindRoomBySocketId(std::uint64_t id);
+
+  /**
+   * @brief Remove a room by id
+   * @param id The id of the room
+   */
+  void RemoveRoom(std::uint64_t id);
 
   /// @brief Name of the node
   std::string name_;
@@ -154,6 +199,9 @@ class rtype::sdk::game::api::Node {
   /// @brief Packet builder
   abra::tools::PacketBuilder packetBuilder_;
 
+  /// @brief Last lobby id
+  std::uint64_t lastRoomId_;
+
   /// @brief Creation of room handler
   std::function<bool(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty)>
       createRoomHandler_;
@@ -162,6 +210,14 @@ class rtype::sdk::game::api::Node {
       masterMessageHandlers_ = {
           {MasterToNodeMsgType::kMsgTypeMTNCreateRoom, &Node::HandleRoomCreation},
           {MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, &Node::HandlePlayerJoin},
+  };
+
+  static inline std::map<unsigned int,
+                         void (Node::*)(const abra::server::ClientTCPMessage &message)>
+      roomMessageHandlers_ = {
+          {RoomToNodeMsgType::kMsgTypeRTNRegisterRoom, &Node::HandleRoomRegister},
+          {RoomToNodeMsgType::kMsgTypeRTNGameStarted, &Node::HandleGameStarted},
+          {RoomToNodeMsgType::kMsgTypeRTNGameEnded, &Node::HandleGameEnded},
   };
 };
 

@@ -10,11 +10,10 @@
 namespace rtype::sdk::game::api {
 /// @brief Client >> Master message type
 enum ClientToMasterMsgType {
-  kMsgTypeCTMConnect,          ///< @brief Connect to the master
-  kMsgTypeCTMRefreshInfos,     ///< @brief Refresh the master infos
-  kMsgTypeCTMCreateRoom,       ///< @brief Create a room
-  kMsgTypeCTMJoinRoom,         ///< @brief Join a room
-  kMsgTypeCTMInfoConnectRoom,  ///< @brief Info to connect to a room (client udp)
+  kMsgTypeCTMConnect,       ///< @brief Connect to the master
+  kMsgTypeCTMRefreshInfos,  ///< @brief Refresh the master infos
+  kMsgTypeCTMCreateRoom,    ///< @brief Create a room
+  kMsgTypeCTMJoinRoom,      ///< @brief Join a room
 };
 
 /// @brief Master >> Client message type

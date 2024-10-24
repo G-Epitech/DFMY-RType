@@ -18,8 +18,9 @@ Node::Node(std::string name, std::string token, std::size_t maxRooms, const std:
       maxRooms_(maxRooms),
       masterSocket_(masterIp, masterPort,
                     [this](auto &msg) { return MasterMessageMiddleware(msg); }),
-      roomsSocket_(0, nullptr),
-      logger_("nodeAPI::" + name) {}
+      roomsSocket_(0, [this](auto &msg) { return RoomsMessageMiddleware(msg); }),
+      logger_("nodeAPI::" + name),
+      lastRoomId_(0) {}
 
 Node::~Node() {
   this->masterSocket_.Close();
@@ -58,6 +59,23 @@ bool Node::RegisterToMaster() {
   return SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRegisterNode, payload);
 }
 
+void Node::RegisterNewRoom(uint64_t socketId, const payload::RegisterRoom &registerPayload) {
+  auto &room = FindRoomById(registerPayload.id);
+  room.socketId = socketId;
+
+  payload::RegisterNewRoom payload{
+      .id = room.id,
+      .nbPlayers = room.maxPlayers,
+      .difficulty = room.difficulty,
+      .port = registerPayload.port,
+  };
+
+  auto success = SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRegisterNewRoom, payload);
+  if (success) {
+    logger_.Info("Register new room [" + std::to_string(room.id) + "]", "🛃");
+  }
+}
+
 void Node::InitMasterThread() {
   this->masterThread_ = std::thread(&abra::client::ClientTCP::Listen, &this->masterSocket_);
 
@@ -81,6 +99,17 @@ bool Node::MasterMessageMiddleware(const abra::tools::MessageProps &message) {
   return false;
 }
 
+bool Node::RoomsMessageMiddleware(const abra::server::ClientTCPMessage &message) {
+  if (roomMessageHandlers_.find(message.messageType) == roomMessageHandlers_.end()) {
+    return true;
+  }
+
+  logger_.Info("Handling message (rooms middleware catch)", "🔧");
+  (this->*(roomMessageHandlers_[message.messageType]))(message);
+
+  return false;
+}
+
 void Node::HandleRoomCreation(const abra::tools::MessageProps &message) {
   auto packet = this->packetBuilder_.Build<payload::CreateRoom>(message.data);
   auto &payload = packet->GetPayload();
@@ -91,7 +120,7 @@ void Node::HandleRoomCreation(const abra::tools::MessageProps &message) {
   }
 
   RoomProps newRoom = {
-      .id = this->rooms_.size(),
+      .id = lastRoomId_,
       .socketId = 0,
       .name = payload.name,
       .maxPlayers = payload.nbPlayers,
@@ -101,6 +130,8 @@ void Node::HandleRoomCreation(const abra::tools::MessageProps &message) {
 
   this->createRoomHandler_(newRoom.id, newRoom.maxPlayers, newRoom.difficulty);
   this->rooms_.push_back(std::move(newRoom));
+
+  lastRoomId_++;
 
   this->logger_.Info("Handle the creation of a new room", "🏠");
 }
@@ -115,7 +146,7 @@ void Node::HandlePlayerJoin(const abra::tools::MessageProps &message) {
 
     room.nbPlayers++;
     socketId = room.socketId;
-  } catch(std::out_of_range &) {
+  } catch (std::out_of_range &) {
     this->logger_.Info("Room not found", "❌");
     return;
   }
@@ -124,6 +155,56 @@ void Node::HandlePlayerJoin(const abra::tools::MessageProps &message) {
   if (success) {
     this->logger_.Info("Handle a new player join a room", "👥");
   }
+}
+
+void Node::HandleRoomRegister(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RegisterRoom>(message.bitset);
+  auto &payload = packet->GetPayload();
+
+  try {
+    RegisterNewRoom(message.clientId, payload);
+  } catch (std::out_of_range &) {
+    this->logger_.Info("Room not found", "❌");
+    return;
+  }
+}
+
+void Node::HandleGameStarted(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RoomGameStart>(message.bitset);
+  auto &payload = packet->GetPayload();
+
+  SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRoomGameStarted, payload);
+
+  logger_.Info("Handle a game started", "🎮");
+}
+
+void Node::HandleGameEnded(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::GameEnd>(message.bitset);
+  auto &endPayload = packet->GetPayload();
+
+  try {
+    auto &room = FindRoomBySocketId(message.clientId);
+
+    EndGame(endPayload, room);
+  } catch (std::out_of_range &) {
+    this->logger_.Info("Room not found", "❌");
+    return;
+  }
+}
+
+void Node::EndGame(const payload::GameEnd &endPayload,
+                   const rtype::sdk::game::api::Node::RoomProps &room) {
+  payload::RoomGameEnd payload{
+      .id = room.id,
+      .score = endPayload.score,
+      .time = endPayload.time,
+      .win = endPayload.win,
+  };
+
+  SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRoomGameEnded, payload);
+  RemoveRoom(room.id);
+
+  logger_.Info("End of the game", "🏁");
 }
 
 Node::RoomProps &Node::FindRoomById(std::uint64_t id) {
@@ -144,4 +225,10 @@ Node::RoomProps &Node::FindRoomBySocketId(std::uint64_t id) {
   }
 
   throw std::runtime_error("Room not found");
+}
+
+void Node::RemoveRoom(std::uint64_t id) {
+  this->rooms_.erase(std::remove_if(this->rooms_.begin(), this->rooms_.end(),
+                                    [id](const auto &r) { return r.id == id; }),
+                     this->rooms_.end());
 }

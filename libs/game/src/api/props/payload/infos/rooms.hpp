@@ -16,10 +16,6 @@ struct InfoRoom {
   unsigned int port;  ///< Port of the room
 };
 
-struct InfoConnectRoom {
-  unsigned int port;  ///< Port of the client in the room
-};
-
 /// @brief Room status - Internal use for InfoRooms
 struct RoomStatus {
   std::uint64_t id;           ///< Room ID
