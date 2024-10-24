@@ -4,25 +4,16 @@ sidebar_position: 2
 
 # R-Type protocol
 
-## Connection with TCP
-In order to connect with TCP, you must to send a first packet as a client to the server.\
-This packet must contain:
-- pseudo (`char [20]`)
+## Architecture of the distributed infrastructure 🕸️
 
-After that, the server will send you a packet with the following informations:
-- numberOfPlayers (`uint64`)
+The R-Type is based on a big **distributed infrastructure** composed of a **master server** that will lead all actions,
+a **node** that lead a server (machine), and **rooms** that are leaded by a node and can handle multiple clients.\
+The **room** run the game logic and communicate with all the infrastructure to inform about player _join/leaving_ and _game status_.
 
-## Connection with UDP
-When a server has created a lobby, you can join this one by sending a packet with the following informations:
-- lobbyId (`uint64`)
+![infrastructure.png](./img/infrastructure.png)
 
-After that, the server will send you a packet with the following informations:
-- ip (`char [14]`)
-- port (`uint16`)
-
-This informations will allow you to connect to the server with UDP. You can now send your binded port to the server that will allow you to receive packets from the server.
-Please respect the following format:
-- port (`uint16`)
-
-## More payloads:
-...
+Here is the composition of the infrastructure communication:\
+Client ➡️ _**TCP**_ ⬅️ Master\
+Master ➡️ _**TCP**_ ⬅️ Node\
+Node ➡️ _**TCP**_ ⬅️ Room\
+Room ➡️ _**UDP**_ ⬅️ Client
