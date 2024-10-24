@@ -57,10 +57,8 @@ Component *Registry::GetComponent(const Entity &e) {
     return nullptr;
   }
 
-  const auto entityIndex = IndexFromEntity(e);
-
-  if (components.get()->size() >= entityIndex) {
-    auto &optionalComponent = (*components)[entityIndex];
+  if (components.get()->size() >= e.id_) {
+    auto &optionalComponent = (*components)[e.id_];
     if (optionalComponent) {
       return &(*optionalComponent);
     }

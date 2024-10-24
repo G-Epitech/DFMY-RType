@@ -5,10 +5,9 @@
 ** main.cpp
 */
 
-#include <iostream>
 #include "app/app.hpp"
 
-int main(int ac, char **av) {
+int main(const int ac, char **av) {
   rtype::server::App app;
 
   return app.Run(ac, av);

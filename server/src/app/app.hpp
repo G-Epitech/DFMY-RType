@@ -29,7 +29,6 @@ class App {
  private:
   /**
    * Initialize server using cli arguments
-   * @param cliResult cli result containing BaseContext needed for server
    * @return server instance
    */
   void InitializeServerInstance();

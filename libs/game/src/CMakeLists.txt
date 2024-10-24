@@ -1,5 +1,4 @@
 target_sources(${GAME_SDK} PUBLIC
-        dummy.cpp
         core.hpp
 )
 

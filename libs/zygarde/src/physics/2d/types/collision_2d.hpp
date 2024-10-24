@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include "entity.hpp"
@@ -27,7 +28,7 @@ struct Collision2D {
   /// @brief Position of the other colliding entity
   const core::components::Position *otherPosition;
   /// @brief Entity of the other colliding entity
-  zygarde::Entity otherEntity;
+  Entity otherEntity;
 };
 
 /// @brief Colliding callback function

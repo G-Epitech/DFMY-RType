@@ -12,11 +12,11 @@
 namespace rtype::server {
 ServerType StringToServerType(const std::string &str) {
   if (str == "master") {
-    return rtype::server::ServerType::kMaster;
+    return kMaster;
   }
   if (str == "lobby") {
-    return rtype::server::ServerType::kLobby;
+    return kLobby;
   }
-  return rtype::server::ServerType::kUnknown;
+  return kUnknown;
 }
 }  // namespace rtype::server

@@ -21,18 +21,18 @@ BoundingBox2D BoundingBox2DBuilder::build(const zygarde::core::components::Posit
 void BoundingBox2DBuilder::ResolveVerticalBounds(
     const zygarde::core::components::Position &position, BoundingBox2D *bounding_box,
     zygarde::core::types::Vector2f size) noexcept {
-  switch (position.aligns.horizontal) {
-    case core::components::HorizontalAlign::kLeft:
-      bounding_box->left = position.point.x;
-      bounding_box->right = position.point.x + size.x;
+  switch (position.aligns.vertical) {
+    case core::components::VerticalAlign::kTop:
+      bounding_box->top = position.point.y;
+      bounding_box->bottom = position.point.y + size.y;
       break;
-    case core::components::HorizontalAlign::kCenter:
-      bounding_box->left = position.point.x - size.x / 2;
-      bounding_box->right = position.point.x + size.x / 2;
+    case core::components::VerticalAlign::kCenter:
+      bounding_box->top = position.point.y - size.y / 2;
+      bounding_box->bottom = position.point.y + size.y / 2;
       break;
     default:
-      bounding_box->left = position.point.x - size.x;
-      bounding_box->right = position.point.x;
+      bounding_box->top = position.point.y - size.y;
+      bounding_box->bottom = position.point.y;
       break;
   }
 }

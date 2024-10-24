@@ -37,9 +37,16 @@ class GameService {
 
   /**
    * @brief Add a new player to the game
-   * @param playerId The player id
+   * @param player_id The player id
    */
-  void NewPlayer(std::uint64_t playerId);
+  void NewPlayer(std::uint64_t player_id);
+
+ private:
+  struct EntityStates {
+    std::vector<payload::PlayerState> playerStates;
+    std::vector<payload::EnemyState> enemyStates;
+    std::vector<payload::BulletState> bulletStates;
+  };
 
  private:
   /**
@@ -62,10 +69,23 @@ class GameService {
    */
   void HandleMessages();
 
+  void HandlePlayerMessage(const std::uint64_t &player_id,
+                           const abra::server::ClientUDPMessage &data);
+
+  void HandlePlayerMoveMessage(const std::uint64_t &player_id,
+                               const abra::server::ClientUDPMessage &data);
+
+  void HandlePlayerShootMessage(const std::uint64_t &player_id,
+                                const abra::server::ClientUDPMessage &data);
+
   /**
    * @brief Send stats to the server
    */
-  void SendStates();
+  void BroadcastEntityStates() const;
+
+  void GatherEntityStates(const std::unique_ptr<EntityStates> &states) const;
+
+  void SendStates(const std::unique_ptr<EntityStates> &states) const;
 
  private:
   /// @brief Game running flag
@@ -90,6 +110,6 @@ class GameService {
   abra::tools::PacketBuilder packetBuilder_;
 
   /// @brief Logger
-  abra::tools::Logger logger_;
+  Logger logger_;
 };
 }  // namespace rtype::server::game

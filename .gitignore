@@ -44,3 +44,5 @@ abra_tests
 build
 bin
 cmake-build-*
+.vs
+copy_log.txt
