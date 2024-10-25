@@ -7,13 +7,11 @@
 
 #include "./registry.hpp"
 
-#include <iostream>
-
 using namespace zygarde;
 
 Registry::Registry(Private) {}
 
-std::shared_ptr<Registry> Registry::create() {
+std::shared_ptr<Registry> Registry::Create() {
   return std::make_shared<Registry>(Private());
 }
 
@@ -26,23 +24,6 @@ void Registry::RunSystems() {
   for (const auto &system : systems_) {
     (*system)(pt);
   }
-}
-
-Entity Registry::SpawnEntity() {
-  std::size_t newId;
-
-  if (!freeIds_.empty()) {
-    newId = freeIds_.top();
-    freeIds_.pop();
-  } else {
-    newId = currentMaxEntityId_++;
-  }
-  if (newId >= entities_.size()) {
-    entities_.resize(newId + 1);
-  }
-  Entity e(newId);
-  entities_.at(newId) = e;
-  return e;
 }
 
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
@@ -70,13 +51,13 @@ void Registry::KillEntity(Entity const &e) {
 }
 
 void Registry::DestroyEntity(const Entity &e) {
-  entitesToKill_.push(e);
+  entitiesToKill_.push(e);
 }
 
 void Registry::CleanupDestroyedEntities() {
-  while (!entitesToKill_.empty()) {
-    KillEntity(entitesToKill_.top());
-    entitesToKill_.pop();
+  while (!entitiesToKill_.empty()) {
+    KillEntity(entitiesToKill_.top());
+    entitiesToKill_.pop();
   }
 }
 bool Registry::HasEntityAtIndex(std::size_t idx) const {
@@ -87,4 +68,8 @@ Registry::Exception::Exception(std::string message) : message_(std::move(message
 
 const char *Registry::Exception::what() const noexcept {
   return message_.c_str();
+}
+
+std::vector<std::optional<Entity>> &Registry::GetEntities() {
+  return entities_;
 }

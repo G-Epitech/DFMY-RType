@@ -9,7 +9,7 @@ using namespace rtype::client;
 
 template <typename ContextType>
 SceneBase<ContextType>::SceneBase(const ContextType &context) : context_(context) {
-  registry_ = zygarde::Registry::create();
+  registry_ = zygarde::Registry::Create();
   resourcesManager_ = ResourcesManager::Create();
   soundManager_ = context_.soundManager;
   gameManager_ = context_.gameManager;

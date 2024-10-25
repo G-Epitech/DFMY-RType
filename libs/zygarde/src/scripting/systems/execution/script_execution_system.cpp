@@ -7,20 +7,19 @@
 
 #include "script_execution_system.hpp"
 
-#include <iostream>
-
 using namespace zygarde::scripting::systems;
 
 ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& deltaTime)
     : deltaTime_{deltaTime} {}
 
-void ScriptExecutionSystem::Run(Registry::Ptr r,
-                                sparse_array<scripting::components::Script>::ptr scripts) {
-  for (currentScriptIndex_; currentScriptIndex_ < scripts->size(); currentScriptIndex_++) {
-    auto& scriptComponent = (*scripts)[currentScriptIndex_];
-    if (scriptComponent.has_value() && r->HasEntityAtIndex(currentScriptIndex_)) {
-      ProcessScript(r, &scriptComponent.value());
-    }
+void ScriptExecutionSystem::Run(Registry::Ptr r, zipper<scripting::components::Script> components) {
+  const auto start = components.begin();
+  const auto end = components.end();
+  for (auto it = start; it != end; ++it) {
+    auto&& [index, extractedComponents] = ~it;
+    auto&& [scripts] = extractedComponents;
+    currentScriptIndex_ = index;
+    ProcessScript(r, &scripts);
   }
   currentScriptIndex_ = 0;
 }
