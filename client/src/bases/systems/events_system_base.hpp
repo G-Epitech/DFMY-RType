@@ -24,7 +24,7 @@ class EventSystemBase : public ASystem<EventsComponent...> {
    * @param r Registry to use
    * @param components Components to use
    */
-  void Run(Registry::Ptr r, zipper<EventsComponent...> components) override;
+  void Run(Registry::Ptr r, zipper<EventsComponent...> components) final;
 
  protected:
   /**
