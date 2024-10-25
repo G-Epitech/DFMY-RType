@@ -17,8 +17,8 @@ void ScriptExecutionSystem::Run(
   const auto start = components.begin();
   const auto end = components.end();
   for (auto it = start; it != end; ++it) {
-    auto&& [index, values] = ~it;
-    auto&& [scripts] = values;
+    auto&& [index, extractedComponents] = ~it;
+    auto&& [scripts] = extractedComponents;
     currentScriptIndex_ = index;
     ProcessScript(r, &scripts);
   }

@@ -55,13 +55,13 @@ void Registry::KillEntity(Entity const &e) {
 }
 
 void Registry::DestroyEntity(const Entity &e) {
-  entitesToKill_.push(e);
+  entitiesToKill_.push(e);
 }
 
 void Registry::CleanupDestroyedEntities() {
-  while (!entitesToKill_.empty()) {
-    KillEntity(entitesToKill_.top());
-    entitesToKill_.pop();
+  while (!entitiesToKill_.empty()) {
+    KillEntity(entitiesToKill_.top());
+    entitiesToKill_.pop();
   }
 }
 bool Registry::HasEntityAtIndex(std::size_t idx) const {

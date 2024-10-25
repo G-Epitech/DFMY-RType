@@ -21,8 +21,8 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
   const auto start = components.begin();
   const auto end = components.end();
   for (auto it = start; it != end; ++it) {
-    auto &&[index, values] = ~it;
-    auto &&[rigidbodies, positions, colliders] = values;
+    auto &&[index, extractedComponents] = ~it;
+    auto &&[rigidbodies, positions, colliders] = extractedComponents;
     ComponentsPack componentsPack = {&rigidbodies, &positions, &colliders,
                                      r->EntityFromIndex(index)};
 

@@ -23,8 +23,8 @@ void MouseMoveEventSystem::HandleEvent(
   const auto end = components.end();
   const auto drawableComponents = r->GetComponents<components::Drawable>();
   for (auto it = begin; it != end; ++it) {
-    auto&& [index, values] = ~it;
-    auto&& [mouseMove] = values;
+    auto&& [index, extractedComponents] = ~it;
+    auto&& [mouseMove] = extractedComponents;
     HandleEventForEntity(index, event, drawableComponents, mouseMove);
   }
 }

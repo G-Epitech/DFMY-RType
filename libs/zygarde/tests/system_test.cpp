@@ -26,8 +26,8 @@ TEST(SystemTests, CreateBasicSystem) {
       const auto beg = components.begin();
       const auto end = components.end();
       for (auto it = beg; it != end; ++it) {
-        auto &&[index, values] = ~it;
-        auto &&[nb] = values;
+        auto &&[index, extractedComponents] = ~it;
+        auto &&[nb] = extractedComponents;
         (void) nb;
       }
     }

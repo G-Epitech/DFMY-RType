@@ -23,8 +23,8 @@ void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEvent(
   const auto end = components.end();
   const auto drawableComponents = r->GetComponents<components::Drawable>();
   for (auto it = begin; it != end; ++it) {
-    auto&& [index, values] = ~it;
-    auto&& [mouseButton] = values;
+    auto&& [index, extractedComponents] = ~it;
+    auto&& [mouseButton] = extractedComponents;
     HandleEventForEntity(index, event, drawableComponents, mouseButton);
   }
 }

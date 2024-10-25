@@ -11,5 +11,5 @@ using namespace zygarde;
 
 template <typename Component>
 Component* Entity::GetComponent() {
-  return registry_.template GetComponent<Component>(*this);
+  return registry_.GetComponent<Component>(*this);
 }
