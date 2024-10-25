@@ -88,3 +88,15 @@ typename zygarde::tools::zipper_iterator<Containers...>::value_type
 zygarde::tools::zipper_iterator<Containers...>::to_value(std::index_sequence<Is...>) {
   return std::make_tuple(std::ref(**std::get<Is>(current_))...);
 }
+
+template <class... Containers>
+template <std::size_t... Is>
+bool zygarde::tools::zipper_iterator<Containers...>::any_end_reached(
+    std::index_sequence<Is...>) const {
+  return (... || (std::get<Is>(current_) == std::get<Is>(end_)));
+}
+
+template <class... Containers>
+bool zygarde::tools::zipper_iterator<Containers...>::any_end_reached() const {
+  return any_end_reached(seq_);
+}

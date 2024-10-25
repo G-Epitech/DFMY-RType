@@ -26,10 +26,6 @@ void Registry::RunSystems() {
   }
 }
 
-Entity Registry::SpawnEntity() {
-  return SpawnEntity<Entity>();
-}
-
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
   if (entities_.empty()) {
     throw Exception("Entity not found");

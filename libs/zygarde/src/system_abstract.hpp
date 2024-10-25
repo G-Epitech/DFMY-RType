@@ -28,7 +28,7 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
    * @param r The registry
    * @param components The components
    */
-  virtual void Run(std::shared_ptr<Registry> r, ComponentsPtr components);
+  virtual void Run(std::shared_ptr<Registry> r, ComponentsPtr components) = 0;
 };
 
 /**
@@ -39,7 +39,7 @@ class EXPORT_ZYGARDE_API ASystem<> : public ISystem {
  public:
   void operator()(std::shared_ptr<Registry> r) override;
 
-  virtual void Run(std::shared_ptr<Registry> r);
+  virtual void Run(std::shared_ptr<Registry> r) = 0;
 };
 }  // namespace zygarde
 

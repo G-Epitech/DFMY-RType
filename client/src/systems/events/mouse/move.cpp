@@ -18,7 +18,7 @@ MouseMoveEventSystem::MouseMoveEventSystem(WindowManager::Ptr window_manager)
 
 void MouseMoveEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
                                        zipper<components::OnMouseMoved> components) {
-  auto begin = components.begin();
+  const auto begin = components.begin();
   const auto end = components.end();
   const auto drawableComponents = r->GetComponents<components::Drawable>();
   for (auto it = begin; it != end; ++it) {

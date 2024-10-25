@@ -18,7 +18,7 @@ MouseButtonEventSystem<EventType, MouseEventComponent>::MouseButtonEventSystem(
 template <events::EventType EventType, typename MouseEventComponent>
 void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEvent(
     const sf::Event& event, Registry::Ptr r, zipper<MouseEventComponent> components) {
-  auto begin = components.begin();
+  const auto begin = components.begin();
   const auto end = components.end();
   const auto drawableComponents = r->GetComponents<components::Drawable>();
   for (auto it = begin; it != end; ++it) {

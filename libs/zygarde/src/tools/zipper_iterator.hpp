@@ -172,12 +172,21 @@ class zipper_iterator {
   template <std::size_t... Is>
   value_type to_value(std::index_sequence<Is...>);
 
-  [[nodiscard]] bool any_end_reached() const { return any_end_reached(seq_); }
+  /**
+   * @brief Check if any iterator reached the end
+   * @return true If any iterator reached the end
+   * @return false If no iterator reached the end
+   */
+  [[nodiscard]] bool any_end_reached() const;
 
+  /**
+   * @brief Check if any iterator reached the end
+   * @tparam Is The index sequence
+   * @return true If any iterator reached the end
+   * @return false If no iterator reached the end
+   */
   template <std::size_t... Is>
-  [[nodiscard]] bool any_end_reached(std::index_sequence<Is...>) const {
-    return (... || (std::get<Is>(current_) == std::get<Is>(end_)));
-  }
+  [[nodiscard]] bool any_end_reached(std::index_sequence<Is...>) const;
 };
 }  // namespace zygarde::tools
 

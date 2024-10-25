@@ -77,17 +77,11 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   Component *GetComponent(Entity const &e);
 
   /**
-   * @brief Spawn an entity
-   * @return Entity
-   */
-  Entity SpawnEntity();
-
-  /**
    * @brief Spawn an entity with a specific type
    * @tparam T Type of the entity
    * @return Entity
    */
-  template <EntityType T, typename... Args>
+  template <EntityType T = Entity, typename... Args>
   Entity SpawnEntity(Args &&...args);
 
   /**
