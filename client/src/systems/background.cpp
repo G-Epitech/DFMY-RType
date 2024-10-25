@@ -23,9 +23,7 @@ BackgroundSystem::BackgroundSystem() : starsCount_(0) {
   clock_.restart();
 }
 
-void BackgroundSystem::Run(
-    const std::shared_ptr<Registry> r,
-    zipper<sparse_array<Tags>::ptr, sparse_array<Position>::ptr> components) {
+void BackgroundSystem::Run(const std::shared_ptr<Registry> r, zipper<Tags, Position> components) {
   const float deltaTime = clock_.restart().asSeconds();
   if (starsCount_ < 50) {
     SpawnStar(r);

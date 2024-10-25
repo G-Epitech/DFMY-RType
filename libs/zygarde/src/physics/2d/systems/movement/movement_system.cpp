@@ -13,9 +13,7 @@ MovementSystem::MovementSystem(const utils::Timer::Nanoseconds& delta_time)
     : ASystem(), deltaTime_(delta_time) {}
 
 void MovementSystem::Run(std::shared_ptr<Registry> r,
-                         zipper<sparse_array<components::Rigidbody2D>::ptr,
-                                sparse_array<core::components::Position>::ptr>
-                             components) {
+                         zipper<components::Rigidbody2D, core::components::Position> components) {
   for (auto&& [rigidbody, position] : components) {
     ComputePositionOffset(&(rigidbody));
     UpdatePosition(&(position));

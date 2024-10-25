@@ -16,8 +16,7 @@ KeyEventSystemBase<EventType, KeyEventComponent>::KeyEventSystemBase(
 
 template <events::EventType EventType, typename KeyEventComponent>
 void KeyEventSystemBase<EventType, KeyEventComponent>::HandleEvent(
-    const sf::Event& event, Registry::Ptr r,
-    zipper<typename sparse_array<KeyEventComponent>::ptr> components) {
+    const sf::Event& event, Registry::Ptr r, zipper<KeyEventComponent> components) {
   for (auto&& [keyEvent] : components) {
     keyEvent.handler(event.key.code);
   }

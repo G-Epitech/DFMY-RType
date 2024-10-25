@@ -13,11 +13,10 @@
 
 using namespace zygarde::physics::systems;
 
-void CollisionSystem::Run(std::shared_ptr<Registry> r,
-                          zipper<sparse_array<components::Rigidbody2D>::ptr,
-                                 sparse_array<core::components::Position>::ptr,
-                                 sparse_array<components::BoxCollider2D>::ptr>
-                              components) {
+void CollisionSystem::Run(
+    std::shared_ptr<Registry> r,
+    zipper<components::Rigidbody2D, core::components::Position, components::BoxCollider2D>
+        components) {
   const auto start = components.begin();
   const auto end = components.end();
   for (auto it = start; it != end; ++it) {

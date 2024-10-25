@@ -10,7 +10,7 @@
 using namespace zygarde::tools;
 
 template <class... Containers>
-zygarde::tools::zipper<Containers...>::zipper(Containers &&...cs)
+zygarde::tools::zipper<Containers...>::zipper(sparse_array<Containers>::ptr &&...cs)
     : begin_(std::make_tuple((*cs).begin()...)),
       end_(std::make_tuple((*cs).end()...)),
       size_(std::min({(*cs).size()...})) {}

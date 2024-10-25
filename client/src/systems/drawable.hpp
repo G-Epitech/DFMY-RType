@@ -30,10 +30,8 @@ class DrawableSystem final : public ASystem<components::Drawable, zyc::component
   explicit DrawableSystem(WindowManager::Ptr window_manager,
                           std::shared_ptr<ResourcesManager> resources_manager);
 
-  void Run(
-      Registry::Ptr r,
-      zipper<sparse_array<components::Drawable>::ptr, sparse_array<zyc::components::Position>::ptr>
-          components) override;
+  void Run(Registry::Ptr r,
+           zipper<components::Drawable, zyc::components::Position> components) override;
 
  private:
   /// @brief The render window to display the entities.

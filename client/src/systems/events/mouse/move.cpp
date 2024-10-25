@@ -16,9 +16,8 @@ using namespace rtype::client::systems;
 MouseMoveEventSystem::MouseMoveEventSystem(WindowManager::Ptr window_manager)
     : EventSystemBase<events::kMouseMoved, components::OnMouseMoved>(std::move(window_manager)) {}
 
-void MouseMoveEventSystem::HandleEvent(
-    const sf::Event& event, Registry::Ptr r,
-    zipper<sparse_array<components::OnMouseMoved>::ptr> components) {
+void MouseMoveEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
+                                       zipper<components::OnMouseMoved> components) {
   auto begin = components.begin();
   const auto end = components.end();
   const auto drawableComponents = r->GetComponents<components::Drawable>();

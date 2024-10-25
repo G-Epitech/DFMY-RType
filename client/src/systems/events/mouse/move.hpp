@@ -21,7 +21,7 @@ class MouseMoveEventSystem : public EventSystemBase<events::kMouseMoved, compone
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   zipper<sparse_array<components::OnMouseMoved>::ptr> components) override;
+                   zipper<components::OnMouseMoved> components) override;
   /**
    * @brief Handle the event for the entity
    * @param entityId Entity id

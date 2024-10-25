@@ -10,19 +10,14 @@
 using namespace zygarde;
 
 template <class... Components>
-void ASystem<Components...>::Run(std::shared_ptr<Registry> r,
-                                 zipper<typename sparse_array<Components>::ptr...> components) {
-  // Implémentation de Run avec des composants
-}
+void ASystem<Components...>::Run(std::shared_ptr<Registry> r, zipper<Components...> components) {}
 
 template <class... Components>
 void ASystem<Components...>::operator()(std::shared_ptr<Registry> r) {
-  Run(r, zipper<typename sparse_array<Components>::ptr...>(r->GetComponents<Components>()...));
+  Run(r, zipper<Components...>(r->GetComponents<Components>()...));
 }
 
-inline void ASystem<>::Run(std::shared_ptr<Registry> r) {
-  // Spécialisation complète sans composants
-}
+inline void ASystem<>::Run(std::shared_ptr<Registry> r) {}
 
 inline void ASystem<>::operator()(std::shared_ptr<Registry> r) {
   Run(r);

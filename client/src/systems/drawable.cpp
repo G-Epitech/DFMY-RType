@@ -19,10 +19,8 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
   windowManager_ = std::move(window_manager);
 }
 
-void DrawableSystem::Run(
-    Registry::Ptr r,
-    zipper<sparse_array<components::Drawable>::ptr, sparse_array<zyc::components::Position>::ptr>
-        components) {
+void DrawableSystem::Run(Registry::Ptr r,
+                         zipper<components::Drawable, zyc::components::Position> components) {
   const auto window = windowManager_->window();
   window->clear();
   for (auto&& [drawable, position] : components) {

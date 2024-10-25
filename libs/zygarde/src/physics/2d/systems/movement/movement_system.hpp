@@ -33,9 +33,8 @@ class EXPORT_ZYGARDE_API MovementSystem final
    * @param r The registry to use
    * @param components The components to use
    */
-  void Run(std::shared_ptr<Registry> r, zipper<sparse_array<components::Rigidbody2D>::ptr,
-                                               sparse_array<core::components::Position>::ptr>
-                                            components) override;
+  void Run(std::shared_ptr<Registry> r,
+           zipper<components::Rigidbody2D, core::components::Position> components) override;
 
  private:
   /**

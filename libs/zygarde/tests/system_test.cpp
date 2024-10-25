@@ -18,7 +18,7 @@ TEST(SystemTests, CreateBasicSystem) {
    public:
     BasicSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
+    void Run(std::shared_ptr<Registry> r, zipper<int> components) override {
       (void) r;
       for (auto &&[nb] : components) {
         (void) nb;
@@ -45,7 +45,7 @@ TEST(SystemTests, CreateMultipleSystem) {
    public:
     IntSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
+    void Run(std::shared_ptr<Registry> r, zipper<int> components) override {
       (void) r;
       (void) components;
     }
@@ -54,8 +54,7 @@ TEST(SystemTests, CreateMultipleSystem) {
    public:
     FloatSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r,
-             zipper<sparse_array<float>::ptr, sparse_array<int>::ptr> components) override {
+    void Run(std::shared_ptr<Registry> r, zipper<float, int> components) override {
       (void) r;
       for (auto &&[f, i] : components) {
         (void) f;
@@ -84,7 +83,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
    public:
     IntSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
+    void Run(std::shared_ptr<Registry> r, zipper<int> components) override {
       (void) r;
       (void) components;
     }
@@ -93,7 +92,7 @@ TEST(SystemTests, CreateMultipleSystemWithSameComponent) {
    public:
     FloatSystem() = default;
 
-    void Run(std::shared_ptr<Registry> r, zipper<sparse_array<int>::ptr> components) override {
+    void Run(std::shared_ptr<Registry> r, zipper<int> components) override {
       (void) r;
       (void) components;
     }

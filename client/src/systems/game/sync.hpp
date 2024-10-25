@@ -16,7 +16,7 @@
 #include "managers/server_connection_manager.hpp"
 
 namespace rtype::client::systems {
-class GameSyncSystem final : public ASystem<components::ServerEntityId> {
+class GameSyncSystem final : public ASystem<> {
  public:
   /**
    * @brief Construct a new Game Sync System object
@@ -24,8 +24,7 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
    */
   explicit GameSyncSystem(ServerConnectionManager::Ptr serverConnectionManager);
 
-  void Run(Registry::Ptr r,
-           zipper<sparse_array<components::ServerEntityId>::ptr> components) override;
+  void Run(Registry::Ptr r) override;
 
  private:
   /**

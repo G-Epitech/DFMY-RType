@@ -12,8 +12,7 @@ using namespace zygarde::scripting::systems;
 ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& deltaTime)
     : deltaTime_{deltaTime} {}
 
-void ScriptExecutionSystem::Run(
-    Registry::Ptr r, zipper<sparse_array<scripting::components::Script>::ptr> components) {
+void ScriptExecutionSystem::Run(Registry::Ptr r, zipper<scripting::components::Script> components) {
   const auto start = components.begin();
   const auto end = components.end();
   for (auto it = start; it != end; ++it) {

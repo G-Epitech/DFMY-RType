@@ -9,6 +9,7 @@
 
 #include <cstddef>
 
+#include "./spare_array.hpp"
 #include "./zipper_iterator.hpp"
 
 namespace zygarde::tools {
@@ -16,7 +17,7 @@ template <class... Containers>
 class zipper {
  public:
   /// @brief Iterator type
-  using iterator = zipper_iterator<Containers...>;
+  using iterator = zipper_iterator<typename sparse_array<Containers>::ptr...>;
   /// @brief Iterator tuple type
   using iterator_tuple = typename iterator::iterator_tuple;
 
@@ -24,7 +25,7 @@ class zipper {
    * @brief Construct a new zipper object
    * @param cs Containers
    */
-  explicit zipper(Containers &&...cs);
+  explicit zipper(sparse_array<Containers>::ptr &&...cs);
 
   /**
    * @brief Get the begin iterator

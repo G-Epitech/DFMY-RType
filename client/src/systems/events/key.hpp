@@ -19,7 +19,7 @@ class KeyEventSystemBase final : public EventSystemBase<EventType, KeyEventCompo
 
  protected:
   void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                   zipper<typename sparse_array<KeyEventComponent>::ptr> components) final;
+                   zipper<KeyEventComponent> components) final;
 };
 
 typedef KeyEventSystemBase<events::kKeyPressed, components::OnKeyPressed> KeyPressEventSystem;

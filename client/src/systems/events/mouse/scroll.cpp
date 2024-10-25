@@ -15,9 +15,8 @@ MouseScrollEventSystem::MouseScrollEventSystem(WindowManager::Ptr window_manager
     : EventSystemBase<events::kMouseScrolled, components::OnMouseScrolled>(
           std::move(window_manager)) {}
 
-void MouseScrollEventSystem::HandleEvent(
-    const sf::Event& event, Registry::Ptr r,
-    zipper<sparse_array<components::OnMouseScrolled>::ptr> components) {
+void MouseScrollEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
+                                         zipper<components::OnMouseScrolled> components) {
   auto window = this->windowManager_->window();
   auto position =
       window ? window->mapPixelToCoords({event.mouseWheelScroll.x, event.mouseWheelScroll.y})
