@@ -22,7 +22,7 @@ using namespace zygarde::core::types;
 GameSyncSystem::GameSyncSystem(ServerConnectionManager::Ptr serverConnectionManager)
     : serverConnectionManager_{std::move(serverConnectionManager)} {}
 
-void GameSyncSystem::Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr IDs) {
+void GameSyncSystem::Run(Registry::Ptr r) {
   auto queue = serverConnectionManager_->client()->ExtractQueue();
   while (!queue.empty()) {
     auto& message = queue.front();
