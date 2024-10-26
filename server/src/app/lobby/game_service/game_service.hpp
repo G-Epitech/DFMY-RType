@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <map>
 
+#include "app/lobby/game_service/archetype_manager/archetype_manager.hpp"
 #include "enemy_manager/enemy_manager.hpp"
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
@@ -102,5 +103,8 @@ class GameService {
 
   /// @brief Logger
   Logger logger_;
+
+  /// @brief Archetype manager
+  tools::ArchetypeManager archetypeManager_;
 };
 }  // namespace rtype::server::game

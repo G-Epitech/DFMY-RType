@@ -30,6 +30,7 @@ void GameService::RegistrySetup() {
 void GameService::Initialize() {
   ticksManager_.Initialize();
   RegistrySetup();
+  archetypeManager_.LoadArchetypes();
 }
 
 int GameService::Run(std::shared_ptr<Lobby> api) {

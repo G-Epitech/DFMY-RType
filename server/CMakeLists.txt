@@ -26,3 +26,5 @@ endif ()
 
 add_subdirectory(src)
 add_subdirectory(tests)
+
+include(commands.cmake)

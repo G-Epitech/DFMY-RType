@@ -6,6 +6,7 @@
     "boost-asio",
     "boost-program-options",
     "gtest",
-    "sfml"
+    "sfml",
+    "nlohmann-json"
   ]
 }

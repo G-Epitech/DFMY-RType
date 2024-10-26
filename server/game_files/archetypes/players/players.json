@@ -1,0 +1,50 @@
+{
+  "archetype_name": "player_photon",
+  "data": {
+    "class": {
+      "className": "Photon",
+      "health": 100,
+      "fireRate": 1,
+      "speed": 1,
+      "powerChargeTime": 1,
+      "primaryWeapon": "Laser",
+      "secondaryWeapon": "Missile"
+    },
+    "components": [
+      {
+        "name": "rigidbody2d",
+        "data": {
+          "isKinematic": false
+        }
+      },
+      {
+        "name": "position"
+      },
+      {
+        "name": "box_collider2d",
+        "data": {
+          "box_size": {
+            "x": 96,
+            "y": 48
+          },
+          "collision_layers": [
+            1
+          ],
+          "include_layers": [
+            2,
+            4,
+            32
+          ]
+        }
+      },
+      {
+        "name": "tags",
+        "data": {
+          "tags": [
+            "player"
+          ]
+        }
+      }
+    ]
+  }
+}
