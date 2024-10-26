@@ -22,9 +22,9 @@ class EXPORT_ZYGARDE_API CollisionSystem final
   CollisionSystem() = default;
   ~CollisionSystem() override = default;
 
-  void Run(std::shared_ptr<Registry> r,
-           zipper<components::Rigidbody2D, core::components::Position, components::BoxCollider2D>
-               components) override;
+  void Run(std::shared_ptr<Registry> r, sparse_array<components::Rigidbody2D>::ptr rigidbodies,
+           sparse_array<core::components::Position>::ptr positions,
+           sparse_array<components::BoxCollider2D>::ptr colliders) override;
 
  private:
   struct ComponentsPack {

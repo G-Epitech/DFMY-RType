@@ -19,14 +19,12 @@ class BackgroundSystem : public ASystem<zyc::components::Tags, zyc::components::
  public:
   BackgroundSystem();
 
-  void Run(std::shared_ptr<Registry> r,
-           zipper<zyc::components::Tags, zyc::components::Position> components) override;
+  void Run(std::shared_ptr<Registry> r, sparse_array<core::components::Tags>::ptr tags,
+           sparse_array<core::components::Position>::ptr positions) override;
 
  private:
   /// @brief The clock to animate stars
   sf::Clock clock_;
-  /// @brief The number of stars
-  std::size_t starsCount_;
 
   /**
    * @brief Spawn a star in the background

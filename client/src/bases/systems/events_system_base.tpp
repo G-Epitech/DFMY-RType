@@ -19,13 +19,13 @@ EventSystemBase<EventType, EventComponents...>::EventSystemBase(WindowManager::P
 }
 
 template <events::EventType EventType, class... EventComponents>
-void EventSystemBase<EventType, EventComponents...>::Run(Registry::Ptr r,
-                                                         zipper<EventComponents...> components) {
+void EventSystemBase<EventType, EventComponents...>::Run(
+    Registry::Ptr r, sparse_array<EventComponents>::ptr... components) {
   auto type_to_handle = events::EventTypeMapper<EventType>::type;
   auto& events = windowManager_->GetDeferredEvents();
 
   for (const auto& event : events) {
     if (event.type == type_to_handle)
-      HandleEvent(event, r, components);
+      HandleEvent(event, r, components...);
   }
 }

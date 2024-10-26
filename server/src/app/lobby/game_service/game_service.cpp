@@ -21,7 +21,7 @@ GameService::GameService(const size_t &tick_rate)
     : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {}
 
 void GameService::RegistrySetup() {
-  registry_ = zygarde::Registry::Create();
+  registry_ = Registry::create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
   utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
 }

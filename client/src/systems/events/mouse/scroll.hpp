@@ -21,6 +21,6 @@ class MouseScrollEventSystem
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   zipper<components::OnMouseScrolled> components) override;
+                   sparse_array<components::OnMouseScrolled>::ptr components) override;
 };
 }  // namespace rtype::client::systems

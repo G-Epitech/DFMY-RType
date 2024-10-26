@@ -40,7 +40,3 @@ Vector3f& Vector3f::operator*=(const Vector3f& other) noexcept {
 Vector3f& Vector3f::operator/=(const Vector3f& other) noexcept {
   return *this = *this / other;
 }
-
-bool Vector3f::operator==(const Vector3f& other) const noexcept {
-  return x == other.x && y == other.y && z == other.z;
-}

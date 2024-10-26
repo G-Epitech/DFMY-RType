@@ -5,7 +5,7 @@
 ** RegistryHelper.cpp
 */
 
-#include "./helper.hpp"
+#include "./registry_helper.hpp"
 
 #include "core/components/components.hpp"
 #include "physics/2d/components/components.hpp"

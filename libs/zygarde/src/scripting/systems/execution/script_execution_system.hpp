@@ -22,7 +22,7 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
   ~ScriptExecutionSystem() override = default;
 
  public:
-  void Run(Registry::Ptr r, zipper<scripting::components::Script> components) override;
+  void Run(Registry::Ptr r, sparse_array<scripting::components::Script>::ptr scripts) override;
 
  private:
   void ProcessScript(Registry::Const_Ptr registry, scripting::components::Script *script);

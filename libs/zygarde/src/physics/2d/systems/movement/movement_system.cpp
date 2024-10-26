@@ -7,16 +7,27 @@
 
 #include "./movement_system.hpp"
 
+#include <iostream>
+
 using namespace zygarde::physics::systems;
 
 MovementSystem::MovementSystem(const utils::Timer::Nanoseconds& delta_time)
     : ASystem(), deltaTime_(delta_time) {}
 
 void MovementSystem::Run(std::shared_ptr<Registry> r,
-                         zipper<components::Rigidbody2D, core::components::Position> components) {
-  for (auto&& [rigidbody, position] : components) {
-    ComputePositionOffset(&(rigidbody));
-    UpdatePosition(&(position));
+                         tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
+                         tools::sparse_array<core::components::Position>::ptr positions) {
+  auto max = std::max(rigidbodies->size(), positions->size());
+  for (size_t i = 0; i < max; i++) {
+    if (!r->HasEntityAtIndex(i)) {
+      continue;
+    }
+    auto& rigidbody = (*rigidbodies)[i];
+    auto& position = (*positions)[i];
+    if (rigidbody.has_value() && position.has_value()) {
+      ComputePositionOffset(&(*rigidbody));
+      UpdatePosition(&((*position)));
+    }
   }
 }
 

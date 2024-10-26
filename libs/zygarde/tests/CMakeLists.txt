@@ -15,5 +15,3 @@ target_sources(zygarde_tests PRIVATE
         registry_test.cpp
         system_test.cpp
 )
-
-add_subdirectory(physics)

@@ -35,16 +35,14 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   using Ptr = std::shared_ptr<Registry>;
   using Const_Ptr = const std::shared_ptr<Registry> &;
 
-  /**
-   * @brief Construct a new Registry object
-   */
+ public:
   explicit Registry(Private);
 
   /**
    * @brief Create a new registry.
    * @return std::shared_ptr<Registry>
    */
-  static std::shared_ptr<Registry> Create();
+  static std::shared_ptr<Registry> create();
 
   /**
    * @brief Get the shared pointer of this registry.
@@ -63,10 +61,10 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   /**
    * @brief Get the components
    * @tparam Component Component to get
-   * @return const sparse_array<Component>&
+   * @return sparse_array<Component>&
    */
   template <typename Component>
-  typename sparse_array<Component>::ptr GetComponents() const;
+  typename sparse_array<Component>::ptr GetComponents();
 
   /**
    * @brief Get the components
@@ -74,15 +72,16 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @return const sparse_array<Component>&
    */
   template <typename Component>
+  typename sparse_array<Component>::ptr GetComponents() const;
+
+  template <typename Component>
   Component *GetComponent(Entity const &e);
 
   /**
-   * @brief Spawn an entity with a specific type
-   * @tparam T Type of the entity
+   * @brief Spawn an entity
    * @return Entity
    */
-  template <EntityType T = Entity, typename... Args>
-  Entity SpawnEntity(Args &&...args);
+  Entity SpawnEntity();
 
   /**
    * @brief Get an entity from an index
@@ -91,12 +90,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    */
   [[nodiscard]] Entity EntityFromIndex(std::size_t idx) const;
 
-  /**
-   * @brief Check if an entity exists at an index
-   * @param idx Index to check
-   * @return bool
-   */
-  [[nodiscard]] bool HasEntityAtIndex(std::size_t idx) const;
+  bool HasEntityAtIndex(std::size_t idx) const;
 
   /**
    * @brief Kill an entity
@@ -109,21 +103,6 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @param e Entity to destroy
    */
   void DestroyEntity(Entity const &e);
-
-  /**
-   * @brief Get the entities
-   * @return std::vector<std::optional<Entity>>&
-   */
-  [[nodiscard]] std::vector<std::optional<Entity>> &GetEntities();
-
-  /**
-   * @brief Check if an entity has a component
-   * @tparam Component Component(s) to check
-   * @param e Entity to check
-   * @return bool
-   */
-  template <typename... Component>
-  bool HasComponents(Entity const &e);
 
   /**
    * @brief Cleanup destroyed entities
@@ -205,15 +184,12 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   std::stack<std::size_t> freeIds_;
 
   /// @brief Entities to kill
-  std::stack<Entity> entitiesToKill_;
+  std::stack<Entity> entitesToKill_;
 
   /// @brief remove functions used to remove components
   using component_destroyer = std::function<void(Registry &, Entity const &)>;
-
-  /// @brief remove functions used to remove components
   std::map<std::type_index, component_destroyer> removeFunctions_;
 };
 }  // namespace zygarde
 
-#include "./entity.tpp"
-#include "./registry.tpp"
+#include "registry.tpp"

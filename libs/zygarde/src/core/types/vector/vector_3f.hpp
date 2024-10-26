@@ -60,11 +60,6 @@ class EXPORT_ZYGARDE_API Vector3f final {
   Vector3f& operator/=(const Vector3f& other) noexcept;
 
   /**
-   * @brief Check if Vector3f object is equal to another Vector3f object
-   */
-  bool operator==(const Vector3f& other) const noexcept;
-
-  /**
    * @brief Get the zero vector
    */
   [[nodiscard]] static constexpr Vector3f zero() noexcept { return Vector3f{0, 0, 0}; }

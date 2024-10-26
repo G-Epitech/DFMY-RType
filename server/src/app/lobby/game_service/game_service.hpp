@@ -14,7 +14,7 @@
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
-#include "zygarde/src/utils/helper/helper.hpp"
+#include "zygarde/src/utils/registry_helper/registry_helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game {

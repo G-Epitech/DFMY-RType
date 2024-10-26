@@ -31,12 +31,22 @@ typename sparse_array<Component>::ptr Registry::RegisterComponent() {
 }
 
 template <typename Component>
+typename sparse_array<Component>::ptr Registry::GetComponents() {
+  try {
+    auto components = componentsArrays_.at(typeid(Component));
+    return std::any_cast<typename sparse_array<Component>::ptr>(components);
+  } catch (std::out_of_range &) {
+    throw Exception("Component not registered: " + utils::GetTypeName<Component>()  + ".");
+  }
+}
+
+template <typename Component>
 typename sparse_array<Component>::ptr Registry::GetComponents() const {
   try {
     auto components = componentsArrays_.at(typeid(Component));
     return std::any_cast<typename sparse_array<Component>::ptr>(components);
   } catch (std::out_of_range &) {
-    throw Exception("Component not registered: " + utils::GetTypeName<Component>() + ".");
+    throw Exception("Component not registered: " + utils::GetTypeName<Component>()  + ".");
   }
 }
 
@@ -47,7 +57,7 @@ Component *Registry::GetComponent(const Entity &e) {
     return nullptr;
   }
 
-  if (components->size() > e.id_) {
+  if (components.get()->size() >= e.id_) {
     auto &optionalComponent = (*components)[e.id_];
     if (optionalComponent) {
       return &(*optionalComponent);
@@ -86,28 +96,4 @@ void Registry::RemoveComponent(Entity const &from) {
 template <typename System, typename... ExtraParams>
 void Registry::AddSystem(ExtraParams &&...extraParams) {
   systems_.push_back(std::make_shared<System>(std::forward<ExtraParams>(extraParams)...));
-}
-
-template <typename... Components>
-bool Registry::HasComponents(Entity const &e) {
-  return (... && (GetComponent<Components>(e) != nullptr));
-}
-
-template <EntityType T, typename... Args>
-Entity Registry::SpawnEntity(Args &&...args) {
-  std::size_t newId;
-
-  if (!freeIds_.empty()) {
-    newId = freeIds_.top();
-    freeIds_.pop();
-  } else {
-    newId = currentMaxEntityId_++;
-  }
-  if (newId >= entities_.size()) {
-    entities_.resize(newId + 1);
-  }
-  T e(newId, *this, std::forward<Args>(args)...);
-  entities_.at(newId) = e;
-  e.OnSpawn();
-  return e;
 }
