@@ -40,3 +40,5 @@ Vector3f& Vector3f::operator*=(const Vector3f& other) noexcept {
 Vector3f& Vector3f::operator/=(const Vector3f& other) noexcept {
   return *this = *this / other;
 }
+
+Vector3f& Vector3f::operator=(const Vector3f& other) = default;

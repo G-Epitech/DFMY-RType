@@ -1,6 +1,7 @@
 add_library(zygarde SHARED)
 
 add_subdirectory(src)
+add_subdirectory(includes)
 add_subdirectory(tests)
 
 target_include_directories(zygarde PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)

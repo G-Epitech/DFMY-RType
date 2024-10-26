@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "app/lobby/filepaths.hpp"
+#include "app/lobby/game_service/archetype_manager/component_parser/component_parser.hpp"
 
 using namespace rtype::server::tools;
 
@@ -71,6 +72,17 @@ void ArchetypeManager::LoadPlayerArchetype(nlohmann::json jsonData) {
 
   for (const auto& component : components) {
     const auto& componentName = component["name"].get<std::string>();
-    std::cout << "Component name: " << componentName << "\n";
+    if (componentName == "position") {
+      auto position = ComponentParser::ParsePosition(component);
+    }
+    if (componentName == "rigidbody2d") {
+      auto rigidbody2d = ComponentParser::ParseRigidbody2D(component);
+    }
+    if (componentName == "box_collider2d") {
+      auto boxCollider2d = ComponentParser::ParseBoxCollider2D(component);
+    }
+    if (componentName == "tags") {
+      auto tags = ComponentParser::ParseTags(component);
+    }
   }
 }
