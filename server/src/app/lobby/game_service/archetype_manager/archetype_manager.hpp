@@ -14,8 +14,11 @@
 
 namespace rtype::server::tools {
 class ArchetypeManager final {
-  using RegistryAddFunction =
+  using RegistryAttachCallback =
       std::function<void(zygarde::Entity, const std::shared_ptr<zygarde::Registry>&)>;
+
+  using ComponentParserFunction =
+      std::function<void(std::vector<RegistryAttachCallback>*, const nlohmann::json&)>;
 
  public:
   ArchetypeManager();
@@ -30,13 +33,23 @@ class ArchetypeManager final {
   void LoadArchetypesFromDirectory(const std::string& archetypeDirectory,
                                    const std::function<void(const nlohmann::json&)>& callback);
 
-  static std::vector<RegistryAddFunction> LoadArchetypeComponents(const nlohmann::json& jsonData);
+  static void LoadArchetypeJSON(const std::string& filePath,
+                                const std::function<void(const nlohmann::json&)>& callback);
+
+  std::vector<RegistryAttachCallback> LoadArchetypeComponents(const nlohmann::json& jsonData);
+
+  template <typename Component>
+  static void EmplaceRegistryAttachCallback(std::vector<RegistryAttachCallback>* callbacks,
+                                            Component&& component);
 
   void LoadPlayerArchetype(nlohmann::json jsonData);
-  static RegistryAddFunction GetPlayerScript(nlohmann::json jsonData);
+  static RegistryAttachCallback GetPlayerScript(nlohmann::json jsonData);
 
  private:
   std::string currentPath_;
-  std::map<std::string, std::vector<RegistryAddFunction>> archetypes_;
+  std::map<std::string, std::vector<RegistryAttachCallback>> archetypes_;
+  std::unordered_map<std::string, ComponentParserFunction> componentParsers_;
 };
 }  // namespace rtype::server::tools
+
+#include "archetype_manager.tpp"

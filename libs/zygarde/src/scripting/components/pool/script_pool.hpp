@@ -21,6 +21,8 @@ class EXPORT_ZYGARDE_API ScriptPool final {
 
   explicit ScriptPool(std::vector<std::shared_ptr<MonoBehaviour>> scripts);
 
+  explicit ScriptPool(std::shared_ptr<MonoBehaviour> script);
+
  public:
   void AddScript(const std::shared_ptr<MonoBehaviour>& script);
 

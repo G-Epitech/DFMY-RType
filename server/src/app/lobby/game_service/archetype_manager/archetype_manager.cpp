@@ -21,7 +21,24 @@ namespace fs = std::filesystem;
 
 ArchetypeManager::ArchetypeManager() {
   currentPath_ = std::filesystem::current_path().string();
-  std::cout << "Current path: " << currentPath_ << std::endl;
+  componentParsers_ = {
+      {"position",
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParsePosition(component));
+       }},
+      {"rigidbody2d",
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseRigidbody2D(component));
+       }},
+      {"box_collider2d",
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseBoxCollider2D(component));
+       }},
+      {"tags",
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseTags(component));
+       }},
+  };
 }
 
 zygarde::Entity ArchetypeManager::InvokeArchetype(
@@ -54,66 +71,43 @@ void ArchetypeManager::LoadArchetypesFromDirectory(
   for (const auto& entry : fs::directory_iterator(directoryPath)) {
     if (entry.is_regular_file()) {
       const auto& filePath = entry.path();
-
       if (filePath.extension() == ".json") {
-        std::ifstream inputFile(filePath);
-        if (!inputFile.is_open()) {
-          throw std::runtime_error("Could not open the file: " + filePath.string());
-        }
-
-        nlohmann::json jsonData;
-        try {
-          inputFile >> jsonData;
-          std::cout << "Successfully read: " << filePath.filename() << "\n";
-        } catch (const nlohmann::json::parse_error& e) {
-          inputFile.close();
-          throw std::runtime_error("Could not parse the file: " + filePath.string());
-        }
-        inputFile.close();
-        callback(jsonData);
+        LoadArchetypeJSON(filePath.string(), callback);
       }
     }
   }
 }
 
-std::vector<ArchetypeManager::RegistryAddFunction> ArchetypeManager::LoadArchetypeComponents(
+void ArchetypeManager::LoadArchetypeJSON(
+    const std::string& filePath, const std::function<void(const nlohmann::json&)>& callback) {
+  std::ifstream inputFile(filePath);
+  if (!inputFile.is_open()) {
+    throw std::runtime_error("Could not open the file: " + filePath);
+  }
+
+  nlohmann::json jsonData;
+  try {
+    inputFile >> jsonData;
+  } catch (const nlohmann::json::parse_error& e) {
+    inputFile.close();
+    throw std::runtime_error("Could not parse the file: " + filePath);
+  }
+  inputFile.close();
+  callback(jsonData);
+}
+
+std::vector<ArchetypeManager::RegistryAttachCallback> ArchetypeManager::LoadArchetypeComponents(
     const nlohmann::json& jsonData) {
-  std::vector<RegistryAddFunction> components;
+  std::vector<RegistryAttachCallback> components;
   const auto& componentsJson = jsonData["components"];
 
   for (const auto& component : componentsJson) {
     const auto& componentName = component["name"].get<std::string>();
-    if (componentName == "position") {
-      auto position = ComponentParser::ParsePosition(component);
-      components.emplace_back(
-          [position](zygarde::Entity entity, const std::shared_ptr<zygarde::Registry>& registry) {
-            registry->AddComponent<zygarde::core::components::Position>(
-                entity, zygarde::core::components::Position(position));
-          });
-    }
-    if (componentName == "rigidbody2d") {
-      auto rigidbody2d = ComponentParser::ParseRigidbody2D(component);
-      components.emplace_back([rigidbody2d](zygarde::Entity entity,
-                                            const std::shared_ptr<zygarde::Registry>& registry) {
-        registry->AddComponent<zygarde::physics::components::Rigidbody2D>(
-            entity, zygarde::physics::components::Rigidbody2D(rigidbody2d));
-      });
-    }
-    if (componentName == "box_collider2d") {
-      auto boxCollider2d = ComponentParser::ParseBoxCollider2D(component);
-      components.emplace_back([boxCollider2d](zygarde::Entity entity,
-                                              const std::shared_ptr<zygarde::Registry>& registry) {
-        registry->AddComponent<zygarde::physics::components::BoxCollider2D>(
-            entity, zygarde::physics::components::BoxCollider2D(boxCollider2d));
-      });
-    }
-    if (componentName == "tags") {
-      auto tags = ComponentParser::ParseTags(component);
-      components.emplace_back(
-          [tags](zygarde::Entity entity, const std::shared_ptr<zygarde::Registry>& registry) {
-            registry->AddComponent<zygarde::core::components::Tags>(
-                entity, zygarde::core::components::Tags(tags));
-          });
+    auto it = componentParsers_.find(componentName);
+    if (it != componentParsers_.end()) {
+      it->second(&components, component);
+    } else {
+      throw std::runtime_error("Component parser not found: " + componentName);
     }
   }
   return components;
@@ -125,31 +119,33 @@ void ArchetypeManager::LoadPlayerArchetype(nlohmann::json jsonData) {
   if (!jsonData.contains("data") || !jsonData["data"].contains("class")) {
     throw std::runtime_error("Invalid player archetype: " + archetypeName);
   }
-  std::vector<RegistryAddFunction> components = LoadArchetypeComponents(jsonData["data"]);
-  components.push_back(GetPlayerScript(jsonData["data"]));
+  auto components = LoadArchetypeComponents(jsonData["data"]);
+  auto playerScript = GetPlayerScript(jsonData["data"]);
+  components.push_back(playerScript);
   archetypes_[archetypeName] = components;
 }
 
-ArchetypeManager::RegistryAddFunction ArchetypeManager::GetPlayerScript(nlohmann::json jsonData) {
+ArchetypeManager::RegistryAttachCallback ArchetypeManager::GetPlayerScript(
+    nlohmann::json jsonData) {
   std::shared_ptr<game::scripts::PlayerScript> script =
       std::make_shared<game::scripts::PlayerScript>();
   game::scripts::PlayerScript::PlayerProps props;
-  RegistryAddFunction scriptComponent;
+  RegistryAttachCallback scriptComponentCallback;
 
   const auto& classData = jsonData["class"];
-  props.health = classData["health"].get<float>();
-  props.speed = classData["speed"].get<float>();
-  props.className = classData["className"].get<std::string>();
-  props.powerCooldown = classData["powerCooldown"].get<float>();
-  props.primaryWeapon = classData["primaryWeapon"].get<std::string>();
-  props.secondaryWeapon = classData["secondaryWeapon"].get<std::string>();
-  script->SetPlayerProps(props);
-  std::vector<std::shared_ptr<zygarde::scripting::components::MonoBehaviour>> scripts;
-  scripts.push_back(script);
-  scriptComponent = [scripts](zygarde::Entity entity,
-                              const std::shared_ptr<zygarde::Registry>& registry) {
-    registry->AddComponent<zygarde::scripting::components::ScriptPool>(
-        entity, zygarde::scripting::components::ScriptPool{scripts});
+  props = {
+      .className = classData["className"].get<std::string>(),
+      .health = classData["health"].get<float>(),
+      .speed = classData["speed"].get<float>(),
+      .powerCooldown = classData["powerCooldown"].get<float>(),
+      .primaryWeapon = classData["primaryWeapon"].get<std::string>(),
+      .secondaryWeapon = classData["secondaryWeapon"].get<std::string>(),
   };
-  return scriptComponent;
+  script->SetPlayerProps(props);
+  scriptComponentCallback = [script](zygarde::Entity entity,
+                                      const std::shared_ptr<zygarde::Registry>& registry) {
+    registry->AddComponent<zygarde::scripting::components::ScriptPool>(
+        entity, zygarde::scripting::components::ScriptPool(script));
+  };
+  return scriptComponentCallback;
 }

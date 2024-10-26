@@ -7,6 +7,8 @@
 
 #include "script_pool.hpp"
 
+#include <utility>
+
 using namespace zygarde::scripting::components;
 
 void ScriptPool::AddScript(const std::shared_ptr<MonoBehaviour>& script) {
@@ -14,3 +16,5 @@ void ScriptPool::AddScript(const std::shared_ptr<MonoBehaviour>& script) {
 }
 ScriptPool::ScriptPool(std::vector<std::shared_ptr<MonoBehaviour>> scripts)
     : scripts_(std::move(scripts)) {}
+
+ScriptPool::ScriptPool(std::shared_ptr<MonoBehaviour> script) : scripts_{std::move(script)} {}
