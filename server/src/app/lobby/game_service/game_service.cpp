@@ -9,6 +9,7 @@
 
 #include <utility>
 
+#include "app/lobby/game_service/archetype_manager/archetype_keys.hpp"
 #include "constants/tags.hpp"
 #include "factories/player_factory.hpp"
 #include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
@@ -112,9 +113,10 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
 }
 
 void GameService::NewPlayer(std::uint64_t player_id) {
-  Entity player = PlayerFactory::CreatePlayer(
-      registry_, core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0), {96, 48});
+  Entity player = archetypeManager_.InvokeArchetype(registry_, tools::kArchetypeKeyPlayerPhoton);
+  auto position = registry_->GetComponent<core::components::Position>(player);
 
+  position->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
 }

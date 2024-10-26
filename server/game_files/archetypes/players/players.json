@@ -4,9 +4,8 @@
     "class": {
       "className": "Photon",
       "health": 100,
-      "fireRate": 1,
       "speed": 1,
-      "powerChargeTime": 1,
+      "powerCooldown": 1,
       "primaryWeapon": "Laser",
       "secondaryWeapon": "Missile"
     },

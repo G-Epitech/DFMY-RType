@@ -9,7 +9,6 @@
 
 #include <nlohmann/json.hpp>
 
-#include "libs/game/src/types/game_entities.hpp"
 #include "zygarde/src/entity.hpp"
 #include "zygarde/src/registry.hpp"
 
@@ -24,20 +23,20 @@ class ArchetypeManager final {
 
   void LoadArchetypes();
 
-  void InvokeArchetype(const std::shared_ptr<zygarde::Registry>& registry,
-                       const std::string& archetype_name,
-                       rtype::sdk::game::types::GameEntityType type);
+  zygarde::Entity InvokeArchetype(const std::shared_ptr<zygarde::Registry>& registry,
+                                  const std::string& archetype_name);
 
  private:
   void LoadArchetypesFromDirectory(const std::string& archetypeDirectory,
                                    const std::function<void(const nlohmann::json&)>& callback);
+
+  static std::vector<RegistryAddFunction> LoadArchetypeComponents(const nlohmann::json& jsonData);
+
   void LoadPlayerArchetype(nlohmann::json jsonData);
+  static RegistryAddFunction GetPlayerScript(nlohmann::json jsonData);
 
  private:
   std::string currentPath_;
-  std::map<std::string, std::vector<RegistryAddFunction>> playerArchetypes_;
-  std::map<std::string, std::vector<RegistryAddFunction>> powerupArchetypes_;
-  std::map<std::string, std::vector<RegistryAddFunction>> enemyArchetypes_;
-  std::map<std::string, std::vector<RegistryAddFunction>> projectileArchetypes_;
+  std::map<std::string, std::vector<RegistryAddFunction>> archetypes_;
 };
 }  // namespace rtype::server::tools

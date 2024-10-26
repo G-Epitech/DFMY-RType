@@ -17,6 +17,16 @@
 namespace rtype::server::game::scripts {
 class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
  public:
+  struct PlayerProps {
+    std::string className;
+    float health;
+    float speed;
+    float powerCooldown;
+    std::string primaryWeapon;
+    std::string secondaryWeapon;
+  };
+
+ public:
   PlayerScript();
   ~PlayerScript() override = default;
 
@@ -27,7 +37,9 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
 
   inline void Shoot() { isShooting_ = true; }
 
+  inline void SetPlayerProps(const PlayerProps& props) { props_ = props; }
  private:
+  PlayerProps props_;
   float health_;
   sdk::game::types::WeaponType equippedWeapon_;
   std::chrono::nanoseconds shootCooldown_;

@@ -41,9 +41,9 @@ void PlayerScript::OnCollisionEnter(
     return;
   }
   if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
-    health_ -= 10;
+    props_.health -= 10;
   }
-  if (health_ <= 0) {
+  if (props_.health <= 0) {
     context->registry->DestroyEntity(context->me);
   }
 }
