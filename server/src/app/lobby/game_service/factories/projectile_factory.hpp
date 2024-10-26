@@ -24,11 +24,5 @@ class ProjectileFactory {
                                  const core::types::Vector3f &position,
                                  const core::types::Vector2f &box_size,
                                  const sdk::game::types::GameEntityType shooter);
-
- private:
-  static void CreateScript(Registry::Const_Ptr registry, const Entity &entity);
-
-  static void HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
-                              const physics::types::Collision2D::ptr &collision);
 };
 }  // namespace rtype::server::game

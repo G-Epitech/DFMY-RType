@@ -9,12 +9,8 @@
 
 #include <iostream>
 
-#include "game/includes/constants.hpp"
-#include "game/includes/stats.hpp"
-#include "game/src/utils/projectiles/fire_rate.hpp"
+#include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
 #include "projectile_factory.hpp"
-#include "scripting/components/script/script.hpp"
-#include "types/weapons.hpp"
 
 using namespace rtype::server::game;
 
@@ -30,6 +26,9 @@ Entity PlayerFactory::CreatePlayer(Registry::Const_Ptr registry,
                sdk::game::constants::kPlayerIncludeLayers});
   registry->AddComponent<core::components::Tags>(
       player, core::components::Tags({sdk::game::constants::kPlayerTag}));
-  registry->AddComponent<scripting::components::MonoBehaviour>(player, scripts::PlayerScript());
+  std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
+  scripts.push_back(std::make_shared<scripts::PlayerScript>());
+  registry->AddComponent<scripting::components::ScriptPool>(
+      player, scripting::components::ScriptPool(scripts));
   return player;
 }

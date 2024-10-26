@@ -9,8 +9,9 @@
 
 #include <iostream>
 
-#include "game/includes/constants.hpp"
-#include "scripting/components/script/script.hpp"
+#include "app/lobby/game_service/scripts/projectiles/base_projectile_script.hpp"
+#include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
+#include "scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 using namespace rtype::server::game;
 
@@ -46,31 +47,10 @@ Entity ProjectileFactory::CreateProjectile(Registry::Const_Ptr registry,
       projectile, {box_size, collisionLayers, includeLayers});
   registry->AddComponent<core::components::Tags>(
       projectile, core::components::Tags({tag, sdk::game::constants::kBulletTag}));
-  CreateScript(registry, projectile);
+
+  std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
+  scripts.push_back(std::make_shared<scripts::BaseProjectileScript>());
+  registry->AddComponent<scripting::components::ScriptPool>(
+      projectile, scripting::components::ScriptPool(scripts));
   return projectile;
-}
-
-void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity& entity) {
-  scripting::types::ValuesMap valuesMap;
-
-  scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
-  scripting::types::FixedUpdateFunction onFixedUpdate =
-      [](scripting::types::ScriptingContext::ConstPtr context) {
-        const auto posComponent =
-            context->registry->GetComponent<core::components::Position>(context->me);
-        if (!posComponent) {
-          return;
-        }
-        if (posComponent->point.x > 2000 || posComponent->point.x < -200) {
-          context->registry->DestroyEntity(context->me);
-        }
-      };
-
-  registry->AddComponent<scripting::components::Script>(
-      entity, {onCollisionEnter, onFixedUpdate, valuesMap});
-}
-
-void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
-                                        const physics::types::Collision2D::ptr& collision) {
-  context->registry->DestroyEntity(context->me);
 }

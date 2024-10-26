@@ -15,32 +15,36 @@ ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& de
     : deltaTime_{deltaTime} {}
 
 void ScriptExecutionSystem::Run(Registry::Ptr r,
-                                sparse_array<scripting::components::MonoBehaviour>::ptr scripts) {
-  for (currentScriptIndex_; currentScriptIndex_ < scripts->size(); currentScriptIndex_++) {
-    auto& scriptComponent = (*scripts)[currentScriptIndex_];
+                                sparse_array<scripting::components::ScriptPool>::ptr script_pools) {
+  for (currentScriptIndex_; currentScriptIndex_ < script_pools->size(); currentScriptIndex_++) {
+    auto& scriptComponent = (*script_pools)[currentScriptIndex_];
     if (scriptComponent.has_value() && r->HasEntityAtIndex(currentScriptIndex_)) {
-      ProcessScript(r, &scriptComponent.value());
+      ProcessScriptPool(r, &scriptComponent.value());
     }
   }
   currentScriptIndex_ = 0;
 }
 
-void ScriptExecutionSystem::ProcessScript(Registry::Const_Ptr registry,
-                                          scripting::components::MonoBehaviour* script) {
+void ScriptExecutionSystem::ProcessScriptPool(Registry::Const_Ptr registry,
+                                              scripting::components::ScriptPool* script_pool) {
   std::shared_ptr<types::ScriptingContext> context =
-      std::make_shared<types::ScriptingContext>(CreateContext(registry, script));
+      std::make_shared<types::ScriptingContext>(CreateContext(registry));
+  auto scripts = script_pool->GetScripts();
 
-  script->FixedUpdate(context);
-  HandleCollisionCallback(registry, script, context);
+  for (auto& script : scripts) {
+    script->FixedUpdate(context);
+    HandleCollisionCallback(registry, script, context);
+  }
 }
 
 scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
-    Registry::Const_Ptr registry, scripting::components::MonoBehaviour* script) {
+    Registry::Const_Ptr registry) {
   return {registry, deltaTime_, registry->EntityFromIndex(currentScriptIndex_)};
 }
 
 void ScriptExecutionSystem::HandleCollisionCallback(
-    Registry::Const_Ptr registry, scripting::components::MonoBehaviour* script,
+    Registry::Const_Ptr registry,
+    const std::shared_ptr<scripting::components::MonoBehaviour>& script,
     types::ScriptingContext::ConstPtr context) const {
   zygarde::Entity entity = registry->EntityFromIndex(currentScriptIndex_);
   auto collider = registry->GetComponent<physics::components::BoxCollider2D>(entity);

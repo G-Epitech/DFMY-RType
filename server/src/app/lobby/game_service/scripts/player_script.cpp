@@ -25,6 +25,8 @@ void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::Scripting
 
     const core::types::Vector3f projectilePos(position->point.x + 86, position->point.y + 20,
                                               position->point.z);
+    ProjectileFactory::CreateProjectile(context->registry, projectilePos, {32, 15},
+                                        sdk::game::types::GameEntityType::kPlayer);
     return;
   }
   isShooting_ = false;

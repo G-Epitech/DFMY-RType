@@ -11,7 +11,8 @@
 
 #include "constants/tags.hpp"
 #include "factories/player_factory.hpp"
-#include "libs/zygarde/src/scripting/components/script/script.hpp"
+#include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
+#include "scripts/player_script.hpp"
 #include "state_broadcaster/state_broadcaster.hpp"
 
 using namespace rtype::server::game;
@@ -69,7 +70,7 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
     HandlePlayerMoveMessage(player_id, data);
   }
   if (data.messageType == kShoot) {
-    //HandlePlayerShootMessage(player_id, data);
+    HandlePlayerShootMessage(player_id, data);
   }
 }
 
@@ -98,8 +99,14 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
   const auto player = players_.find(player_id);
   if (player != players_.end()) {
     const auto &playerEntity = player->second;
-    const auto script = registry_->GetComponent<scripting::components::Script>(playerEntity);
-    script->SetValue("shoot", true);
+    auto scriptPool = registry_->GetComponent<scripting::components::ScriptPool>(playerEntity);
+    auto playerScript = scriptPool->GetScript<scripts::PlayerScript>();
+    if (playerScript) {
+      std::cout << "Player " << player_id << " shot" << std::endl;
+      playerScript->Shoot();
+    } else {
+      logger_.Error("Player script not found");
+    }
   }
 }
 

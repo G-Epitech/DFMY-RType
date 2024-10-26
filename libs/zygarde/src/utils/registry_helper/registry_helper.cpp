@@ -10,6 +10,7 @@
 #include "core/components/components.hpp"
 #include "physics/2d/components/components.hpp"
 #include "physics/2d/systems/systems.hpp"
+#include "scripting/components/pool/script_pool.hpp"
 #include "scripting/components/script/script.hpp"
 #include "scripting/systems/execution/script_execution_system.hpp"
 
@@ -33,8 +34,7 @@ void RegistryHelper::RegisterPhysicsComponents(const std::shared_ptr<Registry> &
 }
 
 void RegistryHelper::RegisterScriptingComponents(const std::shared_ptr<Registry> &registry) {
-  registry->RegisterComponent<scripting::components::Script>();
-  registry->RegisterComponent<scripting::components::MonoBehaviour>();
+  registry->RegisterComponent<scripting::components::ScriptPool>();
 }
 
 void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
