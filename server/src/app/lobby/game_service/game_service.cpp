@@ -69,7 +69,7 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
     HandlePlayerMoveMessage(player_id, data);
   }
   if (data.messageType == kShoot) {
-    HandlePlayerShootMessage(player_id, data);
+    //HandlePlayerShootMessage(player_id, data);
   }
 }
 

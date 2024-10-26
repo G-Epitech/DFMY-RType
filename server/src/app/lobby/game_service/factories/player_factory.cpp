@@ -30,66 +30,6 @@ Entity PlayerFactory::CreatePlayer(Registry::Const_Ptr registry,
                sdk::game::constants::kPlayerIncludeLayers});
   registry->AddComponent<core::components::Tags>(
       player, core::components::Tags({sdk::game::constants::kPlayerTag}));
-  CreateScript(registry, player);
+  registry->AddComponent<scripting::components::MonoBehaviour>(player, scripts::PlayerScript());
   return player;
-}
-
-void PlayerFactory::CreateScript(Registry::Const_Ptr registry, const Entity &entity) {
-  scripting::types::ValuesMap valuesMap;
-
-  valuesMap["health"] = 100;
-  valuesMap["equippedWeapon"] = sdk::game::types::WeaponType::kBasic;
-  valuesMap["shootCooldown"] =
-      sdk::game::utils::GetFireRate(sdk::game::stats::WeaponBasic::fireRate);
-  valuesMap["lastShootTime"] = std::chrono::nanoseconds::zero();
-  valuesMap["shoot"] = false;
-
-  scripting::types::FixedUpdateFunction fixedUpdate = FixedUpdate;
-  scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
-
-  registry->AddComponent<scripting::components::Script>(entity,
-                                                        {onCollisionEnter, fixedUpdate, valuesMap});
-}
-
-void PlayerFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
-                                    const physics::types::Collision2D::ptr &collision) {
-  auto playerHealth = std::any_cast<int>(context->values->at("health"));
-  auto rb = collision.get()->otherRigidbody;
-  auto entity = collision.get()->otherEntity;
-  auto otherEntityTag = context->registry->GetComponent<core::components::Tags>(entity);
-  if (!otherEntityTag) {
-    return;
-  }
-  if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
-    std::cout << "Player hit by enemy bullet" << std::endl;
-    playerHealth -= 10;
-    (*context->values)["health"] = playerHealth;
-  }
-  if (playerHealth <= 0) {
-    context->registry->DestroyEntity(context->me);
-  }
-}
-
-void PlayerFactory::FixedUpdate(scripting::types::ScriptingContext::ConstPtr context) {
-  auto shoot = std::any_cast<bool>(context->values->at("shoot"));
-  auto lastShootTime =
-      std::any_cast<std::chrono::nanoseconds>(context->values->at("lastShootTime"));
-  auto shootCooldown =
-      std::any_cast<std::chrono::nanoseconds>(context->values->at("shootCooldown"));
-
-  auto position = context->registry->GetComponent<core::components::Position>(context->me);
-
-  lastShootTime += context->deltaTime;
-  if (shoot && lastShootTime >= shootCooldown) {
-    std::cout << "Player shoot" << std::endl;
-    (*context->values)["lastShootTime"] = utils::Timer::Nanoseconds::zero();
-    (*context->values)["shoot"] = false;
-    const core::types::Vector3f projectilePos(position->point.x + 86, position->point.y + 20,
-                                              position->point.z);
-    ProjectileFactory::CreateProjectile(context->registry, projectilePos, {32, 15},
-                                        sdk::game::types::GameEntityType::kPlayer);
-    return;
-  }
-  (*context->values)["shoot"] = false;
-  (*context->values)["lastShootTime"] = lastShootTime;
 }

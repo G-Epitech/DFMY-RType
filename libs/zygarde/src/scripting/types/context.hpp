@@ -18,7 +18,6 @@ struct ScriptingContext {
   using ConstPtr = const std::shared_ptr<ScriptingContext> &;
 
   const Registry::Ptr &registry;
-  std::shared_ptr<ValuesMap> values;
   const utils::Timer::Nanoseconds &deltaTime;
   zygarde::Entity me;
 };

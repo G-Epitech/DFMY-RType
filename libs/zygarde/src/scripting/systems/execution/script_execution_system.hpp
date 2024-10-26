@@ -9,6 +9,7 @@
 
 #include "api.hpp"
 #include "physics/2d/components/box_collider/box_collider_2d.hpp"
+#include "scripting/components/mono_behaviour/mono_behaviour.hpp"
 #include "scripting/components/script/script.hpp"
 #include "scripting/types/context.hpp"
 #include "system_abstract.hpp"
@@ -16,25 +17,24 @@
 
 namespace zygarde::scripting::systems {
 class EXPORT_ZYGARDE_API ScriptExecutionSystem final
-    : public ASystem<scripting::components::Script> {
+    : public ASystem<scripting::components::MonoBehaviour> {
  public:
   explicit ScriptExecutionSystem(const utils::Timer::Nanoseconds &deltaTime);
   ~ScriptExecutionSystem() override = default;
 
  public:
-  void Run(Registry::Ptr r, sparse_array<scripting::components::Script>::ptr scripts) override;
+  void Run(Registry::Ptr r,
+           sparse_array<scripting::components::MonoBehaviour>::ptr scripts) override;
 
  private:
-  void ProcessScript(Registry::Const_Ptr registry, scripting::components::Script *script);
+  void ProcessScript(Registry::Const_Ptr registry, scripting::components::MonoBehaviour *script);
 
-  static void HandleFixedUpdate(Registry::Const_Ptr registry, scripting::components::Script *script,
-                                types::ScriptingContext::ConstPtr context);
-
-  void HandleCollisionCallback(Registry::Const_Ptr registry, scripting::components::Script *script,
+  void HandleCollisionCallback(Registry::Const_Ptr registry,
+                               scripting::components::MonoBehaviour *script,
                                types::ScriptingContext::ConstPtr context) const;
 
   types::ScriptingContext CreateContext(Registry::Const_Ptr registry,
-                                        scripting::components::Script *script);
+                                        scripting::components::MonoBehaviour *script);
 
  private:
   const utils::Timer::Nanoseconds &deltaTime_;

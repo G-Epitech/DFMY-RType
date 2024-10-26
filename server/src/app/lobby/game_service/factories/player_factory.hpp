@@ -7,10 +7,12 @@
 
 #pragma once
 
+#include "app/lobby/game_service/scripts/player_script.hpp"
 #include "zygarde/src/core/components/components.hpp"
 #include "zygarde/src/entity.hpp"
 #include "zygarde/src/physics/2d/components/components.hpp"
 #include "zygarde/src/registry.hpp"
+#include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 #include "zygarde/src/scripting/types/callbacks.hpp"
 #include "zygarde/src/scripting/types/context.hpp"
 
@@ -22,13 +24,5 @@ class PlayerFactory {
 
   static Entity CreatePlayer(Registry::Const_Ptr registry, const core::types::Vector3f &position,
                              const core::types::Vector2f &box_size);
-
- private:
-  static void CreateScript(Registry::Const_Ptr registry, const Entity &entity);
-
-  static void HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
-                              const physics::types::Collision2D::ptr &collision);
-
-  static void FixedUpdate(scripting::types::ScriptingContext::ConstPtr context);
 };
 }  // namespace rtype::server::game

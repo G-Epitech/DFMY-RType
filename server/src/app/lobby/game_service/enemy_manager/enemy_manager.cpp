@@ -22,5 +22,4 @@ void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &
   std::uniform_real_distribution dist(80.0f, 1000.0f);
 
   const core::types::Vector3f position(2000, dist(gen), 0);
-  EnemyFactory::CreateEnemy(registry, position, sdk::game::types::EnemyType::kPata);
 }

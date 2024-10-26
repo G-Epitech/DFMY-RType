@@ -34,6 +34,7 @@ void RegistryHelper::RegisterPhysicsComponents(const std::shared_ptr<Registry> &
 
 void RegistryHelper::RegisterScriptingComponents(const std::shared_ptr<Registry> &registry) {
   registry->RegisterComponent<scripting::components::Script>();
+  registry->RegisterComponent<scripting::components::MonoBehaviour>();
 }
 
 void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
