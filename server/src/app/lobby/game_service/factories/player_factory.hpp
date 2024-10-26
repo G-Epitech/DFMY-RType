@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "app/lobby/game_service/scripts/player_script.hpp"
 #include "zygarde/src/core/components/components.hpp"
 #include "zygarde/src/entity.hpp"
 #include "zygarde/src/physics/2d/components/components.hpp"

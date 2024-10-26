@@ -11,8 +11,6 @@
 #include "game/includes/constants.hpp"
 #include "game/includes/stats.hpp"
 #include "game/src/utils/projectiles/fire_rate.hpp"
-#include "scripting/components/mono_behaviour/mono_behaviour.hpp"
-#include "scripting/components/script/script.hpp"
 #include "types/weapons.hpp"
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 

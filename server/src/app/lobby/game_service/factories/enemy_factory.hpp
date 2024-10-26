@@ -22,13 +22,5 @@ class EnemyFactory {
 
   static Entity CreateEnemy(Registry::Const_Ptr registry, const core::types::Vector3f &position,
                             sdk::game::types::EnemyType enemy_type);
-
- private:
-  static void CreateScript(Registry::Const_Ptr registry, const Entity &entity);
-
-  static void FixedUpdate(scripting::types::ScriptingContext::ConstPtr context);
-
-  static void HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
-                              const physics::types::Collision2D::ptr &collision);
 };
 }  // namespace rtype::server::game

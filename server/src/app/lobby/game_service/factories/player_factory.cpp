@@ -9,8 +9,8 @@
 
 #include <iostream>
 
+#include "app/lobby/game_service/scripts/player_script.hpp"
 #include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
-#include "projectile_factory.hpp"
 
 using namespace rtype::server::game;
 
