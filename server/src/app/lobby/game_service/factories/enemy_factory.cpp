@@ -33,7 +33,7 @@ Entity EnemyFactory::CreateEnemy(Registry::Const_Ptr registry,
       enemy,
       core::components::Tags({sdk::game::constants::kEnemyTag, sdk::game::constants::kPataTag}));
   std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
-  scripts.push_back(std::make_shared<scripts::PataScript>(position));
+  scripts.push_back(std::make_shared<scripts::PataScript>());
   registry->AddComponent<scripting::components::ScriptPool>(
       enemy, scripting::components::ScriptPool(scripts));
   return enemy;

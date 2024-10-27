@@ -9,8 +9,10 @@
 
 #include <nlohmann/json.hpp>
 
+#include "app/lobby/game_service/scripts/scripts_registry.hpp"
 #include "zygarde/src/entity.hpp"
 #include "zygarde/src/registry.hpp"
+#include "zygarde/src/scripting/types/context.hpp"
 
 namespace rtype::server::tools {
 class ArchetypeManager final {
@@ -43,12 +45,12 @@ class ArchetypeManager final {
                                             Component&& component);
 
   void LoadPlayerArchetype(nlohmann::json jsonData);
-  static RegistryAttachCallback GetPlayerScript(nlohmann::json jsonData);
 
  private:
   std::string currentPath_;
   std::map<std::string, std::vector<RegistryAttachCallback>> archetypes_;
   std::unordered_map<std::string, ComponentParserFunction> componentParsers_;
+  std::shared_ptr<game::scripts::ScriptsRegistry> scriptsRegistry_;
 };
 }  // namespace rtype::server::tools
 

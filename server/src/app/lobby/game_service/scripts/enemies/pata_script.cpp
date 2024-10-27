@@ -13,12 +13,12 @@
 
 using namespace rtype::server::game::scripts;
 
-PataScript::PataScript(zygarde::core::types::Vector3f basePosition)
+PataScript::PataScript()
     : health_{50},
       goingUp_{true},
-      basePosition_(basePosition),
-      upperLimit_(basePosition.y + 30.0f),
-      lowerLimit_(basePosition.y - 30.0f),
+      basePosition_(0, 0, 0),
+      upperLimit_(basePosition_.y + 30.0f),
+      lowerLimit_(basePosition_.y - 30.0f),
       lastShootTime_(utils::Timer::Nanoseconds::zero()) {}
 
 void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {

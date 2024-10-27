@@ -21,6 +21,7 @@ namespace fs = std::filesystem;
 
 ArchetypeManager::ArchetypeManager() {
   currentPath_ = std::filesystem::current_path().string();
+  scriptsRegistry_ = std::make_shared<game::scripts::ScriptsRegistry>();
   componentParsers_ = {
       {"position",
        [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
@@ -38,7 +39,19 @@ ArchetypeManager::ArchetypeManager() {
        [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
          EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseTags(component));
        }},
-  };
+      {
+          "script_pool",
+          [this](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
+            const auto& map = ComponentParser::ParseScriptPoolData(component);
+            std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
+            for (const auto& [scriptName, valuesMap] : map) {
+              auto script = scriptsRegistry_->GetScript(scriptName);
+              script->onEnable(valuesMap);
+              scripts.push_back(script);
+            }
+            EmplaceRegistryAttachCallback(callbacks, scripting::components::ScriptPool(scripts));
+          },
+      }};
 }
 
 zygarde::Entity ArchetypeManager::InvokeArchetype(
@@ -99,8 +112,12 @@ void ArchetypeManager::LoadArchetypeJSON(
 std::vector<ArchetypeManager::RegistryAttachCallback> ArchetypeManager::LoadArchetypeComponents(
     const nlohmann::json& jsonData) {
   std::vector<RegistryAttachCallback> components;
-  const auto& componentsJson = jsonData["components"];
 
+  if (!jsonData.contains("components")) {
+    return components;
+  }
+
+  const auto& componentsJson = jsonData["components"];
   for (const auto& component : componentsJson) {
     const auto& componentName = component["name"].get<std::string>();
     auto it = componentParsers_.find(componentName);
@@ -116,36 +133,5 @@ std::vector<ArchetypeManager::RegistryAttachCallback> ArchetypeManager::LoadArch
 void ArchetypeManager::LoadPlayerArchetype(nlohmann::json jsonData) {
   const auto& archetypeName = jsonData["archetype_name"].get<std::string>();
 
-  if (!jsonData.contains("data") || !jsonData["data"].contains("class")) {
-    throw std::runtime_error("Invalid player archetype: " + archetypeName);
-  }
-  auto components = LoadArchetypeComponents(jsonData["data"]);
-  auto playerScript = GetPlayerScript(jsonData["data"]);
-  components.push_back(playerScript);
-  archetypes_[archetypeName] = components;
-}
-
-ArchetypeManager::RegistryAttachCallback ArchetypeManager::GetPlayerScript(
-    nlohmann::json jsonData) {
-  std::shared_ptr<game::scripts::PlayerScript> script =
-      std::make_shared<game::scripts::PlayerScript>();
-  game::scripts::PlayerScript::PlayerProps props;
-  RegistryAttachCallback scriptComponentCallback;
-
-  const auto& classData = jsonData["class"];
-  props = {
-      .className = classData["className"].get<std::string>(),
-      .health = classData["health"].get<float>(),
-      .speed = classData["speed"].get<float>(),
-      .powerCooldown = classData["powerCooldown"].get<float>(),
-      .primaryWeapon = classData["primaryWeapon"].get<std::string>(),
-      .secondaryWeapon = classData["secondaryWeapon"].get<std::string>(),
-  };
-  script->SetPlayerProps(props);
-  scriptComponentCallback = [script](zygarde::Entity entity,
-                                      const std::shared_ptr<zygarde::Registry>& registry) {
-    registry->AddComponent<zygarde::scripting::components::ScriptPool>(
-        entity, zygarde::scripting::components::ScriptPool(script));
-  };
-  return scriptComponentCallback;
+  archetypes_[archetypeName] = LoadArchetypeComponents(jsonData);
 }

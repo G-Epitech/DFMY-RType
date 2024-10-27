@@ -79,3 +79,48 @@ zygarde::core::components::Tags ComponentParser::ParseTags(const nlohmann::json&
   }
   return zygarde::core::components::Tags{tags};
 }
+
+std::unordered_map<std::string, zygarde::scripting::types::ValuesMap>
+ComponentParser::ParseScriptPoolData(const nlohmann::json& json) {
+  std::unordered_map<std::string, zygarde::scripting::types::ValuesMap> scripts;
+
+  if (!json.contains("data")) {
+    return scripts;
+  }
+  const auto& data = json["data"];
+  for (auto& scriptJSON : data) {
+    const auto [scriptName, valuesMap] = ParseScriptData(scriptJSON);
+    scripts[scriptName] = valuesMap;
+  }
+  return scripts;
+}
+
+std::pair<std::string, zygarde::scripting::types::ValuesMap> ComponentParser::ParseScriptData(
+    const nlohmann::json& json) {
+  zygarde::scripting::types::ValuesMap values;
+  std::string scriptName;
+
+  scriptName = json["scriptName"].get<std::string>();
+  if (!json.contains("customValues")) {
+    return {scriptName, values};
+  }
+  values = ParseCustomScriptValues(json["customValues"]);
+  return {scriptName, values};
+}
+
+scripting::types::ValuesMap ComponentParser::ParseCustomScriptValues(const nlohmann::json& json) {
+  scripting::types::ValuesMap values;
+
+  for (auto& [key, value] : json.items()) {
+    if (value.is_string()) {
+      values[key] = value.get<std::string>();
+    } else if (value.is_number_float()) {
+      values[key] = value.get<float>();
+    } else if (value.is_number_integer()) {
+      values[key] = value.get<int>();
+    } else if (value.is_boolean()) {
+      values[key] = value.get<bool>();
+    }
+  }
+  return values;
+}

@@ -30,6 +30,8 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
   PlayerScript();
   ~PlayerScript() override = default;
 
+  void onEnable(const scripting::types::ValuesMap& customScriptValues) override;
+
   void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) override;
 
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
@@ -38,9 +40,9 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
   inline void Shoot() { isShooting_ = true; }
 
   inline void SetPlayerProps(const PlayerProps& props) { props_ = props; }
+
  private:
   PlayerProps props_;
-  float health_;
   sdk::game::types::WeaponType equippedWeapon_;
   std::chrono::nanoseconds shootCooldown_;
   std::chrono::nanoseconds lastShootTime_;

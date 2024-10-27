@@ -14,13 +14,13 @@
 namespace rtype::server::game::scripts {
 class PataScript : public zygarde::scripting::components::MonoBehaviour {
  public:
-  PataScript(zygarde::core::types::Vector3f basePosition);
+  PataScript();
   ~PataScript() = default;
 
   void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context);
 
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
-                                const physics::types::Collision2D::ptr& collision);
+                        const physics::types::Collision2D::ptr& collision);
 
  private:
   float health_;

@@ -1,0 +1,49 @@
+{
+  "archetype_name": "enemy_pata_big",
+  "data": {
+    "stats": {
+      "health": 100.0,
+      "speed": 1.0,
+      "upperLimitOffset": 20.0,
+      "lowerLimitOffset": 20.0,
+      "fireRate": 0.7,
+      "bulletsType": 0
+    },
+    "components": [
+      {
+        "name": "rigidbody2d",
+        "data": {
+          "isKinematic": false
+        }
+      },
+      {
+        "name": "position"
+      },
+      {
+        "name": "box_collider2d",
+        "data": {
+          "size": {
+            "x": 70,
+            "y": 120
+          },
+          "collisionLayers": [
+            2
+          ],
+          "includeLayers": [
+            1,
+            8
+          ]
+        }
+      },
+      {
+        "name": "tags",
+        "data": {
+          "tags": [
+            "enemy",
+            "pata"
+          ]
+        }
+      }
+    ]
+  }
+}

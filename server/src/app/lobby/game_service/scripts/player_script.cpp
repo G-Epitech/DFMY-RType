@@ -10,11 +10,19 @@
 using namespace rtype::server::game::scripts;
 
 PlayerScript::PlayerScript()
-    : health_{100},
-      equippedWeapon_{sdk::game::types::WeaponType::kBasic},
+    : equippedWeapon_{sdk::game::types::WeaponType::kBasic},
       shootCooldown_{sdk::game::utils::GetFireRate(sdk::game::stats::WeaponBasic::fireRate)},
       lastShootTime_{utils::Timer::Nanoseconds::zero()},
       isShooting_{false} {}
+
+void PlayerScript::onEnable(const scripting::types::ValuesMap& customScriptValues) {
+  props_.className = std::any_cast<std::string>(customScriptValues.at("className"));
+  props_.health = std::any_cast<float>(customScriptValues.at("health"));
+  props_.speed = std::any_cast<float>(customScriptValues.at("speed"));
+  props_.powerCooldown = std::any_cast<float>(customScriptValues.at("powerCooldown"));
+  props_.primaryWeapon = std::any_cast<std::string>(customScriptValues.at("primaryWeapon"));
+  props_.secondaryWeapon = std::any_cast<std::string>(customScriptValues.at("secondaryWeapon"));
+}
 
 void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   lastShootTime_ += context->deltaTime;

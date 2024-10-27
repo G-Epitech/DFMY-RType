@@ -1,56 +1,62 @@
 {
   "archetype_name": "player_photon",
-  "data": {
-    "class": {
-      "className": "Photon",
-      "health": 100,
-      "speed": 1,
-      "powerCooldown": 1,
-      "primaryWeapon": "Laser",
-      "secondaryWeapon": "Missile"
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": false
+      }
     },
-    "components": [
-      {
-        "name": "rigidbody2d",
-        "data": {
-          "isKinematic": true
-        }
-      },
-      {
-        "name": "position",
-        "data": {
-          "point": {
-            "x": 1,
-            "y": 2,
-            "z": 3
-          }
-        }
-      },
-      {
-        "name": "box_collider2d",
-        "data": {
-          "size": {
-            "x": 96,
-            "y": 48
-          },
-          "collisionLayers": [
-            1
-          ],
-          "includeLayers": [
-            2,
-            4,
-            32
-          ]
-        }
-      },
-      {
-        "name": "tags",
-        "data": {
-          "tags": [
-            "player"
-          ]
+    {
+      "name": "position",
+      "data": {
+        "point": {
+          "x": 1,
+          "y": 2,
+          "z": 3
         }
       }
-    ]
-  }
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 96,
+          "y": 48
+        },
+        "collisionLayers": [
+          1
+        ],
+        "includeLayers": [
+          2,
+          4,
+          32
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "player"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "playerScript",
+          "customValues": {
+            "className": "Photon",
+            "health": 100.0,
+            "speed": 1.0,
+            "powerCooldown": 1.0,
+            "primaryWeapon": "Laser",
+            "secondaryWeapon": "Missile"
+          }
+        }
+      ]
+    }
+  ]
 }

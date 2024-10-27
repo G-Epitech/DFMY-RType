@@ -18,8 +18,13 @@ namespace zygarde::scripting::components {
 
 class EXPORT_ZYGARDE_API MonoBehaviour {
  public:
+  using Instance = std::shared_ptr<MonoBehaviour>;
+
+ public:
   MonoBehaviour() = default;
   virtual ~MonoBehaviour() = default;
+
+  virtual void onEnable(const scripting::types::ValuesMap& customScriptValues) {};
 
   virtual void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {};
 
