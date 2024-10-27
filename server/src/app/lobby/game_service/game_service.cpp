@@ -11,7 +11,6 @@
 
 #include "app/lobby/game_service/archetype_manager/archetype_keys.hpp"
 #include "constants/tags.hpp"
-#include "factories/player_factory.hpp"
 #include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
 #include "scripts/player_script.hpp"
 #include "state_broadcaster/state_broadcaster.hpp"
@@ -20,7 +19,9 @@ using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
-    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {}
+    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {
+  archetypeManager_ = std::make_shared<tools::ArchetypeManager>();
+}
 
 void GameService::RegistrySetup() {
   registry_ = Registry::create();
@@ -31,7 +32,7 @@ void GameService::RegistrySetup() {
 void GameService::Initialize() {
   ticksManager_.Initialize();
   RegistrySetup();
-  archetypeManager_.LoadArchetypes();
+  archetypeManager_->LoadArchetypes();
 }
 
 int GameService::Run(std::shared_ptr<Lobby> api) {
@@ -50,7 +51,7 @@ int GameService::Run(std::shared_ptr<Lobby> api) {
 
 void GameService::ExecuteGameLogic() {
   if (!players_.empty()) {
-    enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+    enemyManager_.Update(ticksManager_.DeltaTime(), registry_, archetypeManager_);
   }
   registry_->RunSystems();
   registry_->CleanupDestroyedEntities();
@@ -113,7 +114,7 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
 }
 
 void GameService::NewPlayer(std::uint64_t player_id) {
-  Entity player = archetypeManager_.InvokeArchetype(registry_, tools::kArchetypeKeyPlayerPhoton);
+  Entity player = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypeKeyPlayerPhoton);
   auto position = registry_->GetComponent<core::components::Position>(player);
 
   position->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);

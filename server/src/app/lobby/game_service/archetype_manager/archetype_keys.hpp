@@ -9,4 +9,5 @@
 
 namespace rtype::server::tools {
 constexpr const char *kArchetypeKeyPlayerPhoton = "player_photon";
-}
+constexpr const char *kArchetypeKeyEnemyPataNormal = "enemy_pata_normal";
+}  // namespace rtype::server::tools

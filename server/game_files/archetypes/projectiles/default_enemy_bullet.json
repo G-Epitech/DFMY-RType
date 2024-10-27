@@ -1,10 +1,14 @@
 {
-  "archetype_name": "enemy_pata_normal",
+  "archetype_name": "base_enemy_bullet",
   "components": [
     {
       "name": "rigidbody2d",
       "data": {
-        "isKinematic": false
+        "isKinematic": false,
+        "velocity": {
+          "x": -300,
+          "y": 0
+        }
       }
     },
     {
@@ -14,11 +18,11 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 61,
-          "y": 108
+          "x": 32,
+          "y": 15
         },
         "collisionLayers": [
-          2
+          4
         ],
         "includeLayers": [
           1,
@@ -30,8 +34,8 @@
       "name": "tags",
       "data": {
         "tags": [
-          "enemy",
-          "pata"
+          "enemy_bullet",
+          "bullet"
         ]
       }
     },
@@ -39,15 +43,7 @@
       "name": "script_pool",
       "data": [
         {
-          "scriptName": "pataScript",
-          "customValues": {
-            "health": 50.0,
-            "speed": 1.0,
-            "upperLimitOffset": 30.0,
-            "lowerLimitOffset": 30.0,
-            "fireRate": 1,
-            "bulletsType": 0
-          }
+          "scriptName": "baseProjectileScript"
         }
       ]
     }

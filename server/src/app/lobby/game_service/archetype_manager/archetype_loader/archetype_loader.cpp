@@ -53,6 +53,8 @@ ArchetypeLoader::ArchetypeLoader() {
 
 std::map<std::string, std::vector<ArchetypeLoader::RegistryAttachCallback>> ArchetypeLoader::Run() {
   LoadArchetypesFromDirectory(rtype::server::kPlayerArchetypesDirectory);
+  LoadArchetypesFromDirectory(rtype::server::kEnemyArchetypesDirectory);
+  LoadArchetypesFromDirectory(rtype::server::kProjectileArchetypesDirectory);
   return archetypes_;
 }
 

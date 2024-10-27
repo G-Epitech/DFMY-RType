@@ -105,6 +105,6 @@ class GameService {
   Logger logger_;
 
   /// @brief Archetype manager
-  tools::ArchetypeManager archetypeManager_;
+  std::shared_ptr<tools::ArchetypeManager> archetypeManager_;
 };
 }  // namespace rtype::server::game

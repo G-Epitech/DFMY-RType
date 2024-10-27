@@ -9,8 +9,11 @@
 
 #include <random>
 
-void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &delta_time,
-                                               Registry::Const_Ptr registry) {
+#include "app/lobby/game_service/archetype_manager/archetype_keys.hpp"
+
+void rtype::server::game::EnemyManager::Update(
+    const utils::Timer::Nanoseconds &delta_time, Registry::Const_Ptr registry,
+    const std::shared_ptr<tools::ArchetypeManager> &archetype_manager) {
   accumulatedTime_ += delta_time;
 
   if (accumulatedTime_ < std::chrono::milliseconds(1500)) {
@@ -22,5 +25,7 @@ void rtype::server::game::EnemyManager::Update(const utils::Timer::Nanoseconds &
   std::uniform_real_distribution dist(80.0f, 1000.0f);
 
   const core::types::Vector3f position(2000, dist(gen), 0);
-  EnemyFactory::CreateEnemy(registry, position, sdk::game::types::EnemyType::kPata);
+  auto entity = archetype_manager->InvokeArchetype(registry, tools::kArchetypeKeyEnemyPataNormal);
+  auto positionComponent = registry->GetComponent<core::components::Position>(entity);
+  positionComponent->point = position;
 }
