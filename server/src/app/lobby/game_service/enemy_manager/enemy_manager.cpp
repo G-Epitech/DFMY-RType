@@ -9,11 +9,11 @@
 
 #include <random>
 
-#include "app/lobby/game_service/archetype_manager/archetype_keys.hpp"
+#include "app/lobby/game_service/archetype_keys.hpp"
 
 void rtype::server::game::EnemyManager::Update(
     const utils::Timer::Nanoseconds &delta_time, Registry::Const_Ptr registry,
-    const std::shared_ptr<tools::ArchetypeManager> &archetype_manager) {
+    const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> &archetype_manager) {
   accumulatedTime_ += delta_time;
 
   if (accumulatedTime_ < std::chrono::milliseconds(1500)) {

@@ -10,20 +10,19 @@
 #include <unordered_map>
 
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
+#include "zygarde/src/scripting/types/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {
 class ScriptsRegistry {
  public:
-  using MonoBehaviourCreater = std::function<scripting::components::MonoBehaviour::Instance()>;
-  using ScriptsMap = std::unordered_map<std::string, MonoBehaviourCreater>;
-
- public:
   ScriptsRegistry();
   ~ScriptsRegistry() = default;
 
-  scripting::components::MonoBehaviour::Instance GetScript(const std::string &name);
+  scripting::components::MonoBehaviour::Instance GetScript(const std::string& name);
+
+  [[nodiscard]] const zygarde::scripting::types::ScriptsMap& GetScripts() const { return scripts_; }
 
  private:
-  ScriptsMap scripts_;
+  zygarde::scripting::types::ScriptsMap scripts_;
 };
 }  // namespace rtype::server::game::scripts

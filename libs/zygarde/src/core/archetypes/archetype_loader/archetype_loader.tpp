@@ -8,7 +8,7 @@
 #pragma once
 
 template <typename Component>
-void rtype::server::tools::ArchetypeLoader::EmplaceRegistryAttachCallback(
+void zygarde::core::archetypes::ArchetypeLoader::EmplaceRegistryAttachCallback(
     std::vector<RegistryAttachCallback>* callbacks, Component&& component) {
   callbacks->emplace_back(
       [component = std::forward<Component>(component)](

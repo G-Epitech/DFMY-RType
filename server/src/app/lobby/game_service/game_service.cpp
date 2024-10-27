@@ -9,7 +9,9 @@
 
 #include <utility>
 
-#include "app/lobby/game_service/archetype_manager/archetype_keys.hpp"
+#include "app/lobby/filepaths.hpp"
+#include "app/lobby/game_service/archetype_keys.hpp"
+#include "app/lobby/game_service/scripts/scripts_registry.hpp"
 #include "constants/tags.hpp"
 #include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
 #include "scripts/player_script.hpp"
@@ -20,7 +22,7 @@ using namespace rtype::sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
     : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {
-  archetypeManager_ = std::make_shared<tools::ArchetypeManager>();
+  archetypeManager_ = std::make_shared<zygarde::core::archetypes::ArchetypeManager>();
 }
 
 void GameService::RegistrySetup() {
@@ -30,9 +32,13 @@ void GameService::RegistrySetup() {
 }
 
 void GameService::Initialize() {
+  std::vector<std::string> archetypeDirs = {kDirectoryEnemyArchetypes, kDirectoryPlayerArchetypes,
+                                            kDirectoryProjectileArchetypes};
+  scripts::ScriptsRegistry scriptsRegistry;
+
   ticksManager_.Initialize();
   RegistrySetup();
-  archetypeManager_->LoadArchetypes();
+  archetypeManager_->LoadArchetypes(archetypeDirs, scriptsRegistry.GetScripts());
 }
 
 int GameService::Run(std::shared_ptr<Lobby> api) {

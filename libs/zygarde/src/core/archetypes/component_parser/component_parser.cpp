@@ -7,7 +7,7 @@
 
 #include "component_parser.hpp"
 
-using namespace rtype::server::tools;
+using namespace zygarde::core::archetypes;
 
 zygarde::physics::components::Rigidbody2D ComponentParser::ParseRigidbody2D(
     const nlohmann::json& json) {

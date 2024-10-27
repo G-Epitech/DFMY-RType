@@ -1,4 +1,4 @@
-target_sources(${SERVER_CORE_LIB} PRIVATE
+target_sources(zygarde PRIVATE
         component_parser.cpp
         component_parser.hpp
 )

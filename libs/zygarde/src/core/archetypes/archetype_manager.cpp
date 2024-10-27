@@ -7,17 +7,9 @@
 
 #include "archetype_manager.hpp"
 
-#include <filesystem>
-#include <fstream>
-#include <iostream>
+#include <utility>
 
-#include "app/lobby/filepaths.hpp"
-#include "app/lobby/game_service/archetype_manager/component_parser/component_parser.hpp"
-#include "app/lobby/game_service/scripts/player_script.hpp"
-
-using namespace rtype::server::tools;
-
-namespace fs = std::filesystem;
+using namespace zygarde::core::archetypes;
 
 zygarde::Entity ArchetypeManager::InvokeArchetype(
     const std::shared_ptr<zygarde::Registry>& registry, const std::string& archetype_name) {
@@ -32,8 +24,9 @@ zygarde::Entity ArchetypeManager::InvokeArchetype(
   return entity;
 }
 
-void ArchetypeManager::LoadArchetypes() {
-  ArchetypeLoader archetypeLoader;
+void ArchetypeManager::LoadArchetypes(std::vector<std::string> directories,
+                                      const scripting::types::ScriptsMap& scriptsRegistry) {
+  ArchetypeLoader archetypeLoader(std::move(directories), scriptsRegistry);
 
   archetypes_ = archetypeLoader.Run();
 }

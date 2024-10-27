@@ -9,22 +9,24 @@
 
 #include <nlohmann/json.hpp>
 
-#include "app/lobby/game_service/scripts/scripts_registry.hpp"
-#include "zygarde/src/entity.hpp"
-#include "zygarde/src/registry.hpp"
-#include "zygarde/src/scripting/types/context.hpp"
+#include "api.hpp"
+#include "entity.hpp"
+#include "registry.hpp"
+#include "scripting/types/context.hpp"
+#include "scripting/types/mono_behaviour.hpp"
 
-namespace rtype::server::tools {
-class ArchetypeLoader {
+namespace zygarde::core::archetypes {
+class EXPORT_ZYGARDE_API ArchetypeLoader final {
  public:
   using RegistryAttachCallback =
       std::function<void(zygarde::Entity, const std::shared_ptr<zygarde::Registry>&)>;
 
-  using ComponentParserFunction =
-      std::function<void(std::vector<RegistryAttachCallback>*, const nlohmann::json&)>;
+  using ComponentParserFunction = std::function<void(
+      std::vector<ArchetypeLoader::RegistryAttachCallback>*, const nlohmann::json&)>;
 
  public:
-  ArchetypeLoader();
+  ArchetypeLoader(std::vector<std::string> directories,
+                  const scripting::types::ScriptsMap& scriptsRegistry);
   ~ArchetypeLoader() = default;
 
   std::map<std::string, std::vector<RegistryAttachCallback>> Run();
@@ -46,8 +48,9 @@ class ArchetypeLoader {
   std::string currentPath_;
   std::map<std::string, std::vector<RegistryAttachCallback>> archetypes_;
   std::unordered_map<std::string, ComponentParserFunction> componentParsers_;
-  std::shared_ptr<game::scripts::ScriptsRegistry> scriptsRegistry_;
+  scripting::types::ScriptsMap scriptsRegistry_;
+  std::vector<std::string> directories_;
 };
-}  // namespace rtype::server::tools
+}  // namespace zygarde::core::archetypes
 
 #include "archetype_loader.tpp"

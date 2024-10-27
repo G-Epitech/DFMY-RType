@@ -9,11 +9,12 @@
 
 #include <nlohmann/json.hpp>
 
-#include "zygarde/includes/components.hpp"
-#include "zygarde/src/scripting/types/context.hpp"
+#include "libs/zygarde/includes/components.hpp"
+#include "scripting/types/context.hpp"
+#include "api.hpp"
 
-namespace rtype::server::tools {
-class ComponentParser {
+namespace zygarde::core::archetypes {
+class EXPORT_ZYGARDE_API ComponentParser final {
  public:
   ComponentParser() = delete;
   ~ComponentParser() = default;
@@ -30,4 +31,4 @@ class ComponentParser {
       const nlohmann::json &json);
   static scripting::types::ValuesMap ParseCustomScriptValues(const nlohmann::json &json);
 };
-}  // namespace rtype::server::tools
+}  // namespace zygarde::core::archetypes

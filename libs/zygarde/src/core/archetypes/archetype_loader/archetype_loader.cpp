@@ -8,17 +8,22 @@
 #include "archetype_loader.hpp"
 
 #include <fstream>
+#include <utility>
 
-#include "app/lobby/filepaths.hpp"
-#include "app/lobby/game_service/archetype_manager/component_parser/component_parser.hpp"
+#include "core/archetypes/component_parser/component_parser.hpp"
+#include "scripting/components/pool/script_pool.hpp"
 
-using namespace rtype::server::tools;
+using namespace zygarde::core::archetypes;
 
 namespace fs = std::filesystem;
 
-ArchetypeLoader::ArchetypeLoader() {
-  currentPath_ = std::filesystem::current_path().string();
-  scriptsRegistry_ = std::make_shared<game::scripts::ScriptsRegistry>();
+ArchetypeLoader::ArchetypeLoader(std::vector<std::string> directories,
+                                 const scripting::types::ScriptsMap& scriptsRegistry)
+    : currentPath_(std::filesystem::current_path().string()),
+      archetypes_(),
+      componentParsers_(),
+      scriptsRegistry_(scriptsRegistry),
+      directories_(std::move(directories)) {
   componentParsers_ = {
       {"position",
        [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
@@ -42,7 +47,7 @@ ArchetypeLoader::ArchetypeLoader() {
             const auto& map = ComponentParser::ParseScriptPoolData(component);
             std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
             for (const auto& [scriptName, valuesMap] : map) {
-              auto script = scriptsRegistry_->GetScript(scriptName);
+              auto script = scriptsRegistry_[scriptName]();
               script->onEnable(valuesMap);
               scripts.push_back(script);
             }
@@ -52,9 +57,9 @@ ArchetypeLoader::ArchetypeLoader() {
 }
 
 std::map<std::string, std::vector<ArchetypeLoader::RegistryAttachCallback>> ArchetypeLoader::Run() {
-  LoadArchetypesFromDirectory(rtype::server::kPlayerArchetypesDirectory);
-  LoadArchetypesFromDirectory(rtype::server::kEnemyArchetypesDirectory);
-  LoadArchetypesFromDirectory(rtype::server::kProjectileArchetypesDirectory);
+  for (const auto& directory : directories_) {
+    LoadArchetypesFromDirectory(directory);
+  }
   return archetypes_;
 }
 

@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "app/lobby/game_service/archetype_manager/archetype_manager.hpp"
-#include "app/lobby/game_service/factories/enemy_factory.hpp"
+#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
@@ -20,7 +19,7 @@ class EnemyManager {
 
   void Update(const zygarde::utils::Timer::Nanoseconds &delta_time,
               zygarde::Registry::Const_Ptr registry,
-              const std::shared_ptr<tools::ArchetypeManager> &archetypeManager);
+              const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> &archetypeManager);
 
  private:
   zygarde::utils::Timer::Nanoseconds accumulatedTime_;

@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <map>
 
-#include "app/lobby/game_service/archetype_manager/archetype_manager.hpp"
+#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "enemy_manager/enemy_manager.hpp"
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
@@ -105,6 +105,6 @@ class GameService {
   Logger logger_;
 
   /// @brief Archetype manager
-  std::shared_ptr<tools::ArchetypeManager> archetypeManager_;
+  std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> archetypeManager_;
 };
 }  // namespace rtype::server::game
