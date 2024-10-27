@@ -40,7 +40,7 @@ class rtype::sdk::game::api::Master {
     std::string username;
     bool inLobby;
     std::uint64_t nodeId;
-    std::uint64_t lobbyId;
+    std::uint64_t roomId;
   };
 
   struct Room {
@@ -131,6 +131,18 @@ class rtype::sdk::game::api::Master {
   void HandleRefreshInfos(const abra::server::ClientTCPMessage &message);
 
   /**
+   * @brief Handle the creation of a room
+   * @param message The message of the client
+   */
+  void HandleCreateRoom(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the join of a room
+   * @param message The message of the client
+   */
+  void HandleJoinRoom(const abra::server::ClientTCPMessage &message);
+
+  /**
    * @brief Add a new client to the server
    * @param clientId The client id
    * @param pseudo The pseudo of the client
@@ -183,7 +195,9 @@ class rtype::sdk::game::api::Master {
   static inline std::map<unsigned int, void (Master::*)(const abra::server::ClientTCPMessage &)>
       clientMessageHandlers = {
           {ClientToMasterMsgType::kMsgTypeCTMConnect, &Master::HandleClientConnection},
-          {ClientToMasterMsgType::kMsgTypeCTMRefreshInfos, &Master::HandleRefreshInfos}
+          {ClientToMasterMsgType::kMsgTypeCTMRefreshInfos, &Master::HandleRefreshInfos},
+          {ClientToMasterMsgType::kMsgTypeCTMCreateRoom, &Master::HandleCreateRoom},
+          {ClientToMasterMsgType::kMsgTypeCTMJoinRoom, &Master::HandleJoinRoom},
   };
 
   /// @brief Map of handlers for the TCP messages

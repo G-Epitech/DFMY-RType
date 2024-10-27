@@ -130,6 +130,56 @@ void Master::SendRoomsInfos(std::uint64_t clientId) {
   SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRooms, infos, clientId);
 }
 
+void Master::HandleCreateRoom(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::CreateRoom>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  for (auto &node : this->nodes_) {
+    if (node.second.rooms_.size() >= node.second.maxRooms) {
+      continue;
+    }
+
+    payload::CreateRoom room = {
+      .nbPlayers = payload.nbPlayers,
+      .difficulty = payload.difficulty,
+    };
+    strcpy(room.name, payload.name);
+
+    SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, room, node.first);
+    break;
+  }
+}
+
+void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::JoinRoom>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  if (this->nodes_.find(payload.nodeId) == this->nodes_.end()) {
+    this->logger_.Warning("Trying to join a room in an unknown node", "⚠️ ");
+    return;
+  }
+
+  auto &node = this->nodes_[payload.nodeId];
+  if (node.rooms_.find(payload.roomId) == node.rooms_.end()) {
+    this->logger_.Warning("Trying to join an unknown room", "⚠️ ");
+    return;
+  }
+
+  auto &room = node.rooms_[payload.roomId];
+  auto &client = this->clients_[message.clientId];
+  if (room.nbPlayers >= room.maxPlayers) {
+    this->logger_.Warning("Trying to join a full room", "⚠️ ");
+    return;
+  }
+
+  room.nbPlayers++;
+  client.inLobby = true;
+  client.nodeId = payload.nodeId;
+  client.roomId = payload.roomId;
+
+  SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, payload, payload.nodeId);
+}
+
 void Master::SendInfos(std::uint64_t clientId, bool game, bool rooms) {
   if (game) {
     SendGameInfos(clientId);
