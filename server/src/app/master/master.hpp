@@ -51,5 +51,5 @@ class rtype::server::Master final : public IServer {
   Context ctx_;
 
   /// @brief Server network
-  rtype::sdk::game::api::Server api_;
+  rtype::sdk::game::api::Master api_;
 };

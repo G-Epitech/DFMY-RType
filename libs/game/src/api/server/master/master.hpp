@@ -37,29 +37,28 @@ class rtype::sdk::game::api::Master {
 
   struct Client {
     std::uint64_t id;
-    std::string pseudo;
+    std::string username;
     bool inLobby;
-    std::uint32_t lobbyId;
-    boost::asio::ip::udp::endpoint endpoint;
+    std::uint64_t nodeId;
+    std::uint64_t lobbyId;
   };
 
-  struct Lobby {
+  struct Room {
     std::uint64_t id;
     std::string name;
-    std::unique_ptr<abra::client::ClientTCP> clientTCP;
-    std::thread thread;
-    bool enabled;
-    char ip[16];
-    std::uint64_t port;
+    unsigned int maxPlayers;
+    unsigned int nbPlayers;
+    unsigned int difficulty;
+    int port;
   };
 
-  /**
-   * @brief Create a lobby that will generate a new UDP server
-   * @param name Name of the lobby
-   * @param port TCP port of the lobby
-   * @warning The handler will be async, please use a mutex when you access to your own resources
-   */
-  std::uint64_t CreateLobby(const std::string &name, uint64_t port);
+  struct Node {
+    std::uint64_t id;
+    std::string name;
+    unsigned int maxRooms;
+    unsigned int nbRooms;
+    std::map<std::uint64_t, Room> rooms_;
+  };
 
   /**
    * @brief Extract queue of messages
@@ -75,25 +74,14 @@ class rtype::sdk::game::api::Master {
 
  private:
   /**
-   * @brief Initialize the TCP connection
+   * @brief Initialize the clients thread
    */
-  void InitServerTCP();
+  void InitClientsThread();
 
   /**
-   * @brief Start the TCP connection (run the IO service)
+   * @brief Initialize the nodes thread
    */
-  void ListenServerTCP();
-
-  /**
-   * @brief Initialize the TCP connection (for a lobby)
-   * @param id The id of the lobby
-   */
-  void InitClientTCP(std::uint64_t id);
-
-  /**
-   * @brief Start the TCP connection (run the IO service) (for a lobby)
-   */
-  void ListenClientTCP(std::uint64_t id);
+  void InitNodesThread();
 
   /**
    * @brief Send a payload to a specific client (TCP)
@@ -104,11 +92,11 @@ class rtype::sdk::game::api::Master {
    * @return true if the message is sent
    */
   template <typename T>
-  bool SendPayloadTCP(const MessageServerType &type, const T &payload,
-                      const std::uint64_t &clientId);
+  bool SendToClient(const MasterToClientMsgType &type, const T &payload,
+                    const std::uint64_t &clientId);
 
   /**
-   * @brief Send a payload to a specific lobby (TCP)
+   * @brief Send a payload to a specific node (TCP)
    * @tparam T The type of the payload
    * @param type The type of the message
    * @param payload The payload to send
@@ -116,22 +104,19 @@ class rtype::sdk::game::api::Master {
    * @return true if the message is sent
    */
   template <typename T>
-  bool SendPayloadLobbyTCP(const MessageServerType &type, const T &payload,
-                           const std::uint64_t &lobbyId);
+  bool SendToNode(const MasterToNodeMsgType &type, const T &payload, const std::uint64_t &nodeId);
 
   /**
-   * @brief Handle the incoming TCP messages
+   * @brief Handle the incoming client TCP messages
    * @return true if the message must be added to the queue (false if the message is handled)
    */
-  [[nodiscard]] bool SystemServerTCPMessagesMiddleware(
-      const abra::server::ClientTCPMessage &message);
+  [[nodiscard]] bool ClientMessageMiddleware(const abra::server::ClientTCPMessage &message);
 
   /**
-   * @brief Handle the incoming TCP messages
+   * @brief Handle the incoming node TCP messages
    * @return true if the message must be added to the queue (false if the message is handled)
    */
-  [[nodiscard]] bool SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message,
-                                                       std::uint64_t lobbyId);
+  [[nodiscard]] bool NodeMessageMiddleware(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Handle a client connection
@@ -140,22 +125,10 @@ class rtype::sdk::game::api::Master {
   void HandleClientConnection(const abra::server::ClientTCPMessage &message);
 
   /**
-   * @brief Handle a lobby join
+   * @brief Handle refresh of infos
    * @param message The message of the client
    */
-  void HandleLobbyJoin(const abra::server::ClientTCPMessage &message);
-
-  /**
-   * @brief Handle player when he joins a lobby
-   * @param message The message of the client
-   */
-  void HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message);
-
-  /**
-   * @brief Handle the lobby infos
-   * @param message The message of the lobby
-   */
-  void HandleLobbyInfos(const abra::tools::MessageProps &message, std::uint64_t lobbyId);
+  void HandleRefreshInfos(const abra::server::ClientTCPMessage &message);
 
   /**
    * @brief Add a new client to the server
@@ -164,11 +137,35 @@ class rtype::sdk::game::api::Master {
    */
   void AddNewClient(std::uint64_t clientId, const std::string &pseudo);
 
-  /// @brief The ABRA Server TCP instance (monitor)
-  abra::server::ServerTCP serverTCP_;
+  /**
+   * @brief Send infos about the game and rooms
+   * @param clientId The client id
+   * @param game Send game infos
+   * @param rooms Send rooms infos
+   */
+  void SendInfos(std::uint64_t clientId, bool game, bool rooms);
 
-  /// @brief The thread that will run the TCP listener
-  std::thread threadTCP_;
+  /**
+   * @brief Send game infos
+   */
+  void SendGameInfos(std::uint64_t clientId);
+
+  /**
+   * @brief Send rooms infos
+   */
+  void SendRoomsInfos(std::uint64_t clientId);
+
+  /// @brief Server socket to communicate with clients (TCP)
+  abra::server::ServerTCP clientsSocket_;
+
+  /// @brief The thread that will run the clients socket
+  std::thread clientsThread_;
+
+  /// @brief Server socket to communicate with nodes (TCP)
+  abra::server::ServerTCP nodesSocket_;
+
+  /// @brief The thread that will run the nodes socket
+  std::thread nodesThread_;
 
   /// @brief Packet builder
   abra::tools::PacketBuilder packetBuilder_;
@@ -179,23 +176,19 @@ class rtype::sdk::game::api::Master {
   /// @brief Vector of clients
   std::vector<Client> clients_;
 
-  /// @brief Map of lobbies
-  std::map<std::uint64_t, Lobby> lobbies_;
+  /// @brief Vector of nodes
+  std::map<std::uint64_t, Node> nodes_;
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Master::*)(const abra::server::ClientTCPMessage &)>
-      serverHandlers_ = {
-          {MessageClientType::kConnection, &Master::HandleClientConnection},
-          {MessageClientType::kJoinLobby, &Master::HandleLobbyJoin},
-          {MessageClientType::kClientJoinLobbyInfos, &Master::HandleLobbyAddPlayer},
+      clientMessageHandlers = {
+          {ClientToMasterMsgType::kMsgTypeCTMConnect, &Master::HandleClientConnection},
+          {ClientToMasterMsgType::kMsgTypeCTMRefreshInfos, &Master::HandleRefreshInfos}
   };
 
   /// @brief Map of handlers for the TCP messages
-  static inline std::map<unsigned int,
-                         void (Master::*)(const abra::tools::MessageProps &, std::uint64_t lobbyId)>
-      clientHandlers_ = {
-          {MessageLobbyType::kLobbyInfos, &Master::HandleLobbyInfos},
-  };
+  static inline std::map<unsigned int, void (Master::*)(const abra::server::ClientTCPMessage &)>
+      nodeMessageHandlers = {};
 };
 
 #include "master.tpp"

@@ -18,7 +18,8 @@ struct InfoRoom {
 
 /// @brief Room status - Internal use for InfoRooms
 struct RoomStatus {
-  std::uint64_t id;           ///< Room ID
+  std::uint64_t nodeId;       ///< Node ID
+  std::uint64_t roomId;       ///< Room ID
   char name[20];              ///< Room name
   unsigned int nbPlayersMax;  ///< Maximum number of players in the room
   unsigned int nbPlayers;     ///< Number of players in the room

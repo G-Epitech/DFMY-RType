@@ -10,162 +10,136 @@
 using namespace rtype::sdk::game::api;
 
 Master::Master(int port)
-    : logger_("serverAPI"), serverTCP_(port, [this](const abra::server::ClientTCPMessage &message) {
-        return this->SystemServerTCPMessagesMiddleware(message);
-      }) {
-  this->InitServerTCP();
+    : logger_("serverAPI"),
+      clientsSocket_(port, [this](auto &msg) { return ClientMessageMiddleware(msg); }),
+      nodesSocket_(port, [this](auto &msg) { return NodeMessageMiddleware(msg); }) {
+  this->InitClientsThread();
+  this->InitNodesThread();
 }
 
 Master::~Master() {
-  this->serverTCP_.Close();
-  this->threadTCP_.join();
+  this->clientsSocket_.Close();
+  this->clientsThread_.join();
 
-  for (auto &lobby : this->lobbies_) {
-    lobby.second.clientTCP->Close();
-  }
+  logger_.Info("Clients thread stopped", "🛑");
 
-  logger_.Info("Server TCP thread stopped", "🛑");
+  this->nodesSocket_.Close();
+  this->nodesThread_.join();
+
+  logger_.Info("Nodes thread stopped", "🛑");
 }
 
-std::uint64_t Master::CreateLobby(const std::string &name, uint64_t port) {
-  std::uint64_t lobbyId = this->lobbies_.size();
-  auto clientTCP = std::make_unique<abra::client::ClientTCP>(
-      kLocalhost, port, [this, lobbyId](const abra::tools::MessageProps &message) {
-        return this->SystemClientTCPMessagesMiddleware(message, lobbyId);
-      });
+void Master::InitClientsThread() {
+  this->clientsThread_ = std::thread(&abra::server::ServerTCP::Start, &this->clientsSocket_);
 
-  this->lobbies_[lobbyId] =
-      Lobby({.id = lobbyId, .name = name, .clientTCP = std::move(clientTCP), .enabled = false});
-
-  payload::RegisterLobby registerPayload = {
-      .lobbyId = static_cast<unsigned int>(lobbyId),
-  };
-  if (SendPayloadLobbyTCP(MessageServerType::kRegisterLobby, registerPayload, lobbyId)) {
-    logger_.Info("Register new lobby [" + std::to_string(lobbyId) + "]", "🛃");
-  }
-
-  InitClientTCP(lobbyId);
-
-  return lobbyId;
+  logger_.Info("Clients TCP thread started", "🚀");
 }
 
-void Master::InitServerTCP() {
-  this->threadTCP_ = std::thread(&Master::ListenServerTCP, this);
-  logger_.Info("Server TCP thread started", "🚀");
+void Master::InitNodesThread() {
+  this->nodesThread_ = std::thread(&abra::server::ServerTCP::Start, &this->nodesSocket_);
+
+  logger_.Info("Nodes TCP thread started", "🚀");
 }
 
-void Master::ListenServerTCP() {
-  this->serverTCP_.Start();
-}
-
-void Master::InitClientTCP(std::uint64_t id) {
-  this->lobbies_[id].thread = std::thread(&Master::ListenClientTCP, this, id);
-  logger_.Info("Server TCP thread started", "🚀");
-}
-
-void Master::ListenClientTCP(std::uint64_t id) {
-  this->lobbies_[id].clientTCP->Listen();
-}
-
-bool Master::SystemServerTCPMessagesMiddleware(const abra::server::ClientTCPMessage &message) {
-  if (serverHandlers_.find(message.messageType) == serverHandlers_.end()) {
-    return true;
-  }
-
-  logger_.Info("Handling message (server middleware catch)", "🔧");
-  (this->*(serverHandlers_[message.messageType]))(message);
-
-  return false;
-}
-
-bool Master::SystemClientTCPMessagesMiddleware(const abra::tools::MessageProps &message,
-                                               std::uint64_t lobbyId) {
-  if (clientHandlers_.find(message.messageType) == clientHandlers_.end()) {
+bool Master::ClientMessageMiddleware(const abra::server::ClientTCPMessage &message) {
+  if (clientMessageHandlers.find(message.messageType) == clientMessageHandlers.end()) {
     return true;
   }
 
   logger_.Info("Handling message (client middleware catch)", "🔧");
-  (this->*(clientHandlers_[message.messageType]))(message, lobbyId);
+  (this->*(clientMessageHandlers[message.messageType]))(message);
+
+  return false;
+}
+
+bool Master::NodeMessageMiddleware(const abra::server::ClientTCPMessage &message) {
+  if (nodeMessageHandlers.find(message.messageType) == nodeMessageHandlers.end()) {
+    return true;
+  }
+
+  logger_.Info("Handling message (node middleware catch)", "🔧");
+  (this->*(nodeMessageHandlers[message.messageType]))(message);
 
   return false;
 }
 
 void Master::HandleClientConnection(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::Connection>(message.bitset);
-  auto pseudo = packet->GetPayload().pseudo;
+  auto packet = this->packetBuilder_.Build<payload::PlayerConnect>(message.bitset);
+  auto username = packet->GetPayload().username;
 
-  payload::ConnectionInfos connectionInfos = {
-      .onlinePlayers = static_cast<unsigned int>(this->clients_.size()) + 1};
+  SendInfos(true, true, message.clientId);
 
-  this->SendPayloadTCP(MessageServerType::kConnectionInfos, connectionInfos, message.clientId);
-  this->AddNewClient(message.clientId, pseudo);
+  this->AddNewClient(message.clientId, username);
 }
 
-void Master::AddNewClient(std::uint64_t clientId, const std::string &pseudo) {
-  Client client = {.id = clientId, .pseudo = pseudo, .inLobby = false};
+void Master::HandleRefreshInfos(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RefreshInfos>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  SendInfos(payload.infoGame, payload.infoRooms, message.clientId);
+}
+
+void Master::AddNewClient(std::uint64_t clientId, const std::string &username) {
+  Client client = {.id = clientId, .username = username, .inLobby = false};
 
   this->clients_.push_back(client);
-  logger_.Info("New client connected: " + pseudo, "👤");
-}
-
-void Master::HandleLobbyJoin(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::JoinLobby>(message.bitset);
-  auto id = packet->GetPayload().lobbyId;
-
-  if (this->lobbies_.find(id) == this->lobbies_.end()) {
-    logger_.Warning("Try to join an invalid lobby", "🛃");
-    return;
-  }
-
-  this->clients_[message.clientId].lobbyId = id;
-
-  payload::JoinLobbyInfos joinInfos{};
-  snprintf(joinInfos.ip, sizeof(joinInfos.ip), "%s", this->lobbies_[id].ip);
-  joinInfos.port = this->lobbies_[id].port;
-
-  this->SendPayloadTCP(MessageServerType::kServerJoinLobbyInfos, joinInfos, message.clientId);
-  logger_.Info(
-      "Send lobby [" + std::to_string(id) + "] infos to client " + std::to_string(message.clientId),
-      "🛃");
-}
-
-void Master::HandleLobbyAddPlayer(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.bitset);
-  auto port = packet->GetPayload().port;
-  auto ip = this->serverTCP_.GetRemoteAddress(message.clientId);
-
-  this->clients_[message.clientId].inLobby = true;
-  this->clients_[message.clientId].endpoint =
-      boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ip), port);
-
-  auto lobbyId = this->clients_[message.clientId].lobbyId;
-  payload::UserJoinLobby userJoinPayload = {
-      .userId = static_cast<unsigned int>(message.clientId),
-  };
-  snprintf(userJoinPayload.ip, sizeof(userJoinPayload.ip), "%s", ip.c_str());
-  userJoinPayload.port = port;
-
-  SendPayloadLobbyTCP(MessageServerType::kUserJoinLobby, userJoinPayload, lobbyId);
-
-  logger_.Info("Client " + std::to_string(message.clientId) + " joined the lobby. Endpoint: " + ip +
-                   ":" + std::to_string(port),
-               "🛃");
+  logger_.Info("New client connected: " + username, "👤");
 }
 
 std::queue<abra::server::ClientTCPMessage> Master::ExtractMainQueue() {
-  return this->serverTCP_.ExtractQueue();
+  return this->clientsSocket_.ExtractQueue();
+}
+
+void Master::SendGameInfos(std::uint64_t clientId) {
+  payload::InfoGame infos = {
+      .nbUsers = static_cast<unsigned int>(this->clients_.size()),
+  };
+
+  SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoGame, infos, clientId);
+}
+
+void Master::SendRoomsInfos(std::uint64_t clientId) {
+  bool canCreate = false;
+  unsigned int nbRooms = 0;
+  payload::InfoRooms infos = {};
+
+  for (auto &node : this->nodes_) {
+    if (node.second.rooms_.size() < node.second.maxRooms) {
+      canCreate = true;
+    }
+
+    for (auto &room : node.second.rooms_) {
+      payload::RoomStatus status = {
+          .nodeId = node.first,
+          .roomId = room.first,
+          .nbPlayersMax = room.second.maxPlayers,
+          .nbPlayers = room.second.nbPlayers,
+          .difficulty = room.second.difficulty,
+      };
+
+      strcpy(status.name, room.second.name.c_str());
+
+      infos.rooms[nbRooms] = status;
+      nbRooms++;
+    }
+  }
+
+  infos.canCreate = canCreate;
+  infos.nbRooms = nbRooms;
+
+  SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRooms, infos, clientId);
+}
+
+void Master::SendInfos(std::uint64_t clientId, bool game, bool rooms) {
+  if (game) {
+    SendGameInfos(clientId);
+  }
+  if (rooms) {
+    SendRoomsInfos(clientId);
+  }
 }
 
 void Master::Join() {
-  this->threadTCP_.join();
-}
-
-void Master::HandleLobbyInfos(const abra::tools::MessageProps &message, std::uint64_t lobbyId) {
-  auto &lobby = this->lobbies_[lobbyId];
-  auto packet = this->packetBuilder_.Build<payload::LobbyInfos>(message.data);
-  auto &infos = packet->GetPayload();
-
-  lobby.enabled = true;
-  snprintf(lobby.ip, sizeof(lobby.ip), "%s", lobby.clientTCP->GetRemoteAddress().c_str());
-  lobby.port = infos.port;
+  this->clientsThread_.join();
+  this->nodesThread_.join();
 }
