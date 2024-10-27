@@ -37,9 +37,10 @@ void RegistryHelper::RegisterScriptingComponents(const std::shared_ptr<Registry>
   registry->RegisterComponent<scripting::components::ScriptPool>();
 }
 
-void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
-                                         const Timer::Nanoseconds &delta_time) {
+void RegistryHelper::RegisterBaseSystems(
+    const std::shared_ptr<Registry> &registry, const Timer::Nanoseconds &delta_time,
+    const std::shared_ptr<core::archetypes::ArchetypeManager> &archetypeManager) {
   registry->AddSystem<physics::systems::MovementSystem>(delta_time);
   registry->AddSystem<physics::systems::CollisionSystem>();
-  registry->AddSystem<scripting::systems::ScriptExecutionSystem>(delta_time);
+  registry->AddSystem<scripting::systems::ScriptExecutionSystem>(delta_time, archetypeManager);
 }

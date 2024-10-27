@@ -12,7 +12,7 @@
 #include "api.hpp"
 #include "entity.hpp"
 #include "registry.hpp"
-#include "scripting/types/context.hpp"
+#include "scripting/types/values_map.hpp"
 #include "scripting/types/mono_behaviour.hpp"
 
 namespace zygarde::core::archetypes {

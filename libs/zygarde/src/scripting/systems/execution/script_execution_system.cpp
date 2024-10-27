@@ -11,8 +11,10 @@
 
 using namespace zygarde::scripting::systems;
 
-ScriptExecutionSystem::ScriptExecutionSystem(const utils::Timer::Nanoseconds& deltaTime)
-    : deltaTime_{deltaTime} {}
+ScriptExecutionSystem::ScriptExecutionSystem(
+    const utils::Timer::Nanoseconds& deltaTime,
+    const std::shared_ptr<core::archetypes::ArchetypeManager>& archetypeManager)
+    : deltaTime_{deltaTime}, archetypeManager_{archetypeManager} {}
 
 void ScriptExecutionSystem::Run(Registry::Ptr r,
                                 sparse_array<scripting::components::ScriptPool>::ptr script_pools) {
@@ -39,7 +41,7 @@ void ScriptExecutionSystem::ProcessScriptPool(Registry::Const_Ptr registry,
 
 scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
     Registry::Const_Ptr registry) {
-  return {registry, deltaTime_, registry->EntityFromIndex(currentScriptIndex_)};
+  return {registry, deltaTime_, registry->EntityFromIndex(currentScriptIndex_), archetypeManager_};
 }
 
 void ScriptExecutionSystem::HandleCollisionCallback(

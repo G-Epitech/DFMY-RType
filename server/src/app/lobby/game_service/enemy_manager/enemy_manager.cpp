@@ -10,6 +10,7 @@
 #include <random>
 
 #include "app/lobby/game_service/archetype_keys.hpp"
+#include "core/components/position/position.hpp"
 
 void rtype::server::game::EnemyManager::Update(
     const utils::Timer::Nanoseconds &delta_time, Registry::Const_Ptr registry,
@@ -25,7 +26,7 @@ void rtype::server::game::EnemyManager::Update(
   std::uniform_real_distribution dist(80.0f, 1000.0f);
 
   const core::types::Vector3f position(2000, dist(gen), 0);
-  auto entity = archetype_manager->InvokeArchetype(registry, tools::kArchetypeKeyEnemyPataNormal);
+  auto entity = archetype_manager->InvokeArchetype(registry, tools::kArchetypeEnemyPataNormal);
   auto positionComponent = registry->GetComponent<core::components::Position>(entity);
   positionComponent->point = position;
 }

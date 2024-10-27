@@ -9,9 +9,11 @@
 
 #include <functional>
 
-#include "scripting/components/mono_behaviour/mono_behaviour.hpp"
+namespace zygarde::scripting::components {
+class MonoBehaviour;
+}
 
 namespace zygarde::scripting::types {
-using MonoBehaviourCreater = std::function<scripting::components::MonoBehaviour::Instance()>;
+using MonoBehaviourCreater = std::function<std::shared_ptr<scripting::components::MonoBehaviour>()>;
 using ScriptsMap = std::unordered_map<std::string, MonoBehaviourCreater>;
 }  // namespace zygarde::scripting::types

@@ -6,8 +6,8 @@
       "data": {
         "isKinematic": false,
         "velocity": {
-          "x": 0,
-          "y": 700
+          "x": 700,
+          "y": 0
         }
       }
     },

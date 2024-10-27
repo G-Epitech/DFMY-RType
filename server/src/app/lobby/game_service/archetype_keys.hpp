@@ -8,6 +8,8 @@
 #pragma once
 
 namespace rtype::server::tools {
-constexpr const char *kArchetypeKeyPlayerPhoton = "player_photon";
-constexpr const char *kArchetypeKeyEnemyPataNormal = "enemy_pata_normal";
+constexpr const char *kArchetypePlayerPhoton = "player_photon";
+constexpr const char *kArchetypeEnemyPataNormal = "enemy_pata_normal";
+constexpr const char *kArchetypeBasePlayerBullet = "base_player_bullet";
+constexpr const char *kArchetypeBaseEnemyBullet = "base_enemy_bullet";
 }  // namespace rtype::server::tools

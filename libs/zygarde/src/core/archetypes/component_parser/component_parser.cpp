@@ -12,6 +12,7 @@ using namespace zygarde::core::archetypes;
 zygarde::physics::components::Rigidbody2D ComponentParser::ParseRigidbody2D(
     const nlohmann::json& json) {
   zygarde::physics::components::Rigidbody2D rigidbody2d;
+  zygarde::core::types::Vector2f velocity;
 
   if (!json.contains("data")) {
     return rigidbody2d;
@@ -22,6 +23,12 @@ zygarde::physics::components::Rigidbody2D ComponentParser::ParseRigidbody2D(
   } else {
     rigidbody2d.SetKinematic(data["isKinematic"].get<bool>());
   }
+  if (!data.contains("velocity")) {
+    velocity = {0, 0};
+  } else {
+    velocity = {data["velocity"]["x"], data["velocity"]["y"]};
+  }
+  rigidbody2d.SetVelocity(velocity);
   return rigidbody2d;
 }
 

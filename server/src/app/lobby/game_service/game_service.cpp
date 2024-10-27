@@ -28,7 +28,8 @@ GameService::GameService(const size_t &tick_rate)
 void GameService::RegistrySetup() {
   registry_ = Registry::create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
-  utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
+  utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime(),
+                                             archetypeManager_);
 }
 
 void GameService::Initialize() {
@@ -37,8 +38,8 @@ void GameService::Initialize() {
   scripts::ScriptsRegistry scriptsRegistry;
 
   ticksManager_.Initialize();
-  RegistrySetup();
   archetypeManager_->LoadArchetypes(archetypeDirs, scriptsRegistry.GetScripts());
+  RegistrySetup();
 }
 
 int GameService::Run(std::shared_ptr<Lobby> api) {
@@ -120,7 +121,7 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
 }
 
 void GameService::NewPlayer(std::uint64_t player_id) {
-  Entity player = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypeKeyPlayerPhoton);
+  Entity player = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypePlayerPhoton);
   auto position = registry_->GetComponent<core::components::Position>(player);
 
   position->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);

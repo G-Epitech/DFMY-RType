@@ -13,7 +13,6 @@
 #include "api.hpp"
 #include "entity.hpp"
 #include "registry.hpp"
-#include "scripting/types/mono_behaviour.hpp"
 
 namespace zygarde::core::archetypes {
 class EXPORT_ZYGARDE_API ArchetypeManager final {

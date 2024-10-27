@@ -1,5 +1,5 @@
 {
-  "archetype_name": "base_enemy_bullet",
+  "archetype_name": "default_enemy_bullet",
   "components": [
     {
       "name": "rigidbody2d",

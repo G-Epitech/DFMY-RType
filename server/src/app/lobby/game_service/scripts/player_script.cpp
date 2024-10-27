@@ -7,6 +7,8 @@
 
 #include "player_script.hpp"
 
+#include "app/lobby/game_service/archetype_keys.hpp"
+
 using namespace rtype::server::game::scripts;
 
 PlayerScript::PlayerScript()
@@ -28,14 +30,17 @@ void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::Scripting
   lastShootTime_ += context->deltaTime;
   if (isShooting_ && lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
-    isShooting_ = false;
     auto position = context->registry->GetComponent<core::components::Position>(context->me);
 
     const core::types::Vector3f projectilePos(position->point.x + 86, position->point.y + 20,
                                               position->point.z);
-    ProjectileFactory::CreateProjectile(context->registry, projectilePos, {32, 15},
-                                        sdk::game::types::GameEntityType::kPlayer);
-    return;
+    Entity entity = context->archetypeManager->InvokeArchetype(
+        context->registry, tools::kArchetypeBasePlayerBullet);
+    auto positionComponent = context->registry->GetComponent<core::components::Position>(entity);
+    if (positionComponent) {
+      positionComponent->point = projectilePos;
+      return;
+    }
   }
   isShooting_ = false;
 }

@@ -31,8 +31,12 @@ void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingCo
   lastShootTime_ += context->deltaTime;
   if (lastShootTime_ >= std::chrono::seconds(1)) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
-    auto bullet = ProjectileFactory::CreateProjectile(context->registry, position->point, {32, 15},
-                                                      sdk::game::types::GameEntityType::kEnemy);
+    Entity entity =
+        context->archetypeManager->InvokeArchetype(context->registry, "default_enemy_bullet");
+    auto positionComponent = context->registry->GetComponent<core::components::Position>(entity);
+    if (positionComponent) {
+      positionComponent->point = position->point;
+    }
   }
   if (!position || !rb) {
     return;
