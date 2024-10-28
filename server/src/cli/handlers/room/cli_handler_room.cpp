@@ -11,20 +11,21 @@
 
 using namespace rtype::server;
 
-CliHandlerLobby::CliHandlerLobby() : AbstractCliHandler() {
+CliHandlerRoom::CliHandlerRoom() : AbstractCliHandler() {
   Setup();
 }
 
-void CliHandlerLobby::Setup() noexcept {
+void CliHandlerRoom::Setup() noexcept {
   optDescription_.add_options()("help", "produce help message")(
       "name", po::value<std::string>()->default_value(kDefaultName), "name of the lobby")(
       "port", po::value<std::size_t>()->required(), "port of the server")(
       "ticks", po::value<std::size_t>()->default_value(kDefaultTicks),
       "number of ticks for the game")("token", po::value<std::string>()->required(),
-                                      "token for the node auth");
+                                      "token for the node auth")(
+      "id", po::value<std::size_t>()->required(), "id of the room");
 }
 
-CliResult CliHandlerLobby::Run(int ac, char **av) {
+CliResult CliHandlerRoom::Run(int ac, char **av) {
   po::store(po::parse_command_line(ac, av, optDescription_), variablesMap_);
 
   if (variablesMap_.count("help")) {
@@ -35,12 +36,13 @@ CliResult CliHandlerLobby::Run(int ac, char **av) {
   return BuildCtx();
 }
 
-rtype::server::BaseContext CliHandlerLobby::BuildCtx() {
+rtype::server::BaseContext CliHandlerRoom::BuildCtx() {
   std::string name = variablesMap_["name"].as<std::string>();
   std::size_t port = variablesMap_["port"].as<std::size_t>();
   std::size_t ticks = variablesMap_["ticks"].as<std::size_t>();
   std::string token = variablesMap_["token"].as<std::string>();
-  auto props = RoomCtxProps(ticks, token);
+  std::size_t id = variablesMap_["id"].as<std::size_t>();
+  auto props = RoomCtxProps(ticks, token, id);
 
   return {name, port, ServerType::kRoom, props};
 }

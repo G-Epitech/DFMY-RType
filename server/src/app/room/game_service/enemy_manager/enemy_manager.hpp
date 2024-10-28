@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "app/lobby/game_service/factories/enemy_factory.hpp"
+#include "app/room/game_service/factories/enemy_factory.hpp"
 #include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 

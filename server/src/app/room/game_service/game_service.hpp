@@ -33,7 +33,7 @@ class GameService {
    * @brief Run the game service
    * @return Status code
    */
-  int Run(std::shared_ptr<rtype::sdk::game::api::Lobby> api);
+  int Run(std::shared_ptr<rtype::sdk::game::api::Room> api);
 
   /**
    * @brief Add a new player to the game
@@ -101,7 +101,7 @@ class GameService {
   EnemyManager enemyManager_;
 
   /// @brief Server network
-  std::shared_ptr<rtype::sdk::game::api::Lobby> api_;
+  std::shared_ptr<rtype::sdk::game::api::Room> api_;
 
   /// @brief Player list
   std::map<std::uint64_t, zygarde::Entity> players_;

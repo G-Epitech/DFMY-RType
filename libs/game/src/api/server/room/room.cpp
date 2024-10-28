@@ -9,9 +9,9 @@
 
 using namespace rtype::sdk::game::api;
 
-Room::Room(const std::string &nodeIp, std::size_t nodePort,
-           const std::function<void(std::uint64_t)> &newPlayerHandler, std::uint64_t roomId)
-    : nodeSocket_(nodeIp, nodePort, [this](auto &msg) { return NodeMessageMiddleware(msg); }),
+Room::Room(std::size_t nodePort, const std::function<void(std::uint64_t)> &newPlayerHandler,
+           std::uint64_t roomId)
+    : nodeSocket_(kLocalhost, nodePort, [this](auto &msg) { return NodeMessageMiddleware(msg); }),
       logger_("Room"),
       roomId_(roomId) {
   this->newPlayerHandler_ = newPlayerHandler;

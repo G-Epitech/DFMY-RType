@@ -30,10 +30,11 @@ void GameService::Initialize() {
   RegistrySetup();
 }
 
-int GameService::Run(std::shared_ptr<Lobby> api) {
+int GameService::Run(std::shared_ptr<Room> api) {
   this->api_ = std::move(api);
 
   Initialize();
+
   while (gameRunning_) {
     ticksManager_.Update();
     HandleMessages();
@@ -64,10 +65,10 @@ void GameService::HandleMessages() {
 
 void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
                                       const abra::server::ClientUDPMessage &data) {
-  if (data.messageType == kMovement) {
+  if (data.messageType == ClientToRoomMsgType::kMsgTypeCTRPlayerMove) {
     HandlePlayerMoveMessage(player_id, data);
   }
-  if (data.messageType == kShoot) {
+  if (data.messageType == ClientToRoomMsgType::kMsgTypeCTRPlayerShoot) {
     HandlePlayerShootMessage(player_id, data);
   }
 }

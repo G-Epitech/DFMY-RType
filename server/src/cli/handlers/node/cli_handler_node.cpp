@@ -43,6 +43,6 @@ rtype::server::BaseContext CliHandlerNode::BuildCtx() {
   std::size_t maxRooms = static_cast<std::size_t>(config.Get<int>("MAX_ROOMS"));
   auto token = config.Get<std::string>("TOKEN");
   auto masterToken = config.Get<std::string>("MASTER_TOKEN");
-  NodeCtxProps props = NodeCtxProps(token);
+  NodeCtxProps props = NodeCtxProps(maxRooms, token, masterToken);
   return {name, port, ServerType::kNode, props};
 }

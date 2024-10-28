@@ -26,13 +26,12 @@ class rtype::sdk::game::api::Room {
  public:
   /**
    * @brief Construct a new Room API instance
-   * @param nodeIp The IP of the node.
    * @param nodePort The port of the node.
    * @param newPlayerHandler The handler to call when a new player is connected
    * @param roomId The room id
    */
-  explicit Room(const std::string &nodeIp, std::size_t nodePort,
-                const std::function<void(std::uint64_t)> &newPlayerHandler, std::uint64_t roomId);
+  explicit Room(std::size_t nodePort, const std::function<void(std::uint64_t)> &newPlayerHandler,
+                std::uint64_t roomId);
 
   /**
    * @brief Delete the Room API instance

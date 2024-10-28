@@ -11,13 +11,14 @@
 #include <utility>
 #include <variant>
 
-#include "master/props.hpp"
-#include "room/props.hpp"
+#include "app/master/props.hpp"
+#include "app/room/props.hpp"
+#include "app/node/props.hpp"
 #include "server_types.hpp"
 
 namespace rtype::server {
 /// @brief Context properties variant
-using CtxProps = std::variant<RoomCtxProps, MasterCtxProps>;
+using CtxProps = std::variant<RoomCtxProps, MasterCtxProps, NodeCtxProps>;
 
 struct BaseContext {
   /// @brief Name of the server

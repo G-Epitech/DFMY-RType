@@ -18,12 +18,15 @@ struct RoomCtxProps {
   /// @brief Token to authenticate the room to the node
   std::string token;
 
+  /// @brief If of the room
+  std::size_t id;
+
   /**
    * @brief Construct a new LobbyCtxProps object
    * @param ticks Number of ticks for the game loop
    * @param token Token to authenticate the room to the node
    */
-  explicit RoomCtxProps(std::size_t ticks, std::string token);
+  explicit RoomCtxProps(std::size_t ticks, std::string token, std::size_t id);
 
   /**
    * @brief Construct a new LobbyCtxProps object with default values

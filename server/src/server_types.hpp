@@ -13,7 +13,7 @@ namespace rtype::server {
 /**
  * Server type enum
  */
-enum class ServerType { kUnknown, kMaster, kRoom };
+enum class ServerType { kUnknown, kMaster, kNode, kRoom };
 
 /**
  * Convert string to ServerType

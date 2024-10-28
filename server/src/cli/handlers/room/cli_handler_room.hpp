@@ -17,12 +17,12 @@ const char kDefaultName[] = "R-Type Lobby";
 /// @brief Default number of ticks per second
 const std::size_t kDefaultTicks = 60;
 
-class CliHandlerLobby : public AbstractCliHandler {
+class CliHandlerRoom : public AbstractCliHandler {
  public:
   /**
    * @brief Construct a new CliHandlerLobby object and setup the cli options
    */
-  CliHandlerLobby();
+  CliHandlerRoom();
 
   /**
    * @brief Run the lobby server cli

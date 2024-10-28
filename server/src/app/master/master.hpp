@@ -9,10 +9,10 @@
 
 #include <cstddef>
 
-#include "app/context.hpp"
-#include "app/server_interface.hpp"
 #include "libs/game/includes/api.hpp"
-#include "props.hpp"
+#include "server/src/app/context.hpp"
+#include "server/src/app/master/props.hpp"
+#include "server/src/app/server_interface.hpp"
 
 namespace rtype::server {
 class Master;
