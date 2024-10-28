@@ -65,7 +65,7 @@ class DrawableSystem final : public ASystem<Drawable, zygarde::core::components:
    */
   void DrawEntityTexture(const Texture &texture,
                          const zygarde::core::components::Position &position,
-                         const sf::Shader &shader);
+                         const std::shared_ptr<sf::Shader> &shader);
 
   /**
    * @brief Draw a text
@@ -74,7 +74,7 @@ class DrawableSystem final : public ASystem<Drawable, zygarde::core::components:
    * @param shader The shader to apply to the text
    */
   void DrawEntityText(const Text &text, const zygarde::core::components::Position &position,
-                      const sf::Shader &shader);
+                      const std::shared_ptr<sf::Shader> &shader);
 
   /**
    * @brief Draw a rectangle
@@ -84,7 +84,7 @@ class DrawableSystem final : public ASystem<Drawable, zygarde::core::components:
    */
   void DrawEntityRectangle(const Rectangle &rectangle,
                            const zygarde::core::components::Position &position,
-                           const sf::Shader &shader);
+                           const std::shared_ptr<sf::Shader> &shader);
 
   /**
    * @brief Get the origin of the entity

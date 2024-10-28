@@ -5,12 +5,12 @@
 ** main.cpp
 */
 
+#include "./src/constants/settings.hpp"
+#include "./src/constants/window.hpp"
 #include "./src/scenes/game.hpp"
 #include "./src/scenes/lobby.hpp"
 #include "./src/scenes/menu.hpp"
 #include "./src/scenes/settings.hpp"
-#include "./src/constants/settings.hpp"
-#include "./src/constants/window.hpp"
 #include "libs/mew/src/game/builder.hpp"
 #include "libs/mew/src/game/game.hpp"
 
@@ -46,6 +46,13 @@ int MAIN {
 
   game.managers.resources->LoadFont("assets/fonts/main.ttf", "main");
   game.managers.resources->LoadTexture("assets/icons/R-Type.png", "g-epitech-logo");
+
+  game.managers.resources->LoadShader("assets/shaders/protanopia.frag", "protanopia",
+                                      sf::Shader::Fragment);
+  game.managers.resources->LoadShader("assets/shaders/deuteranopia.frag", "deuteranopia",
+                                      sf::Shader::Fragment);
+  game.managers.resources->LoadShader("assets/shaders/tritanopia.frag", "tritanopia",
+                                      sf::Shader::Fragment);
 
   game.managers.scenes->RegisterScene<SceneMenu>();
   game.managers.scenes->RegisterScene<SceneSettings>();

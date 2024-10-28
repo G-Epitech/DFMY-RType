@@ -10,7 +10,7 @@ The Porygon library is made to provide a simple and efficient way to manage depe
 
 ## Get started
 
-The single way to use the Porygon library is to Create an instance of `DependenciesHandler` and register the dependencies you want to use.
+The single way to use the Porygon library is to create an instance of `DependenciesHandler` and register the dependencies you want to use.
 
 :::info
 The Porygon library is available in the `porygon` namespace.
@@ -35,7 +35,7 @@ class MyService {
 };
 ```
 
-Now, we can Create an instance of `DependenciesHandler` and register the service:
+Now, we can create an instance of `DependenciesHandler` and register the service:
 
 ```cpp
 using namespace porygon;
@@ -52,7 +52,7 @@ int main() {
 }
 ```
 
-Then let's Create an other class in order to inject the `MyService`:
+Then let's create an other class in order to inject the `MyService`:
 
 ```cpp
 class MyClass {
@@ -68,7 +68,7 @@ class MyClass {
   DependenciesHandler::Ptr handler_;
 };
 
-We can now Create an instance of `MyClass` and call the `DoSomething` method:
+We can now create an instance of `MyClass` and call the `DoSomething` method:
 
 ```cpp
 int main() {

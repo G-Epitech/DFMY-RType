@@ -160,5 +160,15 @@ class SceneSettings final : public SceneBase {
    * @param y Y position of the setting on the y axis
    */
   void CreateKeyMapSetting(const float &x, const float &y);
+
+  /**
+   * @brief Update the color blindness shader from the settings
+   */
+  void UpdateBlindnessShader();
+
+  /**
+   * @brief Update the keymap from the settings
+   */
+  void UpdateKeyMap();
 };
 }  // namespace rtype::client::scenes

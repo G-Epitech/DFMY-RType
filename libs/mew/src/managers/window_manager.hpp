@@ -96,15 +96,15 @@ class WindowManager : public ManagerBase {
 
   /**
    * @brief Set the shader of the window
-   * @param name Name of the shader
+   * @param shader Shader to set
    */
-  void SetShader(const std::string &name);
+  void SetShader(std::shared_ptr<sf::Shader> shader);
 
   /**
-   * @brief Get the selected shader
-   * @return Selected shader
+   * @brief Get the render states of the window
+   * @return Render states of the window
    */
-  std::shared_ptr<sf::Shader> GetSelectedShader() const;
+  std::shared_ptr<sf::Shader> GetShader() const;
 
   /// @brief Get the width of the window
   float width_;
@@ -138,7 +138,7 @@ class WindowManager : public ManagerBase {
   std::map<std::string, std::shared_ptr<sf::Shader>> shaders_;
 
   /// @brief Selected shader
-  std::shared_ptr<sf::Shader> selectedShader_;
+  std::shared_ptr<sf::Shader> shader_ = nullptr;
 
   /**
    * @brief Handle the resize event

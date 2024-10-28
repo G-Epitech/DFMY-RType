@@ -24,6 +24,7 @@ class ResourcesManager : public ManagerBase {
 
   using TexturePtr = std::shared_ptr<sf::Texture>;
   using FontPtr = std::shared_ptr<sf::Font>;
+  using ShaderPtr = std::shared_ptr<sf::Shader>;
 
   /**
    * @brief Construct a new Resources Manager object
@@ -52,6 +53,14 @@ class ResourcesManager : public ManagerBase {
   void LoadTexture(const std::string &path, const std::string &name);
 
   /**
+   * @brief Load a new shader in the resources manager
+   * @param path Shader path to load
+   * @param name Name of the shader to store
+   * @param type Type of the shader
+   */
+  void LoadShader(const std::string &path, const std::string &name, sf::Shader::Type type);
+
+  /**
    * @brief Get a texture from the resources manager
    * @param name Name of the texture to get
    * @return Texture
@@ -64,6 +73,13 @@ class ResourcesManager : public ManagerBase {
    * @return Font
    */
   [[nodiscard]] FontPtr GetFont(const std::string &name);
+
+  /**
+   * @brief Get a shader from the resources manager
+   * @param name Name of the shader to get
+   * @return Shader
+   */
+  [[nodiscard]] ShaderPtr GetShader(const std::string &name);
 
   class Exception final : public std::exception {
    public:
@@ -87,6 +103,8 @@ class ResourcesManager : public ManagerBase {
     std::map<std::string, TexturePtr> textures;
     /// @brief Map of fonts
     std::map<std::string, FontPtr> fonts;
+    /// @brief Map of shaders
+    std::map<std::string, ShaderPtr> shaders;
   };
 
   /// @brief Map of resources

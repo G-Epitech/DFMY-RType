@@ -57,3 +57,22 @@ ResourcesManager::FontPtr ResourcesManager::GetFont(const std::string &name) {
   }
   return resourcesMap_.fonts[name];
 }
+
+void ResourcesManager::LoadShader(const std::string &path, const std::string &name,
+                                  sf::Shader::Type type) {
+  if (resourcesMap_.shaders.contains(name)) {
+    throw Exception("Shader already loaded");
+  }
+  auto shader = std::make_shared<sf::Shader>();
+  if (!shader->loadFromFile(path, type)) {
+    throw Exception("Failed to load shader");
+  }
+  resourcesMap_.shaders[name] = shader;
+}
+
+ResourcesManager::ShaderPtr ResourcesManager::GetShader(const std::string &name) {
+  if (!resourcesMap_.shaders.contains(name)) {
+    throw Exception("Shader not found");
+  }
+  return resourcesMap_.shaders[name];
+}

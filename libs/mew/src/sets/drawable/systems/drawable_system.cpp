@@ -67,23 +67,16 @@ void DrawableSystem::DrawEntity(Drawable* drawable, const zyc::components::Posit
   std::visit(
       [this, position, drawable](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
-        auto shader = windowManager_->GetSelectedShader();
+        auto shader = windowManager_->GetShader();
+
         if constexpr (std::is_same_v<T, Texture>) {
-          shader->setUniform("objectColor", sf::Glsl::Vec4(1, 1, 1, 1));
-          shader->setUniform("hasTexture", true);
-          shader->setUniform("texture", sf::Shader::CurrentTexture);
-          DrawEntityTexture(arg, position, *shader);
+          DrawEntityTexture(arg, position, shader);
           drawable->bounds = sprite_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, Text>) {
-          shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
-          shader->setUniform("hasTexture", true);
-          shader->setUniform("texture", sf::Shader::CurrentTexture);
-          DrawEntityText(arg, position, *shader);
+          DrawEntityText(arg, position, shader);
           drawable->bounds = text_.getGlobalBounds();
         } else if constexpr (std::is_same_v<T, Rectangle>) {
-          shader->setUniform("objectColor", sf::Glsl::Vec4(arg.color));
-          shader->setUniform("hasTexture", false);
-          DrawEntityRectangle(arg, position, *shader);
+          DrawEntityRectangle(arg, position, shader);
           drawable->bounds = shape_.getGlobalBounds();
         }
       },
@@ -92,8 +85,15 @@ void DrawableSystem::DrawEntity(Drawable* drawable, const zyc::components::Posit
 
 void DrawableSystem::DrawEntityTexture(const Texture& texture,
                                        const zyc::components::Position& position,
-                                       const sf::Shader& shader) {
+                                       const std::shared_ptr<sf::Shader>& shader) {
   const auto saved_texture = resourcesManager_->GetTexture(texture.name);
+  const auto render_states = shader ? shader.get() : sf::RenderStates::Default;
+
+  if (shader) {
+    shader->setUniform("objectColor", sf::Glsl::Vec4(1, 1, 1, 1));
+    shader->setUniform("hasTexture", true);
+    shader->setUniform("texture", sf::Shader::CurrentTexture);
+  }
 
   sprite_.setScale(1, 1);
   sprite_.setTexture(*saved_texture);
@@ -104,12 +104,19 @@ void DrawableSystem::DrawEntityTexture(const Texture& texture,
   sprite_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
   sprite_.setScale(texture.scale, texture.scale);
-  windowManager_->window()->draw(sprite_, &shader);
+  windowManager_->window()->draw(sprite_, render_states);
 }
 
 void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Position& position,
-                                    const sf::Shader& shader) {
+                                    const std::shared_ptr<sf::Shader>& shader) {
   const auto saved_font = resourcesManager_->GetFont(text.fontName);
+  const auto render_states = shader ? shader.get() : sf::RenderStates::Default;
+
+  if (shader) {
+    shader->setUniform("objectColor", sf::Glsl::Vec4(text.color));
+    shader->setUniform("hasTexture", true);
+    shader->setUniform("texture", sf::Shader::CurrentTexture);
+  }
 
   text_.setFont(*saved_font);
   text_.setString(text.text);
@@ -124,12 +131,19 @@ void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Pos
   const auto origin = GetOrigin(position, text_.getGlobalBounds());
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
-  windowManager_->window()->draw(text_, &shader);
+  windowManager_->window()->draw(text_, render_states);
 }
 
 void DrawableSystem::DrawEntityRectangle(const Rectangle& rectangle,
                                          const zyc::components::Position& position,
-                                         const sf::Shader& shader) {
+                                         const std::shared_ptr<sf::Shader>& shader) {
+  const auto render_states = shader ? shader.get() : sf::RenderStates::Default;
+
+  if (shader) {
+    shader->setUniform("objectColor", sf::Glsl::Vec4(rectangle.color));
+    shader->setUniform("hasTexture", false);
+  }
+
   shape_.setFillColor(rectangle.color);
   shape_.setSize(rectangle.size);
   shape_.setPosition(position.point.x, position.point.y);
@@ -137,5 +151,5 @@ void DrawableSystem::DrawEntityRectangle(const Rectangle& rectangle,
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
-  windowManager_->window()->draw(shape_, &shader);
+  windowManager_->window()->draw(shape_, render_states);
 }

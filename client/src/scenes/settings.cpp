@@ -55,22 +55,8 @@ void SceneSettings::OnActivate() {}
 
 void SceneSettings::Update(std::chrono::nanoseconds delta_time) {
   registry_->RunSystems();
-
-  auto blindness_mode =
-      Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
-  if (blindness_mode && blindness_mode.has_value()) {
-    managers_.window->SetShader(std::get<std::string>(blindness_mode.value()));
-  }
-
-  auto keymap_mode = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "keymap");
-  if (keymap_mode && keymap_mode.has_value()) {
-    auto mode = std::get<std::string>(keymap_mode.value());
-    if (mode == "zqsd") {
-      settingsManager_->Set(SETTING_GAME_KEYMAP, KeyMap::ZQSD);
-    } else {
-      settingsManager_->Set(SETTING_GAME_KEYMAP, KeyMap::Arrows);
-    }
-  }
+  UpdateBlindnessShader();
+  UpdateKeyMap();
 }
 
 void SceneSettings::CreateMainEntity() const {
@@ -469,5 +455,30 @@ void SceneSettings::SelectKeyMapRadioOptions(const std::string &selected_value) 
     texture.rect = selected ? active : disable;
     radio->selected = selected;
     entity_id += 1;
+  }
+}
+
+void SceneSettings::UpdateBlindnessShader() {
+  try {
+    ResourcesManager::ShaderPtr shader = nullptr;
+    auto mode = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "color_blindness");
+    if (mode && std::get<std::string>(*mode) != "normal") {
+      shader = managers_.resources->GetShader(std::get<std::string>(*mode));
+    }
+    managers_.window->SetShader(shader);
+  } catch (const std::exception &e) {
+    std::cout << "[ERROR] " << e.what() << std::endl;
+  }
+}
+
+void SceneSettings::UpdateKeyMap() {
+  auto mode = Radio::Utils::GetValue(registry_->GetComponents<Radio>(), "keymap");
+  if (!mode)
+    return;
+  auto string_mode = std::get<std::string>(*mode);
+  if (string_mode == "zqsd") {
+    settingsManager_->Set(SETTING_GAME_KEYMAP, KeyMap::ZQSD);
+  } else {
+    settingsManager_->Set(SETTING_GAME_KEYMAP, KeyMap::Arrows);
   }
 }
