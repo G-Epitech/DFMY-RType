@@ -80,7 +80,7 @@ void Master::HandleRefreshInfos(const abra::server::ClientTCPMessage &message) {
 }
 
 void Master::AddNewClient(std::uint64_t clientId, const std::string &username) {
-  Client client = {.id = clientId, .username = username, .inLobby = false};
+  Client client = {.id = clientId, .username = username, .inRoom = false};
 
   this->clients_.push_back(client);
   logger_.Info("New client connected: " + username, "👤");
@@ -140,8 +140,8 @@ void Master::HandleCreateRoom(const abra::server::ClientTCPMessage &message) {
     }
 
     payload::CreateRoom room = {
-      .nbPlayers = payload.nbPlayers,
-      .difficulty = payload.difficulty,
+        .nbPlayers = payload.nbPlayers,
+        .difficulty = payload.difficulty,
     };
     strcpy(room.name, payload.name);
 
@@ -173,11 +173,77 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
   }
 
   room.nbPlayers++;
-  client.inLobby = true;
+  client.inRoom = true;
   client.nodeId = payload.nodeId;
   client.roomId = payload.roomId;
 
   SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, payload, payload.nodeId);
+}
+
+void Master::HandleRegisterNode(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RegisterNode>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  Node node = {
+      .id = message.clientId,
+      .name = payload.name,
+      .maxRooms = payload.maxRooms,
+  };
+
+  this->nodes_[node.id] = std::move(node);
+  logger_.Info("New node registered: " + this->nodes_[node.id].name, "🌐");
+}
+
+void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RegisterNewRoom>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  if (this->nodes_.find(message.clientId) == this->nodes_.end()) {
+    this->logger_.Warning("Trying to register a room in an unknown node", "⚠️ ");
+    return;
+  }
+
+  auto &node = this->nodes_[message.clientId];
+  Room room = {
+      .id = payload.id,
+      .name = payload.name,
+      .maxPlayers = payload.nbPlayers,
+      .nbPlayers = 0,
+      .difficulty = payload.difficulty,
+      .port = payload.port,
+  };
+
+  node.rooms_[room.id] = std::move(room);
+  logger_.Info("New room registered: " + node.rooms_[room.id].name, "🏠");
+}
+
+void Master::HandleRoomGameStarted(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RoomGameStart>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  for (auto &client : this->clients_) {
+    if (client.nodeId == message.clientId && client.roomId == payload.id) {
+      SendToClient(MasterToClientMsgType::kMsgTypeMTCGameStarted, '\0', client.id);
+    }
+  }
+}
+
+void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) {
+  auto packet = this->packetBuilder_.Build<payload::RoomGameEnd>(message.bitset);
+  auto payload = packet->GetPayload();
+
+  payload::RoomGameEnd end = {
+      .id = payload.id,
+      .score = payload.score,
+      .time = payload.time,
+      .win = payload.win,
+  };
+
+  for (auto &client : this->clients_) {
+    if (client.nodeId == message.clientId && client.roomId == payload.id) {
+      SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
+    }
+  }
 }
 
 void Master::SendInfos(std::uint64_t clientId, bool game, bool rooms) {

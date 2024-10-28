@@ -38,7 +38,7 @@ class rtype::sdk::game::api::Master {
   struct Client {
     std::uint64_t id;
     std::string username;
-    bool inLobby;
+    bool inRoom;
     std::uint64_t nodeId;
     std::uint64_t roomId;
   };
@@ -49,14 +49,13 @@ class rtype::sdk::game::api::Master {
     unsigned int maxPlayers;
     unsigned int nbPlayers;
     unsigned int difficulty;
-    int port;
+    unsigned int port;
   };
 
   struct Node {
     std::uint64_t id;
     std::string name;
-    unsigned int maxRooms;
-    unsigned int nbRooms;
+    std::size_t maxRooms;
     std::map<std::uint64_t, Room> rooms_;
   };
 
@@ -143,6 +142,30 @@ class rtype::sdk::game::api::Master {
   void HandleJoinRoom(const abra::server::ClientTCPMessage &message);
 
   /**
+   * @brief Handle the registration of a node
+   * @param message The message of the node
+   */
+  void HandleRegisterNode(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the registration of a room
+   * @param message The message of the node
+   */
+  void HandleRegisterRoom(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the start of a game in a room
+   * @param message The message of the node
+   */
+  void HandleRoomGameStarted(const abra::server::ClientTCPMessage &message);
+
+  /**
+   * @brief Handle the end of a game in a room
+   * @param message The message of the node
+   */
+  void HandleRoomGameEnded(const abra::server::ClientTCPMessage &message);
+
+  /**
    * @brief Add a new client to the server
    * @param clientId The client id
    * @param pseudo The pseudo of the client
@@ -202,7 +225,12 @@ class rtype::sdk::game::api::Master {
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Master::*)(const abra::server::ClientTCPMessage &)>
-      nodeMessageHandlers = {};
+      nodeMessageHandlers = {
+          {NodeToMasterMsgType::kMsgTypeNTMRegisterNode, &Master::HandleRegisterNode},
+          {NodeToMasterMsgType::kMsgTypeNTMRegisterNewRoom, &Master::HandleRegisterRoom},
+          {NodeToMasterMsgType::kMsgTypeNTMRoomGameStarted, &Master::HandleRoomGameStarted},
+          {NodeToMasterMsgType::kMsgTypeNTMRoomGameEnded, &Master::HandleRoomGameEnded},
+  };
 };
 
 #include "master.tpp"
