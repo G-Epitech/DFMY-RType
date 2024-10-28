@@ -11,9 +11,9 @@ using namespace rtype::sdk::game::api;
 
 Room::Room(const std::string &nodeIp, std::size_t nodePort,
            const std::function<void(std::uint64_t)> &newPlayerHandler, std::uint64_t roomId)
-        : nodeSocket_(nodeIp, nodePort, [this](auto &msg) { return NodeMessageMiddleware(msg); }),
-          logger_("Room"),
-          roomId_(roomId) {
+    : nodeSocket_(nodeIp, nodePort, [this](auto &msg) { return NodeMessageMiddleware(msg); }),
+      logger_("Room"),
+      roomId_(roomId) {
   this->newPlayerHandler_ = newPlayerHandler;
 
   InitNodeThread();
@@ -60,7 +60,7 @@ std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Room::Extra
 }
 
 std::uint64_t Room::FindUserByEndpoint(const boost::asio::ip::udp::endpoint &endpoint) {
-  for (const auto &client: this->clients_) {
+  for (const auto &client : this->clients_) {
     if (client.endpoint == endpoint) {
       return client.id;
     }
@@ -117,10 +117,10 @@ bool Room::StartGame() {
 
 bool Room::EndGame(unsigned int score, time_t time, bool win) {
   payload::RoomGameEnd end = {
-          .id = this->roomId_,
-          .score = score,
-          .time = time,
-          .win = win,
+      .id = this->roomId_,
+      .score = score,
+      .time = time,
+      .win = win,
   };
 
   auto success = this->SendToNode(RoomToNodeMsgType::kMsgTypeRTNGameEnded, end);
@@ -146,10 +146,11 @@ void Room::HandlePlayerJoin(const abra::tools::MessageProps &message) {
   auto packet = this->packetBuilder_.Build<payload::PlayerJoin>(message.data);
   auto &payload = packet->GetPayload();
 
-  boost::asio::ip::udp::endpoint endpoint = {boost::asio::ip::address::from_string(payload.ip), kClientUDPPort};
+  boost::asio::ip::udp::endpoint endpoint = {boost::asio::ip::address::from_string(payload.ip),
+                                             kClientUDPPort};
   RoomClient newClient = {
-          .id = payload.id,
-          .endpoint = endpoint,
+      .id = payload.id,
+      .endpoint = endpoint,
   };
 
   this->clients_.push_back(newClient);
