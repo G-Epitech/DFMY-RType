@@ -21,11 +21,6 @@ PataScript::PataScript()
       lastShootTime_(utils::Timer::Nanoseconds::zero()) {}
 
 void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
-  if (health_ <= 0) {
-    context->registry->DestroyEntity(context->me);
-    return;
-  }
-
   auto position = context->registry->GetComponent<core::components::Position>(context->me);
   auto rb = context->registry->GetComponent<physics::components::Rigidbody2D>(context->me);
   lastShootTime_ += context->deltaTime;
@@ -66,5 +61,9 @@ void PataScript::OnCollisionEnter(
   if (*otherEntityTag == rtype::sdk::game::constants::kPlayerBulletTag) {
     health_ -= 10;
     std::cout << "Pata health: " << health_ << std::endl;
+  }
+  if (health_ <= 0) {
+    context->registry->DestroyEntity(context->me);
+    return;
   }
 }

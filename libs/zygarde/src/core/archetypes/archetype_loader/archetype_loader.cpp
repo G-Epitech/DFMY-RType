@@ -22,7 +22,6 @@ ArchetypeLoader::ArchetypeLoader(std::vector<std::string> directories,
     : currentPath_(std::filesystem::current_path().string()),
       archetypes_(),
       componentParsers_(),
-      scriptsRegistry_(scriptsRegistry),
       directories_(std::move(directories)) {
   componentParsers_ = {
       {"position",
@@ -41,19 +40,25 @@ ArchetypeLoader::ArchetypeLoader(std::vector<std::string> directories,
        [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& json) {
          EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseTags(json));
        }},
-      {
-          "script_pool",
-          [this](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
-            const auto& map = ComponentParser::ParseScriptPoolData(component);
-            std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
-            for (const auto& [scriptName, valuesMap] : map) {
-              auto script = scriptsRegistry_[scriptName]();
-              script->onEnable(valuesMap);
-              scripts.push_back(script);
-            }
-            EmplaceRegistryAttachCallback(callbacks, scripting::components::ScriptPool(scripts));
-          },
-      }};
+      {"script_pool", [scriptsRegistry](std::vector<RegistryAttachCallback>* callbacks,
+                                        const nlohmann::json& component) {
+         const auto& map = ComponentParser::ParseScriptPoolData(component);
+
+         callbacks->emplace_back(
+             [scriptsRegistry, map](zygarde::Entity entity,
+                                    const std::shared_ptr<zygarde::Registry>& registry) {
+               std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
+
+               for (const auto& [scriptName, valuesMap] : map) {
+                 auto script = scriptsRegistry.at(scriptName)();
+                 script->onEnable(valuesMap);
+                 scripts.push_back(script);
+               }
+
+               registry->AddComponent<scripting::components::ScriptPool>(
+                   entity, scripting::components::ScriptPool(scripts));
+             });
+       }}};
 }
 
 std::map<std::string, std::vector<ArchetypeLoader::RegistryAttachCallback>> ArchetypeLoader::Run() {

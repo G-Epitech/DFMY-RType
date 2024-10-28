@@ -48,7 +48,6 @@ class EXPORT_ZYGARDE_API ArchetypeLoader final {
   std::string currentPath_;
   std::map<std::string, std::vector<RegistryAttachCallback>> archetypes_;
   std::unordered_map<std::string, ComponentParserFunction> componentParsers_;
-  scripting::types::ScriptsMap scriptsRegistry_;
   std::vector<std::string> directories_;
 };
 }  // namespace zygarde::core::archetypes
