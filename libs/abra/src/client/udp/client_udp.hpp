@@ -27,7 +27,7 @@ class abra::client::ClientUDP final : public AbstractClient {
    * @param ip The IP of the server (host)
    * @param port The port of the server
    */
-  ClientUDP(const std::string &ip, const std::uint32_t &port);
+  ClientUDP(const std::string &ip, const std::uint32_t &port, const uint32_t &localPort);
 
   ~ClientUDP() override;
 
