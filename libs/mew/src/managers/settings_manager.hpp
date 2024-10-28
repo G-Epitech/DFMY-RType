@@ -14,8 +14,10 @@
 #include <string>
 #include <typeindex>
 
+#include "libs/mew/include/api.hpp"
+
 namespace mew::managers {
-class SettingsManager {
+class EXPORT_MEW_API SettingsManager final {
  public:
   /// @brief Shared pointer to a SettingsManager
   using Ptr = std::shared_ptr<SettingsManager>;

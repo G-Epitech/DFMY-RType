@@ -7,13 +7,15 @@
 
 #pragma once
 
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/components/components.hpp"
 #include "libs/mew/src/sets/events/constants.hpp"
 
 namespace mew::sets::events {
 template <EventType EventType, typename MouseEventComponent>
-class MouseButtonEventSystem : public EventSystemBase<EventType, MouseEventComponent> {
+class EXPORT_MEW_API MouseButtonEventSystem
+    : public EventSystemBase<EventType, MouseEventComponent> {
  public:
   /**
    * @brief Build a new Mouse Event System Base object

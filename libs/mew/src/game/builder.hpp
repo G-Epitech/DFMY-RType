@@ -10,6 +10,7 @@
 #include <optional>
 
 #include "./game.hpp"
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/porygon/src/handler.hpp"
 
@@ -17,7 +18,7 @@ namespace mew::game {
 
 using namespace porygon;
 
-class GameBuilder {
+class EXPORT_MEW_API GameBuilder final {
  public:
   /**
    * @brief Construct a new App Builder object

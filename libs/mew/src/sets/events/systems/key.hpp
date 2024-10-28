@@ -8,12 +8,14 @@
 #pragma once
 
 #include "./system_base.hpp"
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/sets/events/components/components.hpp"
 #include "libs/mew/src/sets/events/constants.hpp"
 
 namespace mew::sets::events {
 template <EventType EventType, typename KeyEventComponent>
-class KeyEventSystemBase final : public EventSystemBase<EventType, KeyEventComponent> {
+class EXPORT_MEW_API KeyEventSystemBase final
+    : public EventSystemBase<EventType, KeyEventComponent> {
  public:
   explicit KeyEventSystemBase(managers::WindowManager::Ptr window_manager);
   ~KeyEventSystemBase() final = default;

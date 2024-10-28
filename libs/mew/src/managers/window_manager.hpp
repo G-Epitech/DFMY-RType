@@ -12,10 +12,11 @@
 #include <memory>
 #include <optional>
 
+#include "libs/mew/include/api.hpp"
 #include "manager_base.hpp"
 
 namespace mew::managers {
-class WindowManager : public ManagerBase {
+class EXPORT_MEW_API WindowManager final : public ManagerBase {
  public:
   /// @brief Deferred events
   typedef std::vector<sf::Event> EventsDeferrer;

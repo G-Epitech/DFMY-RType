@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/managers/resources_manager.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/mew/src/sets/drawable/components/components.hpp"
@@ -18,7 +19,8 @@ namespace mew::sets::drawable {
 /**
  * @brief Drawable System class
  */
-class DrawableSystem final : public ASystem<Drawable, zygarde::core::components::Position> {
+class EXPORT_MEW_API DrawableSystem final
+    : public ASystem<Drawable, zygarde::core::components::Position> {
  public:
   /**
    * @brief Default constructor of a Drawable System

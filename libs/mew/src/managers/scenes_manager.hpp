@@ -14,11 +14,12 @@
 
 #include "./manager_base.hpp"
 #include "./window_manager.hpp"
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/scenes/scene_interface.hpp"
 
 namespace mew::managers {
 
-class ScenesManager : public ManagerBase {
+class EXPORT_MEW_API ScenesManager final : public ManagerBase {
  public:
   /// @brief Pointer type of the scenes manager
   typedef std::shared_ptr<ScenesManager> Ptr;
@@ -64,7 +65,7 @@ class ScenesManager : public ManagerBase {
    */
   [[nodiscard]] bool IsActive() const;
 
-  class Exception : public std::exception {
+  class EXPORT_MEW_API Exception : public std::exception {
    public:
     /**
      * @brief Construct a new scenes manager exception
@@ -72,7 +73,7 @@ class ScenesManager : public ManagerBase {
      */
     explicit Exception(std::string msg);
 
-    [[nodiscard]] const char *what() const noexcept override;
+    [[nodiscard]] const char *what() const noexcept final;
 
    private:
     /// @brief Message of the exception

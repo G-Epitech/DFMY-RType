@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/managers/managers.hpp"
 #include "libs/porygon/src/handler.hpp"
 #include "libs/zygarde/src/utils/timer/timer.hpp"
@@ -26,7 +27,7 @@ class GameBuilder;
  * the necessary methods to initialize and Run the application.
  */
 
-class Game final {
+class EXPORT_MEW_API Game final {
   friend class GameBuilder;
 
  public:

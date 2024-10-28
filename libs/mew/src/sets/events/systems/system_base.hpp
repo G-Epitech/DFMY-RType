@@ -9,13 +9,14 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/mew/src/sets/events/constants.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
 
 namespace mew::sets::events {
 template <EventType, class... Components>
-class EventSystemBase : public ASystem<Components...> {
+class EXPORT_MEW_API EventSystemBase : public ASystem<Components...> {
  public:
   ~EventSystemBase() override = default;
 

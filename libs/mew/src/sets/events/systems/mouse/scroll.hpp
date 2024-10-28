@@ -7,12 +7,14 @@
 
 #pragma once
 
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/components/components.hpp"
 #include "libs/mew/src/sets/events/systems/system_base.hpp"
 
 namespace mew::sets::events {
-class MouseScrollEventSystem : public EventSystemBase<events::kMouseScrolled, OnMouseScrolled> {
+class EXPORT_MEW_API MouseScrollEventSystem final
+    : public EventSystemBase<events::kMouseScrolled, OnMouseScrolled> {
  public:
   /**
    * @brief Construct a new Mouse Scroll Event System object
@@ -22,6 +24,6 @@ class MouseScrollEventSystem : public EventSystemBase<events::kMouseScrolled, On
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   zipper<OnMouseScrolled> components) override;
+                   zipper<OnMouseScrolled> components) final;
 };
 }  // namespace mew::sets::events

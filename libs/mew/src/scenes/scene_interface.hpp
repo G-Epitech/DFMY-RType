@@ -11,10 +11,11 @@
 #include <chrono>
 #include <memory>
 
+#include "libs/mew/include/api.hpp"
 #include "libs/zygarde/src/utils/timer/timer.hpp"
 
 namespace mew::scenes {
-class IScene {
+class EXPORT_MEW_API IScene {
  public:
   /// @brief Pointer type
   using Ptr = std::shared_ptr<IScene>;

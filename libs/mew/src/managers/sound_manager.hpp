@@ -13,11 +13,12 @@
 #include <memory>
 #include <queue>
 
+#include "libs/mew/include/api.hpp"
 #include "manager_base.hpp"
 
 namespace mew::managers {
 
-class SoundManager : public ManagerBase {
+class EXPORT_MEW_API SoundManager final : public ManagerBase {
  public:
   /// @brief Pointer to a sound manager
   using Ptr = std::shared_ptr<SoundManager>;

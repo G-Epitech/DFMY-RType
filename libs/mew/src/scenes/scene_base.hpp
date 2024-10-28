@@ -8,6 +8,7 @@
 #pragma once
 
 #include "./scene_interface.hpp"
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/managers/managers.hpp"
 #include "libs/porygon/src/handler.hpp"
 #include "libs/zygarde/src/registry.hpp"
@@ -16,7 +17,7 @@ namespace mew::scenes {
 
 using namespace porygon;
 
-class SceneBase : public IScene {
+class EXPORT_MEW_API SceneBase : public IScene {
  public:
   /**
    * @brief Update the scene

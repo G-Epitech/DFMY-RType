@@ -9,12 +9,13 @@
 
 #include <SFML/Graphics/Rect.hpp>
 
+#include "libs/mew/include/api.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/transform/transform.hpp"
 #include "libs/zygarde/src/tools/spare_array.hpp"
 
 namespace mew::sets::events {
-class MouseStrategyUtils {
+class EXPORT_MEW_API MouseStrategyUtils final {
  public:
   /**
    * @brief Get the current target of the event

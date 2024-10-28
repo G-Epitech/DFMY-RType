@@ -14,10 +14,11 @@
 #include <string>
 
 #include "./manager_base.hpp"
+#include "libs/mew/include/api.hpp"
 
 namespace mew::managers {
 
-class ResourcesManager : public ManagerBase {
+class EXPORT_MEW_API ResourcesManager final : public ManagerBase {
  public:
   /// @brief Pointer type of the resources manager
   using Ptr = std::shared_ptr<ResourcesManager>;
@@ -81,7 +82,7 @@ class ResourcesManager : public ManagerBase {
    */
   [[nodiscard]] ShaderPtr GetShader(const std::string &name);
 
-  class Exception final : public std::exception {
+  class EXPORT_MEW_API Exception final : public std::exception {
    public:
     /**
      * @brief Construct a new resources manager exception
@@ -89,7 +90,7 @@ class ResourcesManager : public ManagerBase {
      */
     explicit Exception(std::string msg);
 
-    [[nodiscard]] const char *what() const noexcept override;
+    [[nodiscard]] const char *what() const noexcept final;
 
    private:
     /// @brief Message of the exception

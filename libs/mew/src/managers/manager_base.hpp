@@ -7,13 +7,14 @@
 
 #pragma once
 
+#include "libs/mew/include/api.hpp"
 #include "libs/porygon/src/handler.hpp"
 
 namespace mew::managers {
 
 using namespace porygon;
 
-class ManagerBase {
+class EXPORT_MEW_API ManagerBase {
  public:
   /**
    * @brief Destroy the Manager Base object
