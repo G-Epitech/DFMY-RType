@@ -116,8 +116,7 @@ bool Room::StartGame() {
 }
 
 bool Room::EndGame(unsigned int score, time_t time, bool win) {
-  payload::RoomGameEnd end = {
-      .id = this->roomId_,
+  payload::GameEnd end = {
       .score = score,
       .time = time,
       .win = win,

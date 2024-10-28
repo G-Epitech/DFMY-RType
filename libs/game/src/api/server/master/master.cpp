@@ -232,8 +232,7 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
   auto packet = this->packetBuilder_.Build<payload::RoomGameEnd>(message.bitset);
   auto payload = packet->GetPayload();
 
-  payload::RoomGameEnd end = {
-      .id = payload.id,
+  payload::GameEnd end = {
       .score = payload.score,
       .time = payload.time,
       .win = payload.win,
