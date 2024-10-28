@@ -2,12 +2,10 @@
 ** EPITECH PROJECT, 2024
 ** r-type
 ** File description:
-** MovementSystem.hpp
+** position_system.hpp
 */
 
 #pragma once
-
-#include <chrono>
 
 #include "libs/zygarde/src/api.hpp"
 #include "libs/zygarde/src/core/components/position/position.hpp"
@@ -17,16 +15,11 @@
 #include "libs/zygarde/src/utils/timer/timer.hpp"
 
 namespace zygarde::physics::systems {
-
-class EXPORT_ZYGARDE_API MovementSystem final
+class EXPORT_ZYGARDE_API PositionSystem final
     : public ASystem<components::Rigidbody2D, core::components::Position> {
  public:
-  /**
-   * @brief Construct a new Movement System object
-   * @param delta_time Delta time (provided by the game loop)
-   */
-  explicit MovementSystem(const utils::Timer::Nanoseconds &delta_time);
-  ~MovementSystem() override = default;
+  PositionSystem() = default;
+  ~PositionSystem() override = default;
 
   /**
    * @brief Run the system
@@ -40,21 +33,11 @@ class EXPORT_ZYGARDE_API MovementSystem final
 
  private:
   /**
-   * @brief Compute the position offset
+   * @brief Apply the movement offset to the position
    * @param rigidbody The rigidbody of the entity
+   * @param position The position of the entity
    */
-  void ComputePositionOffset(components::Rigidbody2D *rigidbody);
-
-  /**
-   * @brief Apply drag to the rigidbody
-   * @param rigidbody The rigidbody of the entity
-   */
-  void ApplyDrag(components::Rigidbody2D *rigidbody) const;
-
- private:
-  /// @brief Delta time
-  const utils::Timer::Nanoseconds &deltaTime_;
-  /// @brief Movement offset
-  core::types::Vector2f movementOffset_ = core::types::Vector2f::zero();
+  static void ApplyMovementOffset(components::Rigidbody2D* rigidbody,
+                                  core::components::Position* position);
 };
 }  // namespace zygarde::physics::systems

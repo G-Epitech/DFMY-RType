@@ -4,7 +4,7 @@
     {
       "name": "rigidbody2d",
       "data": {
-        "isKinematic": false,
+        "isKinematic": true,
         "velocity": {
           "x": -300,
           "y": 0

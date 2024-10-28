@@ -1,10 +1,10 @@
 {
-  "archetype_name": "base_player_bullet",
+  "archetype_name": "default_player_bullet",
   "components": [
     {
       "name": "rigidbody2d",
       "data": {
-        "isKinematic": false,
+        "isKinematic": true,
         "velocity": {
           "x": 700,
           "y": 0

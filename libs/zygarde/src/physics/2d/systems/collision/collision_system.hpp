@@ -50,10 +50,8 @@ class EXPORT_ZYGARDE_API CollisionSystem final
       const components::BoxCollider2D &collider1,
       const components::BoxCollider2D &collider2) noexcept;
 
-  [[nodiscard]] static bool AreColliding(const components::BoxCollider2D &collider1,
-                                         const core::components::Position &position1,
-                                         const components::BoxCollider2D &collider2,
-                                         const core::components::Position &position2) noexcept;
+  [[nodiscard]] static bool AreColliding(const ComponentsPack &pack1,
+                                         const ComponentsPack &pack2) noexcept;
 
   static void ProcessCollision(const ComponentsPack &pack1, const ComponentsPack &pack2) noexcept;
 

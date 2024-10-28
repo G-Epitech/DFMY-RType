@@ -23,6 +23,7 @@ PataScript::PataScript()
 void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   if (health_ <= 0) {
     context->registry->DestroyEntity(context->me);
+    return;
   }
 
   auto position = context->registry->GetComponent<core::components::Position>(context->me);
@@ -64,5 +65,6 @@ void PataScript::OnCollisionEnter(
 
   if (*otherEntityTag == rtype::sdk::game::constants::kPlayerBulletTag) {
     health_ -= 10;
+    std::cout << "Pata health: " << health_ << std::endl;
   }
 }

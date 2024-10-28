@@ -40,8 +40,8 @@ zygarde::physics::components::Rigidbody2D ComponentParser::ParseRigidbody2D(
 zygarde::physics::components::BoxCollider2D ComponentParser::ParseBoxCollider2D(
     const nlohmann::json& json) {
   zygarde::core::types::Vector2f size;
-  std::vector<int> includeLayers;
-  std::vector<int> collisionLayers;
+  std::vector<int> includeLayers = {};
+  std::vector<int> collisionLayers = {};
 
   if (!json.contains("data")) {
     return {size, collisionLayers, includeLayers};

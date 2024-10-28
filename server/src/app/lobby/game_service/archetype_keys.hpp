@@ -10,6 +10,6 @@
 namespace rtype::server::tools {
 constexpr const char *kArchetypePlayerPhoton = "player_photon";
 constexpr const char *kArchetypeEnemyPataNormal = "enemy_pata_normal";
-constexpr const char *kArchetypeBasePlayerBullet = "base_player_bullet";
-constexpr const char *kArchetypeBaseEnemyBullet = "base_enemy_bullet";
+constexpr const char *kArchetypeBasePlayerBullet = "default_player_bullet";
+constexpr const char *kArchetypeBaseEnemyBullet = "default_enemy_bullet";
 }  // namespace rtype::server::tools

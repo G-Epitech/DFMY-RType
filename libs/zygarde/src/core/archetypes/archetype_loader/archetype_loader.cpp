@@ -26,20 +26,20 @@ ArchetypeLoader::ArchetypeLoader(std::vector<std::string> directories,
       directories_(std::move(directories)) {
   componentParsers_ = {
       {"position",
-       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
-         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParsePosition(component));
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& json) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParsePosition(json));
        }},
       {"rigidbody2d",
-       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
-         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseRigidbody2D(component));
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& json) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseRigidbody2D(json));
        }},
       {"box_collider2d",
-       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
-         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseBoxCollider2D(component));
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& json) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseBoxCollider2D(json));
        }},
       {"tags",
-       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& component) {
-         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseTags(component));
+       [](std::vector<RegistryAttachCallback>* callbacks, const nlohmann::json& json) {
+         EmplaceRegistryAttachCallback(callbacks, ComponentParser::ParseTags(json));
        }},
       {
           "script_pool",

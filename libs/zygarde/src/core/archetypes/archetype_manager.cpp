@@ -7,6 +7,7 @@
 
 #include "archetype_manager.hpp"
 
+#include <iostream>
 #include <utility>
 
 using namespace zygarde::core::archetypes;
@@ -29,4 +30,7 @@ void ArchetypeManager::LoadArchetypes(std::vector<std::string> directories,
   ArchetypeLoader archetypeLoader(std::move(directories), scriptsRegistry);
 
   archetypes_ = archetypeLoader.Run();
+  for (const auto& [name, components] : archetypes_) {
+    std::cout << "Loaded archetype: " << name << std::endl;
+  }
 }

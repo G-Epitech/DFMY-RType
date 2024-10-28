@@ -12,11 +12,11 @@
 namespace rtype::sdk::game::constants {
 /// @brief Collision layers for the game
 enum CollisionLayers {
-  kPlayer = 1 << 0,
-  kEnemy = 1 << 1,
-  kEnemyBullet = 1 << 2,
-  kPlayerBullet = 1 << 3,
-  kPowerUp = 1 << 5,
+  kPlayer = 1,
+  kEnemy = 2,
+  kEnemyBullet = 4,
+  kPlayerBullet = 8,
+  kPowerUp = 16,
 };
 
 /// @brief Player collision layers

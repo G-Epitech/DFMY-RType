@@ -47,15 +47,16 @@ void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states
   if (!tags) {
     return;
   }
-  if (*tags & sdk::game::constants::kPlayerTag) {
+  const core::components::Tags tagsToCheck{*tags};
+  if (tagsToCheck & sdk::game::constants::kPlayerTag) {
     payload::PlayerState state = {static_cast<std::size_t>(entity), vec, 100};
     states->playerStates.push_back(state);
   }
-  if (*tags & sdk::game::constants::kEnemyTag) {
-    GatherEnemyState(states, entity, vec, tags);
+  if (tagsToCheck & sdk::game::constants::kEnemyTag) {
+    GatherEnemyState(states, entity, vec, &tagsToCheck);
   }
-  if (*tags & sdk::game::constants::kBulletTag) {
-    GatherProjectileState(states, entity, vec, tags);
+  if (tagsToCheck & sdk::game::constants::kBulletTag) {
+    GatherProjectileState(states, entity, vec, &tagsToCheck);
   }
 }
 

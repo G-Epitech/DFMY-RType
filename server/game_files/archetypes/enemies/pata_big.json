@@ -1,5 +1,5 @@
 {
-  "archetype_name": "enemy_pata_normal",
+  "archetype_name": "enemy_pata_big",
   "components": [
     {
       "name": "rigidbody2d",

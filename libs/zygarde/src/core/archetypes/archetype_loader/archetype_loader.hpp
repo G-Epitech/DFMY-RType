@@ -12,8 +12,8 @@
 #include "api.hpp"
 #include "entity.hpp"
 #include "registry.hpp"
-#include "scripting/types/values_map.hpp"
 #include "scripting/types/mono_behaviour.hpp"
+#include "scripting/types/values_map.hpp"
 
 namespace zygarde::core::archetypes {
 class EXPORT_ZYGARDE_API ArchetypeLoader final {
@@ -40,7 +40,7 @@ class EXPORT_ZYGARDE_API ArchetypeLoader final {
 
   template <typename Component>
   static void EmplaceRegistryAttachCallback(std::vector<RegistryAttachCallback>* callbacks,
-                                            Component&& component);
+                                            Component component);
 
   void LoadArchetype(nlohmann::json jsonData);
 

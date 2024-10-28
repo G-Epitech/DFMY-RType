@@ -26,17 +26,19 @@ void CollisionSystem::Run(std::shared_ptr<Registry> r,
     }
     auto componentsPack = GetComponentsPackAtIndex(r, i, rigidbodies, positions, colliders);
 
-    for (size_t j = i + 1; j < positions->size(); j++) {
-      if (!IndexHasRequiredComponents(j, rigidbodies, positions, colliders)) {
+    for (size_t j = 0; j < positions->size(); j++) {
+      if (i == j) {
         continue;
       }
       if (!r->HasEntityAtIndex(j)) {
-        break;
+        continue;
+      }
+      if (!IndexHasRequiredComponents(j, rigidbodies, positions, colliders)) {
+        continue;
       }
       auto otherComponentsPack = GetComponentsPackAtIndex(r, j, rigidbodies, positions, colliders);
 
-      if (AreColliding(*componentsPack.boxCollider, *componentsPack.position,
-                       *otherComponentsPack.boxCollider, *otherComponentsPack.position)) {
+      if (AreColliding(componentsPack, otherComponentsPack)) {
         ProcessCollision(componentsPack, otherComponentsPack);
       }
     }
@@ -78,12 +80,24 @@ bool CollisionSystem::HaveCommonCollisionLayers(
   return false;
 }
 
-bool CollisionSystem::AreColliding(const components::BoxCollider2D &collider1,
-                                   const core::components::Position &position1,
-                                   const components::BoxCollider2D &collider2,
-                                   const core::components::Position &position2) noexcept {
-  auto boundingBox1 = types::BoundingBox2DBuilder::build(position1, collider1.GetSize());
-  auto boundingBox2 = types::BoundingBox2DBuilder::build(position2, collider2.GetSize());
+bool CollisionSystem::AreColliding(const ComponentsPack &pack1,
+                                   const ComponentsPack &pack2) noexcept {
+  core::components::Position simulatedPosition1;
+  simulatedPosition1.aligns = pack1.position->aligns;
+  simulatedPosition1.point.x = pack1.position->point.x + pack1.rigidbody->GetMovementOffset().x;
+  simulatedPosition1.point.y = pack1.position->point.y + pack1.rigidbody->GetMovementOffset().y;
+  simulatedPosition1.point.z = pack1.position->point.z;
+
+  core::components::Position simulatedPosition2;
+  simulatedPosition2.aligns = pack2.position->aligns;
+  simulatedPosition2.point.x = pack2.position->point.x + pack2.rigidbody->GetMovementOffset().x;
+  simulatedPosition2.point.y = pack2.position->point.y + pack2.rigidbody->GetMovementOffset().y;
+  simulatedPosition2.point.z = pack2.position->point.z;
+
+  auto boundingBox1 =
+      types::BoundingBox2DBuilder::build(simulatedPosition1, pack1.boxCollider->GetSize());
+  auto boundingBox2 =
+      types::BoundingBox2DBuilder::build(simulatedPosition2, pack2.boxCollider->GetSize());
 
   bool overlapX =
       boundingBox1.left <= boundingBox2.right && boundingBox1.right >= boundingBox2.left;
@@ -95,20 +109,12 @@ bool CollisionSystem::AreColliding(const components::BoxCollider2D &collider1,
 void CollisionSystem::ProcessCollision(const ComponentsPack &pack1,
                                        const ComponentsPack &pack2) noexcept {
   if (HaveCommonCollisionLayers(*pack1.boxCollider, *pack2.boxCollider)) {
-    if (!pack1.rigidbody->IsKinematic()) {
-      pack1.rigidbody->CancelVelocity();
+    if (!pack1.rigidbody->IsKinematic() && !pack2.rigidbody->IsKinematic()) {
+      pack1.rigidbody->SetMovementOffset(core::types::Vector2f::zero());
     }
     pack1.boxCollider->AddCollision(BuildCollision2D(pack1, pack2));
   }
-
-  if (HaveCommonCollisionLayers(*pack2.boxCollider, *pack1.boxCollider)) {
-    if (!pack2.rigidbody->IsKinematic()) {
-      pack2.rigidbody->CancelVelocity();
-    }
-    pack2.boxCollider->AddCollision(BuildCollision2D(pack2, pack1));
-  }
 }
-
 physics::types::Collision2D CollisionSystem::BuildCollision2D(
     const ComponentsPack &pack1, const ComponentsPack &pack2) noexcept {
   return {pack1.rigidbody, pack1.position, pack2.rigidbody, pack2.position, pack2.entity};

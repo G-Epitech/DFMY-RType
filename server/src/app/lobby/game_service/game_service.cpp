@@ -33,7 +33,7 @@ void GameService::RegistrySetup() {
 }
 
 void GameService::Initialize() {
-  std::vector<std::string> archetypeDirs = {kDirectoryEnemyArchetypes, kDirectoryPlayerArchetypes,
+  std::vector<std::string> archetypeDirs = {kDirectoryPlayerArchetypes, kDirectoryEnemyArchetypes,
                                             kDirectoryProjectileArchetypes};
   scripts::ScriptsRegistry scriptsRegistry;
 
@@ -46,6 +46,7 @@ int GameService::Run(std::shared_ptr<Lobby> api) {
   this->api_ = std::move(api);
 
   Initialize();
+
   while (gameRunning_) {
     ticksManager_.Update();
     HandleMessages();

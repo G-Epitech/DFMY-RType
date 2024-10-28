@@ -21,7 +21,12 @@ int App::Run(int ac, char **av) {
   if (!cliResult_.has_value()) {
     return status;
   }
-  InitializeServerInstance();
+  try {
+    InitializeServerInstance();
+  } catch (std::exception &exception) {
+    std::cerr << "Server Error: " << exception.what() << std::endl;
+    return EXIT_FAILURE;
+  };
   return server_->Run();
 }
 

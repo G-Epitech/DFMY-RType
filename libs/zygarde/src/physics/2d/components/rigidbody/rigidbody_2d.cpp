@@ -20,5 +20,6 @@ void Rigidbody2D::AddForce(core::types::Vector2f force) noexcept {
 }
 
 void Rigidbody2D::AddForce(float x, float y) noexcept {
-  velocity_ += {x, y};
+  velocity_.x += x;
+  velocity_.y += y;
 }

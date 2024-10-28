@@ -9,14 +9,7 @@
       }
     },
     {
-      "name": "position",
-      "data": {
-        "point": {
-          "x": 1,
-          "y": 2,
-          "z": 3
-        }
-      }
+      "name": "position"
     },
     {
       "name": "box_collider2d",
@@ -29,9 +22,10 @@
           1
         ],
         "includeLayers": [
+          1,
           2,
           4,
-          32
+          16
         ]
       }
     },

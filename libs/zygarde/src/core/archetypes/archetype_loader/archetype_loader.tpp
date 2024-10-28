@@ -9,10 +9,11 @@
 
 template <typename Component>
 void zygarde::core::archetypes::ArchetypeLoader::EmplaceRegistryAttachCallback(
-    std::vector<RegistryAttachCallback>* callbacks, Component&& component) {
+    std::vector<RegistryAttachCallback>* callbacks, Component component) {
   callbacks->emplace_back(
-      [component = std::forward<Component>(component)](
+      [component](
           zygarde::Entity entity, const std::shared_ptr<zygarde::Registry>& registry) mutable {
-        registry->AddComponent<Component>(entity, std::move(component));
+        auto copy = component;
+        registry->AddComponent<Component>(entity, std::move(copy));
       });
 }

@@ -62,6 +62,16 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
 
   [[nodiscard]] inline float GetDrag() const noexcept { return drag_; }
 
+  [[nodiscard]] inline core::types::Vector2f GetVelocity() noexcept { return velocity_; }
+
+  inline void SetMovementOffset(const core::types::Vector2f &movementOffset) noexcept {
+    movementOffset_ = movementOffset;
+  }
+
+  [[nodiscard]] inline const core::types::Vector2f &GetMovementOffset() const noexcept {
+    return movementOffset_;
+  }
+
  private:
   /// @brief Velocity vector
   core::types::Vector2f velocity_;
@@ -70,5 +80,7 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
   bool isKinematic_{false};
   /// @brief Drag value
   float drag_{1.0f};
+  /// @brief Computed movement offset
+  core::types::Vector2f movementOffset_{core::types::Vector2f::zero()};
 };
 }  // namespace zygarde::physics::components
