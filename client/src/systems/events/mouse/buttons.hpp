@@ -13,8 +13,7 @@
 
 namespace rtype::client::systems {
 template <events::EventType EventType, typename MouseEventComponent>
-class MouseButtonEventSystem
-    : public EventSystemBase<EventType, MouseEventComponent, components::Drawable> {
+class MouseButtonEventSystem : public EventSystemBase<EventType, MouseEventComponent> {
  public:
   /**
    * @brief Build a new Mouse Event System Base object
@@ -26,8 +25,7 @@ class MouseButtonEventSystem
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   typename sparse_array<MouseEventComponent>::ptr components,
-                   sparse_array<components::Drawable>::ptr drawables) override;
+                   zipper<MouseEventComponent> components) override;
 
   /**
    * @brief Handle the event for the entity
@@ -38,7 +36,7 @@ class MouseButtonEventSystem
    */
   void HandleEventForEntity(std::size_t entityId, const sf::Event& event,
                             const sparse_array<components::Drawable>::ptr& drawables,
-                            const std::optional<MouseEventComponent>& component);
+                            const MouseEventComponent& component);
 };
 
 typedef MouseButtonEventSystem<events::kMouseReleased, components::OnMouseReleased>
