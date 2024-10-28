@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "app/lobby/game_service/factories/projectile_factory.hpp"
 #include "game/includes/constants.hpp"
 #include "game/includes/stats.hpp"
 #include "game/src/utils/projectiles/fire_rate.hpp"

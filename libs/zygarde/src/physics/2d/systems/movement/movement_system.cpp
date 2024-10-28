@@ -25,6 +25,7 @@ void MovementSystem::Run(std::shared_ptr<Registry> r,
     auto& rigidbody = (*rigidbodies)[i];
     auto& position = (*positions)[i];
     if (rigidbody.has_value() && position.has_value()) {
+      ApplyDrag(&(*rigidbody));
       ComputePositionOffset(&(*rigidbody));
       UpdatePosition(&((*position)));
     }
@@ -46,4 +47,33 @@ void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {
 void MovementSystem::UpdatePosition(core::components::Position* position) const {
   position->point.x += movementOffset_.x;
   position->point.y += movementOffset_.y;
+}
+
+void MovementSystem::ApplyDrag(physics::components::Rigidbody2D* rigidbody) const {
+  float drag = rigidbody->GetDrag();
+
+  if (drag == 0) {
+    return;
+  }
+  if (drag == 100) {
+    rigidbody->SetVelocity(core::types::Vector2f(0, 0));
+    return;
+  }
+  core::types::Vector2f velocity = rigidbody->GetVelocity();
+  float deltaTimeSec = utils::Timer::ToSeconds(deltaTime_);
+  if (velocity.magnitude() > 0) {
+    core::types::Vector2f dragForce = -drag * velocity;
+    core::types::Vector2f dragVector = dragForce * deltaTimeSec;
+
+    if (velocity.x != 0) {
+      velocity.x += dragVector.x;
+    }
+    if (velocity.y != 0) {
+      velocity.y += dragVector.y;
+    }
+    if (velocity.magnitude() < 0.01f) {
+      velocity = core::types::Vector2f(0, 0);
+    }
+  }
+  rigidbody->SetVelocity(velocity);
 }

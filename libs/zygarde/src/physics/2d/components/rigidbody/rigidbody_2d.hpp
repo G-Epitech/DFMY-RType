@@ -28,7 +28,7 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
    */
   explicit Rigidbody2D(core::types::Vector2f velocity) noexcept;
 
-  Rigidbody2D(core::types::Vector2f velocity, bool isKinematic) noexcept;
+  Rigidbody2D(core::types::Vector2f velocity, bool isKinematic, float drag) noexcept;
 
  public:
   /**
@@ -58,11 +58,17 @@ class EXPORT_ZYGARDE_API Rigidbody2D final {
 
   [[nodiscard]] bool IsKinematic() const noexcept { return isKinematic_; }
 
+  inline void SetDrag(float drag) noexcept { drag_ = drag; }
+
+  [[nodiscard]] inline float GetDrag() const noexcept { return drag_; }
+
  private:
   /// @brief Velocity vector
   core::types::Vector2f velocity_;
   /// @brief Is kinematic flag. Rigidbody will not be affected by physics (force, collisions,etc...)
   /// if set to true
   bool isKinematic_{false};
+  /// @brief Drag value
+  float drag_{1.0f};
 };
 }  // namespace zygarde::physics::components

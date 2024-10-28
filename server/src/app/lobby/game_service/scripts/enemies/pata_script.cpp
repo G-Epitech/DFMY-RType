@@ -7,9 +7,8 @@
 
 #include "pata_script.hpp"
 
-#include "app/lobby/game_service/factories/projectile_factory.hpp"
 #include "constants/tags.hpp"
-#include "types/game_entities.hpp"
+#include "zygarde/src/core/components/tags/tags.hpp"
 
 using namespace rtype::server::game::scripts;
 

@@ -44,14 +44,17 @@ void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states
                                      const Entity& entity,
                                      const rtype::sdk::game::utils::types::vector_2f& vec,
                                      const core::components::Tags* tags) noexcept {
-  if (*tags == sdk::game::constants::kPlayerTag) {
+  if (!tags) {
+    return;
+  }
+  if (*tags & sdk::game::constants::kPlayerTag) {
     payload::PlayerState state = {static_cast<std::size_t>(entity), vec, 100};
     states->playerStates.push_back(state);
   }
-  if (*tags == sdk::game::constants::kEnemyTag) {
+  if (*tags & sdk::game::constants::kEnemyTag) {
     GatherEnemyState(states, entity, vec, tags);
   }
-  if (*tags == sdk::game::constants::kBulletTag) {
+  if (*tags & sdk::game::constants::kBulletTag) {
     GatherProjectileState(states, entity, vec, tags);
   }
 }

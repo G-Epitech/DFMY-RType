@@ -29,6 +29,11 @@ zygarde::physics::components::Rigidbody2D ComponentParser::ParseRigidbody2D(
     velocity = {data["velocity"]["x"], data["velocity"]["y"]};
   }
   rigidbody2d.SetVelocity(velocity);
+  if (!data.contains("drag")) {
+    rigidbody2d.SetDrag(1);
+  } else {
+    rigidbody2d.SetDrag(data["drag"].get<float>());
+  }
   return rigidbody2d;
 }
 

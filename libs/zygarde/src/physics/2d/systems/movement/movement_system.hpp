@@ -51,6 +51,12 @@ class EXPORT_ZYGARDE_API MovementSystem final
    */
   void UpdatePosition(core::components::Position *position) const;
 
+  /**
+   * @brief Apply drag to the rigidbody
+   * @param rigidbody The rigidbody of the entity
+   */
+  void ApplyDrag(components::Rigidbody2D *rigidbody) const;
+
  private:
   /// @brief Delta time
   const utils::Timer::Nanoseconds &deltaTime_;

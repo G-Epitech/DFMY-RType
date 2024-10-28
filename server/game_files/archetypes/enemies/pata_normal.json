@@ -4,7 +4,8 @@
     {
       "name": "rigidbody2d",
       "data": {
-        "isKinematic": false
+        "isKinematic": false,
+        "drag": 0
       }
     },
     {

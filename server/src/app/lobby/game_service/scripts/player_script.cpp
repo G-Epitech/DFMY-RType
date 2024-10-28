@@ -8,6 +8,7 @@
 #include "player_script.hpp"
 
 #include "app/lobby/game_service/archetype_keys.hpp"
+#include "zygarde/src/core/components/tags/tags.hpp"
 
 using namespace rtype::server::game::scripts;
 
