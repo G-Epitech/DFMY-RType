@@ -5,7 +5,7 @@
 ** options_handler_manager.cpp
 */
 
-#include "cli_handler_master.hpp"
+#include "cli_handler_node.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -14,16 +14,16 @@
 
 using namespace rtype::server;
 
-CliHandlerMaster::CliHandlerMaster() : AbstractCliHandler() {
+CliHandlerNode::CliHandlerNode() : AbstractCliHandler() {
   Setup();
 }
 
-void CliHandlerMaster::Setup() noexcept {
+void CliHandlerNode::Setup() noexcept {
   optDescription_.add_options()("help", "produce help message")(
-      "config", po::value<std::string>()->required(), "master server config file");
+      "config", po::value<std::string>()->required(), "node server config file");
 }
 
-CliResult CliHandlerMaster::Run(int ac, char **av) {
+CliResult CliHandlerNode::Run(int ac, char **av) {
   po::store(po::parse_command_line(ac, av, optDescription_), variablesMap_);
 
   if (variablesMap_.count("help")) {
@@ -34,13 +34,15 @@ CliResult CliHandlerMaster::Run(int ac, char **av) {
   return BuildCtx();
 }
 
-rtype::server::BaseContext CliHandlerMaster::BuildCtx() {
+rtype::server::BaseContext CliHandlerNode::BuildCtx() {
   const auto &configPath = variablesMap_["config"].as<std::string>();
   Config config(configPath);
 
   auto name = config.Get<std::string>("NAME");
   std::size_t port = static_cast<std::size_t>(config.Get<int>("PORT"));
+  std::size_t maxRooms = static_cast<std::size_t>(config.Get<int>("MAX_ROOMS"));
   auto token = config.Get<std::string>("TOKEN");
-  MasterCtxProps props = MasterCtxProps(token);
-  return {name, port, ServerType::kMaster, props};
+  auto masterToken = config.Get<std::string>("MASTER_TOKEN");
+  NodeCtxProps props = NodeCtxProps(token);
+  return {name, port, ServerType::kNode, props};
 }

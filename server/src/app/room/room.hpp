@@ -16,15 +16,15 @@
 #include "props.hpp"
 
 namespace rtype::server {
-class Lobby final : public IServer {
+class Room final : public IServer {
  public:
   /**
    * @brief Construct a new Lobby object
    * @param ctx The server context
    */
-  explicit Lobby(const BaseContext& ctx);
+  explicit Room(const BaseContext& ctx);
 
-  ~Lobby() override = default;
+  ~Room() override = default;
 
   /**
    * Run the lobby server
@@ -42,7 +42,7 @@ class Lobby final : public IServer {
     /// @brief Server type
     ServerType type;
     /// @brief Server type-specific properties
-    LobbyCtxProps props;
+    RoomCtxProps props;
   };
 
   /// @brief Lobby server context
@@ -52,6 +52,6 @@ class Lobby final : public IServer {
   game::GameService gameService_;
 
   /// @brief Server network
-  std::shared_ptr<rtype::sdk::game::api::Lobby> api_;
+  std::shared_ptr<rtype::sdk::game::api::Room> api_;
 };
 }  // namespace rtype::server

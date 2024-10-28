@@ -5,7 +5,7 @@
 ** options_handler_game.cpp
 */
 
-#include "cli_handler_lobby.hpp"
+#include "cli_handler_room.hpp"
 
 #include <iostream>
 
@@ -20,7 +20,8 @@ void CliHandlerLobby::Setup() noexcept {
       "name", po::value<std::string>()->default_value(kDefaultName), "name of the lobby")(
       "port", po::value<std::size_t>()->required(), "port of the server")(
       "ticks", po::value<std::size_t>()->default_value(kDefaultTicks),
-      "number of ticks for the game");
+      "number of ticks for the game")("token", po::value<std::string>()->required(),
+                                      "token for the node auth");
 }
 
 CliResult CliHandlerLobby::Run(int ac, char **av) {
@@ -38,7 +39,8 @@ rtype::server::BaseContext CliHandlerLobby::BuildCtx() {
   std::string name = variablesMap_["name"].as<std::string>();
   std::size_t port = variablesMap_["port"].as<std::size_t>();
   std::size_t ticks = variablesMap_["ticks"].as<std::size_t>();
-  auto props = LobbyCtxProps(ticks);
+  std::string token = variablesMap_["token"].as<std::string>();
+  auto props = RoomCtxProps(ticks, token);
 
-  return {name, port, kLobby, props};
+  return {name, port, ServerType::kRoom, props};
 }

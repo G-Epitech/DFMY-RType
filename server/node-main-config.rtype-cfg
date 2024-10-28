@@ -1,0 +1,5 @@
+NAME='main-node'
+PORT=6000
+MAX_ROOMS=10
+MASTER_TOKEN='q-8WetuEwwMdf2A_U8JZL*.jqHNV@Tz8H@a'
+TOKEN='huPpBzo4MQE.6dHiThx7drEekXai9Dcq4-u'

@@ -76,8 +76,8 @@ bool Client::JoinLobby(const payload::JoinRoom &payload) {
   if (!sendSuccess)
     return false;
 
-  auto waitSuccess = WaitForMessage(
-      MasterToClientMsgType::kMsgTypeMTCInfoRoom, &Client::HandleJoinLobbyInfos);
+  auto waitSuccess =
+      WaitForMessage(MasterToClientMsgType::kMsgTypeMTCInfoRoom, &Client::HandleJoinLobbyInfos);
 
   if (!waitSuccess) {
     logger_.Error("Connection to lobby failed", "💢️");
@@ -199,8 +199,8 @@ std::vector<payload::BulletState> Client::ResolveBulletsState(
   return players;
 }
 
-bool api::Client::WaitForMessage(
-        MasterToClientMsgType type, bool (Client::*handler)(const abt::MessageProps &message)) {
+bool api::Client::WaitForMessage(MasterToClientMsgType type,
+                                 bool (Client::*handler)(const abt::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
   abt::MessageProps message;
   bool success = false;
