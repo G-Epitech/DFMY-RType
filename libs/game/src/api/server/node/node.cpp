@@ -170,8 +170,12 @@ void Node::HandleRoomRegister(const abra::server::ClientTCPMessage &message) {
 }
 
 void Node::HandleGameStarted(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::RoomGameStart>(message.bitset);
-  auto &payload = packet->GetPayload();
+  auto packet = this->packetBuilder_.Build<char>(message.bitset);
+
+  auto &room = FindRoomBySocketId(message.clientId);
+  payload::RoomGameStart payload{
+      .id = room.id,
+  };
 
   SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRoomGameStarted, payload);
 
