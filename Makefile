@@ -26,7 +26,9 @@ LINT_DIRS = client/src \
 			libs/game/src \
 			libs/zygarde/src \
 			libs/porygon/src \
+			libs/mew/src \
 			server/src
+
 LINT_FILES = $(shell find $(LINT_DIRS) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.cc' -o -name '*.cxx' \))
 
 ifdef DEBUG

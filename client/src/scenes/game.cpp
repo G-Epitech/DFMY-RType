@@ -7,69 +7,56 @@
 
 #include "game.hpp"
 
-#include "components/drawable.hpp"
-#include "components/on_event.hpp"
+#include "client/src/components/server_entity_id.hpp"
+#include "client/src/systems/game/background.hpp"
+#include "client/src/systems/game/player.hpp"
+#include "client/src/systems/game/sync.hpp"
+#include "libs/mew/src/sets/drawable/drawable.hpp"
+#include "libs/mew/src/sets/events/events.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
 #include "menu.hpp"
-#include "systems/background.hpp"
-#include "systems/drawable.hpp"
-#include "systems/events/key.hpp"
-#include "systems/events/mouse/buttons.hpp"
-#include "systems/events/mouse/move.hpp"
-#include "systems/game/sync.hpp"
-#include "systems/player.hpp"
 
+using namespace mew::sets::events;
+using namespace mew::sets::drawable;
+using namespace porygon;
 using namespace rtype::client::scenes;
-using namespace rtype::client::systems;
+using namespace rtype::client::services;
 using namespace rtype::client::components;
+using namespace rtype::client::systems;
+using namespace zygarde::core::types;
 using namespace zygarde::core::components;
 
-SceneGame::SceneGame(const GlobalContext &context) : SceneBase(context) {
-  registry_->RegisterComponent<Drawable>();
-  registry_->RegisterComponent<Position>();
-  registry_->RegisterComponent<OnKeyPressed>();
-  registry_->RegisterComponent<OnKeyReleased>();
-  registry_->RegisterComponent<OnMousePressed>();
-  registry_->RegisterComponent<OnMouseReleased>();
-  registry_->RegisterComponent<OnMouseMoved>();
+SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
+  auto settings_manager = services_->GetOrThrow<SettingsManager>();
+  auto window_manager = services_->GetOrThrow<WindowManager>();
+  auto server_connection_service = services_->GetOrThrow<ServerConnectionService>();
+
+  serverConnectionService_ = server_connection_service;
+
   registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<ServerEntityId>();
 
-  registry_->AddSystem<KeyPressEventSystem>(context_.windowManager);
-  registry_->AddSystem<KeyReleaseEventSystem>(context_.windowManager);
-  registry_->AddSystem<MousePressEventSystem>(context_.windowManager);
-  registry_->AddSystem<MouseReleaseEventSystem>(context_.windowManager);
-  registry_->AddSystem<MouseMoveEventSystem>(context_.windowManager);
-  registry_->AddSystem<DrawableSystem>(context_.windowManager, resourcesManager_);
-  registry_->AddSystem<GameSyncSystem>(context_.serverConnectionManager);
+  registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
   registry_->AddSystem<BackgroundSystem>();
-  registry_->AddSystem<PlayerSystem>(context_);
+  registry_->AddSystem<PlayerSystem>(settings_manager, window_manager, server_connection_service);
 }
 
 void SceneGame::OnCreate() {
   LoadResources();
-  // CreateControls();
-}
-
-void SceneGame::CreateControls() {
-  auto keyboard_controller = registry_->SpawnEntity();
-
-  auto keypress_handler = [this](const sf::Keyboard::Key key) { return OnKeyPress(key); };
-  registry_->AddComponent<components::OnKeyPressed>(keyboard_controller,
-                                                    {.handler = keypress_handler});
 }
 
 void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {
   switch (key) {
     case sf::Keyboard::Key::Escape:
-      return context_.scenesManager->GoToScene<SceneMenu>();
+      return managers_.scenes->GoToScene<SceneMenu>();
     default:
       break;
   }
 }
 
 void SceneGame::LoadResources() {
-  resourcesManager_->LoadTexture("assets/sheets/player.png", "player");
-  resourcesManager_->LoadTexture("assets/sheets/enemy.png", "enemy");
+  managers_.resources->LoadTexture("assets/sheets/player.png", "player");
+  managers_.resources->LoadTexture("assets/sheets/enemy.png", "enemy");
 }
 
 void SceneGame::CreatePlayerEntity() {
@@ -100,5 +87,5 @@ void SceneGame::CreatePlayerEntity() {
               });
   registry_->AddComponent<Tags>(player, Tags({"player"}));
   registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
-  registry_->AddComponent<Position>(player, {zyc::types::Vector3f{100, 100, 0}});
+  registry_->AddComponent<Position>(player, {Vector3f{100, 100, 0}});
 }

@@ -37,9 +37,10 @@ std::shared_ptr<T> DependenciesHandler::MakeSharedWithDependencies(Args&&... arg
 
 template <typename T, typename... Args>
 DependenciesHandler& DependenciesHandler::Add(Args&&... args) {
-  builders_[std::type_index(typeid(T))] = [this, ... args = std::forward<Args>(args)]() mutable {
-    return MakeSharedWithDependencies<T>(std::forward<Args>(args)...);
-  };
+  builders_[std::type_index(typeid(T))] =
+      [this, ... args = std::decay_t<Args>(std::forward<Args>(args))]() mutable {
+        return MakeSharedWithDependencies<T>(std::forward<decltype(args)>(args)...);
+      };
   return *this;
 }
 

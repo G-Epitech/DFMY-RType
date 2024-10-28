@@ -9,6 +9,8 @@
 
 #include <gtest/gtest.h>
 
+#include <utility>
+
 using namespace zygarde;
 
 TEST(RegistryTests, CreateEmptyRegistry) {
@@ -195,7 +197,7 @@ TEST(RegisterTests, IterateOnOneComponent) {
   registry->AddComponent<int>(entity4, 45);
   auto component = registry->GetComponents<int>();
   std::size_t count = 0;
-  for (const auto &value : *component) {
+  for ([[maybe_unused]] const auto &value : *component) {
     count++;
   }
   ASSERT_EQ(count, 4);
@@ -204,10 +206,11 @@ TEST(RegisterTests, IterateOnOneComponent) {
 TEST(RegistryTests, AddOwnEntity) {
   class MyBestEntity : public Entity {
    public:
-    MyBestEntity(const std::size_t id, Registry &registry, std::size_t nb) : Entity(id, registry) {
+    MyBestEntity(const std::size_t id, Registry::Ptr registry, std::size_t nb)
+        : Entity(id, std::move(registry)) {
       (void) nb;
     }
-    void OnSpawn() override { registry_.RegisterComponent<int>(); }
+    void OnSpawn() override { registry_->RegisterComponent<int>(); }
   };
 
   const auto registry = Registry::Create();

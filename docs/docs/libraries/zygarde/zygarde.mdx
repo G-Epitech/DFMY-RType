@@ -49,7 +49,7 @@ struct controllable {
 };
 ```
 
-Now, we can create a registry, register the components, and create an entity:
+Now, we can Create a registry, register the components, and Create an entity:
 
 ```cpp
 zygrade::registry registry;
@@ -144,7 +144,7 @@ class LoggingSystem final : public ASystem<position, velocity> {
 };
 
 int main() {
-  auto registry = zygarde::Registry::create();
+  auto registry = zygarde::Registry::Create();
 
   registry->RegisterComponent<position>();
   registry->RegisterComponent<velocity>();

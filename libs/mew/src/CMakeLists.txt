@@ -1,0 +1,5 @@
+add_subdirectory(game)
+add_subdirectory(managers)
+add_subdirectory(utils)
+add_subdirectory(scenes)
+add_subdirectory(sets)
