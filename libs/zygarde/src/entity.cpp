@@ -7,9 +7,12 @@
 
 #include "./entity.hpp"
 
+#include <utility>
+
 using namespace zygarde;
 
-Entity::Entity(const std::size_t idx, Registry& registry) : id_{idx}, registry_{registry} {}
+Entity::Entity(const std::size_t idx, std::shared_ptr<Registry> registry)
+    : id_{idx}, registry_{std::move(registry)} {}
 
 Entity::~Entity() = default;
 
@@ -19,10 +22,7 @@ Entity::operator std::size_t() const {
   return id_;
 }
 
-Entity& Entity::operator=(const Entity& other) {
-  id_ = other.id_;
-  return *this;
-}
+Entity& Entity::operator=(const Entity& other) = default;
 
 bool Entity::operator==(const Entity& other) const {
   return id_ == other.id_;

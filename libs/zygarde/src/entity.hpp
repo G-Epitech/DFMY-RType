@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 #include <type_traits>
 
 #include "libs/zygarde/src/api.hpp"
@@ -64,7 +65,7 @@ class EXPORT_ZYGARDE_API Entity {
   /// @brief Entity id
   std::size_t id_;
   /// @brief Registry reference
-  Registry& registry_;
+  std::shared_ptr<Registry> registry_;
 
   /**
    * @brief Private constructor
@@ -72,7 +73,7 @@ class EXPORT_ZYGARDE_API Entity {
    * @param idx Entity id
    * @param registry Registry reference
    */
-  explicit Entity(std::size_t idx, Registry& registry);
+  explicit Entity(std::size_t idx, std::shared_ptr<Registry> registry);
 
   /**
    * @brief OnSpawn method
