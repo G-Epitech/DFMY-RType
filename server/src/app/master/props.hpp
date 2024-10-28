@@ -16,11 +16,14 @@ struct MasterCtxProps {
   /// @brief The token that allow a node to connect to the master
   std::string token;
 
+  /// @brief The node port
+  std::size_t nodePort;
+
   /**
    * @brief Construct a new MasterCtxProps object
    * @param token The token that allow a node to connect to the master
    */
-  MasterCtxProps(std::string token);
+  MasterCtxProps(std::string token, std::size_t nodePort);
 
   /**
    * @brief Construct a new MasterCtxProps object with default values

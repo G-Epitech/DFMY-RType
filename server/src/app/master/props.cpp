@@ -11,6 +11,7 @@
 
 using namespace rtype::server;
 
-MasterCtxProps::MasterCtxProps(std::string token) : token(std::move(token)) {}
+MasterCtxProps::MasterCtxProps(std::string token, std::size_t nodePort)
+    : token(std::move(token)), nodePort(nodePort) {}
 
-MasterCtxProps::MasterCtxProps() : token() {}
+MasterCtxProps::MasterCtxProps() : token(), nodePort(0) {}

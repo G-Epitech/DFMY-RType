@@ -26,9 +26,10 @@ class rtype::sdk::game::api::Master {
  public:
   /**
    * @brief Construct a new Server API instance
-   * @param port The port of the server (Main TCP port)
+   * @param clientsPort The port of the clients socket
+   * @param nodesPort The port of the nodes socket
    */
-  explicit Master(int port);
+  explicit Master(int clientsPort, int nodesPort);
 
   /**
    * @brief Delete the Server API instance

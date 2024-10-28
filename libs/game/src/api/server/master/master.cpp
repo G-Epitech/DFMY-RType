@@ -9,10 +9,10 @@
 
 using namespace rtype::sdk::game::api;
 
-Master::Master(int port)
+Master::Master(int clientsPort, int nodesPort)
     : logger_("serverAPI"),
-      clientsSocket_(port, [this](auto &msg) { return ClientMessageMiddleware(msg); }),
-      nodesSocket_(port, [this](auto &msg) { return NodeMessageMiddleware(msg); }) {
+      clientsSocket_(clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); }),
+      nodesSocket_(nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); }) {
   this->InitClientsThread();
   this->InitNodesThread();
 }

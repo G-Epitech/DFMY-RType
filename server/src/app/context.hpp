@@ -12,8 +12,8 @@
 #include <variant>
 
 #include "app/master/props.hpp"
-#include "app/room/props.hpp"
 #include "app/node/props.hpp"
+#include "app/room/props.hpp"
 #include "server_types.hpp"
 
 namespace rtype::server {

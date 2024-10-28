@@ -9,7 +9,10 @@
 
 #include <iostream>
 
-rtype::server::Master::Master(const BaseContext &ctx) : ctx_(), api_(static_cast<int>(ctx.port)) {
+rtype::server::Master::Master(const BaseContext &ctx)
+    : ctx_(),
+      api_(static_cast<int>(ctx.port),
+           static_cast<int>(std::get<MasterCtxProps>(ctx.props).nodePort)) {
   ctx_ = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,
