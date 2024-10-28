@@ -15,37 +15,34 @@ using namespace mew::sets::events;
 using namespace mew::managers;
 
 MouseMoveEventSystem::MouseMoveEventSystem(WindowManager::Ptr window_manager)
-    : EventSystemBase<events::kMouseMoved, OnMouseMoved, drawable::Drawable>(
-          std::move(window_manager)) {}
+    : EventSystemBase<events::kMouseMoved, OnMouseMoved>(std::move(window_manager)) {}
 
 void MouseMoveEventSystem::HandleEvent(const sf::Event& event, Registry::Ptr r,
-                                       sparse_array<OnMouseMoved>::ptr components,
-                                       sparse_array<drawable::Drawable>::ptr drawables) {
-  std::size_t entity_id = 0;
-
-  for (auto& component : (*components)) {
-    if (component) {
-      HandleEventForEntity(entity_id, event, drawables, *component);
-    }
-    entity_id += 1;
+                                       zipper<OnMouseMoved> components) {
+  const auto begin = components.begin();
+  const auto end = components.end();
+  const auto drawables = r->GetComponents<drawable::Drawable>();
+  for (auto it = begin; it != end; ++it) {
+    auto&& [entity_index, entity_components] = ~it;
+    auto&& [on_mouse_moved] = entity_components;
+    HandleEventForEntity(entity_index, event, drawables, on_mouse_moved);
   }
 }
 
 void MouseMoveEventSystem::HandleEventForEntity(
-    std::size_t entityId, const sf::Event& event,
-    const sparse_array<drawable::Drawable>::ptr& drawables,
-    const std::optional<OnMouseMoved>& component) {
+    std::size_t entity_id, const sf::Event& event,
+    const sparse_array<drawable::Drawable>::ptr& drawables, const OnMouseMoved& on_mouse_moved) {
   auto window = this->windowManager_->window();
   auto position = window ? window->mapPixelToCoords({event.mouseMove.x, event.mouseMove.y})
                          : sf::Vector2f{0, 0};
-  if (!component || !window) {
+  if (!window) {
     return;
   }
-  auto current =
-      MouseStrategyUtils::GetCurrentTarget<OnMouseMoved>(position, *component, drawables, entityId);
-  if ((component->strategy == events::kAnyTarget) ||
-      (current == events::kLocalTarget && component->strategy == events::kLocalTarget) ||
-      (current == events::kOtherTarget && component->strategy == events::kOtherTarget)) {
-    return component->handler(position, current);
+  auto current = MouseStrategyUtils::GetCurrentTarget<OnMouseMoved>(position, on_mouse_moved,
+                                                                    drawables, entity_id);
+  if ((on_mouse_moved.strategy == events::kAnyTarget) ||
+      (current == events::kLocalTarget && on_mouse_moved.strategy == events::kLocalTarget) ||
+      (current == events::kOtherTarget && on_mouse_moved.strategy == events::kOtherTarget)) {
+    return on_mouse_moved.handler(position, current);
   }
 }

@@ -44,7 +44,6 @@ void ServerUDP::ListenNewRequest() {
 void ServerUDP::HandleRequest(const std::size_t &size) {
   std::vector<char> buffer = std::vector<char>(buffer_.begin(), buffer_.begin() + size);
   logger_.Info("Received " + std::to_string(size) + " bytes", "⬅️ ");
-
   ResolveBuffer(&buffer, size);
 }
 

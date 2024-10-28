@@ -22,6 +22,6 @@ class MouseScrollEventSystem : public EventSystemBase<events::kMouseScrolled, On
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   sparse_array<OnMouseScrolled>::ptr components) override;
+                   zipper<OnMouseScrolled> components) override;
 };
 }  // namespace mew::sets::events

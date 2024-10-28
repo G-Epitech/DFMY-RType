@@ -13,8 +13,7 @@
 
 namespace mew::sets::events {
 template <EventType EventType, typename MouseEventComponent>
-class MouseButtonEventSystem
-    : public EventSystemBase<EventType, MouseEventComponent, drawable::Drawable> {
+class MouseButtonEventSystem : public EventSystemBase<EventType, MouseEventComponent> {
  public:
   /**
    * @brief Build a new Mouse Event System Base object
@@ -26,19 +25,18 @@ class MouseButtonEventSystem
 
  protected:
   void HandleEvent(const sf::Event& event, Registry::Ptr r,
-                   typename sparse_array<MouseEventComponent>::ptr components,
-                   sparse_array<drawable::Drawable>::ptr drawables) override;
+                   zipper<MouseEventComponent> components) override;
 
   /**
    * @brief Handle the event for the entity
-   * @param entityId Entity id
+   * @param entity_id Entity id
    * @param event Event to handle
    * @param drawables Drawables components
    * @param component Component to handle
    */
-  void HandleEventForEntity(std::size_t entityId, const sf::Event& event,
+  void HandleEventForEntity(std::size_t entity_id, const sf::Event& event,
                             const sparse_array<drawable::Drawable>::ptr& drawables,
-                            const std::optional<MouseEventComponent>& component);
+                            const MouseEventComponent& component);
 };
 
 typedef MouseButtonEventSystem<kMouseReleased, OnMouseReleased> MouseReleaseEventSystem;

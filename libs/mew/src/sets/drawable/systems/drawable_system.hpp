@@ -28,8 +28,8 @@ class DrawableSystem final : public ASystem<Drawable, zygarde::core::components:
   explicit DrawableSystem(managers::WindowManager::Ptr window_manager,
                           managers::ResourcesManager::Ptr resources_manager);
 
-  void Run(Registry::Ptr r, sparse_array<Drawable>::ptr drawables,
-           sparse_array<zygarde::core::components::Position>::ptr positions) override;
+  void Run(Registry::Ptr r,
+           zipper<drawable::Drawable, zygarde::core::components::Position> components) override;
 
  private:
   /// @brief The render window to display the entities.

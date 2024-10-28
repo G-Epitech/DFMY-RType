@@ -24,7 +24,7 @@ class EventSystemBase : public ASystem<Components...> {
    * @param r Registry to use
    * @param components Components to use
    */
-  void Run(Registry::Ptr r, sparse_array<Components>::ptr... components) final;
+  void Run(Registry::Ptr r, zipper<Components...> components) final;
 
  protected:
   /**
@@ -43,7 +43,7 @@ class EventSystemBase : public ASystem<Components...> {
    * @param components Components to use
    */
   virtual void HandleEvent(const sf::Event &event, Registry::Ptr r,
-                           sparse_array<Components>::ptr... components) = 0;
+                           zipper<Components...> components) = 0;
 };
 }  // namespace mew::sets::events
 

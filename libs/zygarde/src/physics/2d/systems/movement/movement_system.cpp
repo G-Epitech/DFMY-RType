@@ -7,25 +7,16 @@
 
 #include "./movement_system.hpp"
 
-#include <iostream>
-
 using namespace zygarde::physics::systems;
 
 MovementSystem::MovementSystem(const utils::Timer::Nanoseconds& delta_time)
     : ASystem(), deltaTime_(delta_time) {}
 
 void MovementSystem::Run(std::shared_ptr<Registry> r,
-                         tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
-                         tools::sparse_array<core::components::Position>::ptr positions) {
-  std::cout << "rigidbodies size: " << rigidbodies->size() << std::endl;
-  auto max = std::max(rigidbodies->size(), positions->size());
-  for (size_t i = 0; i < max; ++i) {
-    auto& rigidbody = (*rigidbodies)[i];
-    auto& position = (*positions)[i];
-    if (rigidbody.has_value() && position.has_value()) {
-      ComputePositionOffset(&(*rigidbody));
-      UpdatePosition(&((*position)));
-    }
+                         zipper<components::Rigidbody2D, core::components::Position> components) {
+  for (auto&& [rigidbody, position] : components) {
+    ComputePositionOffset(&(rigidbody));
+    UpdatePosition(&(position));
   }
 }
 
@@ -44,5 +35,4 @@ void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {
 void MovementSystem::UpdatePosition(core::components::Position* position) const {
   position->point.x += movementOffset_.x;
   position->point.y += movementOffset_.y;
-  std::cout << "Position: " << position->point.x << ", " << position->point.y << std::endl;
 }

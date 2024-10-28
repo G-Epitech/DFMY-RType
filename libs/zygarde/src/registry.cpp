@@ -7,8 +7,6 @@
 
 #include "./registry.hpp"
 
-#include <iostream>
-
 using namespace zygarde;
 
 Registry::Registry(Private) {}
@@ -28,25 +26,11 @@ void Registry::RunSystems() {
   }
 }
 
-Entity Registry::SpawnEntity() {
-  std::size_t newId;
-
-  if (!freeIds_.empty()) {
-    newId = freeIds_.top();
-    freeIds_.pop();
-  } else {
-    newId = currentMaxEntityId_++;
-  }
-  Entity e(newId);
-  entities_.emplace_back(e);
-  return e;
-}
-
 Entity Registry::EntityFromIndex(const std::size_t idx) const {
   if (entities_.empty()) {
     throw Exception("Entity not found");
   }
-  if (entities_.size() < idx) {
+  if (entities_.size() <= idx) {
     throw Exception("Entity not found");
   }
   if (!entities_.at(idx).has_value()) {
@@ -56,30 +40,24 @@ Entity Registry::EntityFromIndex(const std::size_t idx) const {
 }
 
 void Registry::KillEntity(Entity const &e) {
+  if (std::find(entities_.begin(), entities_.end(), e) == entities_.end()) {
+    return;
+  }
   freeIds_.push(static_cast<std::size_t>(e));
-  entities_.at(IndexFromEntity(e)) = std::nullopt;
+  entities_.at(e.id_) = std::nullopt;
   for (auto &remove_function : removeFunctions_) {
     remove_function.second(*this, e);
   }
 }
 
-std::size_t Registry::IndexFromEntity(const Entity &e) const {
-  for (std::size_t i = 0; i < entities_.size(); i++) {
-    if (entities_.at(i) == e) {
-      return i;
-    }
-  }
-  throw Exception("Entity not found");
-}
-
 void Registry::DestroyEntity(const Entity &e) {
-  entitesToKill_.push(e);
+  entitiesToKill_.push(e);
 }
 
 void Registry::CleanupDestroyedEntities() {
-  while (!entitesToKill_.empty()) {
-    KillEntity(entitesToKill_.top());
-    entitesToKill_.pop();
+  while (!entitiesToKill_.empty()) {
+    KillEntity(entitiesToKill_.top());
+    entitiesToKill_.pop();
   }
 }
 bool Registry::HasEntityAtIndex(std::size_t idx) const {
@@ -90,4 +68,8 @@ Registry::Exception::Exception(std::string message) : message_(std::move(message
 
 const char *Registry::Exception::what() const noexcept {
   return message_.c_str();
+}
+
+std::vector<std::optional<Entity>> &Registry::GetEntities() {
+  return entities_;
 }

@@ -5,9 +5,13 @@
 ** RegistryHelper.cpp
 */
 
-#include "./registry_helper.hpp"
+#include "./helper.hpp"
 
-#include <utility>
+#include "core/components/components.hpp"
+#include "physics/2d/components/components.hpp"
+#include "physics/2d/systems/systems.hpp"
+#include "scripting/components/script/script.hpp"
+#include "scripting/systems/execution/script_execution_system.hpp"
 
 using namespace zygarde::utils;
 

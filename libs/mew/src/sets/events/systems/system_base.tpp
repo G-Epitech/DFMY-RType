@@ -18,15 +18,15 @@ EventSystemBase<EventType, Components...>::EventSystemBase(
   windowManager_ = std::move(window_manager);
 }
 
-template <EventType EventType, class... EventComponents>
-void EventSystemBase<EventType, EventComponents...>::Run(
-    Registry::Ptr r, sparse_array<EventComponents>::ptr... components) {
-  auto type_to_handle = EventTypeMapper<EventType>::type;
+template <EventType EventType, class... Components>
+void EventSystemBase<EventType, Components...>::Run(Registry::Ptr r,
+                                                         zipper<Components...> components) {
+  auto type_to_handle = events::EventTypeMapper<EventType>::type;
   auto& events = windowManager_->GetDeferredEvents();
 
   for (const auto& event : events) {
     if (event.type == type_to_handle)
-      HandleEvent(event, r, components...);
+      HandleEvent(event, r, components);
   }
 }
 }  // namespace mew::sets::events

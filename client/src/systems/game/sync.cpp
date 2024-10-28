@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "client/src/services/server_connection_service.hpp"
+#include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 
@@ -24,7 +25,7 @@ using namespace mew::sets::drawable;
 GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service)
     : ASystem(), serverConnectionService_{std::move(server_connection_service)} {}
 
-void GameSyncSystem::Run(Registry::Ptr r, sparse_array<ServerEntityId>::ptr IDs) {
+void GameSyncSystem::Run(Registry::Ptr r) {
   auto queue = serverConnectionService_->client()->ExtractQueue();
   while (!queue.empty()) {
     auto& message = queue.front();
@@ -43,7 +44,7 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, con
       player, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       player, {
-                  .drawable = Texture{.name = "player", .scale = 5, .rect = base},
+                  .drawable = Texture{.name = "player", .scale = 3, .rect = base},
               });
 
   std::cout << "Player created" << std::endl;
@@ -65,19 +66,21 @@ void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, con
   }
 }
 
-void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const Vector3f& pos) {
+void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
+                                  const sdk::game::api::payload::BulletState& state) {
   const auto bullet = registry->SpawnEntity();
-  static const sf::IntRect base{337, 255, 12, 4};
+  const auto pos = Vector3f(state.position.x, state.position.y, 0);
 
-  registry->AddComponent<ServerEntityId>(bullet, {.id = id});
-  registry->AddComponent<Position>(
-      bullet, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
-  registry->AddComponent<Drawable>(
-      bullet, {
-                  .drawable = Texture{.name = "bullet", .scale = 3, .rect = base},
-              });
-  bullets_.insert_or_assign(id, bullet);
+  registry->AddComponent<components::ServerEntityId>(bullet, {.id = state.entityId});
+  registry->AddComponent<zygarde::core::components::Position>(
+      bullet, {.point = pos,
+               .aligns = {core::components::HorizontalAlign::kLeft,
+                          core::components::VerticalAlign::kTop}});
+  registry->AddComponent<Drawable>(bullet,
+                                   {
+                                       .drawable = TextureMapper::MapBulletType(state.bulletType),
+                                   });
+  bullets_.insert_or_assign(state.entityId, bullet);
 }
 
 void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
@@ -98,7 +101,7 @@ void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, con
 void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                  const Vector3f& pos) {
   auto enemy = registry->SpawnEntity();
-  static const sf::IntRect base{0, 0, 33, 36};
+  static const sf::IntRect base{5, 6, 21, 36};
 
   registry->AddComponent<ServerEntityId>(enemy, {.id = id});
   registry->AddComponent<Position>(
@@ -176,7 +179,7 @@ void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
   if (bullets_.contains(state.entityId)) {
     UpdateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   } else {
-    CreateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    CreateBullet(registry, state);
   }
   handled->insert(state.entityId);
 }
@@ -206,10 +209,13 @@ void GameSyncSystem::HandleEnemyState(const Registry::Ptr& registry,
 void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
                                     const std::set<std::size_t>& handled,
                                     std::map<std::size_t, Entity>* entities) {
-  for (const auto& [id, entity] : *entities) {
+  for (auto it = entities->begin(); it != entities->end();) {
+    const auto& [id, entity] = *it;
     if (handled.find(id) == handled.end()) {
       registry->KillEntity(entity);
-      entities->erase(id);
+      it = entities->erase(it);
+    } else {
+      ++it;
     }
   }
 }

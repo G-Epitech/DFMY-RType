@@ -16,10 +16,9 @@ KeyEventSystemBase<EventType, KeyEventComponent>::KeyEventSystemBase(
 
 template <EventType EventType, typename KeyEventComponent>
 void KeyEventSystemBase<EventType, KeyEventComponent>::HandleEvent(
-    const sf::Event& event, Registry::Ptr r, sparse_array<KeyEventComponent>::ptr components) {
-  for (auto& component : (*components)) {
-    if (component)
-      component->handler(event.key.code);
+    const sf::Event& event, Registry::Ptr r, zipper<KeyEventComponent> components) {
+  for (auto&& [keyEvent] : components) {
+    keyEvent.handler(event.key.code);
   }
 }
 }  // namespace mew::sets::events

@@ -12,42 +12,43 @@ namespace mew::sets::events {
 template <EventType EventType, typename MouseEventComponent>
 MouseButtonEventSystem<EventType, MouseEventComponent>::MouseButtonEventSystem(
     managers::WindowManager::Ptr window_manager)
-    : EventSystemBase<EventType, MouseEventComponent, drawable::Drawable>(
-          std::move(window_manager)) {}
+    : EventSystemBase<EventType, MouseEventComponent>(std::move(window_manager)) {}
 
 template <EventType EventType, typename MouseEventComponent>
 void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEvent(
-    const sf::Event& event, Registry::Ptr r, sparse_array<MouseEventComponent>::ptr components,
-    sparse_array<drawable::Drawable>::ptr drawables) {
-  std::size_t entity_id = 0;
-
-  for (auto& component : (*components)) {
-    HandleEventForEntity(entity_id++, event, drawables, component);
+    const sf::Event& event, Registry::Ptr r, zipper<MouseEventComponent> components) {
+  const auto begin = components.begin();
+  const auto end = components.end();
+  const auto drawables = r->GetComponents<drawable::Drawable>();
+  for (auto it = begin; it != end; ++it) {
+    auto&& [entity_id, entity_components] = ~it;
+    auto&& [on_mouse_button_event] = entity_components;
+    HandleEventForEntity(entity_id, event, drawables, on_mouse_button_event);
   }
 }
 
 template <EventType EventType, typename MouseEventComponent>
 void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEventForEntity(
-    const std::size_t entityId, const sf::Event& event,
+    std::size_t entity_id, const sf::Event& event,
     const sparse_array<drawable::Drawable>::ptr& drawables,
-    const std::optional<MouseEventComponent>& component) {
+    const MouseEventComponent& component) {
   auto window = this->windowManager_->window();
   auto position = window ? window->mapPixelToCoords({event.mouseButton.x, event.mouseButton.y})
                          : sf::Vector2f{0, 0};
-  if (!component || !window) {
+  if (!window) {
     return;
-  } else if (component->strategy == MouseEventTarget::kAnyTarget) {
-    return component->handler(event.mouseButton.button, position, kAnyTarget);
+  } else if (component.strategy == events::MouseEventTarget::kAnyTarget) {
+    return component.handler(event.mouseButton.button, position, events::kAnyTarget);
   }
 
-  auto target = MouseStrategyUtils::GetCurrentTarget<MouseEventComponent>(position, *component,
-                                                                          drawables, entityId);
-  auto v = component->strategy & target;
+  auto target = MouseStrategyUtils::GetCurrentTarget<MouseEventComponent>(position, component,
+                                                                          drawables, entity_id);
+  auto v = component.strategy & target;
   switch (v) {
     case kLocalTarget:
     case kOtherTarget:
-      return component->handler(event.mouseButton.button, position,
-                                static_cast<MouseEventTarget>(target));
+      return component.handler(event.mouseButton.button, position,
+                               static_cast<MouseEventTarget>(target));
     default:
       return;
   }

@@ -16,7 +16,7 @@
 #include "libs/zygarde/src/system_abstract.hpp"
 
 namespace rtype::client::systems {
-class GameSyncSystem final : public ASystem<components::ServerEntityId> {
+class GameSyncSystem final : public ASystem<> {
  public:
   /**
    * @brief Construct a new Game Sync System object
@@ -24,7 +24,7 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
    */
   explicit GameSyncSystem(services::ServerConnectionService::Ptr server_connection_service);
 
-  void Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr component) override;
+  void Run(Registry::Ptr r) override;
 
  private:
   /**
@@ -67,11 +67,10 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
   /**
    * @brief Create a bullet
    * @param registry The registry
-   * @param id The id of the bullet
-   * @param pos The position of the bullet
+   * @param state State of the bullet
    */
-  void CreateBullet(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+  void CreateBullet(const std::shared_ptr<Registry> &registry,
+                    const sdk::game::api::payload::BulletState &state);
 
   /**
    * @brief Update a bullet

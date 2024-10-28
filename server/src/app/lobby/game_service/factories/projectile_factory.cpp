@@ -9,50 +9,67 @@
 
 #include <iostream>
 
+#include "game/includes/constants.hpp"
 #include "scripting/components/script/script.hpp"
 
 using namespace rtype::server::game;
 
-zygarde::Entity ProjectileFactory::CreateProjectile(
-    zygarde::Registry::Const_Ptr registry, const core::types::Vector3f& position,
-    const core::types::Vector2f& box_size, rtype::sdk::game::types::GameEntityType shooter) {
+Entity ProjectileFactory::CreateProjectile(Registry::Const_Ptr registry,
+                                           const core::types::Vector3f& position,
+                                           const core::types::Vector2f& box_size,
+                                           const sdk::game::types::GameEntityType shooter) {
   Entity projectile = registry->SpawnEntity();
-  zygarde::core::types::Vector2f direction;
+  core::types::Vector2f direction;
   std::string tag;
-  std::vector<int> collidesWith;
+  std::vector<int> collisionLayers;
+  std::vector<int> includeLayers;
+  float speedMagnifier;
 
   if (shooter == sdk::game::types::GameEntityType::kPlayer) {
-    direction = zygarde::core::types::Vector2f::right();
+    direction = core::types::Vector2f::right();
     tag = sdk::game::constants::kPlayerBulletTag;
-    collidesWith = sdk::game::constants::kEnemyCollidesWith;
+    collisionLayers = sdk::game::constants::kPlayerBulletCollisionLayers;
+    includeLayers = sdk::game::constants::kPlayerBulletIncludeLayers;
+    speedMagnifier = 700;
   } else {
-    direction = zygarde::core::types::Vector2f::left();
+    direction = core::types::Vector2f::left();
     tag = sdk::game::constants::kEnemyBulletTag;
-    collidesWith = sdk::game::constants::kPlayerCollidesWith;
+    collisionLayers = sdk::game::constants::kEnemyBulletCollisionLayers;
+    includeLayers = sdk::game::constants::kEnemyBulletIncludeLayers;
+    speedMagnifier = 300;
   }
 
-  registry->AddComponent<zygarde::physics::components::Rigidbody2D>(
-      projectile, zygarde::physics::components::Rigidbody2D(direction));
-  registry->AddComponent<zygarde::core::components::Position>(projectile, {position});
-  registry->AddComponent<zygarde::physics::components::BoxCollider2D>(projectile,
-                                                                      {box_size, collidesWith});
-  registry->AddComponent<zygarde::core::components::Tags>(projectile,
-                                                          zygarde::core::components::Tags({tag}));
+  registry->AddComponent<physics::components::Rigidbody2D>(
+      projectile, physics::components::Rigidbody2D(direction * speedMagnifier));
+  registry->AddComponent<core::components::Position>(projectile, {position});
+  registry->AddComponent<physics::components::BoxCollider2D>(
+      projectile, {box_size, collisionLayers, includeLayers});
+  registry->AddComponent<core::components::Tags>(projectile, core::components::Tags({tag}));
   CreateScript(registry, projectile);
   return projectile;
 }
 
-void ProjectileFactory::CreateScript(zygarde::Registry::Const_Ptr registry, const Entity& entity) {
-  zygarde::scripting::types::ValuesMap valuesMap;
+void ProjectileFactory::CreateScript(Registry::Const_Ptr registry, const Entity& entity) {
+  scripting::types::ValuesMap valuesMap;
 
   scripting::types::Collision2DFunction onCollisionEnter = HandleCollision;
+  scripting::types::FixedUpdateFunction onFixedUpdate =
+      [](scripting::types::ScriptingContext::ConstPtr context) {
+        const auto posComponent =
+            context->registry->GetComponent<core::components::Position>(context->me);
+        if (!posComponent) {
+          return;
+        }
+        if (posComponent->point.x > 2000 || posComponent->point.x < -200) {
+          context->registry->DestroyEntity(context->me);
+        }
+      };
 
-  registry->AddComponent<zygarde::scripting::components::Script>(
-      entity, {onCollisionEnter, std::nullopt, valuesMap});
+  registry->AddComponent<scripting::components::Script>(
+      entity, {onCollisionEnter, onFixedUpdate, valuesMap});
 }
 
 void ProjectileFactory::HandleCollision(scripting::types::ScriptingContext::ConstPtr context,
                                         const physics::types::Collision2D::ptr& collision) {
   context->registry->DestroyEntity(context->me);
-  std::cout << "I died" << std::endl;
 }
