@@ -91,8 +91,8 @@ void SceneLobby::JoinLobby() {
   mainMessage_ = "Registering to the server";
   secondaryMessage_ = "Please wait...";
   auto res = serverConnectionService_->client()->Register({
-                                                                  .username = "ptit'plouf",
-                                                          });
+      .username = "ptit'plouf",
+  });
   if (!res) {
     mainMessage_ = "Registration failed";
     secondaryMessage_ = "Unable to register on the server";
@@ -104,9 +104,9 @@ void SceneLobby::JoinLobby() {
   mainMessage_ = "Joining the lobby";
   secondaryMessage_ = "Please wait...";
   res = serverConnectionService_->client()->JoinLobby({
-                                                              .nodeId = 0,
-                                                              .roomId = 0,
-                                                      });
+      .nodeId = 0,
+      .roomId = 0,
+  });
   if (!res) {
     mainMessage_ = "Joining failed";
     secondaryMessage_ = "Unable to join the lobby";

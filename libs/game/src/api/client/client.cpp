@@ -106,7 +106,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
   auto queue = std::queue<ServerMessage>();
 
   auto queueTCP = this->clientTCP_.ExtractQueue();
-  Client::ConvertQueueData(&queueTCP, &queue);
+  Client::ConvertQueueData(&queueTCP, &queue, NetworkProtocolType::kTCP);
 
   if (!this->isLobbyConnected_) {
     logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
@@ -114,7 +114,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
   }
 
   auto queueUDP = this->clientUDP_->ExtractQueue();
-  Client::ConvertQueueData(&queueUDP, &queue);
+  Client::ConvertQueueData(&queueUDP, &queue, NetworkProtocolType::kUDP);
 
   auto multiQueue = this->clientUDP_->ExtractMultiQueue();
   while (!multiQueue.empty()) {
@@ -129,6 +129,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
 
     queue.push({.messageId = multiMessages.messages[0].messageId,
                 .messageType = multiMessages.messages[0].messageType,
+                .protocolType = NetworkProtocolType::kUDP,
                 .data = data});
     multiQueue.pop();
   }
@@ -158,13 +159,15 @@ bool Client::Move(const payload::Movement &payload) {
 }
 
 void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
-                              std::queue<ServerMessage> *serverQueue) {
+                              std::queue<ServerMessage> *serverQueue,
+                              NetworkProtocolType protocolType) {
   while (!queue->empty()) {
     auto &message = queue->front();
 
     serverQueue->push(
         {.messageId = message.messageId,
          .messageType = message.messageType,
+         .protocolType = protocolType,
          .data = std::vector<std::shared_ptr<abra::tools::dynamic_bitset>>{message.data}});
     queue->pop();
   }
@@ -172,8 +175,8 @@ void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
 
 std::vector<payload::PlayerState> Client::ResolvePlayersState(
     const Client::ServerMessage &message) {
-  auto players =
-      ResolvePayloads<payload::PlayerState>(RoomToClientMsgType::kMsgTypeRTCPlayersState, message);
+  auto players = ResolveUDPPayloads<payload::PlayerState>(
+      RoomToClientMsgType::kMsgTypeRTCPlayersState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹");
 
@@ -181,8 +184,8 @@ std::vector<payload::PlayerState> Client::ResolvePlayersState(
 }
 
 std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::ServerMessage &message) {
-  auto players =
-      ResolvePayloads<payload::EnemyState>(RoomToClientMsgType::kMsgTypeRTCEnemiesState, message);
+  auto players = ResolveUDPPayloads<payload::EnemyState>(
+      RoomToClientMsgType::kMsgTypeRTCEnemiesState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " enemies states", "🧌");
 
@@ -191,8 +194,8 @@ std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::Serve
 
 std::vector<payload::BulletState> Client::ResolveBulletsState(
     const Client::ServerMessage &message) {
-  auto players =
-      ResolvePayloads<payload::BulletState>(RoomToClientMsgType::kMsgTypeRTCBulletsState, message);
+  auto players = ResolveUDPPayloads<payload::BulletState>(
+      RoomToClientMsgType::kMsgTypeRTCBulletsState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " bullets states", "💥");
 
@@ -228,4 +231,42 @@ bool api::Client::WaitForMessage(MasterToClientMsgType type,
   }
 
   return success;
+}
+
+bool Client::RefreshInfos(bool game, bool rooms) {
+  payload::RefreshInfos payload = {.infoGame = game, .infoRooms = rooms};
+
+  auto success = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMRefreshInfos, payload);
+  if (success) {
+    logger_.Info("Refresh infos", "🔄");
+  }
+
+  return success;
+}
+
+payload::InfoGame Client::ResolveGameInfo(const Client::ServerMessage &message) {
+  auto payload =
+      ResolveTCPPayloads<payload::InfoGame>(MasterToClientMsgType::kMsgTypeMTCInfoGame, message);
+
+  logger_.Info("Resolved game infos", "🎮");
+
+  return payload[0];
+}
+
+payload::InfoRooms Client::ResolveInfoRooms(const Client::ServerMessage &message) {
+  auto payload =
+      ResolveTCPPayloads<payload::InfoRooms>(MasterToClientMsgType::kMsgTypeMTCInfoRooms, message);
+
+  logger_.Info("Resolved rooms infos", "🏠");
+
+  return payload[0];
+}
+
+payload::GameEnd Client::ResolveRoomGameEnd(const Client::ServerMessage &message) {
+  auto payload =
+      ResolveTCPPayloads<payload::GameEnd>(MasterToClientMsgType::kMsgTypeMTCGameEnded, message);
+
+  logger_.Info("Resolved room game end", "🏁");
+
+  return payload[0];
 }

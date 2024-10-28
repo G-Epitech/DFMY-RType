@@ -32,8 +32,9 @@ class rtype::sdk::game::api::Client {
    * @brief Represent a message from the server
    */
   struct ServerMessage {
-    unsigned int messageId;                                          ///< ID of the message
-    unsigned int messageType;                                        ///< Type of the message
+    unsigned int messageId;            ///< ID of the message
+    unsigned int messageType;          ///< Type of the message
+    NetworkProtocolType protocolType;  ///< Protocol type of the message
     std::vector<std::shared_ptr<abra::tools::dynamic_bitset>> data;  ///< Content of the message
   };
 
@@ -94,6 +95,14 @@ class rtype::sdk::game::api::Client {
   [[nodiscard]] bool Move(const payload::Movement &payload);
 
   /**
+   * @brief Refresh the game and rooms infos
+   * @param game Refresh the game infos
+   * @param rooms Refresh the rooms infos
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool RefreshInfos(bool game, bool rooms);
+
+  /**
    * @brief Resolve players state from a server message
    * @param message The server message (available when extract the queue)
    * @return The list of player states
@@ -113,6 +122,27 @@ class rtype::sdk::game::api::Client {
    * @return The list of bullets states
    */
   [[nodiscard]] std::vector<payload::BulletState> ResolveBulletsState(const ServerMessage &message);
+
+  /**
+   * @brief Resolve the game infos from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The game infos
+   */
+  [[nodiscard]] payload::InfoGame ResolveGameInfo(const ServerMessage &message);
+
+  /**
+   * @brief Resolve the rooms infos from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The rooms infos
+   */
+  [[nodiscard]] payload::InfoRooms ResolveInfoRooms(const ServerMessage &message);
+
+  /**
+   * @brief Resolve the room game end from a server message
+   * @param message The server message (available when extract the queue)
+   * @return The room game end
+   */
+  [[nodiscard]] payload::GameEnd ResolveRoomGameEnd(const ServerMessage &message);
 
  private:
   /// @brief The server response timeout
@@ -159,14 +189,24 @@ class rtype::sdk::game::api::Client {
   bool SendPayloadUDP(const ClientToRoomMsgType &type, const T &payload);
 
   /**
-   * @brief Resolve payloads from a server message
+   * @brief Resolve payloads from a room message
    * @tparam T The payload type
    * @param type The message type to resolve
    * @param message The server message
    * @return The list of payloads
    */
   template <typename T>
-  std::vector<T> ResolvePayloads(RoomToClientMsgType type, const ServerMessage &message);
+  std::vector<T> ResolveUDPPayloads(RoomToClientMsgType type, const ServerMessage &message);
+
+  /**
+   * @brief Resolve payloads from a master message
+   * @tparam T The payload type
+   * @param type The message type to resolve
+   * @param message The server message
+   * @return The list of payloads
+   */
+  template <typename T>
+  std::vector<T> ResolveTCPPayloads(MasterToClientMsgType type, const ServerMessage &message);
 
   /**
    * @brief Wait for a message from the server
@@ -192,9 +232,11 @@ class rtype::sdk::game::api::Client {
    * @brief Convert a abra queue to generic server messages queue
    * @param queue The abra queue
    * @param serverQueue The server messages queue
+   * @param protocolType The protocol type of the messages
    */
   static void ConvertQueueData(std::queue<abra::tools::MessageProps> *queue,
-                               std::queue<ServerMessage> *serverQueue);
+                               std::queue<ServerMessage> *serverQueue,
+                               NetworkProtocolType protocolType);
 
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;

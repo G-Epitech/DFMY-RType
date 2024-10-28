@@ -42,8 +42,24 @@ bool api::Client::SendPayloadUDP(const ClientToRoomMsgType &type, const T &paylo
 }
 
 template <typename T>
-std::vector<T> api::Client::ResolvePayloads(RoomToClientMsgType type, const ServerMessage &message) {
-  if (message.messageType != type) {
+std::vector<T> api::Client::ResolveUDPPayloads(RoomToClientMsgType type, const ServerMessage &message) {
+  if (message.messageType != type || message.protocolType != NetworkProtocolType::kUDP) {
+    return {};
+  }
+  auto elements = std::vector<T>();
+
+  for (auto &data : message.data) {
+    auto packet = this->packetBuilder_.Build<T>(data);
+    elements.push_back(packet->GetPayload());
+  }
+
+  return elements;
+}
+
+
+template <typename T>
+std::vector<T> api::Client::ResolveTCPPayloads(MasterToClientMsgType type, const ServerMessage &message) {
+  if (message.messageType != type || message.protocolType != NetworkProtocolType::kTCP) {
     return {};
   }
   auto elements = std::vector<T>();
