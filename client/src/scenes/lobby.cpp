@@ -97,7 +97,9 @@ void SceneLobby::JoinLobby() {
   }
   mainMessage_ = "Registering to the server";
   secondaryMessage_ = "Please wait...";
-  auto res = context_.serverConnectionManager->client()->Register({.pseudo = "Pti't plouf"});
+  auto res = context_.serverConnectionManager->client()->Register({
+    .username = "ptit'plouf",
+  });
   if (!res) {
     mainMessage_ = "Registration failed";
     secondaryMessage_ = "Unable to register on the server";
@@ -108,7 +110,10 @@ void SceneLobby::JoinLobby() {
   status_ = LobbyStatus::kRegistered;
   mainMessage_ = "Joining the lobby";
   secondaryMessage_ = "Please wait...";
-  res = context_.serverConnectionManager->client()->JoinLobby({.lobbyId = 0});
+  res = context_.serverConnectionManager->client()->JoinLobby({
+    .nodeId = 0,
+    .roomId = 0,
+  });
   if (!res) {
     mainMessage_ = "Joining failed";
     secondaryMessage_ = "Unable to join the lobby";

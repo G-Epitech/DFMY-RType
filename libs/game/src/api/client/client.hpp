@@ -62,14 +62,14 @@ class rtype::sdk::game::api::Client {
    * This method is blocking for a maximum defined in kServerResponseTimeout.
    * @return true if the packet is sent, false otherwise
    */
-  [[nodiscard]] bool Register(const payload::Connection &payload);
+  [[nodiscard]] bool Register(const payload::PlayerConnect &payload);
 
   /**
    * @brief Join a game lobby
    * It will initialize the UDP connection to the game server
    * @param payload The payload to join the lobby
    */
-  [[nodiscard]] bool JoinLobby(const payload::JoinLobby &payload);
+  [[nodiscard]] bool JoinLobby(const payload::JoinRoom &payload);
 
   /**
    * @brief Extract queue of messages
@@ -146,7 +146,7 @@ class rtype::sdk::game::api::Client {
    * @return true if the packet is sent, false otherwise
    */
   template <typename T>
-  bool SendPayloadTCP(const MessageClientType &type, const T &payload);
+  bool SendPayloadTCP(const ClientToMasterMsgType &type, const T &payload);
 
   /**
    * @brief Send a payload to the server UDP
@@ -156,7 +156,7 @@ class rtype::sdk::game::api::Client {
    * @return true if the packet is sent, false otherwise
    */
   template <typename T>
-  bool SendPayloadUDP(const MessageClientType &type, const T &payload);
+  bool SendPayloadUDP(const ClientToRoomMsgType &type, const T &payload);
 
   /**
    * @brief Resolve payloads from a server message
@@ -166,17 +166,15 @@ class rtype::sdk::game::api::Client {
    * @return The list of payloads
    */
   template <typename T>
-  std::vector<T> ResolvePayloads(MessageLobbyType type, const ServerMessage &message);
+  std::vector<T> ResolvePayloads(RoomToClientMsgType type, const ServerMessage &message);
 
   /**
    * @brief Wait for a message from the server
-   * @tparam T The network protocol type
    * @param type The message type to wait for
    * @param handler The handler to call when the message is received
    * @return true if the message is received and handled, false otherwise
    */
-  template <NetworkProtocolType T>
-  bool WaitForMessage(MessageServerType type,
+  bool WaitForMessage(MasterToClientMsgType type,
                       bool (Client::*handler)(const abra::tools::MessageProps &message));
 
   /**
@@ -225,4 +223,4 @@ class rtype::sdk::game::api::Client {
   abra::tools::Logger logger_;
 };
 
-#include "client.tpp"
+#include "libs/game/src/api/client/client.tpp"

@@ -11,7 +11,7 @@ namespace api = rtype::sdk::game::api;
 namespace abt = abra::tools;
 
 template <typename T>
-bool api::Client::SendPayloadTCP(const MessageClientType &type, const T &payload) {
+bool api::Client::SendPayloadTCP(const ClientToMasterMsgType &type, const T &payload) {
   this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
   auto packet = this->packetBuilder_.Build(payload);
 
@@ -25,7 +25,7 @@ bool api::Client::SendPayloadTCP(const MessageClientType &type, const T &payload
 }
 
 template <typename T>
-bool api::Client::SendPayloadUDP(const MessageClientType &type, const T &payload) {
+bool api::Client::SendPayloadUDP(const ClientToRoomMsgType &type, const T &payload) {
   if (!this->clientUDP_.has_value())
     return false;
 
@@ -42,7 +42,7 @@ bool api::Client::SendPayloadUDP(const MessageClientType &type, const T &payload
 }
 
 template <typename T>
-std::vector<T> api::Client::ResolvePayloads(MessageLobbyType type, const ServerMessage &message) {
+std::vector<T> api::Client::ResolvePayloads(RoomToClientMsgType type, const ServerMessage &message) {
   if (message.messageType != type) {
     return {};
   }
@@ -54,67 +54,4 @@ std::vector<T> api::Client::ResolvePayloads(MessageLobbyType type, const ServerM
   }
 
   return elements;
-}
-
-template <>
-inline bool api::Client::WaitForMessage<api::NetworkProtocolType::kTCP>(
-    MessageServerType type, bool (Client::*handler)(const abt::MessageProps &message)) {
-  std::size_t timeout = kServerResponseTimeout;
-  abt::MessageProps message;
-  bool success = false;
-
-  logger_.Info("Waiting for message type " + std::to_string(type), "😴");
-  while (timeout > 0) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    timeout -= 500;
-
-    auto &queue = this->clientTCP_.GetQueue();
-
-    std::unique_lock<std::mutex> lock(this->clientTCP_.Mutex);
-    if (!queue.empty()) {
-      message = queue.front();
-
-      if (message.messageType == type) {
-        success = (this->*handler)(message);
-        queue.pop();
-        break;
-      } else {
-        logger_.Warning("Receive an other message of type " + std::to_string(message.messageType),
-                        "⚠️ ");
-      }
-    }
-  }
-
-  return success;
-}
-
-template <>
-inline bool api::Client::WaitForMessage<api::NetworkProtocolType::kUDP>(
-    MessageServerType type, bool (Client::*handler)(const abt::MessageProps &message)) {
-  std::size_t timeout = kServerResponseTimeout;
-  abt::MessageProps message;
-  bool success = false;
-
-  if (!this->clientUDP_.has_value())
-    return false;
-
-  while (timeout > 0) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    timeout -= 500;
-
-    auto queue = this->clientUDP_->GetQueue();
-
-    std::unique_lock<std::mutex> lock(this->clientUDP_->Mutex);
-    if (!queue.empty()) {
-      message = queue.front();
-
-      if (message.messageType == type) {
-        success = (this->*handler)(message);
-        queue.pop();
-        break;
-      }
-    }
-  }
-
-  return success;
 }

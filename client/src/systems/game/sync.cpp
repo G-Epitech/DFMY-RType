@@ -132,11 +132,11 @@ void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, cons
 void GameSyncSystem::HandleMessage(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
   switch (message.messageType) {
-    case api::MessageLobbyType::kPlayersState:
+    case api::RoomToClientMsgType::kMsgTypeRTCPlayersState:
       return HandlePlayers(registry, message);
-    case api::MessageLobbyType::kBulletsState:
+    case api::RoomToClientMsgType::kMsgTypeRTCBulletsState:
       return HandleBullets(registry, message);
-    case api::MessageLobbyType::kEnemiesState:
+    case api::RoomToClientMsgType::kMsgTypeRTCEnemiesState:
       return HandleEnemies(registry, message);
   }
 }

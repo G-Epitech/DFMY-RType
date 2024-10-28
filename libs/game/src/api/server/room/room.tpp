@@ -35,7 +35,7 @@ bool Room::SendToClients(RoomToClientMsgType type, const T &payload) {
 
   for (const auto &player: this->clients_) {
     for (const auto &packet: packets) {
-      auto success = this->serverUDP_.Send(packet, player.endpoint) == SendMessageStatus::kSuccess;
+      auto success = this->clientsSocket_.Send(packet, player.endpoint) == SendMessageStatus::kSuccess;
       if (!success) {
         logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
       }
