@@ -8,29 +8,38 @@
 #include "player.hpp"
 
 #include <iostream>
+#include <utility>
 
+#include "client/src/constants/settings.hpp"
 #include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
+using namespace rtype::client::services;
 
-PlayerSystem::PlayerSystem(const GlobalContext &context) : context_{context}, ASystem() {}
+PlayerSystem::PlayerSystem(SettingsManager::Ptr settings_manager, WindowManager::Ptr window_manager,
+                           ServerConnectionService::Ptr server_connection_service)
+    : ASystem(),
+      settingsManager_{std::move(settings_manager)},
+      windowManager_{std::move(window_manager)},
+      serverConnectionService_{std::move(server_connection_service)} {}
 
 void PlayerSystem::Run(Registry::Ptr r) {
-  const auto events = context_.windowManager->GetDeferredEvents();
+  const auto events = windowManager_->GetDeferredEvents();
+  const auto key_map = settingsManager_->Get<KeyMap>(SETTING_GAME_KEYMAP);
 
   // If a key is pressed, we send a message to the server
   for (const auto &event : events) {
-    const auto actionKeyBoard = context_.gameManager->keyMap.GetActionFromKey(event.key.code);
-    const auto actionMouse =
-        context_.gameManager->keyMap.GetActionFromMouse(event.mouseButton.button);
+    const auto action_keyboard = key_map.GetActionFromKey(event.key.code);
+    const auto action_mouse = key_map.GetActionFromMouse(event.mouseButton.button);
+
     if (event.type == sf::Event::KeyPressed) {
-      UpdatePlayerActions(actionKeyBoard, true);
+      UpdatePlayerActions(action_keyboard, true);
     } else if (event.type == sf::Event::KeyReleased) {
-      UpdatePlayerActions(actionKeyBoard, false);
+      UpdatePlayerActions(action_keyboard, false);
     } else if (event.type == sf::Event::MouseButtonPressed) {
-      UpdatePlayerActions(actionMouse, true);
+      UpdatePlayerActions(action_mouse, true);
     } else if (event.type == sf::Event::MouseButtonReleased) {
-      UpdatePlayerActions(actionMouse, false);
+      UpdatePlayerActions(action_mouse, false);
     }
   }
   ProcessPlayerActions();
@@ -77,7 +86,7 @@ void PlayerSystem::ProcessPlayerActions() {
 }
 
 void PlayerSystem::ProcessPlayerMoveUp() {
-  auto res = context_.serverConnectionManager->client()->Move({
+  auto res = serverConnectionService_->client()->Move({
       .direction = {0, -1},
   });
   if (!res) {
@@ -86,7 +95,7 @@ void PlayerSystem::ProcessPlayerMoveUp() {
 }
 
 void PlayerSystem::ProcessPlayerMoveDown() {
-  auto res = context_.serverConnectionManager->client()->Move({
+  auto res = serverConnectionService_->client()->Move({
       .direction = {0, 1},
   });
   if (!res) {
@@ -95,7 +104,7 @@ void PlayerSystem::ProcessPlayerMoveDown() {
 }
 
 void PlayerSystem::ProcessPlayerMoveLeft() {
-  auto res = context_.serverConnectionManager->client()->Move({
+  auto res = serverConnectionService_->client()->Move({
       .direction = {-1, 0},
   });
   if (!res) {
@@ -104,7 +113,7 @@ void PlayerSystem::ProcessPlayerMoveLeft() {
 }
 
 void PlayerSystem::ProcessPlayerMoveRight() {
-  auto res = context_.serverConnectionManager->client()->Move({
+  auto res = serverConnectionService_->client()->Move({
       .direction = {1, 0},
   });
   if (!res) {
@@ -113,7 +122,7 @@ void PlayerSystem::ProcessPlayerMoveRight() {
 }
 
 void PlayerSystem::ProcessPlayerShoot() {
-  auto res = context_.serverConnectionManager->client()->Shoot({
+  auto res = serverConnectionService_->client()->Shoot({
       .type = sdk::game::types::ProjectileType::kPlayerCommon,
   });
   if (!res) {

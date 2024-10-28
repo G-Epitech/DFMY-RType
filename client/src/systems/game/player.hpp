@@ -6,25 +6,42 @@
 */
 
 #pragma once
-#include "context/global.hpp"
-#include "managers/game_manager.hpp"
-#include "managers/window_manager.hpp"
-#include "system_abstract.hpp"
+
+#include "client/src/game/keymap.hpp"
+#include "client/src/services/server_connection_service.hpp"
+#include "libs/mew/src/managers/managers.hpp"
+#include "libs/zygarde/src/system_abstract.hpp"
 
 namespace rtype::client::systems {
+
+using namespace mew::managers;
+
 class PlayerSystem final : public ASystem<> {
  public:
   /**
    * @brief Default constructor of a Player System
-   * @param context The global context of the game
+   * @param settings_manager The settings manager
+   * @param window_manager The window manager
+   * @param server_connection_service The server connection service
    */
-  explicit PlayerSystem(const GlobalContext& context);
+  PlayerSystem(SettingsManager::Ptr settings_manager, WindowManager::Ptr window_manager,
+               services::ServerConnectionService::Ptr server_connection_service);
 
   void Run(Registry::Ptr r) override;
 
  private:
-  /// @brief Global context of the game
-  const GlobalContext& context_;
+  /// @brief Settings manager of the game
+  SettingsManager::Ptr settingsManager_;
+
+  /// @brief Window manager of the game
+  WindowManager::Ptr windowManager_;
+
+  /// @brief Server connection service
+  services::ServerConnectionService::Ptr serverConnectionService_;
+
+  /**
+   * @brief Store moving up action state
+   */
 
   /**
    * @brief Store moving up action state

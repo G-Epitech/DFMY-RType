@@ -85,14 +85,6 @@ void SceneSettings::CreateMainEntity() const {
                          managers_.sound->PlaySound("buttons:click");
                        }
                      }});
-  registry_->AddComponent<OnKeyPressed>(
-      main, {.handler = [this](const sf::Keyboard::Key &key) {
-        auto keymap = settingsManager_->Get<KeyMap>(SETTING_GAME_KEYMAP);
-        const auto action = keymap.GetActionFromKey(key);
-        if (action != GameAction::kNone) {
-          std::cout << "Key pressed:" << static_cast<int>(action) << std::endl;
-        }
-      }});
 }
 
 void SceneSettings::CreateTitle() const {
@@ -388,11 +380,7 @@ void SceneSettings::CreateDisableAnimationsButton(const float &x, const float &y
                        if (button == sf::Mouse::Button::Left) {
                          const auto animations =
                              settingsManager_->Get<bool>(SETTING_GAME_ANIMATIONS);
-                         if (animations) {
-                           std::cout << "Disable animations" << std::endl;
-                         } else {
-                           std::cout << "Enable animations" << std::endl;
-                         }
+                         settingsManager_->Set(SETTING_GAME_ANIMATIONS, !animations);
                          auto drawables = registry_->GetComponents<Drawable>();
                          auto &dr = (*drawables)[static_cast<std::size_t>(music_button)];
 

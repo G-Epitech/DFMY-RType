@@ -8,7 +8,8 @@
 #include "game.hpp"
 
 #include "client/src/components/server_entity_id.hpp"
-#include "client/src/systems/background.hpp"
+#include "client/src/systems/game/background.hpp"
+#include "client/src/systems/game/player.hpp"
 #include "client/src/systems/game/sync.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
@@ -26,26 +27,22 @@ using namespace zygarde::core::types;
 using namespace zygarde::core::components;
 
 SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
-  serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
+  auto settings_manager = services_->GetOrThrow<SettingsManager>();
+  auto window_manager = services_->GetOrThrow<WindowManager>();
+  auto server_connection_service = services_->GetOrThrow<ServerConnectionService>();
+
+  serverConnectionService_ = server_connection_service;
 
   registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<ServerEntityId>();
 
   registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
   registry_->AddSystem<BackgroundSystem>();
-  /*registry_->AddSystem<PlayerSystem>(context_);*/
+  registry_->AddSystem<PlayerSystem>(settings_manager, window_manager, server_connection_service);
 }
 
 void SceneGame::OnCreate() {
   LoadResources();
-  // CreateControls();
-}
-
-void SceneGame::CreateControls() {
-  auto keyboard_controller = registry_->SpawnEntity();
-
-  auto keypress_handler = [this](const sf::Keyboard::Key key) { return OnKeyPress(key); };
-  registry_->AddComponent<OnKeyPressed>(keyboard_controller, {.handler = keypress_handler});
 }
 
 void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {

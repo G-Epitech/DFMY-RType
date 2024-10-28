@@ -8,8 +8,8 @@
 #pragma once
 
 #include <cstddef>
-#include <type_traits>
 #include <memory>
+#include <type_traits>
 
 #include "libs/zygarde/src/api.hpp"
 
