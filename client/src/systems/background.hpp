@@ -6,16 +6,16 @@
 */
 
 #pragma once
+
 #include <SFML/System/Clock.hpp>
 
 #include "core/components/position/position.hpp"
 #include "core/components/tags/tags.hpp"
 #include "system_abstract.hpp"
 
-namespace zyc = zygarde::core;
-
 namespace rtype::client::systems {
-class BackgroundSystem : public ASystem<zyc::components::Tags, zyc::components::Position> {
+class BackgroundSystem
+    : public ASystem<zygarde::core::components::Tags, zygarde::core::components::Position> {
  public:
   BackgroundSystem();
 

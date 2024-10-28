@@ -7,24 +7,34 @@
 
 #pragma once
 
-#include "bases/scene_base.hpp"
-#include "context/global.hpp"
-#include "core/types/vector/vector.hpp"
+#include "libs/mew/src/scenes/scene_base.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
+#include "libs/zygarde/src/core/types/vector/vector.hpp"
 
-namespace rtype::client {
-class SceneSettings final : public SceneBase<GlobalContext> {
+namespace rtype::client::scenes {
+
+using namespace mew::scenes;
+
+class SceneSettings final : public SceneBase {
  public:
-  explicit SceneSettings(const GlobalContext &context);
+  /**
+   * @brief Construct a new Scene Settings object
+   * @param services Services provider
+   */
+  explicit SceneSettings(DependenciesHandler::Ptr services);
 
   ~SceneSettings() override = default;
 
-  void Update(utils::DeltaTime delta_time) override;
+  void Update(DeltaTime delta_time) override;
 
   void OnCreate() override;
 
   void OnActivate() override;
 
  private:
+  /// @brief Store the settings manager
+  mew::managers::SettingsManager::Ptr settingsManager_;
+
   /**
    * @brief Create main entity
    */
@@ -151,4 +161,4 @@ class SceneSettings final : public SceneBase<GlobalContext> {
    */
   void CreateKeyMapSetting(const float &x, const float &y);
 };
-}  // namespace rtype::client
+}  // namespace rtype::client::scenes

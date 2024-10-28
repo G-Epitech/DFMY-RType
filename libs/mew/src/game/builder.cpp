@@ -28,17 +28,19 @@ Game GameBuilder::Build() {
   return {services_, BuildDefaultManagers()};
 }
 
-DefaultManagers GameBuilder::BuildDefaultManagers() {
+GameManagers GameBuilder::BuildDefaultManagers() {
   if (!windowProperties_)
     throw std::runtime_error("Window properties are required");
   WithService<WindowManager>(*windowProperties_);
   WithService<ScenesManager>();
   WithService<SoundManager>();
   WithService<ResourcesManager>();
+  WithService<SettingsManager>();
   return {
-      services_->Get<WindowManager>(),
-      services_->Get<ScenesManager>(),
-      services_->Get<SoundManager>(),
-      services_->Get<ResourcesManager>(),
+      .window = services_->Get<WindowManager>(),
+      .scenes = services_->Get<ScenesManager>(),
+      .sound = services_->Get<SoundManager>(),
+      .resources = services_->Get<ResourcesManager>(),
+      .settings = services_->Get<SettingsManager>(),
   };
 }

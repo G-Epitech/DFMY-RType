@@ -52,17 +52,7 @@ class Game final {
   /**
    * @brief Store a read-only reference to the window manager.
    */
-  const managers::WindowManager::Ptr &windowManager;
-
-  /**
-   * @brief Store a read-only reference to the scenes manager.
-   */
-  const managers::ScenesManager::Ptr &scenesManager;
-
-  /**
-   * @brief Store a read-only reference to the sound manager.
-   */
-  const managers::SoundManager::Ptr &soundManager;
+  const managers::GameManagers &managers;
 
  private:
   /**
@@ -71,7 +61,7 @@ class Game final {
    * @param service The services provider to use for the application.
    * @param default_managers The default managers to use for the application.
    */
-  Game(porygon::DependenciesHandler::Ptr service, managers::DefaultManagers default_managers);
+  Game(porygon::DependenciesHandler::Ptr service, managers::GameManagers default_managers);
 
   /**
    * @brief Store the services provider.
@@ -81,7 +71,7 @@ class Game final {
   /**
    * @brief Store the default managers.
    */
-  managers::DefaultManagers defaultManagers_;
+  managers::GameManagers managers_;
 
   /// @brief Timer
   zygarde::utils::Timer timer_;

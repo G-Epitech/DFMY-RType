@@ -10,12 +10,11 @@
 #include <iostream>
 #include <random>
 
-#include "components/drawable.hpp"
-#include "core/components/position/position.hpp"
-#include "libs/mew/src/app/app.hpp"
+#include "client/src/constants/window.hpp"
+#include "libs/mew/src/sets/drawable/drawable.hpp"
 
 using namespace rtype::client::systems;
-using namespace rtype::client::components;
+using namespace mew::sets::drawable;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 
@@ -64,7 +63,7 @@ void BackgroundSystem::SpawnStar(const std::shared_ptr<Registry>& r) {
 
   r->AddComponent<Position>(entity, {Vector3f{randomX, randomY, 0}});
   r->AddComponent<Tags>(entity, Tags({"background"}));
-  r->AddComponent<Drawable>(entity, {components::Rectangle{
+  r->AddComponent<Drawable>(entity, {Rectangle{
                                         .color = sf::Color::White,
                                         .size = {randomSize, randomSize},
                                     }});

@@ -14,21 +14,19 @@
 using namespace mew::game;
 using namespace mew::managers;
 
-Game::Game(DependenciesHandler::Ptr service, DefaultManagers default_managers)
+Game::Game(DependenciesHandler::Ptr service, GameManagers default_managers)
     : services_(std::move(service)),
       services{services_},
-      defaultManagers_{std::move(default_managers)},
-      windowManager{defaultManagers_.window},
-      scenesManager{defaultManagers_.scenes},
-      soundManager{defaultManagers_.sound} {
+      managers_{std::move(default_managers)},
+      managers{managers_} {
   timer_.Initialize();
 }
 
 int Game::Run() {
   try {
-    while (scenesManager->IsActive()) {
+    while (managers_.scenes->IsActive()) {
       timer_.Update();
-      scenesManager->Update(timer_.GetDeltaTime());
+      managers_.scenes->Update(timer_.GetDeltaTime());
     }
   } catch (const std::exception &e) {
     std::cerr << "Mew game terminated: " << e.what() << std::endl;

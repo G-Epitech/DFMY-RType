@@ -5,33 +5,18 @@
 ** main.cpp
 */
 
-#include "libs/mew/src/app/app.hpp"
-#include "libs/mew/src/app/builder.hpp"
-#include "libs/mew/src/scenes/scene_interface.hpp"
+#include "./src/scenes/game.hpp"
+#include "./src/scenes/lobby.hpp"
+#include "./src/scenes/menu.hpp"
+#include "./src/scenes/settings.hpp"
+#include "./src/constants/settings.hpp"
+#include "./src/constants/window.hpp"
+#include "libs/mew/src/game/builder.hpp"
+#include "libs/mew/src/game/game.hpp"
 
-class MyServiceB;
-
-class MyScene final : public mew::scenes::IScene {
- public:
-  MyScene() = default;
-  ~MyScene() final = default;
-
-  void OnCreate() override { std::cout << "MyScene created" << std::endl; }
-
-  void Update(zygarde::utils::Timer::Nanoseconds deltaTime) override {
-  }
-
-  void OnDestroy() override { std::cout << "MyScene destroyed" << std::endl; }
-
-  void OnActivate() override { std::cout << "MyScene activated" << std::endl; }
-
-  void OnDeactivate() override { std::cout << "MyScene deactivated" << std::endl; }
-
- private:
-  mew::app::DependenciesHandler::Ptr dependencies_handler_;
-};
-
-using namespace mew::app;
+using namespace mew::game;
+using namespace rtype::client::scenes;
+using namespace rtype::client::services;
 
 #if (defined(_WIN32) && !defined(DEBUG))
   #include <windows.h>
@@ -41,44 +26,32 @@ using namespace mew::app;
   #define MAIN main()
 #endif
 
-class MyServiceA {
- public:
-  MyServiceA() = default;
-  ~MyServiceA() = default;
-
-  void Update() {
-    std::cout << this << std::endl;
-  }
-};
-
-class MyServiceB {
- public:
-  explicit MyServiceB(const DependenciesHandler::Ptr& dependencies_handler) {
-    auto e = dependencies_handler->GetOrThrow<MyServiceA>();
-    e->Update();
-  }
-  ~MyServiceB() = default;
-
-  void Update() { std::cout << this << std::endl; }
-};
-
 int MAIN {
-  auto builder = AppBuilder();
-  auto app = builder
-                 .WithWindowProperties({
-                     .title = "R-Type",
-                     .videoMode = {1920, 1080},
-                     .style = sf::Style::Default,
-                     .contextSettings = sf::ContextSettings(),
-                     .frameLimit = 60,
-                     .iconPath = "assets/icons/R-Type.png",
-                 })
-                 .WithService<MyServiceA>()
-                 .WithService<MyServiceB>()
-                 .Build();
+  auto builder = GameBuilder();
+  auto game = builder
+                  .WithWindowProperties({
+                      .title = APP_WINDOW_TITLE,
+                      .videoMode = {APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT},
+                      .style = APP_WINDOW_STYLE,
+                      .contextSettings = sf::ContextSettings(),
+                      .frameLimit = APP_WINDOW_FRAME_LIMIT,
+                      .iconPath = APP_WINDOW_ICON,
+                  })
+                  .WithService<ServerConnectionService>("127.0.0.1", 4848)
+                  .Build();
 
-  app.scenesManager->RegisterScene<MyScene>();
-  app.scenesManager->GoToScene<MyScene>();
-  app.services->GetOrThrow<MyServiceB>();
-  return app.Run();
+  game.managers.settings->Set(SETTING_APP_VOLUME, SETTING_DEFAULT_APP_VOLUME);
+  game.managers.settings->Set(SETTING_GAME_KEYMAP, SETTING_DEFAULT_GAME_KEYMAP);
+  game.managers.settings->Set(SETTING_GAME_ANIMATIONS, SETTING_DEFAULT_GAME_ANIMATIONS);
+
+  game.managers.resources->LoadFont("assets/fonts/main.ttf", "main");
+  game.managers.resources->LoadTexture("assets/icons/R-Type.png", "g-epitech-logo");
+
+  game.managers.scenes->RegisterScene<SceneMenu>();
+  game.managers.scenes->RegisterScene<SceneSettings>();
+  game.managers.scenes->RegisterScene<SceneLobby>();
+  game.managers.scenes->RegisterScene<SceneGame>();
+  game.managers.scenes->GoToScene<SceneMenu>();
+
+  return game.Run();
 }

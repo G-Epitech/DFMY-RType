@@ -59,11 +59,11 @@ class SceneBase : public IScene {
   /// @brief Store the context provided by the scenes manager
   porygon::DependenciesHandler::Ptr services_;
 
+  /// @brief Store the default managers
+  managers::GameManagers managers_;
+
   /// @brief Store the ECS registry for the scene
   zygarde::Registry::Ptr registry_;
-
-  /// @brief Store the resources manager
-  managers::DefaultManagers defaultManagers_;
 
  private:
   /**

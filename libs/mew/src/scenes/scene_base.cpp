@@ -19,10 +19,10 @@ using namespace porygon;
 namespace zyc = zygarde::core;
 
 SceneBase::SceneBase(DependenciesHandler::Ptr services) : services_(std::move(services)) {
-  defaultManagers_ = {.window = services_->GetOrThrow<WindowManager>(),
-                      .scenes = services_->GetOrThrow<ScenesManager>(),
-                      .sound = services_->GetOrThrow<SoundManager>(),
-                      .resources = services_->GetOrThrow<ResourcesManager>()};
+  managers_ = {.window = services_->GetOrThrow<WindowManager>(),
+               .scenes = services_->GetOrThrow<ScenesManager>(),
+               .sound = services_->GetOrThrow<SoundManager>(),
+               .resources = services_->GetOrThrow<ResourcesManager>()};
   InitializeRegistry();
 }
 
@@ -45,14 +45,13 @@ void SceneBase::InitializeRegistry() {
 }
 
 void SceneBase::AddDefaultSystems() {
-  registry_->AddSystem<drawable::DrawableSystem>(defaultManagers_.window,
-                                                 defaultManagers_.resources);
-  registry_->AddSystem<events::MousePressEventSystem>(defaultManagers_.window);
-  registry_->AddSystem<events::MouseReleaseEventSystem>(defaultManagers_.window);
-  registry_->AddSystem<events::MouseScrollEventSystem>(defaultManagers_.window);
-  registry_->AddSystem<events::MouseMoveEventSystem>(defaultManagers_.window);
-  registry_->AddSystem<events::KeyPressEventSystem>(defaultManagers_.window);
-  registry_->AddSystem<events::KeyReleaseEventSystem>(defaultManagers_.window);
+  registry_->AddSystem<drawable::DrawableSystem>(managers_.window, managers_.resources);
+  registry_->AddSystem<events::MousePressEventSystem>(managers_.window);
+  registry_->AddSystem<events::MouseReleaseEventSystem>(managers_.window);
+  registry_->AddSystem<events::MouseScrollEventSystem>(managers_.window);
+  registry_->AddSystem<events::MouseMoveEventSystem>(managers_.window);
+  registry_->AddSystem<events::KeyPressEventSystem>(managers_.window);
+  registry_->AddSystem<events::KeyReleaseEventSystem>(managers_.window);
 }
 
 void SceneBase::RegisterDefaultComponents() {

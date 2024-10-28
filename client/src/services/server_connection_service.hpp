@@ -13,11 +13,11 @@
 
 #include "libs/game/src/api/client/client.hpp"
 
-namespace rtype::client {
-class ServerConnectionManager {
+namespace rtype::client::services {
+class ServerConnectionService {
  public:
   /// @brief Pointer to a server connection manager
-  typedef std::shared_ptr<ServerConnectionManager> Ptr;
+  typedef std::shared_ptr<ServerConnectionService> Ptr;
 
   struct Properties {
     std::string ip;      ///< IP of the server
@@ -25,22 +25,16 @@ class ServerConnectionManager {
   };
 
   /**
-   * @brief Create a new server connection manager
-   * @param props Properties of the server connection
-   * @return Pointer to the server connection manager
+   * @brief Construct a new Server Connection Service object
+   * @param ip IP of the server
+   * @param port Port of the server
    */
-  static Ptr Create(Properties &&props);
+  ServerConnectionService(const std::string &ip, std::uint32_t port);
 
   /**
-   * @brief Construct a new Server Connection Manager object
-   * @param props Properties of the server connection
+   * @brief Destruct a Server Connection Service object
    */
-  explicit ServerConnectionManager(Properties &&props);
-
-  /**
-   * @brief Destruct a Server Connection Manager object
-   */
-  ~ServerConnectionManager();
+  ~ServerConnectionService();
 
   /**
    * @brief Get the client object
@@ -89,4 +83,4 @@ class ServerConnectionManager {
   /// @brief Next retry time
   std::chrono::time_point<std::chrono::system_clock> nextRetry_;
 };
-}  // namespace rtype::client
+}  // namespace rtype::client::services

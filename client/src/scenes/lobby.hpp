@@ -7,16 +7,26 @@
 
 #pragma once
 
-#include "bases/scene_base.hpp"
-#include "context/global.hpp"
+#include <thread>
+
+#include "client/src/services/server_connection_service.hpp"
+#include "libs/mew/src/scenes/scene_base.hpp"
 
 namespace rtype::client::scenes {
-class SceneLobby final : public SceneBase<GlobalContext> {
+
+using namespace mew::scenes;
+
+class SceneLobby final : public SceneBase {
  public:
-  explicit SceneLobby(const GlobalContext &context);
+  /**
+   * @brief Construct a new Lobby Scene object
+   * @param services Services provider
+   */
+  explicit SceneLobby(DependenciesHandler::Ptr services);
+
   ~SceneLobby() override;
 
-  void Update(client::utils::DeltaTime delta_time) override;
+  void Update(DeltaTime delta_time) override;
 
   void OnCreate() override;
 
@@ -71,5 +81,8 @@ class SceneLobby final : public SceneBase<GlobalContext> {
 
   /// @brief The main status text entity
   std::string mainMessage_;
+
+  /// @brief Reference to the server connection service
+  services::ServerConnectionService::Ptr serverConnectionService_;
 };
 }  // namespace rtype::client::scenes

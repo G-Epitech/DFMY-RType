@@ -61,7 +61,7 @@ class GameBuilder {
   /**
    * @brief Add the default managers to the provider
    */
-  managers::DefaultManagers BuildDefaultManagers();
+  managers::GameManagers BuildDefaultManagers();
 
   /// @brief Store the properties of the window manager to be created
   std::optional<managers::WindowManager::Properties> windowProperties_;

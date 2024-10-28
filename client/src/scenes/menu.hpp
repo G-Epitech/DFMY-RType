@@ -7,16 +7,27 @@
 
 #pragma once
 
-#include "bases/scene_base.hpp"
-#include "context/global.hpp"
+#include "client/src/services/server_connection_service.hpp"
+#include "libs/mew/src/scenes/scene_base.hpp"
 
 namespace rtype::client::scenes {
-class SceneMenu final : public SceneBase<GlobalContext> {
- public:
-  explicit SceneMenu(const GlobalContext &context);
-  ~SceneMenu() override = default;
 
-  void Update(client::utils::DeltaTime delta_time) override;
+using namespace mew::scenes;
+
+class SceneMenu final : public SceneBase {
+ public:
+  /**
+   * @brief Construct a new Scene Menu object
+   * @param services Services provider
+   */
+  explicit SceneMenu(DependenciesHandler::Ptr services);
+
+  /**
+   * @brief Default destructor
+   */
+  ~SceneMenu() final = default;
+
+  void Update(DeltaTime delta_time) override;
 
   void OnCreate() override;
 
@@ -64,5 +75,8 @@ class SceneMenu final : public SceneBase<GlobalContext> {
    * @brief Update the connection label
    */
   void UpdateConnectionLabel() const;
+
+  /// @brief Store reference to the server connection service
+  services::ServerConnectionService::Ptr serverConnectionService_;
 };
 }  // namespace rtype::client::scenes

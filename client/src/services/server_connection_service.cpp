@@ -5,38 +5,33 @@
 ** window_manager.cpp
 */
 
-#include "server_connection_manager.hpp"
+#include "server_connection_service.hpp"
 
-using namespace rtype::client;
+using namespace rtype::client::services;
 
-ServerConnectionManager::ServerConnectionManager(ServerConnectionManager::Properties&& props)
-    : props_(std::move(props)) {}
+ServerConnectionService::ServerConnectionService(const std::string& ip, std::uint32_t port)
+    : props_{ip, port} {}
 
-ServerConnectionManager::~ServerConnectionManager() {
+ServerConnectionService::~ServerConnectionService() {
   connectionStatus_ = ConnectionStatus::kDisconnected;
   if (connectionThread_ && connectionThread_->joinable()) {
     connectionThread_->join();
   }
 }
 
-ServerConnectionManager::Ptr ServerConnectionManager::Create(
-    ServerConnectionManager::Properties&& props) {
-  return std::make_shared<ServerConnectionManager>(std::move(props));
-}
-
-bool ServerConnectionManager::Connected() const {
+bool ServerConnectionService::Connected() const {
   return client_ != nullptr && connectionStatus_ == ConnectionStatus::kConnected;
 }
 
-void ServerConnectionManager::ConnectAsync() {
+void ServerConnectionService::ConnectAsync() {
   if (connectionThread_)
     return;
   connectionStatus_ = ConnectionStatus::kConnecting;
   nextRetry_ = std::chrono::system_clock::now();
-  connectionThread_ = std::thread(&ServerConnectionManager::Connect, this);
+  connectionThread_ = std::thread(&ServerConnectionService::Connect, this);
 }
 
-void ServerConnectionManager::Connect() {
+void ServerConnectionService::Connect() {
   while (connectionStatus_ == ConnectionStatus::kConnecting) {
     if (std::chrono::system_clock::now() < nextRetry_)
       continue;
