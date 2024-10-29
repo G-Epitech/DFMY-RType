@@ -21,29 +21,36 @@ class EXPORT_ZYGARDE_API Tags final {
    */
   explicit Tags(const std::set<std::string>& tags);
 
-  ~Tags() { tags_.clear(); }
+  /**
+   * @brief Default constructor
+   */
+  ~Tags();
 
-  // Copy constructor
+  /**
+   * @brief Default constructor
+   * @param other
+   */
   Tags(const Tags& other) = default;
 
-  // Move constructor
-  Tags(Tags&& other) noexcept : tags_(std::move(other.tags_)) {}
+  /**
+   * @brief Move c
+   * @param other
+   */
+  Tags(Tags&& other) noexcept;
 
-  // Copy assignment operator
-  Tags& operator=(const Tags& other) {
-    if (this != &other) {
-      tags_ = other.tags_;
-    }
-    return *this;
-  }
+  /**
+   * Copy assignment operator
+   * @param other Other tag to copy
+   * @return Copied tag
+   */
+  Tags& operator=(const Tags& other);
 
-  // Move assignment operator
-  Tags& operator=(Tags&& other) noexcept {
-    if (this != &other) {
-      tags_ = std::move(other.tags_);
-    }
-    return *this;
-  }
+  /**
+   * Move assignment operator
+   * @param other Other tag to move
+   * @return Moved tag
+   */
+  Tags& operator=(Tags&& other) noexcept;
 
   /**
    * @brief Check if the tag contains a specific tag
@@ -52,6 +59,11 @@ class EXPORT_ZYGARDE_API Tags final {
    */
   bool operator&(const std::string& tag) const;
 
+  /**
+   * @brief Check if the tag contains a specific tag
+   * @param tag Tag to check
+   * @return Match result
+   */
   bool operator==(const std::string& tag) const;
 
   /**

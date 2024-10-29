@@ -43,13 +43,6 @@ class GameService {
   void NewPlayer(std::uint64_t player_id);
 
  private:
-  struct EntityStates {
-    std::vector<payload::PlayerState> playerStates;
-    std::vector<payload::EnemyState> enemyStates;
-    std::vector<payload::BulletState> bulletStates;
-  };
-
- private:
   /**
    * @brief Execute the game logic during a tick
    */
@@ -70,12 +63,27 @@ class GameService {
    */
   void HandleMessages();
 
+  /**
+   * @brief Handle player message
+   * @param player_id The player id of the message
+   * @param data The message data
+   */
   void HandlePlayerMessage(const std::uint64_t &player_id,
                            const abra::server::ClientUDPMessage &data);
 
+  /**
+   * @brief Handle player move message
+   * @param player_id The player id
+   * @param data The message data
+   */
   void HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                const abra::server::ClientUDPMessage &data);
 
+  /**
+   * @brief Handle player shoot message
+   * @param player_id Player id
+   * @param data The data of the message
+   */
   void HandlePlayerShootMessage(const std::uint64_t &player_id,
                                 const abra::server::ClientUDPMessage &data);
 

@@ -12,5 +12,6 @@
 #include <string>
 
 namespace zygarde::scripting::types {
+/// @brief Map of values mainly used for custom script values
 using ValuesMap = std::map<std::string, std::any>;
 }

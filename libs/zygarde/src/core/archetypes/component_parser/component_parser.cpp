@@ -12,28 +12,19 @@ using namespace zygarde::core::archetypes;
 zygarde::physics::components::Rigidbody2D ComponentParser::ParseRigidbody2D(
     const nlohmann::json& json) {
   zygarde::physics::components::Rigidbody2D rigidbody2d;
-  zygarde::core::types::Vector2f velocity;
 
   if (!json.contains("data")) {
     return rigidbody2d;
   }
   const auto& data = json["data"];
-  if (!data.contains("isKinematic")) {
-    rigidbody2d.SetKinematic(false);
-  } else {
-    rigidbody2d.SetKinematic(data["isKinematic"].get<bool>());
-  }
+  !data.contains("isKinematic") ? rigidbody2d.SetKinematic(false)
+                                : rigidbody2d.SetKinematic(data["isKinematic"].get<bool>());
   if (!data.contains("velocity")) {
-    velocity = {0, 0};
+    rigidbody2d.SetVelocity({0, 0});
   } else {
-    velocity = {data["velocity"]["x"], data["velocity"]["y"]};
+    rigidbody2d.SetVelocity({data["velocity"]["x"], data["velocity"]["y"]});
   }
-  rigidbody2d.SetVelocity(velocity);
-  if (!data.contains("drag")) {
-    rigidbody2d.SetDrag(1);
-  } else {
-    rigidbody2d.SetDrag(data["drag"].get<float>());
-  }
+  !data.contains("drag") ? rigidbody2d.SetDrag(1) : rigidbody2d.SetDrag(data["drag"].get<float>());
   return rigidbody2d;
 }
 
@@ -47,37 +38,29 @@ zygarde::physics::components::BoxCollider2D ComponentParser::ParseBoxCollider2D(
     return {size, collisionLayers, includeLayers};
   }
   const auto& data = json["data"];
-  if (!data.contains("size")) {
-    size = {0, 0};
-  } else {
-    size = {data["size"]["x"], data["size"]["y"]};
-  }
-  if (!data.contains("includeLayers")) {
-    includeLayers = {};
-  } else {
-    includeLayers = data["includeLayers"].get<std::vector<int>>();
-  }
-  if (!data.contains("collisionLayers")) {
-    collisionLayers = {};
-  } else {
-    collisionLayers = data["collisionLayers"].get<std::vector<int>>();
-  }
+  !data.contains("size") ? size = {0, 0} : size = {data["size"]["x"], data["size"]["y"]};
+
+  !data.contains("includeLayers") ? includeLayers = {}
+                                  : includeLayers = data["includeLayers"].get<std::vector<int>>();
+
+  !data.contains("collisionLayers")
+      ? collisionLayers = {}
+      : collisionLayers = data["collisionLayers"].get<std::vector<int>>();
+
   return {size, collisionLayers, includeLayers};
 }
 
 zygarde::core::components::Position ComponentParser::ParsePosition(const nlohmann::json& json) {
-  zygarde::core::types::Vector3f point;
+  zygarde::core::components::Position position;
 
   if (!json.contains("data") || !json["data"].contains("point")) {
-    point = zygarde::core::types::Vector3f{0, 0, 0};
+    position.point = zygarde::core::types::Vector3f{0, 0, 0};
   } else {
     const auto& data = json["data"];
-    point = zygarde::core::types::Vector3f{data["point"]["x"].get<float>(),
-                                           data["point"]["y"].get<float>(),
-                                           data["point"]["z"].get<float>()};
+    position.point = zygarde::core::types::Vector3f{data["point"]["x"].get<float>(),
+                                                    data["point"]["y"].get<float>(),
+                                                    data["point"]["z"].get<float>()};
   }
-  zygarde::core::components::Position position;
-  position.point = point;
   return position;
 }
 
@@ -87,7 +70,8 @@ zygarde::core::components::Tags ComponentParser::ParseTags(const nlohmann::json&
   if (!json.contains("data") || !json["data"].contains("tags")) {
     tags = {};
   } else {
-    tags = json["data"]["tags"].get<std::set<std::string>>();
+    const auto& data = json["data"];
+    tags = data["tags"].get<std::set<std::string>>();
   }
   return zygarde::core::components::Tags{tags};
 }
