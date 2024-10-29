@@ -98,3 +98,27 @@ template <typename System, typename... ExtraParams>
 void Registry::AddSystem(ExtraParams &&...extraParams) {
   systems_.push_back(std::make_shared<System>(std::forward<ExtraParams>(extraParams)...));
 }
+
+template <typename... Components>
+bool Registry::HasComponents(Entity const &e) {
+  return (... && (GetComponent<Components>(e) != nullptr));
+}
+
+template <EntityType T, typename... Args>
+Entity Registry::SpawnEntity(Args &&...args) {
+  std::size_t newId;
+
+  if (!freeIds_.empty()) {
+    newId = freeIds_.top();
+    freeIds_.pop();
+  } else {
+    newId = currentMaxEntityId_++;
+  }
+  if (newId >= entities_.size()) {
+    entities_.resize(newId + 1);
+  }
+  T e(newId, GetShared(), std::forward<Args>(args)...);
+  entities_.at(newId) = e;
+  e.OnSpawn();
+  return e;
+}

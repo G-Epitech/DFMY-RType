@@ -8,6 +8,8 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
+#include <type_traits>
 
 #include "libs/zygarde/src/api.hpp"
 
@@ -41,13 +43,15 @@ class EXPORT_ZYGARDE_API Entity {
  private:
   /// @brief Entity id
   std::size_t id_;
+  /// @brief Registry reference
+  std::shared_ptr<Registry> registry_;
 
   /**
    * @brief Private constructor
    * Even if this constructor is private, the registry class can access it
    * @param idx Entity id
    */
-  explicit Entity(std::size_t idx);
+  explicit Entity(std::size_t idx, std::shared_ptr<Registry> registry);
 
   friend class Registry;
 };

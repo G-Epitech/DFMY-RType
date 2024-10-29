@@ -7,17 +7,24 @@
 
 #pragma once
 
-#include "bases/scene_base.hpp"
-#include "context/global.hpp"
+#include "client/src/services/server_connection_service.hpp"
+#include "libs/mew/src/scenes/scene_base.hpp"
 
 namespace rtype::client::scenes {
-class SceneGame final : public SceneBase<GlobalContext> {
+
+using namespace mew::scenes;
+
+class SceneGame final : public SceneBase {
  public:
   /**
    * @brief Construct a new Scene Game object
    * @param context Context to use
    */
-  explicit SceneGame(const GlobalContext &context);
+  explicit SceneGame(DependenciesHandler::Ptr services);
+
+  /**
+   * @brief Default destructor
+   */
   ~SceneGame() override = default;
 
  protected:
@@ -44,5 +51,8 @@ class SceneGame final : public SceneBase<GlobalContext> {
    * @brief Load resources
    */
   void LoadResources();
+
+  /// @brief Server connection service
+  services::ServerConnectionService::Ptr serverConnectionService_;
 };
 }  // namespace rtype::client::scenes

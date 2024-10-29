@@ -9,7 +9,7 @@ include(cmake/platforms.cmake)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DDEBUG)
-endif()
+endif ()
 
 add_subdirectory(libs)
 add_subdirectory(client)

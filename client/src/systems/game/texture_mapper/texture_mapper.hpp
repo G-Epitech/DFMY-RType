@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "components/drawable.hpp"
 #include "game/src/types/projectile.hpp"
+#include "libs/mew/src/sets/drawable/drawable.hpp"
 
 namespace rtype::client::systems {
 class TextureMapper final {
@@ -20,6 +20,6 @@ class TextureMapper final {
    * @param type Type of the bullet
    * @return Texture component
    */
-  static components::Texture MapBulletType(sdk::game::types::ProjectileType type) noexcept;
+  static mew::sets::drawable::Texture MapBulletType(sdk::game::types::ProjectileType type) noexcept;
 };
 }  // namespace rtype::client::systems

@@ -10,19 +10,19 @@
 #include <map>
 #include <set>
 
+#include "client/src/services/server_connection_service.hpp"
 #include "components/server_entity_id.hpp"
 #include "core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
-#include "managers/server_connection_manager.hpp"
 
 namespace rtype::client::systems {
 class GameSyncSystem final : public ASystem<components::ServerEntityId> {
  public:
   /**
    * @brief Construct a new Game Sync System object
-   * @param serverConnectionManager Pointer to the server connection manager
+   * @param server_connection_service Pointer to the server connection service
    */
-  explicit GameSyncSystem(ServerConnectionManager::Ptr serverConnectionManager);
+  explicit GameSyncSystem(services::ServerConnectionService::Ptr server_connection_service);
 
   void Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr component) override;
 
@@ -30,7 +30,7 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
   /**
    * @brief Pointer to the server connection manager
    */
-  ServerConnectionManager::Ptr serverConnectionManager_;
+  services::ServerConnectionService::Ptr serverConnectionService_;
 
   /**
    * @brief Players list

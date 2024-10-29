@@ -10,20 +10,23 @@
 #include <set>
 #include <utility>
 
-#include "components/drawable.hpp"
-#include "libs/zygarde/src/core/components/position/position.hpp"
-#include "texture_mapper/texture_mapper.hpp"
+#include "client/src/services/server_connection_service.hpp"
+#include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
+#include "libs/mew/src/sets/drawable/drawable.hpp"
+#include "libs/zygarde/src/core/components/components.hpp"
 
 using namespace rtype::client::systems;
 using namespace rtype::client::components;
+using namespace rtype::client::services;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
+using namespace mew::sets::drawable;
 
-GameSyncSystem::GameSyncSystem(ServerConnectionManager::Ptr serverConnectionManager)
-    : serverConnectionManager_{std::move(serverConnectionManager)} {}
+GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service)
+    : ASystem(), serverConnectionService_{std::move(server_connection_service)} {}
 
-void GameSyncSystem::Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr IDs) {
-  auto queue = serverConnectionManager_->client()->ExtractQueue();
+void GameSyncSystem::Run(Registry::Ptr r) {
+  auto queue = serverConnectionService_->client()->ExtractQueue();
   while (!queue.empty()) {
     auto& message = queue.front();
     HandleMessage(r, message);
@@ -32,18 +35,16 @@ void GameSyncSystem::Run(Registry::Ptr r, sparse_array<components::ServerEntityI
 }
 
 void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const zygarde::core::types::Vector3f& pos) {
+                                  const Vector3f& pos) {
   auto player = registry->SpawnEntity();
   static const sf::IntRect base{100, 0, 32, 16};
 
-  registry->AddComponent<components::ServerEntityId>(player, {.id = id});
-  registry->AddComponent<zygarde::core::components::Position>(
-      player, {.point = pos,
-               .aligns = {core::components::HorizontalAlign::kLeft,
-                          core::components::VerticalAlign::kTop}});
-  registry->AddComponent<components::Drawable>(
+  registry->AddComponent<ServerEntityId>(player, {.id = id});
+  registry->AddComponent<Position>(
+      player, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
+  registry->AddComponent<Drawable>(
       player, {
-                  .drawable = components::Texture{.name = "player", .scale = 3, .rect = base},
+                  .drawable = Texture{.name = "player", .scale = 3, .rect = base},
               });
 
   std::cout << "Player created" << std::endl;
@@ -51,9 +52,9 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, con
 }
 
 void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const zygarde::core::types::Vector3f& pos) {
+                                  const Vector3f& pos) {
   auto player = players_.at(id);
-  auto positions = registry->GetComponents<zygarde::core::components::Position>();
+  auto positions = registry->GetComponents<Position>();
   auto entity_id = static_cast<std::size_t>(player);
 
   if (entity_id >= positions->size()) {
@@ -68,24 +69,24 @@ void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, con
 void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
                                   const sdk::game::api::payload::BulletState& state) {
   const auto bullet = registry->SpawnEntity();
-  const core::types::Vector3f pos(state.position.x, state.position.y, 0);
+  const auto pos = Vector3f(state.position.x, state.position.y, 0);
 
   registry->AddComponent<components::ServerEntityId>(bullet, {.id = state.entityId});
   registry->AddComponent<zygarde::core::components::Position>(
       bullet, {.point = pos,
                .aligns = {core::components::HorizontalAlign::kLeft,
                           core::components::VerticalAlign::kTop}});
-  registry->AddComponent<components::Drawable>(
-      bullet, {
-                  .drawable = TextureMapper::MapBulletType(state.bulletType),
-              });
+  registry->AddComponent<Drawable>(bullet,
+                                   {
+                                       .drawable = TextureMapper::MapBulletType(state.bulletType),
+                                   });
   bullets_.insert_or_assign(state.entityId, bullet);
 }
 
 void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const zygarde::core::types::Vector3f& pos) {
+                                  const Vector3f& pos) {
   auto bullet = bullets_.at(id);
-  auto positions = registry->GetComponents<zygarde::core::components::Position>();
+  auto positions = registry->GetComponents<Position>();
   auto entity_id = static_cast<std::size_t>(bullet);
 
   if (entity_id >= positions->size()) {
@@ -98,26 +99,24 @@ void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, con
 }
 
 void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                 const zygarde::core::types::Vector3f& pos) {
+                                 const Vector3f& pos) {
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{5, 6, 21, 36};
 
-  registry->AddComponent<components::ServerEntityId>(enemy, {.id = id});
-  registry->AddComponent<zygarde::core::components::Position>(
-      enemy, {.point = pos,
-              .aligns = {core::components::HorizontalAlign::kLeft,
-                         core::components::VerticalAlign::kTop}});
-  registry->AddComponent<components::Drawable>(
+  registry->AddComponent<ServerEntityId>(enemy, {.id = id});
+  registry->AddComponent<Position>(
+      enemy, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
+  registry->AddComponent<Drawable>(
       enemy, {
-                 .drawable = components::Texture{.name = "enemy", .scale = 3, .rect = base},
+                 .drawable = Texture{.name = "enemy", .scale = 3, .rect = base},
              });
   enemies_.insert_or_assign(id, enemy);
 }
 
 void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                 const zygarde::core::types::Vector3f& pos) {
+                                 const Vector3f& pos) {
   auto enemy = enemies_.at(id);
-  auto positions = registry->GetComponents<zygarde::core::components::Position>();
+  auto positions = registry->GetComponents<Position>();
   auto entity_id = static_cast<std::size_t>(enemy);
 
   if (entity_id >= positions->size()) {
@@ -143,7 +142,7 @@ void GameSyncSystem::HandleMessage(const Registry::Ptr& registry,
 
 void GameSyncSystem::HandlePlayers(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
-  auto states = serverConnectionManager_->client()->ResolvePlayersState(message);
+  auto states = serverConnectionService_->client()->ResolvePlayersState(message);
   auto handled = std::set<std::size_t>();
 
   for (const auto& state : states) {
@@ -165,7 +164,7 @@ void GameSyncSystem::HandlePlayerState(const Registry::Ptr& registry,
 
 void GameSyncSystem::HandleBullets(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
-  auto states = serverConnectionManager_->client()->ResolveBulletsState(message);
+  auto states = serverConnectionService_->client()->ResolveBulletsState(message);
   auto handled = std::set<std::size_t>();
 
   for (const auto& state : states) {
@@ -187,7 +186,7 @@ void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
 
 void GameSyncSystem::HandleEnemies(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
-  auto states = serverConnectionManager_->client()->ResolveEnemiesState(message);
+  auto states = serverConnectionService_->client()->ResolveEnemiesState(message);
   auto handled = std::set<std::size_t>();
 
   for (const auto& state : states) {
