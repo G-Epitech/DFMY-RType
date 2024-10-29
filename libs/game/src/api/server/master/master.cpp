@@ -117,7 +117,7 @@ void Master::SendRoomsInfos(std::uint64_t clientId) {
           .difficulty = room.second.difficulty,
       };
 
-      strcpy(status.name, room.second.name.c_str());
+      snprintf(status.name, sizeof(status.name), "%s", room.second.name.c_str());
 
       infos.rooms[nbRooms] = status;
       nbRooms++;
@@ -143,7 +143,7 @@ void Master::HandleCreateRoom(const abra::server::ClientTCPMessage &message) {
         .nbPlayers = payload.nbPlayers,
         .difficulty = payload.difficulty,
     };
-    strcpy(room.name, payload.name);
+    snprintf(room.name, sizeof(room.name), "%s", payload.name);
 
     this->logger_.Info("Send creation of room", "📡");
 
@@ -184,15 +184,17 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
   payload::PlayerJoin joinPayload = {
       .id = message.clientId,
   };
-  strcpy(joinPayload.username, client.username.c_str());
-  strcpy(joinPayload.ip, this->clientsSocket_.GetRemoteAddress(message.clientId).c_str());
+  snprintf(joinPayload.username, sizeof(joinPayload.username), "%s", client.username.c_str());
+  snprintf(joinPayload.ip, sizeof(joinPayload.ip), "%s",
+           this->clientsSocket_.GetRemoteAddress(message.clientId).c_str());
 
   SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, joinPayload, payload.nodeId);
 
   payload::InfoRoom infoPayload = {
       .port = room.port,
   };
-  strcpy(infoPayload.ip, this->nodesSocket_.GetRemoteAddress(node.id).c_str());
+  snprintf(infoPayload.ip, sizeof(infoPayload.ip), "%s",
+           this->nodesSocket_.GetRemoteAddress(node.id).c_str());
 
   SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRoom, infoPayload, message.clientId);
 }
