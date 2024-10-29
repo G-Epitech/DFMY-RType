@@ -7,8 +7,6 @@
 
 #include "script_execution_system.hpp"
 
-#include <iostream>
-
 using namespace zygarde::scripting::systems;
 
 ScriptExecutionSystem::ScriptExecutionSystem(
@@ -17,12 +15,14 @@ ScriptExecutionSystem::ScriptExecutionSystem(
     : deltaTime_{deltaTime}, archetypeManager_{archetypeManager} {}
 
 void ScriptExecutionSystem::Run(Registry::Ptr r,
-                                sparse_array<scripting::components::ScriptPool>::ptr script_pools) {
-  for (currentScriptIndex_; currentScriptIndex_ < script_pools->size(); currentScriptIndex_++) {
-    auto& scriptComponent = (*script_pools)[currentScriptIndex_];
-    if (scriptComponent.has_value() && r->HasEntityAtIndex(currentScriptIndex_)) {
-      ProcessScriptPool(r, &scriptComponent.value());
-    }
+                                zipper<scripting::components::ScriptPool> components) {
+  const auto start = components.begin();
+  const auto end = components.end();
+  for (auto it = start; it != end; ++it) {
+    auto&& [index, extractedComponents] = ~it;
+    auto&& [scripts] = extractedComponents;
+    currentScriptIndex_ = index;
+    ProcessScriptPool(r, &scripts);
   }
   currentScriptIndex_ = 0;
 }

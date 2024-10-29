@@ -27,7 +27,7 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
   ~ScriptExecutionSystem() override = default;
 
  public:
-  void Run(Registry::Ptr r, sparse_array<scripting::components::ScriptPool>::ptr scripts) override;
+  void Run(Registry::Ptr r, zipper<scripting::components::ScriptPool> scripts) override;
 
  private:
   void ProcessScriptPool(Registry::Const_Ptr registry, scripting::components::ScriptPool *script);

@@ -10,18 +10,9 @@
 using namespace zygarde::physics::systems;
 
 void PositionSystem::Run(std::shared_ptr<Registry> r,
-                         tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
-                         tools::sparse_array<core::components::Position>::ptr positions) {
-  auto max = std::max(rigidbodies->size(), positions->size());
-  for (size_t i = 0; i < max; i++) {
-    if (!r->HasEntityAtIndex(i)) {
-      continue;
-    }
-    auto& rigidbody = (*rigidbodies)[i];
-    auto& position = (*positions)[i];
-    if (rigidbody.has_value() && position.has_value()) {
-      ApplyMovementOffset(&(*rigidbody), &(*position));
-    }
+                         zipper<components::Rigidbody2D, core::components::Position> components) {
+  for (auto&& [rigidbody, position] : components) {
+    ApplyMovementOffset(&rigidbody, &position);
   }
 }
 

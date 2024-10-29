@@ -31,16 +31,6 @@ typename sparse_array<Component>::ptr Registry::RegisterComponent() {
 }
 
 template <typename Component>
-typename sparse_array<Component>::ptr Registry::GetComponents() {
-  try {
-    auto components = componentsArrays_.at(typeid(Component));
-    return std::any_cast<typename sparse_array<Component>::ptr>(components);
-  } catch (std::out_of_range &) {
-    throw Exception("Component not registered: " + utils::GetTypeName<Component>() + ".");
-  }
-}
-
-template <typename Component>
 typename sparse_array<Component>::ptr Registry::GetComponents() const {
   try {
     auto components = componentsArrays_.at(typeid(Component));

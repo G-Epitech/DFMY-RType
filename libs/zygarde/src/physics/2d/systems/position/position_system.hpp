@@ -13,6 +13,7 @@
 #include "libs/zygarde/src/physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
 #include "libs/zygarde/src/utils/timer/timer.hpp"
+#include "physics/2d/components/box_collider/box_collider_2d.hpp"
 
 namespace zygarde::physics::systems {
 class EXPORT_ZYGARDE_API PositionSystem final
@@ -28,8 +29,8 @@ class EXPORT_ZYGARDE_API PositionSystem final
    * @param positions The positions to use
    */
   void Run(std::shared_ptr<Registry> r,
-           tools::sparse_array<components::Rigidbody2D>::ptr rigidbodies,
-           tools::sparse_array<core::components::Position>::ptr positions) override;
+           zipper<components::Rigidbody2D, core::components::Position>
+               components) override;
 
  private:
   /**

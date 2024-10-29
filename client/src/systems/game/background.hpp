@@ -26,6 +26,8 @@ class BackgroundSystem
  private:
   /// @brief The clock to animate stars
   sf::Clock clock_;
+  /// @brief The number of stars
+  std::size_t starsCount_;
 
   /**
    * @brief Spawn a star in the background

@@ -7,37 +7,34 @@
 
 #include "collision_system.hpp"
 
-#include <iostream>
+#include <algorithm>
 
 #include "physics/2d/types/bounding_box/builder.hpp"
 
 using namespace zygarde::physics::systems;
 
-void CollisionSystem::Run(std::shared_ptr<Registry> r,
-                          sparse_array<components::Rigidbody2D>::ptr rigidbodies,
-                          sparse_array<core::components::Position>::ptr positions,
-                          sparse_array<components::BoxCollider2D>::ptr colliders) {
-  for (size_t i = 0; i < positions->size(); i++) {
-    if (!r->HasEntityAtIndex(i)) {
-      continue;
-    }
-    if (!IndexHasRequiredComponents(i, rigidbodies, positions, colliders)) {
-      continue;
-    }
-    auto componentsPack = GetComponentsPackAtIndex(r, i, rigidbodies, positions, colliders);
+void CollisionSystem::Run(
+    std::shared_ptr<Registry> r,
+    zipper<components::Rigidbody2D, core::components::Position, components::BoxCollider2D>
+        components) {
+  const auto start = components.begin();
+  const auto end = components.end();
+  for (auto it = start; it != end; ++it) {
+    auto &&[index, extractedComponents] = ~it;
+    auto &&[rigidbodies, positions, colliders] = extractedComponents;
+    ComponentsPack componentsPack = {&rigidbodies, &positions, &colliders,
+                                     r->EntityFromIndex(index)};
 
-    for (size_t j = 0; j < positions->size(); j++) {
-      if (i == j) {
+    const auto startOther = it + 1;
+    const auto endOther = components.end();
+    for (auto itOther = startOther; itOther != endOther; ++itOther) {
+      auto &&[indexOther, valuesOther] = ~itOther;
+      auto &&[rigidbodiesOther, positionsOther, collidersOther] = valuesOther;
+      if (index == indexOther) {
         continue;
       }
-      if (!r->HasEntityAtIndex(j)) {
-        continue;
-      }
-      if (!IndexHasRequiredComponents(j, rigidbodies, positions, colliders)) {
-        continue;
-      }
-      auto otherComponentsPack = GetComponentsPackAtIndex(r, j, rigidbodies, positions, colliders);
-
+      ComponentsPack otherComponentsPack = {&rigidbodiesOther, &positionsOther, &collidersOther,
+                                            r->EntityFromIndex(indexOther)};
       if (AreColliding(componentsPack, otherComponentsPack)) {
         ProcessCollision(componentsPack, otherComponentsPack);
       }

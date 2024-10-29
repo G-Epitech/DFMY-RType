@@ -16,7 +16,7 @@
 #include "libs/zygarde/src/system_abstract.hpp"
 
 namespace rtype::client::systems {
-class GameSyncSystem final : public ASystem<components::ServerEntityId> {
+class GameSyncSystem final : public ASystem<> {
  public:
   /**
    * @brief Construct a new Game Sync System object
@@ -24,7 +24,7 @@ class GameSyncSystem final : public ASystem<components::ServerEntityId> {
    */
   explicit GameSyncSystem(services::ServerConnectionService::Ptr server_connection_service);
 
-  void Run(Registry::Ptr r, sparse_array<components::ServerEntityId>::ptr component) override;
+  void Run(Registry::Ptr r) override;
 
  private:
   /**
