@@ -14,6 +14,9 @@
 #include "libs/zygarde/src/api.hpp"
 
 namespace zygarde {
+
+class Registry;
+
 /**
  * @brief Entity class
  * This class is used to represent an entity in the ECS system
@@ -59,8 +62,6 @@ class EXPORT_ZYGARDE_API Entity {
   Component* GetComponent();
 
  protected:
-  friend class Registry;
-
   /// @brief Entity id
   std::size_t id_;
   /// @brief Registry reference
@@ -80,6 +81,8 @@ class EXPORT_ZYGARDE_API Entity {
    * This method is virtual and can be overridden
    */
   virtual void OnSpawn();
+
+  friend class Registry;
 };
 
 /// @brief Entity type concept
