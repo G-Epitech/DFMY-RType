@@ -50,8 +50,9 @@ class rtype::sdk::game::api::Node {
   /**
    * @brief Start the node and send register message to the master
    */
-  void Start(const std::function<bool(std::uint64_t roomId, std::size_t maxPlayers,
-                                      std::size_t difficulty, unsigned int port)> &createRoomHandler);
+  void Start(
+      const std::function<bool(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty,
+                               unsigned int port)> &createRoomHandler);
 
   /**
    * @biref Wait the end of threads
@@ -208,7 +209,8 @@ class rtype::sdk::game::api::Node {
   std::uint64_t lastRoomId_;
 
   /// @brief Creation of room handler
-  std::function<bool(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty, unsigned int port)>
+  std::function<bool(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty,
+                     unsigned int port)>
       createRoomHandler_;
 
   static inline std::map<unsigned int, void (Node::*)(const abra::tools::MessageProps &message)>

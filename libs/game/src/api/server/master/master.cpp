@@ -190,7 +190,7 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
   SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, joinPayload, payload.nodeId);
 
   payload::InfoRoom infoPayload = {
-          .port = room.port,
+      .port = room.port,
   };
   strcpy(infoPayload.ip, this->nodesSocket_.GetRemoteAddress(node.id).c_str());
 

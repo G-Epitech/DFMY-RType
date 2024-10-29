@@ -29,9 +29,10 @@ rtype::server::Node::~Node() {
 }
 
 int rtype::server::Node::Node::Run() {
-  api_.Start([this](std::uint64_t id, std::size_t maxPlayers, std::size_t difficulty, unsigned int port) {
-    return this->CreateNewRoom(id, maxPlayers, difficulty, port);
-  });
+  api_.Start(
+      [this](std::uint64_t id, std::size_t maxPlayers, std::size_t difficulty, unsigned int port) {
+        return this->CreateNewRoom(id, maxPlayers, difficulty, port);
+      });
   api_.Join();
   return EXIT_SUCCESS;
 }
@@ -39,8 +40,8 @@ int rtype::server::Node::Node::Run() {
 bool rtype::server::Node::CreateNewRoom(std::uint64_t roomId, std::size_t maxPlayers,
                                         std::size_t difficulty, unsigned int port) {
   boost::process::child roomProcess(
-      ctx_.props.binaryPath, "room", "--name", ctx_.name, "--port", std::to_string(port),
-      "--ticks", std::to_string(60), "--token", ctx_.props.token, "--id", std::to_string(roomId),
+      ctx_.props.binaryPath, "room", "--name", ctx_.name, "--port", std::to_string(port), "--ticks",
+      std::to_string(60), "--token", ctx_.props.token, "--id", std::to_string(roomId),
       "--maxPlayers", std::to_string(maxPlayers), "--difficulty", std::to_string(difficulty));
 
   this->childrens_.push_back(std::move(roomProcess));

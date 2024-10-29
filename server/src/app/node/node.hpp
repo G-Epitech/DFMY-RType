@@ -43,7 +43,8 @@ class rtype::server::Node final : public IServer {
    * @param difficulty The difficulty of the room
    * @return True if the room was created, false otherwise
    */
-  bool CreateNewRoom(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty, unsigned int port);
+  bool CreateNewRoom(std::uint64_t roomId, std::size_t maxPlayers, std::size_t difficulty,
+                     unsigned int port);
 
  private:
   /// @brief Master server context
