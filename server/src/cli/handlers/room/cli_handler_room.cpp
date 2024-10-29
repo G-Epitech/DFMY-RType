@@ -42,7 +42,9 @@ rtype::server::BaseContext CliHandlerRoom::BuildCtx() {
   std::size_t ticks = variablesMap_["ticks"].as<std::size_t>();
   std::string token = variablesMap_["token"].as<std::string>();
   std::size_t id = variablesMap_["id"].as<std::size_t>();
-  auto props = RoomCtxProps(ticks, token, id);
+  std::size_t maxPlayers = variablesMap_["maxPlayers"].as<std::size_t>();
+  std::size_t difficulty = variablesMap_["difficulty"].as<std::size_t>();
+  auto props = RoomCtxProps(ticks, token, id, maxPlayers, difficulty);
 
   return {name, port, ServerType::kRoom, props};
 }

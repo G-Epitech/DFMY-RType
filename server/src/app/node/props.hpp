@@ -22,11 +22,18 @@ struct NodeCtxProps {
   /// @brief The token to connect to the master
   std::string masterToken;
 
+  /// @brief The path to the binary
+  std::string binaryPath;
+
+  /// @brief The ip of the node
+  std::string ip;
+
   /**
    * @brief Construct a new NodeCtxProps object
    * @param token The token that allow a room to connect to the node
    */
-  NodeCtxProps(std::size_t maxRooms, std::string token, std::string masterToken);
+  NodeCtxProps(std::size_t maxRooms, std::string token, std::string masterToken,
+               std::string binaryPath, std::string ip);
 
   /**
    * @brief Construct a new NodeCtxProps object with default values

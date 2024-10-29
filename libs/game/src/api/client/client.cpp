@@ -71,7 +71,7 @@ bool Client::HandleConnectionConfirmation(const MessageProps &) {
   return true;
 }
 
-bool Client::JoinLobby(const payload::JoinRoom &payload) {
+bool Client::JoinRoom(const payload::JoinRoom &payload) {
   auto sendSuccess = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMJoinRoom, payload);
   if (!sendSuccess)
     return false;

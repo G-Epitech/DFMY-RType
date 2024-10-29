@@ -15,7 +15,7 @@ ServerType StringToServerType(const std::string &str) {
     return ServerType::kMaster;
   }
   if (str == "node") {
-    return ServerType::kMaster;
+    return ServerType::kNode;
   }
   if (str == "room") {
     return ServerType::kRoom;

@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "app/master/master.hpp"
+#include "app/node/node.hpp"
 #include "app/room/room.hpp"
 #include "cli/cli.hpp"
 
@@ -31,6 +32,9 @@ void App::InitializeServerInstance() {
   switch (ctx.type) {
     case ServerType::kMaster:
       server_ = std::make_unique<Master>(ctx);
+      break;
+    case ServerType::kNode:
+      server_ = std::make_unique<Node>(ctx);
       break;
     case ServerType::kRoom:
       server_ = std::make_unique<Room>(ctx);

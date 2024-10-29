@@ -70,7 +70,7 @@ class rtype::sdk::game::api::Client {
    * It will initialize the UDP connection to the game server
    * @param payload The payload to join the lobby
    */
-  [[nodiscard]] bool JoinLobby(const payload::JoinRoom &payload);
+  [[nodiscard]] bool JoinRoom(const payload::JoinRoom &payload);
 
   /**
    * @brief Extract queue of messages

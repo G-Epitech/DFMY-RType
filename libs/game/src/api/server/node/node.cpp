@@ -236,3 +236,8 @@ void Node::RemoveRoom(std::uint64_t id) {
                                     [id](const auto &r) { return r.id == id; }),
                      this->rooms_.end());
 }
+
+void Node::Join() {
+  this->masterThread_.join();
+  this->roomsThread_.join();
+}

@@ -53,6 +53,11 @@ class rtype::sdk::game::api::Node {
   void Start(const std::function<bool(std::uint64_t roomId, std::size_t maxPlayers,
                                       std::size_t difficulty)> &createRoomHandler);
 
+  /**
+   * @biref Wait the end of threads
+   */
+  void Join();
+
  private:
   /**
    * @brief Initialize the master thread
