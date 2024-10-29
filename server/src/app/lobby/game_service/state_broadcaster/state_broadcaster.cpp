@@ -35,7 +35,9 @@ void StateBroadcaster::GatherEntityStates(const std::shared_ptr<zygarde::Registr
     auto ent = registry->EntityFromIndex(i);
     const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
     const auto tags = registry->GetComponent<core::components::Tags>(ent);
-    ProcessEntity(states, ent, vec, tags);
+    if (tags.has_value() && tags.value()) {
+      ProcessEntity(states, ent, vec, *tags);
+    }
     i++;
   }
 }
@@ -44,9 +46,6 @@ void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states
                                      const Entity& entity,
                                      const rtype::sdk::game::utils::types::vector_2f& vec,
                                      const core::components::Tags* tags) noexcept {
-  if (!tags) {
-    return;
-  }
   const core::components::Tags tagsToCheck{*tags};
   if (tagsToCheck & sdk::game::constants::kPlayerTag) {
     payload::PlayerState state = {static_cast<std::size_t>(entity), vec, 100};

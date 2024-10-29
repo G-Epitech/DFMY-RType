@@ -19,38 +19,52 @@ class EXPORT_ZYGARDE_API Tags final {
    * @brief Build a tags with a set of tags
    * @param tags Tags to add
    */
-  explicit Tags(const std::set<std::string> &tags);
+  explicit Tags(const std::set<std::string>& tags);
 
-  /**
-   * @brief Default constructor
-   */
-  Tags() = default;
+  ~Tags() { tags_.clear(); }
 
-  /**
-   * @brief Destructor
-   */
-  ~Tags() = default;
+  // Copy constructor
+  Tags(const Tags& other) = default;
+
+  // Move constructor
+  Tags(Tags&& other) noexcept : tags_(std::move(other.tags_)) {}
+
+  // Copy assignment operator
+  Tags& operator=(const Tags& other) {
+    if (this != &other) {
+      tags_ = other.tags_;
+    }
+    return *this;
+  }
+
+  // Move assignment operator
+  Tags& operator=(Tags&& other) noexcept {
+    if (this != &other) {
+      tags_ = std::move(other.tags_);
+    }
+    return *this;
+  }
 
   /**
    * @brief Check if the tag contains a specific tag
    * @param tag Tag to check
    * @return Match result
    */
-  bool operator&(const std::string &tag) const;
+  bool operator&(const std::string& tag) const;
 
-  bool operator==(const std::string &tag) const;
+  bool operator==(const std::string& tag) const;
 
   /**
    * @brief Add a tag to the tag
    * @param tag Tag to add
    */
-  void AddTag(const std::string &tag);
+  void AddTag(const std::string& tag);
 
   /**
    * @brief Remove a tag from the tag
    * @param tag Tag to remove
    */
-  void RemoveTag(const std::string &tag);
+  void RemoveTag(const std::string& tag);
 
  private:
   std::set<std::string> tags_{};

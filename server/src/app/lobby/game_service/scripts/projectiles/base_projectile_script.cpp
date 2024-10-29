@@ -13,10 +13,10 @@ void rtype::server::game::scripts::BaseProjectileScript::FixedUpdate(
     const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   const auto posComponent =
       context->registry->GetComponent<core::components::Position>(context->me);
-  if (!posComponent) {
+  if (!posComponent.has_value() || !posComponent.value()) {
     return;
   }
-  if (posComponent->point.x > 2000 || posComponent->point.x < -200) {
+  if ((*posComponent)->point.x > 2000 || (*posComponent)->point.x < -200) {
     context->registry->DestroyEntity(context->me);
   }
 }

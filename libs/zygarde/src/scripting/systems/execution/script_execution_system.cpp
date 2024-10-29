@@ -50,11 +50,11 @@ void ScriptExecutionSystem::HandleCollisionCallback(
     types::ScriptingContext::ConstPtr context) const {
   zygarde::Entity entity = registry->EntityFromIndex(currentScriptIndex_);
   auto collider = registry->GetComponent<physics::components::BoxCollider2D>(entity);
-  if (!collider) {
+  if (!collider.has_value() || !collider.value()) {
     return;
   }
-  while (collider->HasCollision()) {
-    auto collision = collider->GetNextCollision();
+  while ((*collider)->HasCollision()) {
+    auto collision = (*collider)->GetNextCollision();
     script->OnCollisionEnter(context, collision);
   }
 }

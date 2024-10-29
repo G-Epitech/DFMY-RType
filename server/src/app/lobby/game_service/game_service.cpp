@@ -93,12 +93,12 @@ void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
   if (const auto player = players_.find(player_id); player != players_.end()) {
     const auto &playerEntity = player->second;
     const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
-    if (!rigidBody) {
+    if (!rigidBody.has_value() || !rigidBody.value()) {
       return;
     }
 
     const core::types::Vector2f newDir = {direction.x, direction.y};
-    rigidBody->SetVelocity(newDir * 200);
+    (*rigidBody)->SetVelocity(newDir * 200);
   }
 
   logger_.Info("Player " + std::to_string(player_id) + " moved", "🏃‍");
@@ -110,8 +110,14 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
   const auto player = players_.find(player_id);
   if (player != players_.end()) {
     const auto &playerEntity = player->second;
+    if (!registry_->HasEntityAtIndex(playerEntity.operator std::size_t())) {
+      return;
+    }
     auto scriptPool = registry_->GetComponent<scripting::components::ScriptPool>(playerEntity);
-    auto playerScript = scriptPool->GetScript<scripts::PlayerScript>();
+    if (!scriptPool.has_value() || !scriptPool.value()) {
+      return;
+    }
+    auto playerScript = (*scriptPool)->GetScript<scripts::PlayerScript>();
     if (playerScript) {
       std::cout << "Player " << player_id << " shot" << std::endl;
       playerScript->Shoot();
@@ -125,7 +131,11 @@ void GameService::NewPlayer(std::uint64_t player_id) {
   Entity player = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypePlayerPhoton);
   auto position = registry_->GetComponent<core::components::Position>(player);
 
-  position->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
+  if (!position.has_value() || !position.value()) {
+    return;
+  }
+
+  (*position)->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
 }

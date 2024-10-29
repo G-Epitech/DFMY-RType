@@ -36,7 +36,7 @@ typename sparse_array<Component>::ptr Registry::GetComponents() {
     auto components = componentsArrays_.at(typeid(Component));
     return std::any_cast<typename sparse_array<Component>::ptr>(components);
   } catch (std::out_of_range &) {
-    throw Exception("Component not registered: " + utils::GetTypeName<Component>()  + ".");
+    throw Exception("Component not registered: " + utils::GetTypeName<Component>() + ".");
   }
 }
 
@@ -46,24 +46,25 @@ typename sparse_array<Component>::ptr Registry::GetComponents() const {
     auto components = componentsArrays_.at(typeid(Component));
     return std::any_cast<typename sparse_array<Component>::ptr>(components);
   } catch (std::out_of_range &) {
-    throw Exception("Component not registered: " + utils::GetTypeName<Component>()  + ".");
+    throw Exception("Component not registered: " + utils::GetTypeName<Component>() + ".");
   }
 }
 
 template <typename Component>
-Component *Registry::GetComponent(const Entity &e) {
-  typename sparse_array<Component>::ptr components = GetComponents<Component>();
-  if (!components) {
-    return nullptr;
+std::optional<Component *> Registry::GetComponent(const Entity &e) {
+  auto components = GetComponents<Component>();
+
+  if (!components || e.id_ >= components->size()) {
+    return std::nullopt;
   }
 
-  if (components.get()->size() >= e.id_) {
-    auto &optionalComponent = (*components)[e.id_];
-    if (optionalComponent) {
-      return &(*optionalComponent);
-    }
+  auto &optionalComponent = (*components)[e.id_];
+
+  if (optionalComponent) {
+    return &(*optionalComponent);
   }
-  return nullptr;
+
+  return std::nullopt;
 }
 
 template <typename Component>

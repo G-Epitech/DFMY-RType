@@ -28,5 +28,7 @@ void rtype::server::game::EnemyManager::Update(
   const core::types::Vector3f position(2000, dist(gen), 0);
   auto entity = archetype_manager->InvokeArchetype(registry, tools::kArchetypeEnemyPataNormal);
   auto positionComponent = registry->GetComponent<core::components::Position>(entity);
-  positionComponent->point = position;
+  if (positionComponent.has_value() && positionComponent.value()) {
+    (*positionComponent)->point = position;
+  }
 }

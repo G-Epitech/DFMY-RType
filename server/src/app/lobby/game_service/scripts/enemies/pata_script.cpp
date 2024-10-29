@@ -23,29 +23,32 @@ PataScript::PataScript()
 void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   auto position = context->registry->GetComponent<core::components::Position>(context->me);
   auto rb = context->registry->GetComponent<physics::components::Rigidbody2D>(context->me);
+  if (!position.has_value() || !rb.has_value() || !rb.value() || !position.value()) {
+    return;
+  }
   lastShootTime_ += context->deltaTime;
   if (lastShootTime_ >= std::chrono::seconds(1)) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
     Entity entity =
         context->archetypeManager->InvokeArchetype(context->registry, "default_enemy_bullet");
     auto positionComponent = context->registry->GetComponent<core::components::Position>(entity);
-    if (positionComponent) {
-      positionComponent->point = position->point;
+    if (positionComponent.has_value() && positionComponent.value()) {
+      (*positionComponent)->point = (*position)->point;
     }
   }
   if (!position || !rb) {
     return;
   }
-  if (position->point.y >= upperLimit_) {
+  if ((*position)->point.y >= upperLimit_) {
     goingUp_ = false;
-  } else if (position->point.y <= lowerLimit_) {
+  } else if ((*position)->point.y <= lowerLimit_) {
     goingUp_ = true;
   }
   float verticalSpeed = 20.0f;
   if (goingUp_) {
-    rb->SetVelocity({-100.0f, verticalSpeed});
+    (*rb)->SetVelocity({-100.0f, verticalSpeed});
   } else {
-    rb->SetVelocity({-100.0f, -verticalSpeed});
+    (*rb)->SetVelocity({-100.0f, -verticalSpeed});
   }
 }
 
@@ -54,11 +57,11 @@ void PataScript::OnCollisionEnter(
     const physics::types::Collision2D::ptr& collision) {
   auto entity = collision->otherEntity;
   auto otherEntityTag = context->registry->GetComponent<core::components::Tags>(entity);
-  if (!otherEntityTag) {
+  if (!otherEntityTag.has_value() || !otherEntityTag.value()) {
     return;
   }
 
-  if (*otherEntityTag == rtype::sdk::game::constants::kPlayerBulletTag) {
+  if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerBulletTag) {
     health_ -= 10;
     std::cout << "Pata health: " << health_ << std::endl;
   }

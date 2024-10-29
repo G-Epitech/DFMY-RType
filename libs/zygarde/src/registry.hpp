@@ -75,7 +75,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   typename sparse_array<Component>::ptr GetComponents() const;
 
   template <typename Component>
-  Component *GetComponent(Entity const &e);
+  std::optional<Component *> GetComponent(Entity const &e);
 
   /**
    * @brief Spawn an entity

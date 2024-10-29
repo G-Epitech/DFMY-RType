@@ -32,14 +32,16 @@ void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::Scripting
   if (isShooting_ && lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
     auto position = context->registry->GetComponent<core::components::Position>(context->me);
-
-    const core::types::Vector3f projectilePos(position->point.x + 86, position->point.y + 20,
-                                              position->point.z);
-    Entity entity = context->archetypeManager->InvokeArchetype(
-        context->registry, tools::kArchetypeBasePlayerBullet);
+    if (!position.has_value() || !position.value()) {
+      return;
+    }
+    const core::types::Vector3f projectilePos((*position)->point.x + 86, (*position)->point.y + 20,
+                                              (*position)->point.z);
+    Entity entity = context->archetypeManager->InvokeArchetype(context->registry,
+                                                               tools::kArchetypeBasePlayerBullet);
     auto positionComponent = context->registry->GetComponent<core::components::Position>(entity);
-    if (positionComponent) {
-      positionComponent->point = projectilePos;
+    if (positionComponent.has_value() && positionComponent.value()) {
+      (*positionComponent)->point = projectilePos;
       return;
     }
   }
@@ -54,7 +56,7 @@ void PlayerScript::OnCollisionEnter(
   if (!otherEntityTag) {
     return;
   }
-  if (*otherEntityTag == rtype::sdk::game::constants::kEnemyBulletTag) {
+  if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kEnemyBulletTag) {
     props_.health -= 10;
   }
   if (props_.health <= 0) {
