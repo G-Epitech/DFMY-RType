@@ -145,9 +145,13 @@ void Master::HandleCreateRoom(const abra::server::ClientTCPMessage &message) {
     };
     strcpy(room.name, payload.name);
 
+    this->logger_.Info("Send creation of room", "📡");
+
     SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, room, node.first);
     break;
   }
+
+  this->logger_.Info("Room creation requested", "🏠");
 }
 
 void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
@@ -177,7 +181,20 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
   client.nodeId = payload.nodeId;
   client.roomId = payload.roomId;
 
-  SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, payload, payload.nodeId);
+  payload::PlayerJoin joinPayload = {
+      .id = message.clientId,
+  };
+  strcpy(joinPayload.username, client.username.c_str());
+  strcpy(joinPayload.ip, this->clientsSocket_.GetRemoteAddress(message.clientId).c_str());
+
+  SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, joinPayload, payload.nodeId);
+
+  payload::InfoRoom infoPayload = {
+          .port = room.port,
+  };
+  strcpy(infoPayload.ip, this->nodesSocket_.GetRemoteAddress(node.id).c_str());
+
+  SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRoom, infoPayload, message.clientId);
 }
 
 void Master::HandleRegisterNode(const abra::server::ClientTCPMessage &message) {
@@ -214,7 +231,7 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
   };
 
   node.rooms_[room.id] = std::move(room);
-  logger_.Info("New room registered: " + node.rooms_[room.id].name, "🏠");
+  logger_.Info("New room registered: " + std::string(node.rooms_[room.id].name), "🏠");
 }
 
 void Master::HandleRoomGameStarted(const abra::server::ClientTCPMessage &message) {

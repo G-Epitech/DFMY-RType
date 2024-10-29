@@ -22,7 +22,9 @@ void CliHandlerRoom::Setup() noexcept {
       "ticks", po::value<std::size_t>()->default_value(kDefaultTicks),
       "number of ticks for the game")("token", po::value<std::string>()->required(),
                                       "token for the node auth")(
-      "id", po::value<std::size_t>()->required(), "id of the room");
+      "id", po::value<std::size_t>()->required(), "id of the room")(
+      "maxPlayers", po::value<std::size_t>()->required(), "max players in the room")(
+      "difficulty", po::value<std::size_t>()->required(), "difficulty of the room");
 }
 
 CliResult CliHandlerRoom::Run(int ac, char **av) {

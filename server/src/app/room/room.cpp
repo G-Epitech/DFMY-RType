@@ -17,6 +17,8 @@ rtype::server::Room::Room(const BaseContext &ctx)
       gameService_(ctx_.props.ticks) {}
 
 int rtype::server::Room::Run() {
+  api_->RegisterNewRoom();
+
   gameService_.Run(api_);
   return EXIT_SUCCESS;
 }

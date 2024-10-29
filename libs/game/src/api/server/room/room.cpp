@@ -32,6 +32,18 @@ Room::~Room() {
   logger_.Info("Clients thread stopped", "🛑");
 }
 
+void Room::RegisterNewRoom() {
+  payload::RegisterRoom payload = {
+      .id = this->roomId_,
+      .token = "token",
+      .port = this->clientsSocket_.GetEndpoint().port,
+  };
+
+  this->SendToNode(RoomToNodeMsgType::kMsgTypeRTNRegisterRoom, payload);
+
+  logger_.Info("Room registered", "🛂");
+}
+
 void Room::InitNodeThread() {
   this->nodeThread_ = std::thread(&abra::client::ClientTCP::Listen, &this->nodeSocket_);
 

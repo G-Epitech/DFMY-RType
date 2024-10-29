@@ -86,6 +86,11 @@ class rtype::sdk::game::api::Room {
    */
   bool EndGame(unsigned int score, time_t time, bool win);
 
+  /**
+   * @brief Register a new room
+   */
+  void RegisterNewRoom();
+
  private:
   /**
    * @brief Initialize the node thread

@@ -33,7 +33,7 @@ Node::~Node() {
 }
 
 void Node::Start(const std::function<bool(std::uint64_t roomId, std::size_t maxPlayers,
-                                          std::size_t difficulty)> &createRoomHandler) {
+                                          std::size_t difficulty, unsigned int port)> &createRoomHandler) {
   InitMasterThread();
   InitRoomsThread();
 
@@ -128,7 +128,7 @@ void Node::HandleRoomCreation(const abra::tools::MessageProps &message) {
       .difficulty = payload.difficulty,
   };
 
-  this->createRoomHandler_(newRoom.id, newRoom.maxPlayers, newRoom.difficulty);
+  this->createRoomHandler_(newRoom.id, newRoom.maxPlayers, newRoom.difficulty, this->roomsSocket_.GetPort());
   this->rooms_.push_back(std::move(newRoom));
 
   lastRoomId_++;

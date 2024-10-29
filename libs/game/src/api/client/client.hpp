@@ -73,6 +73,13 @@ class rtype::sdk::game::api::Client {
   [[nodiscard]] bool JoinRoom(const payload::JoinRoom &payload);
 
   /**
+   * @brief Create a room
+   * @param payload The payload to create the room
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool CreateRoom(const payload::CreateRoom &payload);
+
+  /**
    * @brief Extract queue of messages
    * It's a mix of TCP and UDP messages
    * @warning The queue is cleared after the extraction

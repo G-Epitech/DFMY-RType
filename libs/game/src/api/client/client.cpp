@@ -60,6 +60,7 @@ bool Client::Register(const payload::PlayerConnect &payload) {
   if (!sendSuccess)
     return false;
 
+  this->isConnected_ = sendSuccess;
   logger_.Info("Register to server", "🛜");
 
   return this->isConnected_;
@@ -86,6 +87,15 @@ bool Client::JoinRoom(const payload::JoinRoom &payload) {
   }
 
   return this->isLobbyConnected_;
+}
+
+bool Client::CreateRoom(const payload::CreateRoom &payload) {
+  auto success = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMCreateRoom, payload);
+  if (success) {
+    logger_.Info("Room created", "🏠");
+  }
+
+  return success;
 }
 
 bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
