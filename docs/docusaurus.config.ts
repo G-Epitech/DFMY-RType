@@ -38,10 +38,10 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/G-Epitech/DFMY-RType/tree/main/docs/',
+            'https://github.com/G-Epitech/DFMY-RType/tree/main/docs',
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: './src/css/custom.css'
         },
       } satisfies Preset.Options,
     ],
@@ -57,6 +57,12 @@ const config: Config = {
         src: 'img/logo.svg',
       },
       items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'projectSidebar',
+          position: 'left',
+          label: 'The project',
+        },
         {
           type: 'docSidebar',
           sidebarId: 'docsSidebar',
@@ -78,6 +84,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['bash'],
     },
   } satisfies Preset.ThemeConfig,
 };
