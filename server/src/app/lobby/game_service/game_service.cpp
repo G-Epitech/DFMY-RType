@@ -13,6 +13,7 @@
 #include "app/lobby/game_service/archetype_keys.hpp"
 #include "app/lobby/game_service/scripts/scripts_registry.hpp"
 #include "constants/tags.hpp"
+#include "difficulty_loader/difficulty_loader.hpp"
 #include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
 #include "scripts/player_script.hpp"
 #include "state_broadcaster/state_broadcaster.hpp"
@@ -40,6 +41,10 @@ void GameService::Initialize() {
   ticksManager_.Initialize();
   archetypeManager_->LoadArchetypes(archetypeDirs, scriptsRegistry.GetScripts());
   RegistrySetup();
+  const auto levels = LevelLoader().Run(kDirectoryLevels);
+  for (const auto &difficulty : levels) {
+    logger_.Info("Loaded difficulty: " + difficulty.name, "📊");
+  }
 }
 
 int GameService::Run(std::shared_ptr<Lobby> api) {
@@ -47,13 +52,13 @@ int GameService::Run(std::shared_ptr<Lobby> api) {
 
   Initialize();
 
-  while (gameRunning_) {
-    ticksManager_.Update();
-    HandleMessages();
-    ExecuteGameLogic();
-    StateBroadcaster::Run(registry_, api_);
-    ticksManager_.WaitUntilNextTick();
-  }
+  //  while (gameRunning_) {
+  //    ticksManager_.Update();
+  //    HandleMessages();
+  //    ExecuteGameLogic();
+  //    StateBroadcaster::Run(registry_, api_);
+  //    ticksManager_.WaitUntilNextTick();
+  //  }
   return EXIT_SUCCESS;
 }
 

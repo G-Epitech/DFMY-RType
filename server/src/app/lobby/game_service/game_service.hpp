@@ -10,11 +10,12 @@
 #include <cstddef>
 #include <map>
 
-#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "enemy_manager/enemy_manager.hpp"
+#include "level_manager/loader/level_loader.hpp"
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
+#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
@@ -114,5 +115,8 @@ class GameService {
 
   /// @brief Archetype manager
   std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> archetypeManager_;
+
+  /// @brief Level loader
+  LevelLoader levelLoader_;
 };
 }  // namespace rtype::server::game
