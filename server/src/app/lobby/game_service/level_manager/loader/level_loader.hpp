@@ -20,8 +20,6 @@ class LevelLoader {
   std::vector<Level> Run(const std::string &directory_path);
 
  private:
-  void LoadLevelJSON(const std::string &file_path);
-
   void LoadLevelData(const nlohmann::json &jsonData);
 
   static void LoadLevelMetadata(const nlohmann::json &jsonData, Level *level);
@@ -33,7 +31,6 @@ class LevelLoader {
   static void LoadLevelWaveEnemyData(const nlohmann::json &jsonData, Wave *wave);
 
  private:
-  std::string currentDirectory_;
   std::vector<Level> levels_;
 };
 }  // namespace rtype::server::game

@@ -8,46 +8,21 @@
 #include "level_loader.hpp"
 
 #include <filesystem>
-#include <fstream>
+
+#include "utils/json_helper/json_helper.hpp"
 
 using namespace rtype::server::game;
 
-namespace fs = std::filesystem;
-
-LevelLoader::LevelLoader() : currentDirectory_(fs::current_path().string()), levels_() {}
+LevelLoader::LevelLoader() : levels_() {}
 
 std::vector<Level> LevelLoader::Run(const std::string& directory_path) {
-  std::string levelDirectoryPath = currentDirectory_ + directory_path;
-  if (!fs::is_directory(levelDirectoryPath)) {
-    throw std::runtime_error("Provided path is not a directory!");
-  }
+  std::vector<nlohmann::json> jsonFiles =
+      utils::JsonHelper::ReadJsonFilesFromDirectory(directory_path);
 
-  for (const auto& entry : fs::directory_iterator(levelDirectoryPath)) {
-    if (entry.is_regular_file()) {
-      const auto& filePath = entry.path();
-      if (filePath.extension() == ".json") {
-        LoadLevelJSON(filePath.string());
-      }
-    }
+  for (const auto& jsonFile : jsonFiles) {
+    LoadLevelData(jsonFile);
   }
   return levels_;
-}
-
-void LevelLoader::LoadLevelJSON(const std::string& file_path) {
-  std::ifstream inputFile(file_path);
-  if (!inputFile.is_open()) {
-    throw std::runtime_error("Could not open the file: " + file_path);
-  }
-
-  nlohmann::json jsonData;
-  try {
-    inputFile >> jsonData;
-  } catch (const nlohmann::json::parse_error& e) {
-    inputFile.close();
-    throw std::runtime_error("Could not parse the file: " + file_path);
-  }
-  inputFile.close();
-  LoadLevelData(jsonData);
 }
 
 void LevelLoader::LoadLevelData(const nlohmann::json& jsonData) {

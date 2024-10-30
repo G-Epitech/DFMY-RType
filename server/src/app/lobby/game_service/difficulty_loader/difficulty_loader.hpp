@@ -27,11 +27,12 @@ class DifficultyLoader {
   static void LoadDifficultyMetadata(const nlohmann::json &jsonData, Difficulty *difficulty);
 
   static void LoadDifficultyMultipliers(const nlohmann::json &jsonData, Difficulty *difficulty);
-  static void LoadDifficultyPlayerMultipliers(const nlohmann::json &jsonData, Difficulty *difficulty);
-  static void LoadDifficultyEnemyMultipliers(const nlohmann::json &jsonData, Difficulty *difficulty);
+  static void LoadDifficultyPlayerMultipliers(const nlohmann::json &jsonData,
+                                              Difficulty *difficulty);
+  static void LoadDifficultyEnemyMultipliers(const nlohmann::json &jsonData,
+                                             Difficulty *difficulty);
 
  private:
-  std::string currentDirectory_;
   std::vector<Difficulty> difficulties_;
 };
 }  // namespace rtype::server::game

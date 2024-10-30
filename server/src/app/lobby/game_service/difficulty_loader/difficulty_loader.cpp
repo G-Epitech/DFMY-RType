@@ -7,17 +7,13 @@
 
 #include "difficulty_loader.hpp"
 
-#include <filesystem>
 #include <fstream>
 
 #include "utils/json_helper/json_helper.hpp"
 
 using namespace rtype::server::game;
 
-namespace fs = std::filesystem;
-
-DifficultyLoader::DifficultyLoader()
-    : currentDirectory_(fs::current_path().string()), difficulties_() {}
+DifficultyLoader::DifficultyLoader() : difficulties_() {}
 
 std::vector<Difficulty> DifficultyLoader::Run(const std::string& directory_path) {
   std::vector<nlohmann::json> jsonDifficulties =
