@@ -16,7 +16,7 @@ namespace fs = std::filesystem;
 
 LevelLoader::LevelLoader() : currentDirectory_(fs::current_path().string()), levels_() {}
 
-std::vector<Level> LevelLoader::LoadLevels(const std::string& directory_path) {
+std::vector<Level> LevelLoader::Run(const std::string& directory_path) {
   std::string levelDirectoryPath = currentDirectory_ + directory_path;
   if (!fs::is_directory(levelDirectoryPath)) {
     throw std::runtime_error("Provided path is not a directory!");

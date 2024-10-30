@@ -17,8 +17,8 @@ constexpr const char* kDirectoryProjectileArchetypes = "/game_files/archetypes/p
 constexpr const char* kDirectoryPowerUpArchetypes = "/game_files/archetypes/powerups/";
 
 /// @brief Filepaths for levels
-constexpr const char* kLevelFolderPath = "/game_files/levels/";
+constexpr const char* kDirectoryLevels = "/game_files/levels/";
 
 /// @brief Filepaths for difficulties
-constexpr const char* kDifficultyFolderPath = "/game_files/difficulties/";
+constexpr const char* kDirectoryDifficulties = "/game_files/difficulties/";
 }  // namespace rtype::server

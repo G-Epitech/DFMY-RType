@@ -1,13 +1,18 @@
 {
   "difficulty": "default",
-  "stats": {
-    "enemyHealthMultiplier": 1,
-    "enemyDamageMultiplier": 1,
-    "enemySpeedMultiplier": 1,
-    "enemyFireRateMultiplier": 1,
-    "playerHealthMultiplier": 1,
-    "playerDamageMultiplier": 1,
-    "playerSpeedMultiplier": 1,
-    "playerFireRateMultiplier": 1
+  "description": "The default difficulty",
+  "multipliers": {
+    "player": {
+      "health": 1.0,
+      "damage": 1.0,
+      "speed": 4.0,
+      "fireRate": 1.0
+    },
+    "enemy": {
+      "health": 1.0,
+      "damage": 1.0,
+      "speed": 1.0,
+      "fireRate": 4.0
+    }
   }
 }

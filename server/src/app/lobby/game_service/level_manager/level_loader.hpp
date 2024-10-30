@@ -17,7 +17,7 @@ class LevelLoader {
   LevelLoader();
   ~LevelLoader() = default;
 
-  std::vector<Level> LoadLevels(const std::string &directory_path);
+  std::vector<Level> Run(const std::string &directory_path);
 
  private:
   void LoadLevelJSON(const std::string &file_path);
