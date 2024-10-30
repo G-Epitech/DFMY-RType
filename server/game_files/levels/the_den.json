@@ -1,17 +1,17 @@
 {
-  "levelName": "The Den",
-  "levelDescription": "The Den is a dark and dangerous place. The creatures that live here are not to be trifled with.",
+  "name": "The Den",
+  "description": "The Den is a dark and dangerous place. The creatures that live here are not to be trifled with.",
   "waves": [
     {
       "maxTime": 30.0,
       "enemies": [
         {
-          "type": "enemy_pata_normal",
-          "number": 5
+          "name": "enemy_pata_normal",
+          "count": 5
         },
         {
-          "type": "enemy_pata_big",
-          "number": 5
+          "name": "enemy_pata_big",
+          "count": 5
         }
       ]
     },
@@ -19,12 +19,12 @@
       "maxTime": 60.0,
       "enemies": [
         {
-          "type": "enemy_pata_normal",
-          "number": 10
+          "name": "enemy_pata_normal",
+          "count": 10
         },
         {
-          "type": "enemy_pata_big",
-          "number": 10
+          "name": "enemy_pata_big",
+          "count": 10
         }
       ]
     },
@@ -32,12 +32,12 @@
       "maxTime": 90.0,
       "enemies": [
         {
-          "type": "enemy_pata_normal",
-          "number": 15
+          "name": "enemy_pata_normal",
+          "count": 15
         },
         {
-          "type": "enemy_pata_big",
-          "number": 15
+          "name": "enemy_pata_big",
+          "count": 15
         }
       ]
     }
