@@ -29,11 +29,11 @@ Thanks [Abra](/docs/dev/libraries/abra) for the help on the API 😉.
 Next, when you have get the lobby ID (the method to list lobby is not implemented yet), you can join a lobby with the following code:
 
 ```cpp
-payload::JoinLobby joinPayload = {
+payload::JoinRoom joinPayload = {
   .lobbyId = 1
 };
 
-auto success = client->JoinLobby(joinPayload);
+auto success = client->JoinRoom(joinPayload);
 if (!success)
   throw std::runtime_error("Failed to join the lobby.");
 ```
@@ -44,7 +44,7 @@ Now, you can send and receive messages from the server.
 
 :::note
 The first `Register` method have a timeout of 5 seconds.\
-The `JoinLobby` method have a timeout of 10 seconds.
+The `JoinRoom` method have a timeout of 10 seconds.
 :::
 
 :::info

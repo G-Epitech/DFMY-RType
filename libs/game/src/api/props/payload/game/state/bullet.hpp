@@ -13,13 +13,11 @@
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 namespace rtype::sdk::game::api::payload {
-/// @brief Payload for enemy state
+/// @brief Payload for bullet state - Link to RoomToClientMsgType::kMsgTypeRTCBulletsState
 struct BulletState {
-  /// @brief The entity id of the enemy
-  std::size_t entityId = 0;
-  /// @brief The position of the enemy
-  utils::types::vector_2f position;
-  /// @brief The type of the bullet
-  types::ProjectileType bulletType = types::ProjectileType::kPlayerCommon;
+  std::size_t entityId = 0;          ///< @brief The entity id of the enemy
+  utils::types::vector_2f position;  ///< @brief The position of the enemy
+  types::ProjectileType bulletType =
+      types::ProjectileType::kPlayerCommon;  ///< @brief The type of the bullet
 };
 }  // namespace rtype::sdk::game::api::payload

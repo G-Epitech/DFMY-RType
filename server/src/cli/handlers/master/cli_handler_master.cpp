@@ -40,9 +40,8 @@ rtype::server::BaseContext CliHandlerMaster::BuildCtx() {
 
   auto name = config.Get<std::string>("NAME");
   std::size_t port = static_cast<std::size_t>(config.Get<int>("PORT"));
-  std::size_t maxGames = static_cast<std::size_t>(config.Get<int>("MAX_GAMES"));
-  std::size_t ticks = static_cast<std::size_t>(config.Get<int>("TICKS"));
-  MasterCtxProps props = MasterCtxProps(maxGames, ticks);
-
-  return {name, port, kMaster, props};
+  auto token = config.Get<std::string>("TOKEN");
+  std::size_t nodePort = static_cast<std::size_t>(config.Get<int>("NODE_PORT"));
+  MasterCtxProps props = MasterCtxProps(token, nodePort);
+  return {name, port, ServerType::kMaster, props};
 }

@@ -20,6 +20,7 @@ ServerTCP::ServerTCP(const int &port,
       logger_("server_tcp") {
   mutex_ = std::make_shared<std::mutex>();
   queue_ = std::make_shared<std::queue<ClientTCPMessage>>();
+  port_ = acceptor_.local_endpoint().port();
 }
 
 ServerTCP::~ServerTCP() {
@@ -105,4 +106,8 @@ std::string ServerTCP::GetRemoteAddress(std::uint64_t clientId) const {
     return "";
   }
   return clients_.at(clientId)->GetRemoteAddress();
+}
+
+int ServerTCP::GetPort() const {
+  return port_;
 }

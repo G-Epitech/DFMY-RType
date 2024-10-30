@@ -12,11 +12,9 @@
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 namespace rtype::sdk::game::api::payload {
-/// @brief Movement payload
+/// @brief Movement payload - Link to ClientToRoomMsgType::kMsgTypeCTRPlayerMove
 struct Movement {
-  /// @brief The entity id
-  std::size_t entityId = 0;
-  /// @brief The new position
-  utils::types::vector_2f direction;
+  std::size_t entityId = 0;           ///< @brief The entity id
+  utils::types::vector_2f direction;  ///< @brief The new position
 };
 }  // namespace rtype::sdk::game::api::payload

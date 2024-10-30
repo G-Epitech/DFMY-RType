@@ -9,6 +9,7 @@
 
 constexpr const char *kIpNull = "0.0.0.0";
 constexpr const char *kLocalhost = "127.0.0.1";
+constexpr unsigned int kClientUDPPort = 3480;
 
 namespace rtype::sdk::game::api {
 /// @brief Network protocol type
