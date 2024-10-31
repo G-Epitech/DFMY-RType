@@ -65,6 +65,11 @@ class SceneMenu final : public SceneBase {
   void CreateInputField() const;
 
   /**
+   * @brief Create the blinking cursor
+   */
+  void CreateBlinkingCursor() const;
+
+  /**
    * @brief Get the connection label color
    * @return sf::Color The connection label color
    */

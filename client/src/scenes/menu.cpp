@@ -11,6 +11,7 @@
 #include "libs/mew/src/sets/events/events.hpp"
 #include "lobby.hpp"
 #include "settings.hpp"
+#include "systems/blink.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::services;
@@ -22,6 +23,7 @@ using namespace zygarde::core::types;
 
 SceneMenu::SceneMenu(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   registry_->RegisterComponent<Tags>();
+  registry_->AddSystem<systems::BlinkSystem>();
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
 }
 
@@ -32,6 +34,7 @@ void SceneMenu::OnCreate() {
   CreateExitButton();
   CreateServerConnectionLabel();
   CreateInputField();
+  CreateBlinkingCursor();
 }
 
 void SceneMenu::OnActivate() {
@@ -184,6 +187,7 @@ void SceneMenu::CreateInputField() const {
   registry_->AddComponent<Position>(input_field, {point, aligns});
   registry_->AddComponent<Drawable>(input_field,
                                     {Text{"Input field", "main", 20}, WindowManager::View::HUD});
+  registry_->AddComponent<Tags>(input_field, Tags({"input_field"}));
   registry_->AddComponent<OnTextEntered>(
       input_field, OnTextEntered{.handler = [this, input_field](const sf::Uint32& unicode) {
         const auto component = registry_->GetComponent<Drawable>(input_field);
@@ -205,9 +209,31 @@ void SceneMenu::CreateInputField() const {
       }});
 }
 
+void SceneMenu::CreateBlinkingCursor() const {
+  const auto cursor = registry_->SpawnEntity();
+  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 200);
+  constexpr auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(cursor, {point, aligns});
+  registry_->AddComponent<Drawable>(cursor, {Text{"|", "main", 20}, WindowManager::View::HUD});
+  registry_->AddComponent<Tags>(cursor, Tags({"blink"}));
+  registry_->AddComponent<OnTextEntered>(
+      cursor, OnTextEntered{.handler = [this, cursor](const sf::Uint32&) {
+        const auto drawable = registry_->GetComponent<Drawable>(cursor);
+        const auto tags = registry_->GetComponent<Tags>(cursor);
+        if (!tags || !drawable) {
+          return;
+        }
+        auto& [text, fontName, characterSize, style, color] = std::get<Text>(drawable->drawable);
+        text = "|";
+        tags->AddTag("not_blink");
+        drawable->visible = true;
+      }});
+}
+
 void SceneMenu::CreateServerConnectionLabel() const {
   const auto label = registry_->SpawnEntity();
-  const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+  constexpr auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ - 100);
 
   registry_->AddComponent<Position>(label, {point, aligns});
