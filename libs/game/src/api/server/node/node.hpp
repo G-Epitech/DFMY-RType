@@ -216,7 +216,7 @@ class rtype::sdk::game::api::Node {
   static inline std::map<unsigned int, void (Node::*)(const abra::tools::MessageProps &message)>
       masterMessageHandlers_ = {
           {MasterToNodeMsgType::kMsgTypeMTNCreateRoom, &Node::HandleRoomCreation},
-          {MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, &Node::HandlePlayerJoin},
+          {MasterToNodeMsgType::kMsgTypeMTNPlayerJoinRoom, &Node::HandlePlayerJoin},
   };
 
   static inline std::map<unsigned int,

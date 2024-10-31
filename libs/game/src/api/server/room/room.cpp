@@ -161,8 +161,8 @@ void Room::HandlePlayerJoin(const abra::tools::MessageProps &message) {
     boost::asio::ip::udp::endpoint endpoint = {boost::asio::ip::address::from_string(payload.ip),
                                                kClientUDPPort};
     RoomClient newClient = {
-            .id = payload.id,
-            .endpoint = endpoint,
+        .id = payload.id,
+        .endpoint = endpoint,
     };
 
     this->clients_.push_back(newClient);

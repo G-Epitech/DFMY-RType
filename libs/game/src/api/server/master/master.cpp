@@ -215,14 +215,15 @@ void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
 }
 
 void Master::SendPlayerJoinToNode(const std::uint64_t &nodeId, const Master::Client &client) {
-  payload::PlayerJoin joinPayload = {
+  payload::PlayerJoinRoom joinPayload = {
       .id = client.id,
+      .roomId = client.roomId,
   };
   snprintf(joinPayload.username, sizeof(joinPayload.username), "%s", client.username.c_str());
   snprintf(joinPayload.ip, sizeof(joinPayload.ip), "%s",
            this->clientsSocket_.GetRemoteAddress(client.id).c_str());
 
-  SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, joinPayload, nodeId);
+  SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoinRoom, joinPayload, nodeId);
 }
 
 void Master::HandleRegisterNode(const abra::server::ClientTCPMessage &message) {
