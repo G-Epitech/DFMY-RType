@@ -11,8 +11,9 @@ using namespace rtype::sdk::game::api;
 
 Master::Master(int clientsPort, int nodesPort)
     : logger_("masterAPI"),
-      clientsSocket_(clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); }),
-      nodesSocket_(nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); }) {
+      clientsSocket_(
+          clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); }, nullptr),
+      nodesSocket_(nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); }, nullptr) {
   this->InitClientsThread();
   this->InitNodesThread();
 }
