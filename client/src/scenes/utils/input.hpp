@@ -24,7 +24,7 @@ class Input {
    * @param position Position
    * @param alignment Alignment
    */
-  static void Create(const Registry::Ptr& registry, const std::string& tag, const std::string& text,
+  static void Create(const Registry::Ptr& registry, const std::string& tag,
                      core::types::Vector3f position, core::components::Alignment alignment);
 
  private:
@@ -32,11 +32,10 @@ class Input {
    * @brief Create an input field
    * @param registry Registry to create the input field
    * @param tag Tag Name of the input field
-   * @param text Starting text
    * @param position Position
    * @param alignment Alignment
    */
-  static void CreateInputField(Registry::Ptr registry, std::string tag, std::string text,
+  static void CreateInputField(Registry::Ptr registry, std::string tag,
                                core::types::Vector3f position,
                                core::components::Alignment alignment);
 
@@ -48,7 +47,7 @@ class Input {
    * @param position Position
    * @param alignment Alignment
    */
-  static void CreateBlinkingCursor(Registry::Ptr registry, std::string tag, std::string text,
+  static void CreateBlinkingCursor(Registry::Ptr registry, std::string tag,
                                    core::types::Vector3f position,
                                    core::components::Alignment alignment);
 

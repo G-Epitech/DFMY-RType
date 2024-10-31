@@ -18,19 +18,19 @@ using namespace mew::sets::events;
 using namespace mew::managers;
 using namespace zygarde::core::types;
 
-void Input::Create(const Registry::Ptr& registry, const std::string& tag, const std::string& text,
-                   const Vector3f position, const Alignment alignment) {
-  CreateInputField(registry, tag, text, position, alignment);
-  CreateBlinkingCursor(registry, tag, text, position, alignment);
+void Input::Create(const Registry::Ptr& registry, const std::string& tag, const Vector3f position,
+                   const Alignment alignment) {
+  CreateInputField(registry, tag, position, alignment);
+  CreateBlinkingCursor(registry, tag, position, alignment);
 }
 
-void Input::CreateInputField(Registry::Ptr registry, std::string tag, std::string text,
+void Input::CreateInputField(Registry::Ptr registry, std::string tag,
                              const core::types::Vector3f position,
                              const core::components::Alignment alignment) {
   const auto input_field = registry->SpawnEntity();
 
   registry->AddComponent<Position>(input_field, {position, alignment});
-  registry->AddComponent<Drawable>(input_field, {Text{text, "main", 20}, WindowManager::View::HUD});
+  registry->AddComponent<Drawable>(input_field, {Text{"", "main", 20}, WindowManager::View::HUD});
   registry->AddComponent<Tags>(input_field, Tags({tag}));
   registry->AddComponent<OnTextEntered>(
       input_field, OnTextEntered{.handler = [registry, input_field](const sf::Uint32& unicode) {
@@ -53,7 +53,7 @@ void Input::CreateInputField(Registry::Ptr registry, std::string tag, std::strin
       }});
 }
 
-void Input::CreateBlinkingCursor(Registry::Ptr registry, std::string tag, std::string text,
+void Input::CreateBlinkingCursor(Registry::Ptr registry, std::string tag,
                                  const core::types::Vector3f position,
                                  const core::components::Alignment alignment) {
   const auto cursor = registry->SpawnEntity();
@@ -95,7 +95,7 @@ void Input::BlinkingCursorFunction(const Registry::Ptr& registry, const Entity& 
           index >= all_positions->size() || !(*all_positions)[index]) {
         return;
       }
-      auto& input_field_drawable = ((*all_drawables)[index]).value();
+      auto& input_field_drawable = (*all_drawables)[index].value();
       auto& input_field_position = (*all_positions)[index].value();
       if (!std::holds_alternative<Text>(input_field_drawable.drawable)) {
         return;
