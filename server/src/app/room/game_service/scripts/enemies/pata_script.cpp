@@ -86,7 +86,7 @@ void PataScript::SpawnBullet(const std::shared_ptr<scripting::types::ScriptingCo
   if (!position.has_value() || !position.value()) {
     return;
   }
-  const core::types::Vector3f projectilePos((*position)->point.x - 86, (*position)->point.y - 20,
+  const core::types::Vector3f projectilePos((*position)->point.x - 40, (*position)->point.y + 10,
                                             (*position)->point.z);
   zygarde::core::archetypes::ArchetypeManager::ScheduleInvocationParams params;
   params.archetypeName = tools::kArchetypeBaseEnemyBullet;

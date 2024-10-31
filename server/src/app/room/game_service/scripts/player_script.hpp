@@ -11,6 +11,7 @@
 #include "game/includes/stats.hpp"
 #include "game/src/utils/projectiles/fire_rate.hpp"
 #include "types/weapons.hpp"
+#include "zygarde/src/core/types/vector/vector_2f.hpp"
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {
@@ -38,9 +39,13 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
 
   inline void Shoot() { isShooting_ = true; }
 
-  inline void SetPlayerProps(const PlayerProps& props) { props_ = props; }
+  inline void SetMovementDirection(const core::types::Vector2f& direction) {
+    movementDirection_ = direction;
+  }
 
  private:
+  void HandleMovement(const std::shared_ptr<scripting::types::ScriptingContext>& context);
+
   static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
 
  private:
@@ -49,5 +54,6 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
   std::chrono::nanoseconds shootCooldown_;
   std::chrono::nanoseconds lastShootTime_;
   bool isShooting_;
+  std::optional<core::types::Vector2f> movementDirection_;
 };
 }  // namespace rtype::server::game::scripts
