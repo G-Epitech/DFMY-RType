@@ -10,7 +10,7 @@
 using namespace rtype::sdk::game::api;
 
 Master::Master(int clientsPort, int nodesPort)
-    : logger_("serverAPI"),
+    : logger_("masterAPI"),
       clientsSocket_(clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); }),
       nodesSocket_(nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); }) {
   this->InitClientsThread();
@@ -68,7 +68,7 @@ void Master::HandleClientConnection(const abra::server::ClientTCPMessage &messag
     auto packet = this->packetBuilder_.Build<payload::PlayerConnect>(message.bitset);
     auto username = packet->GetPayload().username;
 
-    SendInfos(true, true, message.clientId);
+    SendInfos(message.clientId, true, true);
 
     this->AddNewClient(message.clientId, username);
   } catch (const std::exception &e) {
@@ -81,7 +81,7 @@ void Master::HandleRefreshInfos(const abra::server::ClientTCPMessage &message) {
     auto packet = this->packetBuilder_.Build<payload::RefreshInfos>(message.bitset);
     auto payload = packet->GetPayload();
 
-    SendInfos(payload.infoGame, payload.infoRooms, message.clientId);
+    SendInfos(message.clientId, payload.infoGame, payload.infoRooms);
   } catch (const std::exception &e) {
     logger_.Error("Error while handling refresh infos: " + std::string(e.what()), "❌");
   }
@@ -103,7 +103,12 @@ void Master::SendGameInfos(std::uint64_t clientId) {
       .nbUsers = static_cast<unsigned int>(this->clients_.size()),
   };
 
-  SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoGame, infos, clientId);
+  auto success = SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoGame, infos, clientId);
+  if (!success) {
+    logger_.Warning("Failed to send game infos", "⚠️ ");
+  }
+
+  logger_.Info("Send game infos", "🎮");
 }
 
 void Master::SendRoomsInfos(std::uint64_t clientId) {
@@ -311,6 +316,7 @@ void Master::SendInfos(std::uint64_t clientId, bool game, bool rooms) {
   if (game) {
     SendGameInfos(clientId);
   }
+
   if (rooms) {
     SendRoomsInfos(clientId);
   }
