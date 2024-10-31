@@ -27,6 +27,7 @@ class EXPORT_MEW_API KeyEventSystemBase final
 
 typedef KeyEventSystemBase<kKeyPressed, OnKeyPressed> KeyPressEventSystem;
 typedef KeyEventSystemBase<kKeyReleased, OnKeyReleased> KeyReleaseEventSystem;
+typedef KeyEventSystemBase<kTextEntered, OnTextEntered> TextEnteredEventSystem;
 
 }  // namespace mew::sets::events
 

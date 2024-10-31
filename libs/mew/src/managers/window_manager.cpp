@@ -71,7 +71,7 @@ void WindowManager::HandleResize(const sf::Event& event) {
   if (widthRatio < heightRatio) {
     hudView_.zoom(width_ / width);
   } else {
-    hudView_.zoom(height / height);
+    hudView_.zoom(height_ / height);
   }
 }
 
