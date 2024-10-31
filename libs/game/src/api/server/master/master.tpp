@@ -20,7 +20,7 @@ bool Master::SendToClient(const MasterToClientMsgType &type, const T &payload, c
 
     auto success = this->clientsSocket_.Send(packet, clientId) == SendMessageStatus::kSuccess;
     if (!success)
-      logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
+      logger_.Warning("SendToClient: Failed to send packet of type " + std::to_string(type), "⚠️ ");
 
     return success;
   } catch (const std::exception &e) {
@@ -39,7 +39,7 @@ bool Master::SendToNode(const rtype::sdk::game::api::MasterToNodeMsgType &type, 
 
     auto success = this->nodesSocket_.Send(packet, nodeId) == SendMessageStatus::kSuccess;
     if (!success)
-      logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
+      logger_.Warning("SendToNode: Failed to send packet of type " + std::to_string(type), "⚠️ ");
 
     return success;
   } catch (const std::exception &e) {

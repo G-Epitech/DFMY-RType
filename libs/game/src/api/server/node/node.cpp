@@ -19,7 +19,7 @@ Node::Node(std::string name, std::string token, std::size_t maxRooms, const std:
       masterSocket_(masterIp, masterPort,
                     [this](auto &msg) { return MasterMessageMiddleware(msg); }),
       roomsSocket_(0, [this](auto &msg) { return RoomsMessageMiddleware(msg); }),
-      logger_("nodeAPI::" + name),
+      logger_("nodeAPI"),
       lastRoomId_(0) {}
 
 Node::~Node() {
