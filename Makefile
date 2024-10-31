@@ -10,6 +10,7 @@ CLIENT_NAME			= r-type_client
 TESTS_SERVER_NAME 	= r-type_server_tests
 TESTS_CLIENT_NAME 	= r-type_client_tests
 TESTS_ABRA_NAME 	= abra_tests
+TESTS_GAME_NAME		= game_tests
 TESTS_ZYGARDE_NAME 	= zygrade_tests
 TESTS_PORYGON_NAME 	= porygon_tests
 BUILD_PATH 			= $(shell pwd)/build
@@ -58,7 +59,7 @@ clean:
 
 fclean:		clean
 			@rm -f $(NAME)
-			@rm -f $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_ZYGARDE_NAME)
+			@rm -f $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_GAME_NAME) $(TESTS_ZYGARDE_NAME)
 			@rm -f $(SERVER_NAME) $(CLIENT_NAME)
 .PHONY: fclean
 
@@ -71,10 +72,11 @@ generate_tests:
 		@cmake -B $(BUILD_PATH) -DCOVERAGE=ON $(TOOLCHAIN_FLAG) -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(BUILD_PATH)
 
 tests_run: generate_tests
-	@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_ZYGARDE_NAME) $(TESTS_PORYGON_NAME)
+	@cmake --build $(BUILD_PATH) --target $(TESTS_SERVER_NAME) $(TESTS_CLIENT_NAME) $(TESTS_ABRA_NAME) $(TESTS_GAME_NAME) $(TESTS_ZYGARDE_NAME) $(TESTS_PORYGON_NAME)
 	@$(BUILD_PATH)/$(TESTS_CLIENT_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_SERVER_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_ABRA_NAME) --gtest_brief=1
+	@$(BUILD_PATH)/$(TESTS_GAME_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_ZYGARDE_NAME) --gtest_brief=1
 	@$(BUILD_PATH)/$(TESTS_PORYGON_NAME) --gtest_brief=1
 .PHONY: tests_run
@@ -98,6 +100,11 @@ tests_run_abra:
 		@cmake --build $(BUILD_PATH) --target $(TESTS_ABRA_NAME)
 		@$(BUILD_PATH)/$(TESTS_ABRA_NAME) --gtest_brief=1
 .PHONY: tests_run_abra
+
+tests_run_game:
+		@cmake --build $(BUILD_PATH) --target $(TESTS_GAME_NAME)
+		@$(BUILD_PATH)/$(TESTS_GAME_NAME) --gtest_brief=1
+.PHONY: tests_run_game
 
 tests_run_zygarde:
 		@cmake --build $(BUILD_PATH) --target $(TESTS_ZYGARDE_NAME)
