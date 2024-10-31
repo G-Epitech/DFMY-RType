@@ -7,14 +7,10 @@ BINARIES_TESTS = [
     'client': 'r-type_client_tests',
     'server': 'r-type_server_tests'
 ]
-LIBS = ['abra', 'game', 'zygarde', 'porygon']
+LIBS = ['abra', 'zygarde', 'porygon', 'game']
 LIBS_TARGETS = [
     'abra': [
         'target': 'abra',
-        'type': 'shared'
-    ],
-    'game': [
-        'target': 'r-type_game_sdk',
         'type': 'shared'
     ],
     'zygarde': [
@@ -24,13 +20,17 @@ LIBS_TARGETS = [
     'porygon': [
         'target': 'porygon',
         'type': 'shared'
+    ],
+    'game': [
+        'target': 'r-type_game_sdk',
+        'type': 'shared'
     ]
 ]
 LIBS_TESTS = [
     'abra': 'abra_tests',
-    'game': 'game_tests',
     'zygarde': 'zygarde_tests',
-    'porygon': 'porygon_tests'
+    'porygon': 'porygon_tests',
+    'game': 'game_tests'
 ]
 ARTIFACTS_FILES_EXTENSIONS = [
     'windows': ['exe', 'zip'],
