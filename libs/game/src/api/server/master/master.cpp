@@ -351,9 +351,9 @@ void Master::HandleClosedNodeSession(std::uint64_t nodeId) {
   }
 
   payload::GameEnd end = {
-          .score = 0,
-          .time = 0,
-          .win = false,
+      .score = 0,
+      .time = 0,
+      .win = false,
   };
 
   for (auto &client : this->clients_) {

@@ -19,7 +19,8 @@ Node::Node(std::string name, std::string token, std::size_t maxRooms, const std:
       masterSocket_(masterIp, masterPort,
                     [this](auto &msg) { return MasterMessageMiddleware(msg); }),
       roomsSocket_(
-          0, [this](auto &msg) { return RoomsMessageMiddleware(msg); }, nullptr),
+          0, [this](auto &msg) { return RoomsMessageMiddleware(msg); },
+          [this](auto id) { HandleClosedRoom(id); }),
       logger_("nodeAPI"),
       lastRoomId_(0) {}
 
@@ -264,4 +265,24 @@ void Node::RemoveRoom(std::uint64_t id) {
 void Node::Join() {
   this->masterThread_.join();
   this->roomsThread_.join();
+}
+
+void Node::HandleClosedRoom(std::uint64_t roomId) {
+  auto roomIt = std::find_if(this->rooms_.begin(), this->rooms_.end(),
+                             [roomId](const auto &r) { return r.socketId == roomId; });
+
+  if (roomIt == this->rooms_.end()) {
+    return;
+  }
+
+  payload::RoomGameEnd payload{
+      .id = roomIt->id,
+      .score = 0,
+      .time = 0,
+      .win = false,
+  };
+  SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRoomGameEnded, payload);
+
+  this->rooms_.erase(roomIt);
+  this->logger_.Info("Room closed", "🏠");
 }
