@@ -92,8 +92,9 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                           const abra::server::ClientUDPMessage &data) {
-  const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
-  auto &[entityId, direction] = packet->GetPayload();
+  try {
+    const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
+    auto &[entityId, direction] = packet->GetPayload();
 
   if (const auto player = players_.find(player_id); player != players_.end()) {
     const auto &playerEntity = player->second;
@@ -110,8 +111,7 @@ void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
 }
 
 void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
-                                           const abra::server::ClientUDPMessage &data) {
-  auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
+                                           const abra::server::ClientUDPMessage &) {
   const auto player = players_.find(player_id);
   if (player != players_.end()) {
     const auto &playerEntity = player->second;

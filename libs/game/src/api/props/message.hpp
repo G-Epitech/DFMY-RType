@@ -35,8 +35,8 @@ enum NodeToMasterMsgType {
 
 /// @brief Master >> Node message type
 enum MasterToNodeMsgType {
-  kMsgTypeMTNCreateRoom,  ///< @brief Create a room
-  kMsgTypeMTNPlayerJoin,  ///< @brief Player join a room
+  kMsgTypeMTNCreateRoom,      ///< @brief Create a room
+  kMsgTypeMTNPlayerJoinRoom,  ///< @brief Player join a room
 };
 
 /// @brief Room >> Node message type
