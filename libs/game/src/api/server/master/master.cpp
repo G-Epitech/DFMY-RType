@@ -72,9 +72,9 @@ void Master::HandleClientConnection(const abra::server::ClientTCPMessage &messag
     auto packet = this->packetBuilder_.Build<payload::PlayerConnect>(message.bitset);
     auto username = packet->GetPayload().username;
 
-    SendInfos(message.clientId, true, true);
-
     this->AddNewClient(message.clientId, username);
+
+    SendInfos(message.clientId, true, true);
   } catch (const std::exception &e) {
     logger_.Error("Error while handling client connection: " + std::string(e.what()), "❌");
   }

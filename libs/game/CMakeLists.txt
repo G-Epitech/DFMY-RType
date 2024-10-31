@@ -3,6 +3,7 @@ set(GAME_SDK ${CMAKE_PROJECT_NAME}_game_sdk)
 add_library(${GAME_SDK} SHARED)
 
 add_subdirectory(src)
+add_subdirectory(tests)
 add_subdirectory(includes)
 
 target_include_directories(${GAME_SDK} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
