@@ -53,4 +53,10 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
   void StoreMessage(std::shared_ptr<tools::dynamic_bitset> bitset, bool hasOffset);
 
   void ResolveMultiPackets(unsigned int messageId);
+
+  /// @brief If the client has a temporary buffer
+  bool haveTemporaryBuffer;
+
+  /// @brief The temporary buffer
+  std::vector<char> tempBuffer;
 };

@@ -7,6 +7,7 @@
 
 #pragma once
 
-#include "cli/handlers/lobby/cli_handler_lobby.hpp"
 #include "cli/handlers/master/cli_handler_master.hpp"
+#include "cli/handlers/node/cli_handler_node.hpp"
+#include "cli/handlers/room/cli_handler_room.hpp"
 #include "cli_handler_interface.hpp"

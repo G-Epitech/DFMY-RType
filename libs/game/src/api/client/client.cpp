@@ -55,18 +55,12 @@ bool Client::IsConnected() const {
   return this->isConnected_;
 }
 
-bool Client::Register(const payload::Connection &payload) {
-  auto sendSuccess = SendPayloadTCP(MessageClientType::kConnection, payload);
+bool Client::Register(const payload::PlayerConnect &payload) {
+  auto sendSuccess = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMConnect, payload);
   if (!sendSuccess)
     return false;
 
-  auto waitSuccess = WaitForMessage<NetworkProtocolType::kTCP>(
-      MessageServerType::kConnectionInfos, &Client::HandleConnectionConfirmation);
-
-  if (!waitSuccess) {
-    logger_.Error("Register failed", "💢️");
-  }
-
+  this->isConnected_ = sendSuccess;
   logger_.Info("Register to server", "🛜");
 
   return this->isConnected_;
@@ -78,13 +72,13 @@ bool Client::HandleConnectionConfirmation(const MessageProps &) {
   return true;
 }
 
-bool Client::JoinLobby(const payload::JoinLobby &payload) {
-  auto sendSuccess = SendPayloadTCP(MessageClientType::kJoinLobby, payload);
+bool Client::JoinRoom(const payload::JoinRoom &payload) {
+  auto sendSuccess = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMJoinRoom, payload);
   if (!sendSuccess)
     return false;
 
-  auto waitSuccess = WaitForMessage<NetworkProtocolType::kTCP>(
-      MessageServerType::kServerJoinLobbyInfos, &Client::HandleJoinLobbyInfos);
+  auto waitSuccess =
+      WaitForMessage(MasterToClientMsgType::kMsgTypeMTCInfoRoom, &Client::HandleJoinLobbyInfos);
 
   if (!waitSuccess) {
     logger_.Error("Connection to lobby failed", "💢️");
@@ -95,38 +89,39 @@ bool Client::JoinLobby(const payload::JoinLobby &payload) {
   return this->isLobbyConnected_;
 }
 
-bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
-  auto packet = this->packetBuilder_.Build<payload::JoinLobbyInfos>(message.data);
-  auto payload = packet->GetPayload();
-
-  std::string ip = payload.ip;
-  if (ip == kLocalhost || ip == kIpNull) {
-    ip = this->clientTCP_.GetRemoteAddress();
+bool Client::CreateRoom(const payload::CreateRoom &payload) {
+  auto success = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMCreateRoom, payload);
+  if (success) {
+    logger_.Info("Room created", "🏠");
   }
 
-  logger_.Info("Joining lobby " + std::string(ip) + ":" + std::to_string(payload.port), "🚪");
-
-  this->clientUDP_.emplace(ip, payload.port);
-  InitUDP();
-
-  auto endpoint = this->clientUDP_->GetEndpoint();
-  payload::JoinLobbyInfos infoPayload{};
-  infoPayload.port = endpoint.port;
-
-  auto success = SendPayloadTCP(MessageClientType::kClientJoinLobbyInfos, infoPayload);
-  if (!success) {
-    logger_.Error("Joining lobby failed", "💢️");
-  }
-
-  this->isLobbyConnected_ = success;
   return success;
+}
+
+bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
+  try {
+    auto packet = this->packetBuilder_.Build<payload::InfoRoom>(message.data);
+    auto payload = packet->GetPayload();
+
+    logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
+                 "🚪");
+
+    this->clientUDP_.emplace(payload.ip, payload.port, kClientUDPPort);
+    InitUDP();
+
+    this->isLobbyConnected_ = true;
+    return true;
+  } catch (const std::exception &e) {
+    logger_.Error("Failed to join lobby: " + std::string(e.what()), "❌");
+    return false;
+  }
 }
 
 std::queue<Client::ServerMessage> Client::ExtractQueue() {
   auto queue = std::queue<ServerMessage>();
 
   auto queueTCP = this->clientTCP_.ExtractQueue();
-  Client::ConvertQueueData(&queueTCP, &queue);
+  Client::ConvertQueueData(&queueTCP, &queue, NetworkProtocolType::kTCP);
 
   if (!this->isLobbyConnected_) {
     logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
@@ -134,7 +129,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
   }
 
   auto queueUDP = this->clientUDP_->ExtractQueue();
-  Client::ConvertQueueData(&queueUDP, &queue);
+  Client::ConvertQueueData(&queueUDP, &queue, NetworkProtocolType::kUDP);
 
   auto multiQueue = this->clientUDP_->ExtractMultiQueue();
   while (!multiQueue.empty()) {
@@ -149,6 +144,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
 
     queue.push({.messageId = multiMessages.messages[0].messageId,
                 .messageType = multiMessages.messages[0].messageType,
+                .protocolType = NetworkProtocolType::kUDP,
                 .data = data});
     multiQueue.pop();
   }
@@ -159,7 +155,7 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
 }
 
 bool Client::Shoot(const payload::Shoot &payload) {
-  auto success = SendPayloadUDP(MessageClientType::kShoot, payload);
+  auto success = SendPayloadUDP(ClientToRoomMsgType::kMsgTypeCTRPlayerShoot, payload);
   if (success) {
     logger_.Info("Player shoot with type " + std::to_string(static_cast<double>(payload.type)),
                  "🔫");
@@ -169,7 +165,7 @@ bool Client::Shoot(const payload::Shoot &payload) {
 }
 
 bool Client::Move(const payload::Movement &payload) {
-  auto success = SendPayloadUDP(MessageClientType::kMovement, payload);
+  auto success = SendPayloadUDP(ClientToRoomMsgType::kMsgTypeCTRPlayerMove, payload);
   if (success) {
     logger_.Info("Player move", "🚶🏽");
   }
@@ -178,13 +174,15 @@ bool Client::Move(const payload::Movement &payload) {
 }
 
 void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
-                              std::queue<ServerMessage> *serverQueue) {
+                              std::queue<ServerMessage> *serverQueue,
+                              NetworkProtocolType protocolType) {
   while (!queue->empty()) {
     auto &message = queue->front();
 
     serverQueue->push(
         {.messageId = message.messageId,
          .messageType = message.messageType,
+         .protocolType = protocolType,
          .data = std::vector<std::shared_ptr<abra::tools::dynamic_bitset>>{message.data}});
     queue->pop();
   }
@@ -192,7 +190,8 @@ void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
 
 std::vector<payload::PlayerState> Client::ResolvePlayersState(
     const Client::ServerMessage &message) {
-  auto players = ResolvePayloads<payload::PlayerState>(MessageLobbyType::kPlayersState, message);
+  auto players = ResolveUDPPayloads<payload::PlayerState>(
+      RoomToClientMsgType::kMsgTypeRTCPlayersState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " player states", "🦹");
 
@@ -200,7 +199,8 @@ std::vector<payload::PlayerState> Client::ResolvePlayersState(
 }
 
 std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::ServerMessage &message) {
-  auto players = ResolvePayloads<payload::EnemyState>(MessageLobbyType::kEnemiesState, message);
+  auto players = ResolveUDPPayloads<payload::EnemyState>(
+      RoomToClientMsgType::kMsgTypeRTCEnemiesState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " enemies states", "🧌");
 
@@ -209,9 +209,80 @@ std::vector<payload::EnemyState> Client::ResolveEnemiesState(const Client::Serve
 
 std::vector<payload::BulletState> Client::ResolveBulletsState(
     const Client::ServerMessage &message) {
-  auto players = ResolvePayloads<payload::BulletState>(MessageLobbyType::kBulletsState, message);
+  auto players = ResolveUDPPayloads<payload::BulletState>(
+      RoomToClientMsgType::kMsgTypeRTCBulletsState, message);
 
   logger_.Info("Resolved " + std::to_string(players.size()) + " bullets states", "💥");
 
   return players;
+}
+
+bool api::Client::WaitForMessage(MasterToClientMsgType type,
+                                 bool (Client::*handler)(const abt::MessageProps &message)) {
+  std::size_t timeout = kServerResponseTimeout;
+  abt::MessageProps message;
+  bool success = false;
+
+  logger_.Info("Waiting for message type " + std::to_string(type), "😴");
+  while (timeout > 0) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    timeout -= 500;
+
+    auto &queue = this->clientTCP_.GetQueue();
+
+    std::unique_lock<std::mutex> lock(this->clientTCP_.Mutex);
+    if (!queue.empty()) {
+      message = queue.front();
+
+      if (message.messageType == type) {
+        success = (this->*handler)(message);
+        queue.pop();
+        break;
+      } else {
+        logger_.Warning("Receive an other message of type " + std::to_string(message.messageType),
+                        "⚠️ ");
+        queue.pop();
+      }
+    }
+  }
+
+  return success;
+}
+
+bool Client::RefreshInfos(bool game, bool rooms) {
+  payload::RefreshInfos payload = {.infoGame = game, .infoRooms = rooms};
+
+  auto success = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMRefreshInfos, payload);
+  if (success) {
+    logger_.Info("Refresh infos", "🔄");
+  }
+
+  return success;
+}
+
+payload::InfoGame Client::ResolveGameInfo(const Client::ServerMessage &message) {
+  auto payload =
+      ResolveTCPPayloads<payload::InfoGame>(MasterToClientMsgType::kMsgTypeMTCInfoGame, message);
+
+  logger_.Info("Resolved game infos", "🎮");
+
+  return payload[0];
+}
+
+payload::InfoRooms Client::ResolveInfoRooms(const Client::ServerMessage &message) {
+  auto payload =
+      ResolveTCPPayloads<payload::InfoRooms>(MasterToClientMsgType::kMsgTypeMTCInfoRooms, message);
+
+  logger_.Info("Resolved rooms infos", "🏠");
+
+  return payload[0];
+}
+
+payload::GameEnd Client::ResolveRoomGameEnd(const Client::ServerMessage &message) {
+  auto payload =
+      ResolveTCPPayloads<payload::GameEnd>(MasterToClientMsgType::kMsgTypeMTCGameEnded, message);
+
+  logger_.Info("Resolved room game end", "🏁");
+
+  return payload[0];
 }

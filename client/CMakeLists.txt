@@ -13,16 +13,22 @@ if (WIN32)
     else ()
         add_executable(${CLIENT_EXECUTABLE} WIN32 main.cpp ../r-type.rc)
     endif ()
+    file(GLOB_RECURSE DLLS "${CMAKE_CURRENT_BINARY_DIR}/../libs/**/*.dll")
+    add_custom_command(
+            TARGET ${CLIENT_EXECUTABLE} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo "DLLs found: ${DLLS}"
+    )
+
+    foreach(DLL ${DLLS})
+        add_custom_command(
+                TARGET ${CLIENT_EXECUTABLE} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL} $<TARGET_FILE_DIR:${CLIENT_EXECUTABLE}>
+        )
+    endforeach()
 else ()
     add_executable(${CLIENT_EXECUTABLE} main.cpp)
     set_target_properties(${CLIENT_EXECUTABLE} PROPERTIES
             INSTALL_RPATH "$ORIGIN")
-endif ()
-
-if (APPLE)
-    set(CMAKE_EXE_LINKER_FLAGS
-            "-framework AudioToolbox -framework CoreAudio"
-    )
 endif ()
 
 include(dependencies.cmake)

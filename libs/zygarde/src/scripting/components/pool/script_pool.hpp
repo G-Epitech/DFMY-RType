@@ -31,6 +31,11 @@ class EXPORT_ZYGARDE_API ScriptPool final {
    */
   explicit ScriptPool(std::shared_ptr<MonoBehaviour> script);
 
+  ScriptPool(const ScriptPool&) = default;             // Copy constructor
+  ScriptPool(ScriptPool&&) noexcept = default;         // Move constructor
+  ScriptPool& operator=(const ScriptPool&) = default;  // Copy assignment
+  ScriptPool& operator=(ScriptPool&&) noexcept = default;
+
  public:
   /**
    * @brief Add a script to the pool
@@ -56,7 +61,7 @@ class EXPORT_ZYGARDE_API ScriptPool final {
 
  private:
   /// @brief Vector of scripts
-  std::vector<std::shared_ptr<MonoBehaviour>> scripts_;
+  std::vector<std::shared_ptr<MonoBehaviour>> scripts_ = {};
 };
 }  // namespace zygarde::scripting::components
 

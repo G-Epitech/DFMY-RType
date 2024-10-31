@@ -9,8 +9,9 @@
 
 #include <iostream>
 
-#include "app/lobby/lobby.hpp"
 #include "app/master/master.hpp"
+#include "app/node/node.hpp"
+#include "app/room/room.hpp"
 #include "cli/cli.hpp"
 
 using namespace rtype::server;
@@ -34,11 +35,14 @@ void App::InitializeServerInstance() {
   const auto &ctx = cliResult_.value();
 
   switch (ctx.type) {
-    case kMaster:
+    case ServerType::kMaster:
       server_ = std::make_unique<Master>(ctx);
       break;
-    case kLobby:
-      server_ = std::make_unique<Lobby>(ctx);
+    case ServerType::kNode:
+      server_ = std::make_unique<Node>(ctx);
+      break;
+    case ServerType::kRoom:
+      server_ = std::make_unique<Room>(ctx);
       break;
     default:
       throw std::runtime_error("Invalid server type");

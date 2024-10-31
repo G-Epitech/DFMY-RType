@@ -84,6 +84,13 @@ class abra::server::ServerTCP {
    */
   std::string GetRemoteAddress(std::uint64_t clientId) const;
 
+  /**
+   * @brief Get the TCP port
+   * @param clientId The client id
+   * @return The TCP port
+   */
+  int GetPort() const;
+
  private:
   /**
    * @brief Accept a new connection
@@ -119,6 +126,9 @@ class abra::server::ServerTCP {
 
   /// @brief Logger
   tools::Logger logger_;
+
+  /// @brief The TCP port
+  int port_;
 };
 
 #include "server_tcp.tpp"

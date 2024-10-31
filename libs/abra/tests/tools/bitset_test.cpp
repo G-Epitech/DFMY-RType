@@ -24,9 +24,9 @@ TEST(BitsetTest, ConvertSimplePacketToBitset) {
   EXPECT_EQ(bitset->GetSize(), 7 * 8); // header(2), message(4), payload(1)
 
   EXPECT_EQ(bitset->Get(0), 0); // Start header payload length
-  EXPECT_EQ(bitset->Get(9), 1); // End header payload length
+  EXPECT_EQ(bitset->Get(10), 1); // End header payload length
 
-  EXPECT_EQ(bitset->Get(10), 0); // Start header payload type
+  EXPECT_EQ(bitset->Get(11), 0); // Start header payload type
   EXPECT_EQ(bitset->Get(13), 1); // End header payload type
 
   EXPECT_EQ(bitset->Get(14), 0); // Offset flag

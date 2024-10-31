@@ -40,6 +40,13 @@ void ServerConnectionService::Connect() {
       clientMutex_.lock();
       client_ = client;
       clientMutex_.unlock();
+
+      auto res = client->Register({
+          .username = "ptit'plouf",
+      });
+      if (!res) {
+        throw std::runtime_error("Failed to register to server");
+      }
       connectionStatus_ = ConnectionStatus::kConnected;
     } catch (const std::exception& e) {
       std::cerr << "[ERROR]: Failed to connect to server: " << e.what() << std::endl;
