@@ -16,8 +16,6 @@ void ScriptPool::AddScript(const std::shared_ptr<MonoBehaviour>& script) {
 }
 ScriptPool::ScriptPool(std::vector<std::shared_ptr<MonoBehaviour>> scripts)
     : scripts_(std::move(scripts)) {
-  std::cout << "ScriptPool created" << std::endl;
-  std::cout << scripts_.size() << std::endl;
 }
 
 ScriptPool::ScriptPool(std::shared_ptr<MonoBehaviour> script) : scripts_{std::move(script)} {}

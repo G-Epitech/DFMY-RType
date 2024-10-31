@@ -9,6 +9,7 @@
 
 #include <cstddef>
 
+#include "libs/abra/src/tools/logger/logger.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game {
@@ -47,6 +48,11 @@ class TicksManager {
    */
   void WaitUntilNextTick();
 
+  /**
+   * @brief Log the wait time
+   */
+  void LogWaitTime(long wait_time);
+
  private:
   /// @brief The number of ticks per second
   const std::size_t &tickRate_;
@@ -54,5 +60,7 @@ class TicksManager {
   std::chrono::milliseconds millisecondsPerTick_;
   /// @brief Timer for the ticks manager
   zygarde::utils::Timer timer_;
+  /// @brief Logger
+  abra::tools::Logger logger_;
 };
 }  // namespace rtype::server::game

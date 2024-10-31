@@ -66,6 +66,7 @@ void GameService::ExecuteGameLogic() {
     enemyManager_.Update(ticksManager_.DeltaTime(), registry_, archetypeManager_);
   }
   registry_->RunSystems();
+  CheckDeadPlayers();
   registry_->CleanupDestroyedEntities();
 }
 
@@ -126,7 +127,6 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
     }
     auto playerScript = (*scriptPool)->GetScript<scripts::PlayerScript>();
     if (playerScript) {
-      std::cout << "Player " << player_id << " shot" << std::endl;
       playerScript->Shoot();
     } else {
       logger_.Error("Player script not found");
@@ -145,4 +145,18 @@ void GameService::NewPlayer(std::uint64_t player_id) {
   (*position)->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
+}
+
+void GameService::CheckDeadPlayers() {
+  std::vector<zygarde::Entity> entitiesToKill = registry_->GetEntitiesToKill();
+
+  for (auto it = players_.begin(); it != players_.end();) {
+    if (std::find(entitiesToKill.begin(), entitiesToKill.end(), it->second) !=
+        entitiesToKill.end()) {
+      logger_.Info("Player " + std::to_string(it->first) + " died", "💀");
+      it = players_.erase(it);
+    } else {
+      ++it;
+    }
+  }
 }

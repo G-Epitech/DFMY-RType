@@ -188,6 +188,12 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
     const std::string message_;
   };
 
+  /**
+   * @brief Get the entities to kill (for cleanup)
+   * @return The entities to kill
+   */
+  [[nodiscard]] inline std::vector<Entity> GetEntitiesToKill() { return entitiesToKill_; }
+
  private:
   /// @brief systems stored
   std::vector<std::shared_ptr<ISystem>> systems_;
@@ -205,7 +211,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   std::stack<std::size_t> freeIds_;
 
   /// @brief Entities to kill
-  std::stack<Entity> entitiesToKill_;
+  std::vector<Entity> entitiesToKill_;
 
   /// @brief remove functions used to remove components
   using component_destroyer = std::function<void(Registry &, Entity const &)>;

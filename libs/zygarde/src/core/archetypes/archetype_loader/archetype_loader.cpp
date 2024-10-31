@@ -115,7 +115,6 @@ void ArchetypeLoader::InitializeComponentParsers(
       {"script_pool", [scriptsRegistry](std::vector<RegistryAttachCallback>* callbacks,
                                         const nlohmann::json& component) {
          const auto& map = ComponentParser::ParseScriptPoolData(component);
-         std::cout << map.size() << std::endl;
 
          callbacks->emplace_back(
              [scriptsRegistry, map](const zygarde::Entity& entity,
@@ -127,8 +126,6 @@ void ArchetypeLoader::InitializeComponentParsers(
                  script->OnEnable(valuesMap);
                  scripts.push_back(script);
                }
-
-               std::cout << scripts.size() << std::endl;
 
                registry->AddComponent<scripting::components::ScriptPool>(
                    entity, scripting::components::ScriptPool(scripts));
