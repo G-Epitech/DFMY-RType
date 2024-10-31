@@ -90,7 +90,9 @@ void SceneLobby::JoinLobby() {
   }
   mainMessage_ = "Registering to the server";
   secondaryMessage_ = "Please wait...";
-  auto res = serverConnectionService_->client()->Register({.pseudo = "Pti't plouf"});
+  auto res = serverConnectionService_->client()->Register({
+      .username = "ptit'plouf",
+  });
   if (!res) {
     mainMessage_ = "Registration failed";
     secondaryMessage_ = "Unable to register on the server";
@@ -98,10 +100,27 @@ void SceneLobby::JoinLobby() {
     return;
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-  status_ = LobbyStatus::kRegistered;
-  mainMessage_ = "Joining the lobby";
+  mainMessage_ = "Creating the room";
   secondaryMessage_ = "Please wait...";
-  res = serverConnectionService_->client()->JoinLobby({.lobbyId = 0});
+  res = serverConnectionService_->client()->CreateRoom({
+      .name = "MyPtitRoom",
+      .nbPlayers = 4,
+      .difficulty = 0,
+  });
+  if (!res) {
+    mainMessage_ = "Creating failed";
+    secondaryMessage_ = "Unable to create the lobby";
+    status_ = LobbyStatus::kFailed;
+    return;
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
+  status_ = LobbyStatus::kRegistered;
+  mainMessage_ = "Joining the room";
+  secondaryMessage_ = "Please wait...";
+  res = serverConnectionService_->client()->JoinRoom({
+      .nodeId = 0,
+      .roomId = 0,
+  });
   if (!res) {
     mainMessage_ = "Joining failed";
     secondaryMessage_ = "Unable to join the lobby";

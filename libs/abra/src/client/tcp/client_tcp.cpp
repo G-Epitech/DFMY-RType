@@ -15,7 +15,7 @@ using namespace boost::asio;
 ClientTCP::ClientTCP(const std::string &ip, const std::uint32_t &port,
                      const std::function<bool(const tools::MessageProps &)> &middleware)
     : AbstractClient("client_tcp"), socket_(ios_) {
-  ip::tcp::endpoint endpoint(ip::address::from_string(ip), port);
+  ip::tcp::endpoint endpoint(ip::address::from_string(ip.c_str()), port);
 
   socket_.connect(endpoint);
   logger_.Info("Connected to " + ip + ":" + std::to_string(port));

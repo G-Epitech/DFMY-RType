@@ -10,7 +10,7 @@
 using namespace abra::client;
 using namespace boost::asio;
 
-ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
+ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port, const uint32_t &localPort)
     : AbstractClient("client_udp"), socket_(ioc_) {
   ip::udp::resolver resolver(ioc_);
   ip::udp::resolver::query resolverQuery(ip::udp::v4(), ip, std::to_string(port));
@@ -18,11 +18,11 @@ ClientUDP::ClientUDP(const std::string &ip, const uint32_t &port)
   this->receiverEndpoint_ = *iter;
 
   this->socket_.open(ip::udp::v4());
-  ip::udp::endpoint localEndpoint(ip::udp::v4(), 0);
+  ip::udp::endpoint localEndpoint(ip::udp::v4(), localPort);
   this->socket_.bind(localEndpoint);
-  uint16_t localPort = this->socket_.local_endpoint().port();
+  uint16_t localEndpointPort = this->socket_.local_endpoint().port();
 
-  this->logger_.Info("Client UDP started on port " + std::to_string(localPort));
+  this->logger_.Info("Client UDP started on port " + std::to_string(localEndpointPort));
 }
 
 ClientUDP::~ClientUDP() {

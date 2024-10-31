@@ -5,6 +5,7 @@
     "boost-system",
     "boost-asio",
     "boost-program-options",
+    "boost-process",
     "gtest",
     "sfml",
     "nlohmann-json"

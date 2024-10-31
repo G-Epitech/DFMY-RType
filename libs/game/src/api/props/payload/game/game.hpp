@@ -8,8 +8,7 @@
 #pragma once
 
 #include "./combat/shoot.hpp"
-#include "./lifecycle/game_end.hpp"
-#include "./lifecycle/game_start.hpp"
+#include "./lifecycle/game.hpp"
 #include "./movement/movement.hpp"
 #include "./state/bullet.hpp"
 #include "./state/enemy.hpp"

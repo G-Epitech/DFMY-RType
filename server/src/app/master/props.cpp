@@ -7,9 +7,11 @@
 
 #include "props.hpp"
 
+#include <utility>
+
 using namespace rtype::server;
 
-MasterCtxProps::MasterCtxProps(std::size_t maxGames, std::size_t ticks)
-    : maxGames{maxGames}, ticks{ticks} {}
+MasterCtxProps::MasterCtxProps(std::string token, std::size_t nodePort)
+    : token(std::move(token)), nodePort(nodePort) {}
 
-MasterCtxProps::MasterCtxProps() : maxGames(0), ticks(0) {}
+MasterCtxProps::MasterCtxProps() : token(), nodePort(0) {}

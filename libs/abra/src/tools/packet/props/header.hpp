@@ -9,8 +9,8 @@
 
 #include <cstdint>
 
-constexpr std::uint8_t kPacketHeaderPayloadLengthSize = 10;
-constexpr std::uint8_t kPacketHeaderPayloadTypeSize = 4;
+constexpr std::uint8_t kPacketHeaderPayloadLengthSize = 11;
+constexpr std::uint8_t kPacketHeaderPayloadTypeSize = 3;
 constexpr std::uint8_t kPacketHeaderFlagSize = 1;
 constexpr std::uint8_t kPacketHeaderPropsSize =
     kPacketHeaderPayloadLengthSize + kPacketHeaderPayloadTypeSize + kPacketHeaderFlagSize * 2;

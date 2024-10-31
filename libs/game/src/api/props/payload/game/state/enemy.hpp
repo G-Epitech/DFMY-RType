@@ -13,15 +13,11 @@
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 namespace rtype::sdk::game::api::payload {
-/// @brief Payload for enemy state
+/// @brief Payload for enemy state - Link to RoomToClientMsgType::kMsgTypeRTCEnemiesState
 struct EnemyState {
-  /// @brief The entity id of the enemy
-  std::size_t entityId = 0;
-  /// @brief The position of the enemy
-  utils::types::vector_2f position;
-  /// @brief The type of the enemy
-  types::EnemyType enemyType = types::EnemyType::kPata;
-  /// @brief The health of the enemy
-  std::size_t health = 0;
+  std::size_t entityId = 0;                              ///< @brief The entity id of the enemy
+  utils::types::vector_2f position;                      ///< @brief The position of the enemy
+  types::EnemyType enemyType = types::EnemyType::kPata;  ///< @brief The type of the enemy
+  std::size_t health = 0;                                ///< @brief The health of the enemy
 };
 }  // namespace rtype::sdk::game::api::payload

@@ -13,13 +13,10 @@
 #include "libs/game/src/utils/types/vector/vector_2f.hpp"
 
 namespace rtype::sdk::game::api::payload {
-/// @brief Payload for player state
+/// @brief Payload for player state - Link to RoomToClientMsgType::kMsgTypeRTCPlayersState
 struct PlayerState {
-  /// @brief The entity id of the player
-  std::size_t entityId = 0;
-  /// @brief The position of the player
-  utils::types::vector_2f position;
-  /// @brief The health of the player
-  std::size_t health = 0;
+  std::size_t entityId = 0;          ///< @brief The entity id of the player
+  utils::types::vector_2f position;  ///< @brief The position of the player
+  std::size_t health = 0;            ///< @brief The health of the player
 };
 }  // namespace rtype::sdk::game::api::payload
