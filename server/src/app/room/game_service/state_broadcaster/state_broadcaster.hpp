@@ -24,7 +24,7 @@ class StateBroadcaster final {
    * @param api API of the lobby
    */
   static void Run(const std::shared_ptr<zygarde::Registry> &registry,
-                  const std::shared_ptr<rtype::sdk::game::api::Lobby> &api);
+                  const std::shared_ptr<rtype::sdk::game::api::Room> &api);
 
  private:
   /// @brief Struct to store the entity states
@@ -86,7 +86,7 @@ class StateBroadcaster final {
    * @param api API of the lobby
    * @param states EntityStates object containing the states
    */
-  static void SendStates(const std::shared_ptr<rtype::sdk::game::api::Lobby> &api,
+  static void SendStates(const std::shared_ptr<rtype::sdk::game::api::Room> &api,
                          const std::unique_ptr<EntityStates> &states);
 };
 }  // namespace rtype::server::game

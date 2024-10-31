@@ -9,10 +9,9 @@
 
 #include <utility>
 
-#include "app/lobby/filepaths.hpp"
-#include "app/lobby/game_service/archetype_keys.hpp"
-#include "app/lobby/game_service/scripts/scripts_registry.hpp"
-#include "constants/tags.hpp"
+#include "app/room/filepaths.hpp"
+#include "app/room/game_service/archetype_keys.hpp"
+#include "app/room/game_service/scripts/scripts_registry.hpp"
 #include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
 #include "scripts/player_script.hpp"
 #include "state_broadcaster/state_broadcaster.hpp"
@@ -92,9 +91,8 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                           const abra::server::ClientUDPMessage &data) {
-  try {
-    const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
-    auto &[entityId, direction] = packet->GetPayload();
+  const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
+  auto &[entityId, direction] = packet->GetPayload();
 
   if (const auto player = players_.find(player_id); player != players_.end()) {
     const auto &playerEntity = player->second;

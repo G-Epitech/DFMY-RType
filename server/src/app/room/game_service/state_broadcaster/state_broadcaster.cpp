@@ -1,9 +1,9 @@
 /*
-** EPITECH PROJECT, 2024
-** r-type
-** File description:
-** state_broadcaster.cpp
-*/
+ ** EPITECH PROJECT, 2024
+ ** r-type
+ ** File description:
+ ** state_broadcaster.cpp
+ */
 
 #include "state_broadcaster.hpp"
 
@@ -13,7 +13,7 @@
 using namespace rtype::server::game;
 
 void StateBroadcaster::Run(const std::shared_ptr<zygarde::Registry>& registry,
-                           const std::shared_ptr<rtype::sdk::game::api::Lobby>& api) {
+                           const std::shared_ptr<rtype::sdk::game::api::Room>& api) {
   std::unique_ptr<EntityStates> entityStates = std::make_unique<EntityStates>();
 
   GatherEntityStates(registry, entityStates);
@@ -61,7 +61,7 @@ void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states
   }
 }
 
-void StateBroadcaster::SendStates(const std::shared_ptr<rtype::sdk::game::api::Lobby>& api,
+void StateBroadcaster::SendStates(const std::shared_ptr<rtype::sdk::game::api::Room>& api,
                                   const std::unique_ptr<EntityStates>& states) {
   if (!states->playerStates.empty()) {
     api->SendPlayersState(states->playerStates);

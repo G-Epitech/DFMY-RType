@@ -9,7 +9,7 @@
 
 #include <random>
 
-#include "app/lobby/game_service/archetype_keys.hpp"
+#include "app/room/game_service/archetype_keys.hpp"
 #include "core/components/position/position.hpp"
 
 void rtype::server::game::EnemyManager::Update(

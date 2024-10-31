@@ -7,7 +7,7 @@
 
 #include "pata_script.hpp"
 
-#include "app/lobby/game_service/archetype_keys.hpp"
+#include "app/room/game_service/archetype_keys.hpp"
 #include "constants/tags.hpp"
 #include "zygarde/src/core/components/tags/tags.hpp"
 
