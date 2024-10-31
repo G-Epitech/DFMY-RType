@@ -12,8 +12,11 @@ using namespace rtype::sdk::game::api;
 Master::Master(int clientsPort, int nodesPort)
     : logger_("masterAPI"),
       clientsSocket_(
-          clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); }, nullptr),
-      nodesSocket_(nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); }, nullptr) {
+          clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); },
+          [this](auto id) { HandleClosedClientSession(id); }),
+      nodesSocket_(
+          nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); },
+          [this](auto id) { HandleClosedNodeSession(id); }) {
   this->InitClientsThread();
   this->InitNodesThread();
 }
@@ -326,4 +329,39 @@ void Master::SendInfos(std::uint64_t clientId, bool game, bool rooms) {
 void Master::Join() {
   this->clientsThread_.join();
   this->nodesThread_.join();
+}
+
+void Master::HandleClosedClientSession(std::uint64_t clientId) {
+  auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
+                             [clientId](const Client &c) { return c.id == clientId; });
+
+  if (client == this->clients_.end()) {
+    return;
+  }
+
+  this->clients_.erase(client);
+  logger_.Info("Client disconnected", "👤");
+}
+
+void Master::HandleClosedNodeSession(std::uint64_t nodeId) {
+  auto nodeIt = this->nodes_.find(nodeId);
+
+  if (nodeIt == this->nodes_.end()) {
+    return;
+  }
+
+  payload::GameEnd end = {
+          .score = 0,
+          .time = 0,
+          .win = false,
+  };
+
+  for (auto &client : this->clients_) {
+    if (client.nodeId == nodeId) {
+      SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
+    }
+  }
+
+  this->nodes_.erase(nodeIt);
+  logger_.Info("Node disconnected", "🌐");
 }
