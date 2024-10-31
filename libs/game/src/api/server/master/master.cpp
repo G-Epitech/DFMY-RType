@@ -311,6 +311,11 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
         SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
       }
     }
+
+    auto &node = this->nodes_[message.clientId];
+    node.rooms_.erase(payload.id);
+
+    logger_.Info("Room game ended", "🎮");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling room game ended: " + std::string(e.what()), "❌");
   }
