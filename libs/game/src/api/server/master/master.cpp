@@ -194,8 +194,8 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
     client.nodeId = payload.nodeId;
     client.roomId = payload.roomId;
 
-    SendPlayerJoinToNode(node.id, client);
     SendInfoRoom(message.clientId, room, node);
+    SendPlayerJoinToNode(node.id, client);
 
     logger_.Info("Client joined room: " + room.name, "🏠");
   } catch (const std::exception &e) {

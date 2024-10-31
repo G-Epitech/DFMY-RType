@@ -241,6 +241,7 @@ bool api::Client::WaitForMessage(MasterToClientMsgType type,
       } else {
         logger_.Warning("Receive an other message of type " + std::to_string(message.messageType),
                         "⚠️ ");
+        queue.pop();
       }
     }
   }

@@ -199,6 +199,11 @@ class rtype::sdk::game::api::Master {
    */
   void SendInfoRoom(std::uint64_t clientId, const Room &room, const Master::Node &node);
 
+  /**
+   * @brief Send a player join to a node
+   * @param nodeId The node id
+   * @param client The client
+   */
   void SendPlayerJoinToNode(const std::uint64_t &nodeId, const Client &client);
 
   /// @brief Server socket to communicate with clients (TCP)

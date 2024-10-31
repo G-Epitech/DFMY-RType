@@ -16,6 +16,15 @@ AbstractClient::AbstractClient(const std::string &name) : logger_(name) {
 }
 
 void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
+  if (this->haveTemporaryBuffer) {
+    buffer->insert(buffer->begin(), this->tempBuffer.begin(), this->tempBuffer.end());
+
+    len += this->tempBuffer.size();
+
+    this->haveTemporaryBuffer = false;
+    this->tempBuffer.clear();
+  }
+
   if (buffer->size() < kPacketHeaderPropsSize / 8) {
     return;
   }
@@ -36,12 +45,16 @@ void client::AbstractClient::ResolveBuffer(std::vector<char> *buffer, std::size_
     return StoreMessage(bitset, header.offsetFlag);
   }
 
-  logger_.Info("Receive too bigger packet (" + std::to_string(len) + " bytes) than expected (" +
-               std::to_string(packetSize) + " bytes)");
-
   if (packetSize > len) {
+    this->tempBuffer = *buffer;
+    this->haveTemporaryBuffer = true;
+
+    logger_.Info("Store temporary buffer with size " + std::to_string(len));
     return;
   }
+
+  logger_.Info("Receive too bigger packet (" + std::to_string(len) + " bytes) than expected (" +
+               std::to_string(packetSize) + " bytes)");
 
   std::vector<char> cleanBuffer(
       buffer->begin(),
