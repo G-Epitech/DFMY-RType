@@ -31,6 +31,7 @@ void SceneMenu::OnCreate() {
   CreateSettingsButton();
   CreateExitButton();
   CreateServerConnectionLabel();
+  CreateInputField();
 }
 
 void SceneMenu::OnActivate() {
@@ -173,6 +174,35 @@ void SceneMenu::CreateExitButton() const {
                                     }
                                   }
                                 }});
+}
+
+void SceneMenu::CreateInputField() const {
+  const auto input_field = registry_->SpawnEntity();
+  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 150);
+  constexpr auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(input_field, {point, aligns});
+  registry_->AddComponent<Drawable>(input_field,
+                                    {Text{"Input field", "main", 20}, WindowManager::View::HUD});
+  registry_->AddComponent<OnTextEntered>(
+      input_field, OnTextEntered{.handler = [this, input_field](const sf::Uint32& unicode) {
+        const auto component = registry_->GetComponent<Drawable>(input_field);
+        if (!component) {
+          return;
+        }
+        auto& drawable = component->drawable;
+        if (!std::holds_alternative<Text>(drawable)) {
+          return;
+        }
+        auto& [text, fontName, characterSize, style, color] = std::get<Text>(drawable);
+        if (unicode == 8) {
+          if (!text.empty()) {
+            text.pop_back();
+          }
+        } else {
+          text += static_cast<char>(unicode);
+        }
+      }});
 }
 
 void SceneMenu::CreateServerConnectionLabel() const {

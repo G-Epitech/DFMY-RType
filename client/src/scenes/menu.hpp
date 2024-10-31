@@ -60,6 +60,11 @@ class SceneMenu final : public SceneBase {
   void CreateServerConnectionLabel() const;
 
   /**
+   * @brief Create the input field
+   */
+  void CreateInputField() const;
+
+  /**
    * @brief Get the connection label color
    * @return sf::Color The connection label color
    */
