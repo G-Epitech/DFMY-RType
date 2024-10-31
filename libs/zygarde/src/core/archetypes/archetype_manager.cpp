@@ -35,11 +35,11 @@ void ArchetypeManager::LoadArchetypes(std::vector<std::string> directories,
   }
 }
 
-void ArchetypeManager::ScheduleInvocation(const ArchetypeManager::InvokationParams& params) {
+void ArchetypeManager::ScheduleInvocation(const ArchetypeManager::ScheduleInvocationParams& params) {
   invokationQueue_.push_back(params);
 }
 
-void ArchetypeManager::ExecuteScheduledInvokations(
+void ArchetypeManager::ExecuteScheduledInvocations(
     const std::shared_ptr<zygarde::Registry>& registry) {
   for (const auto& params : invokationQueue_) {
     auto spawnedEntity = InvokeArchetype(registry, params.archetypeName);

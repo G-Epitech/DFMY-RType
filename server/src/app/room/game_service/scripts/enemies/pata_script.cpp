@@ -76,7 +76,7 @@ void PataScript::SpawnBullet(const std::shared_ptr<scripting::types::ScriptingCo
   }
   const core::types::Vector3f projectilePos((*position)->point.x - 86, (*position)->point.y - 20,
                                             (*position)->point.z);
-  zygarde::core::archetypes::ArchetypeManager::InvokationParams params;
+  zygarde::core::archetypes::ArchetypeManager::ScheduleInvocationParams params;
   params.archetypeName = tools::kArchetypeBaseEnemyBullet;
   params.registryAttachCallback = [projectilePos](const std::shared_ptr<zygarde::Registry>& registry,
                                                   const zygarde::Entity& entity) -> void {

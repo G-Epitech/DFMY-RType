@@ -22,7 +22,7 @@ class EXPORT_ZYGARDE_API ArchetypeManager final {
 
  public:
   /// @brief Invokation parameters
-  struct InvokationParams {
+  struct ScheduleInvocationParams {
     /// @brief Name of the archetype
     std::string archetypeName;
     /// @brief Registry attach callback (what to do after attaching the archetype to the registry)
@@ -54,18 +54,18 @@ class EXPORT_ZYGARDE_API ArchetypeManager final {
    * @brief Schedule an invocation
    * @param params Invocation parameters
    */
-  void ScheduleInvocation(const InvokationParams& params);
+  void ScheduleInvocation(const ScheduleInvocationParams& params);
 
   /**
    * @brief Execute scheduled invokations
    * @param registry Registry to attach the archetypes to
    */
-  void ExecuteScheduledInvokations(const std::shared_ptr<zygarde::Registry>& registry);
+  void ExecuteScheduledInvocations(const std::shared_ptr<zygarde::Registry>& registry);
 
  private:
   /// @brief Archetype map
   std::map<std::string, std::vector<ArchetypeLoader::RegistryAttachCallback>> archetypes_;
   /// @brief Invokation queue
-  std::vector<InvokationParams> invokationQueue_;
+  std::vector<ScheduleInvocationParams> invokationQueue_;
 };
 }  // namespace zygarde::core::archetypes
