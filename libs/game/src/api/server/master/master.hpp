@@ -191,6 +191,16 @@ class rtype::sdk::game::api::Master {
    */
   void SendRoomsInfos(std::uint64_t clientId);
 
+  /**
+   * @brief Send info about a room
+   * @param clientId The client id
+   * @param room The room
+   * @param node The node
+   */
+  void SendInfoRoom(std::uint64_t clientId, const Room &room, const Master::Node &node);
+
+  void SendPlayerJoinToNode(const std::uint64_t &nodeId, const Client &client);
+
   /// @brief Server socket to communicate with clients (TCP)
   abra::server::ServerTCP clientsSocket_;
 

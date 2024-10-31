@@ -99,17 +99,22 @@ bool Client::CreateRoom(const payload::CreateRoom &payload) {
 }
 
 bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
-  auto packet = this->packetBuilder_.Build<payload::InfoRoom>(message.data);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::InfoRoom>(message.data);
+    auto payload = packet->GetPayload();
 
-  logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
-               "🚪");
+    logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
+                 "🚪");
 
-  this->clientUDP_.emplace(payload.ip, payload.port, kClientUDPPort);
-  InitUDP();
+    this->clientUDP_.emplace(payload.ip, payload.port, kClientUDPPort);
+    InitUDP();
 
-  this->isLobbyConnected_ = true;
-  return true;
+    this->isLobbyConnected_ = true;
+    return true;
+  } catch (const std::exception &e) {
+    logger_.Error("Failed to join lobby: " + std::string(e.what()), "❌");
+    return false;
+  }
 }
 
 std::queue<Client::ServerMessage> Client::ExtractQueue() {

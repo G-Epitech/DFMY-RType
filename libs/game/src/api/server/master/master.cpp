@@ -64,19 +64,27 @@ bool Master::NodeMessageMiddleware(const abra::server::ClientTCPMessage &message
 }
 
 void Master::HandleClientConnection(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::PlayerConnect>(message.bitset);
-  auto username = packet->GetPayload().username;
+  try {
+    auto packet = this->packetBuilder_.Build<payload::PlayerConnect>(message.bitset);
+    auto username = packet->GetPayload().username;
 
-  SendInfos(true, true, message.clientId);
+    SendInfos(true, true, message.clientId);
 
-  this->AddNewClient(message.clientId, username);
+    this->AddNewClient(message.clientId, username);
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling client connection: " + std::string(e.what()), "❌");
+  }
 }
 
 void Master::HandleRefreshInfos(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::RefreshInfos>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::RefreshInfos>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  SendInfos(payload.infoGame, payload.infoRooms, message.clientId);
+    SendInfos(payload.infoGame, payload.infoRooms, message.clientId);
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling refresh infos: " + std::string(e.what()), "❌");
+  }
 }
 
 void Master::AddNewClient(std::uint64_t clientId, const std::string &username) {
@@ -131,136 +139,170 @@ void Master::SendRoomsInfos(std::uint64_t clientId) {
 }
 
 void Master::HandleCreateRoom(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::CreateRoom>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::CreateRoom>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  for (auto &node : this->nodes_) {
-    if (node.second.rooms_.size() >= node.second.maxRooms) {
-      continue;
+    for (auto &node : this->nodes_) {
+      if (node.second.rooms_.size() >= node.second.maxRooms) {
+        continue;
+      }
+
+      payload::CreateRoom room = {
+          .nbPlayers = payload.nbPlayers,
+          .difficulty = payload.difficulty,
+      };
+      snprintf(room.name, sizeof(room.name), "%s", payload.name);
+
+      this->logger_.Info("Send creation of room", "📡");
+
+      SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, room, node.first);
+      break;
     }
 
-    payload::CreateRoom room = {
-        .nbPlayers = payload.nbPlayers,
-        .difficulty = payload.difficulty,
-    };
-    snprintf(room.name, sizeof(room.name), "%s", payload.name);
-
-    this->logger_.Info("Send creation of room", "📡");
-
-    SendToNode(MasterToNodeMsgType::kMsgTypeMTNCreateRoom, room, node.first);
-    break;
+    this->logger_.Info("Room creation requested", "🏠");
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling create room: " + std::string(e.what()), "❌");
   }
-
-  this->logger_.Info("Room creation requested", "🏠");
 }
 
 void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::JoinRoom>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::JoinRoom>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  if (this->nodes_.find(payload.nodeId) == this->nodes_.end()) {
-    this->logger_.Warning("Trying to join a room in an unknown node", "⚠️ ");
-    return;
+    if (this->nodes_.find(payload.nodeId) == this->nodes_.end()) {
+      this->logger_.Warning("Trying to join a room in an unknown node", "⚠️ ");
+      return;
+    }
+
+    auto &node = this->nodes_[payload.nodeId];
+    if (node.rooms_.find(payload.roomId) == node.rooms_.end()) {
+      this->logger_.Warning("Trying to join an unknown room", "⚠️ ");
+      return;
+    }
+
+    auto &room = node.rooms_[payload.roomId];
+    auto &client = this->clients_[message.clientId];
+    if (room.nbPlayers >= room.maxPlayers) {
+      this->logger_.Warning("Trying to join a full room", "⚠️ ");
+      return;
+    }
+
+    room.nbPlayers++;
+    client.inRoom = true;
+    client.nodeId = payload.nodeId;
+    client.roomId = payload.roomId;
+
+    SendPlayerJoinToNode(node.id, client);
+    SendInfoRoom(message.clientId, room, node);
+
+    logger_.Info("Client joined room: " + room.name, "🏠");
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling join room: " + std::string(e.what()), "❌");
   }
+}
 
-  auto &node = this->nodes_[payload.nodeId];
-  if (node.rooms_.find(payload.roomId) == node.rooms_.end()) {
-    this->logger_.Warning("Trying to join an unknown room", "⚠️ ");
-    return;
-  }
-
-  auto &room = node.rooms_[payload.roomId];
-  auto &client = this->clients_[message.clientId];
-  if (room.nbPlayers >= room.maxPlayers) {
-    this->logger_.Warning("Trying to join a full room", "⚠️ ");
-    return;
-  }
-
-  room.nbPlayers++;
-  client.inRoom = true;
-  client.nodeId = payload.nodeId;
-  client.roomId = payload.roomId;
-
-  payload::PlayerJoin joinPayload = {
-      .id = message.clientId,
-  };
-  snprintf(joinPayload.username, sizeof(joinPayload.username), "%s", client.username.c_str());
-  snprintf(joinPayload.ip, sizeof(joinPayload.ip), "%s",
-           this->clientsSocket_.GetRemoteAddress(message.clientId).c_str());
-
-  SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, joinPayload, payload.nodeId);
-
+void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
+                          const Master::Node &node) {
   payload::InfoRoom infoPayload = {
       .port = room.port,
   };
   snprintf(infoPayload.ip, sizeof(infoPayload.ip), "%s",
            this->nodesSocket_.GetRemoteAddress(node.id).c_str());
 
-  SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRoom, infoPayload, message.clientId);
+  SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRoom, infoPayload, clientId);
+}
+
+void Master::SendPlayerJoinToNode(const std::uint64_t &nodeId, const Master::Client &client) {
+  payload::PlayerJoin joinPayload = {
+      .id = client.id,
+  };
+  snprintf(joinPayload.username, sizeof(joinPayload.username), "%s", client.username.c_str());
+  snprintf(joinPayload.ip, sizeof(joinPayload.ip), "%s",
+           this->clientsSocket_.GetRemoteAddress(client.id).c_str());
+
+  SendToNode(MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, joinPayload, nodeId);
 }
 
 void Master::HandleRegisterNode(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::RegisterNode>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::RegisterNode>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  Node node = {
-      .id = message.clientId,
-      .name = payload.name,
-      .maxRooms = payload.maxRooms,
-  };
+    Node node = {
+        .id = message.clientId,
+        .name = payload.name,
+        .maxRooms = payload.maxRooms,
+    };
 
-  this->nodes_[node.id] = std::move(node);
-  logger_.Info("New node registered: " + this->nodes_[node.id].name, "🌐");
+    this->nodes_[node.id] = std::move(node);
+    logger_.Info("New node registered: " + this->nodes_[node.id].name, "🌐");
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling register node: " + std::string(e.what()), "❌");
+  }
 }
 
 void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::RegisterNewRoom>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::RegisterNewRoom>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  if (this->nodes_.find(message.clientId) == this->nodes_.end()) {
-    this->logger_.Warning("Trying to register a room in an unknown node", "⚠️ ");
-    return;
+    if (this->nodes_.find(message.clientId) == this->nodes_.end()) {
+      this->logger_.Warning("Trying to register a room in an unknown node", "⚠️ ");
+      return;
+    }
+
+    auto &node = this->nodes_[message.clientId];
+    Room room = {
+        .id = payload.id,
+        .name = payload.name,
+        .maxPlayers = payload.nbPlayers,
+        .nbPlayers = 0,
+        .difficulty = payload.difficulty,
+        .port = payload.port,
+    };
+
+    node.rooms_[room.id] = std::move(room);
+    logger_.Info("New room registered: " + std::string(node.rooms_[room.id].name), "🏠");
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling register room: " + std::string(e.what()), "❌");
   }
-
-  auto &node = this->nodes_[message.clientId];
-  Room room = {
-      .id = payload.id,
-      .name = payload.name,
-      .maxPlayers = payload.nbPlayers,
-      .nbPlayers = 0,
-      .difficulty = payload.difficulty,
-      .port = payload.port,
-  };
-
-  node.rooms_[room.id] = std::move(room);
-  logger_.Info("New room registered: " + std::string(node.rooms_[room.id].name), "🏠");
 }
 
 void Master::HandleRoomGameStarted(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::RoomGameStart>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::RoomGameStart>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  for (auto &client : this->clients_) {
-    if (client.nodeId == message.clientId && client.roomId == payload.id) {
-      SendToClient(MasterToClientMsgType::kMsgTypeMTCGameStarted, '\0', client.id);
+    for (auto &client : this->clients_) {
+      if (client.nodeId == message.clientId && client.roomId == payload.id) {
+        SendToClient(MasterToClientMsgType::kMsgTypeMTCGameStarted, '\0', client.id);
+      }
     }
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling room game started: " + std::string(e.what()), "❌");
   }
 }
 
 void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) {
-  auto packet = this->packetBuilder_.Build<payload::RoomGameEnd>(message.bitset);
-  auto payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::RoomGameEnd>(message.bitset);
+    auto payload = packet->GetPayload();
 
-  payload::GameEnd end = {
-      .score = payload.score,
-      .time = payload.time,
-      .win = payload.win,
-  };
+    payload::GameEnd end = {
+        .score = payload.score,
+        .time = payload.time,
+        .win = payload.win,
+    };
 
-  for (auto &client : this->clients_) {
-    if (client.nodeId == message.clientId && client.roomId == payload.id) {
-      SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
+    for (auto &client : this->clients_) {
+      if (client.nodeId == message.clientId && client.roomId == payload.id) {
+        SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
+      }
     }
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling room game ended: " + std::string(e.what()), "❌");
   }
 }
 

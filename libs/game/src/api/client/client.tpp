@@ -12,16 +12,21 @@ namespace abt = abra::tools;
 
 template <typename T>
 bool api::Client::SendPayloadTCP(const ClientToMasterMsgType &type, const T &payload) {
-  this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
-  auto packet = this->packetBuilder_.Build(payload);
+  try {
+    this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
+    auto packet = this->packetBuilder_.Build(payload);
 
-  logger_.Info("Send packet (TCP) of type " + std::to_string(type), "📦");
+    logger_.Info("Send packet (TCP) of type " + std::to_string(type), "📦");
 
-  auto success = this->clientTCP_.Send(packet) == abt::SendMessageStatus::kSuccess;
-  if (!success)
-    logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
+    auto success = this->clientTCP_.Send(packet) == abt::SendMessageStatus::kSuccess;
+    if (!success)
+      logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
 
-  return success;
+    return success;
+  } catch (const std::exception &e) {
+    logger_.Error("Failed to send packet of type " + std::to_string(type) + ": " + e.what(), "❌");
+    return false;
+  }
 }
 
 template <typename T>
@@ -29,16 +34,21 @@ bool api::Client::SendPayloadUDP(const ClientToRoomMsgType &type, const T &paylo
   if (!this->clientUDP_.has_value())
     return false;
 
-  this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
-  auto packet = this->packetBuilder_.Build(payload);
+  try {
+    this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
+    auto packet = this->packetBuilder_.Build(payload);
 
-  logger_.Info("Send packet (UDP) of type " + std::to_string(type), "📦");
+    logger_.Info("Send packet (UDP) of type " + std::to_string(type), "📦");
 
-  auto success = this->clientUDP_->Send(packet) == abt::SendMessageStatus::kSuccess;
-  if (!success)
-    logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
+    auto success = this->clientUDP_->Send(packet) == abt::SendMessageStatus::kSuccess;
+    if (!success)
+      logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
 
-  return success;
+    return success;
+  } catch (const std::exception &e) {
+    logger_.Error("Failed to send packet of type " + std::to_string(type) + ": " + e.what(), "❌");
+    return false;
+  }
 }
 
 template <typename T>
@@ -49,8 +59,12 @@ std::vector<T> api::Client::ResolveUDPPayloads(RoomToClientMsgType type, const S
   auto elements = std::vector<T>();
 
   for (auto &data : message.data) {
-    auto packet = this->packetBuilder_.Build<T>(data);
-    elements.push_back(packet->GetPayload());
+    try {
+      auto packet = this->packetBuilder_.Build<T>(data);
+      elements.push_back(packet->GetPayload());
+    } catch (const std::exception &e) {
+      logger_.Error("Failed to resolve UDP payload: " + std::string(e.what()), "❌");
+    }
   }
 
   return elements;
@@ -65,8 +79,12 @@ std::vector<T> api::Client::ResolveTCPPayloads(MasterToClientMsgType type, const
   auto elements = std::vector<T>();
 
   for (auto &data : message.data) {
-    auto packet = this->packetBuilder_.Build<T>(data);
-    elements.push_back(packet->GetPayload());
+    try {
+      auto packet = this->packetBuilder_.Build<T>(data);
+      elements.push_back(packet->GetPayload());
+    } catch (const std::exception &e) {
+      logger_.Error("Failed to resolve TCP payload: " + std::string(e.what()), "❌");
+    }
   }
 
   return elements;
