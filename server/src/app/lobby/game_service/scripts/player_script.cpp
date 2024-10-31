@@ -18,7 +18,7 @@ PlayerScript::PlayerScript()
       lastShootTime_{utils::Timer::Nanoseconds::zero()},
       isShooting_{false} {}
 
-void PlayerScript::onEnable(const scripting::types::ValuesMap& customScriptValues) {
+void PlayerScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
   props_.className = std::any_cast<std::string>(customScriptValues.at("className"));
   props_.health = std::any_cast<float>(customScriptValues.at("health"));
   props_.speed = std::any_cast<float>(customScriptValues.at("speed"));

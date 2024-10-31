@@ -9,7 +9,7 @@
 
 template <typename T>
 std::shared_ptr<T> zygarde::scripting::components::ScriptPool::GetScript() {
-  for (const auto& script : scripts_) {
+  for (const auto& script : this->scripts_) {
     if (auto scriptInstance = std::dynamic_pointer_cast<T>(script)) {
       return scriptInstance;
     }

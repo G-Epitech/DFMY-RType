@@ -21,6 +21,8 @@ class BaseProjectileScript : public zygarde::scripting::components::MonoBehaviou
   BaseProjectileScript() = default;
   ~BaseProjectileScript() override = default;
 
+  void OnEnable(const scripting::types::ValuesMap& customScriptValues) override;
+
   void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) override;
 
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,

@@ -29,7 +29,7 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
   PlayerScript();
   ~PlayerScript() override = default;
 
-  void onEnable(const scripting::types::ValuesMap& customScriptValues) override;
+  void OnEnable(const scripting::types::ValuesMap& customScriptValues) override;
 
   void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) override;
 

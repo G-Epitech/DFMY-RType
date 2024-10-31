@@ -26,3 +26,5 @@ void BaseProjectileScript::OnCollisionEnter(
     const physics::types::Collision2D::ptr& collision) {
   context->registry->DestroyEntity(context->me);
 }
+
+void BaseProjectileScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {}

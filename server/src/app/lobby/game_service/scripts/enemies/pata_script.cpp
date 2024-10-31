@@ -70,3 +70,5 @@ void PataScript::OnCollisionEnter(
     return;
   }
 }
+
+void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {}

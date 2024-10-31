@@ -39,14 +39,6 @@
           "bullet"
         ]
       }
-    },
-    {
-      "name": "script_pool",
-      "data": [
-        {
-          "scriptName": "baseProjectileScript"
-        }
-      ]
     }
   ]
 }

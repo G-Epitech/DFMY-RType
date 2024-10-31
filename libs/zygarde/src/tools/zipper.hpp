@@ -41,12 +41,14 @@ class EXPORT_ZYGARDE_API zipper {
   iterator end();
 
  private:
-  /// @brief Begin iterator tuple
-  iterator_tuple begin_;
-  /// @brief End iterator tuple
-  iterator_tuple end_;
-  /// @brief Size of the zipper
-  std::size_t size_;
+  /// @brief Dynamic begin function builder
+  std::function<iterator_tuple()> dynamicBegin_;
+
+  /// @brief Dynamic end function builder
+  std::function<iterator_tuple()> dynamicEnd_;
+
+  /// @brief Dynamic size function builder
+  std::function<std::size_t()> dynamicSize_;
 };
 }  // namespace zygarde::tools
 

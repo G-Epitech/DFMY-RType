@@ -15,12 +15,14 @@ namespace rtype::server::game::scripts {
 class PataScript : public zygarde::scripting::components::MonoBehaviour {
  public:
   PataScript();
-  ~PataScript() = default;
+  ~PataScript() override = default;
 
-  void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context);
+  void OnEnable(const scripting::types::ValuesMap& customScriptValues) override;
+
+  void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) override;
 
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
-                        const physics::types::Collision2D::ptr& collision);
+                        const physics::types::Collision2D::ptr& collision) override;
 
  private:
   float health_;

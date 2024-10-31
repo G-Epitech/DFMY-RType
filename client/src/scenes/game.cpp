@@ -36,7 +36,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<ServerEntityId>();
 
-  // registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
+  registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
   registry_->AddSystem<BackgroundSystem>();
   registry_->AddSystem<PlayerSystem>(settings_manager, window_manager, server_connection_service);
 }
