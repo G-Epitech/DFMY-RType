@@ -16,9 +16,14 @@ using namespace rtype::server::game::scripts;
 PataScript::PataScript()
     : health_{50},
       goingUp_{true},
+      horizontalSpeed_{0},
+      verticalSpeed_{0},
+      fireRateDuration_{0},
       basePosition_(0, 0, 0),
-      upperLimit_(basePosition_.y + 30.0f),
-      lowerLimit_(basePosition_.y - 30.0f),
+      upperLimit_(),
+      lowerLimit_(),
+      upperLimitOffset_{30.0f},
+      lowerLimitOffset_{30.0f},
       lastShootTime_(utils::Timer::Nanoseconds::zero()) {}
 
 void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
@@ -28,7 +33,7 @@ void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingCo
     return;
   }
   lastShootTime_ += context->deltaTime;
-  if (lastShootTime_ >= std::chrono::seconds(1)) {
+  if (lastShootTime_ >= fireRateDuration_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
     SpawnBullet(context);
   }
@@ -40,11 +45,10 @@ void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingCo
   } else if ((*position)->point.y <= lowerLimit_) {
     goingUp_ = true;
   }
-  float verticalSpeed = 20.0f;
   if (goingUp_) {
-    (*rb)->SetVelocity({-100.0f, verticalSpeed});
+    (*rb)->SetVelocity({-horizontalSpeed_, verticalSpeed_});
   } else {
-    (*rb)->SetVelocity({-100.0f, -verticalSpeed});
+    (*rb)->SetVelocity({-horizontalSpeed_, -verticalSpeed_});
   }
 }
 
@@ -67,7 +71,15 @@ void PataScript::OnCollisionEnter(
   }
 }
 
-void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {}
+void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
+  health_ = std::any_cast<float>(customScriptValues.at("health"));
+  horizontalSpeed_ = std::any_cast<float>(customScriptValues.at("horizontalSpeed"));
+  verticalSpeed_ = std::any_cast<float>(customScriptValues.at("verticalSpeed"));
+  upperLimitOffset_ = std::any_cast<float>(customScriptValues.at("upperLimitOffset"));
+  lowerLimitOffset_ = std::any_cast<float>(customScriptValues.at("lowerLimitOffset"));
+  fireRateDuration_ = static_cast<const std::chrono::duration<double>>(
+      std::any_cast<float>(customScriptValues.at("fireRate")));
+}
 
 void PataScript::SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   auto position = context->registry->GetComponent<core::components::Position>(context->me);
@@ -78,12 +90,19 @@ void PataScript::SpawnBullet(const std::shared_ptr<scripting::types::ScriptingCo
                                             (*position)->point.z);
   zygarde::core::archetypes::ArchetypeManager::ScheduleInvocationParams params;
   params.archetypeName = tools::kArchetypeBaseEnemyBullet;
-  params.registryAttachCallback = [projectilePos](const std::shared_ptr<zygarde::Registry>& registry,
-                                                  const zygarde::Entity& entity) -> void {
+  params.registryAttachCallback = [projectilePos](
+                                      const std::shared_ptr<zygarde::Registry>& registry,
+                                      const zygarde::Entity& entity) -> void {
     auto positionComponent = registry->GetComponent<core::components::Position>(entity);
     if (positionComponent.has_value() && positionComponent.value()) {
       (*positionComponent)->point = projectilePos;
     }
   };
   context->archetypeManager->ScheduleInvocation(params);
+}
+
+void PataScript::SetBasePosition(const core::types::Vector3f& basePosition) {
+  basePosition_ = basePosition;
+  upperLimit_ = basePosition_.y + upperLimitOffset_;
+  lowerLimit_ = basePosition_.y - lowerLimitOffset_;
 }

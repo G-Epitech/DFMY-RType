@@ -24,15 +24,22 @@ class PataScript : public zygarde::scripting::components::MonoBehaviour {
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
                         const physics::types::Collision2D::ptr& collision) override;
 
+  void SetBasePosition(const zygarde::core::types::Vector3f& basePosition);
+
  private:
   static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
 
  private:
   float health_;
   bool goingUp_;
+  float verticalSpeed_;
+  float horizontalSpeed_;
+  std::chrono::duration<double> fireRateDuration_;
   zygarde::core::types::Vector3f basePosition_;
   float upperLimit_;
   float lowerLimit_;
+  float upperLimitOffset_;
+  float lowerLimitOffset_;
   zygarde::utils::Timer::Nanoseconds lastShootTime_;
 };
 }  // namespace rtype::server::game::scripts

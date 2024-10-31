@@ -4,4 +4,4 @@ IP=127.0.0.1
 MAX_ROOMS=10
 MASTER_TOKEN=q-8WetuEwwMdf2A_U8JZL*.jqHNV@Tz8H@a
 TOKEN=huPpBzo4MQE.6dHiThx7drEekXai9Dcq4-u
-BINARY_PATH=build/server/r-type_server
+BINARY_PATH=r-type_server
