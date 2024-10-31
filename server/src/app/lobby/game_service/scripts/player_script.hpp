@@ -41,6 +41,9 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
   inline void SetPlayerProps(const PlayerProps& props) { props_ = props; }
 
  private:
+  static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
+
+ private:
   PlayerProps props_;
   sdk::game::types::WeaponType equippedWeapon_;
   std::chrono::nanoseconds shootCooldown_;

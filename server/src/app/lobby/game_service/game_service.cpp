@@ -45,8 +45,12 @@ void GameService::Initialize() {
 int GameService::Run(std::shared_ptr<Lobby> api) {
   this->api_ = std::move(api);
 
-  Initialize();
-
+  try {
+    Initialize();
+  } catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return EXIT_FAILURE;
+  }
   while (gameRunning_) {
     ticksManager_.Update();
     HandleMessages();
@@ -58,6 +62,7 @@ int GameService::Run(std::shared_ptr<Lobby> api) {
 }
 
 void GameService::ExecuteGameLogic() {
+  archetypeManager_->ExecuteScheduledInvokations(registry_);
   if (!players_.empty()) {
     enemyManager_.Update(ticksManager_.DeltaTime(), registry_, archetypeManager_);
   }

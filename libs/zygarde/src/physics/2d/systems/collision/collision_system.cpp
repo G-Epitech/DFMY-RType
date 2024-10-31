@@ -25,8 +25,7 @@ void CollisionSystem::Run(
     EntityComponents selfComponents = {&rigidbody, &position, &collider,
                                        registry->EntityFromIndex(index)};
 
-    const auto nextEntity = it + 1;
-    for (auto otherIt = nextEntity; otherIt != end; ++otherIt) {
+    for (auto otherIt = start; otherIt != end; ++otherIt) {
       auto &&[otherIndex, otherEntityComponents] = ~otherIt;
       auto &&[otherRigidbody, otherPosition, otherCollider] = otherEntityComponents;
 
@@ -77,10 +76,12 @@ bool CollisionSystem::CheckCollision(const EntityComponents &self_pack,
 bool CollisionSystem::CheckBoundingBoxOverlap(
     const physics::types::BoundingBox2D &self_bounding_box,
     const physics::types::BoundingBox2D &other_bounding_box) noexcept {
-  bool overlapX =
-      self_bounding_box.left <= other_bounding_box.right && self_bounding_box.right >= other_bounding_box.left;
-  bool overlapY =
-      self_bounding_box.top <= other_bounding_box.bottom && self_bounding_box.bottom >= other_bounding_box.top;
+  bool overlapX = self_bounding_box.left <= other_bounding_box.right &&
+                  self_bounding_box.right >= other_bounding_box.left;
+
+  bool overlapY = self_bounding_box.top <= other_bounding_box.bottom &&
+                  self_bounding_box.bottom >= other_bounding_box.top;
+
   return overlapX && overlapY;
 }
 

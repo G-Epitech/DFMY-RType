@@ -12,7 +12,7 @@ using namespace zygarde::scripting::systems;
 ScriptExecutionSystem::ScriptExecutionSystem(
     const utils::Timer::Nanoseconds& deltaTime,
     const std::shared_ptr<core::archetypes::ArchetypeManager>& archetypeManager)
-    : deltaTime_{deltaTime}, archetypeManager_{archetypeManager} {}
+    : deltaTime_{deltaTime}, archetypeManager_{archetypeManager}, currentScriptIndex_{0} {}
 
 void ScriptExecutionSystem::Run(Registry::Ptr r,
                                 zipper<scripting::components::ScriptPool> components) {

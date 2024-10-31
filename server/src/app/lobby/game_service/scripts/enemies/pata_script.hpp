@@ -25,6 +25,9 @@ class PataScript : public zygarde::scripting::components::MonoBehaviour {
                         const physics::types::Collision2D::ptr& collision) override;
 
  private:
+  static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
+
+ private:
   float health_;
   bool goingUp_;
   zygarde::core::types::Vector3f basePosition_;
