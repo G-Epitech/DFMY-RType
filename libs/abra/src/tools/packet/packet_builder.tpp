@@ -7,7 +7,6 @@
 
 #pragma once
 
-
 template<typename T>
 std::unique_ptr<abra::tools::Packet<T>> abra::tools::PacketBuilder::Build(T payload) {
   if (!IsValidBitSize(sizeof(payload), kPacketHeaderPayloadLengthSize))

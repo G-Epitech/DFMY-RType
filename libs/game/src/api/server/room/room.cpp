@@ -154,17 +154,23 @@ bool Room::NodeMessageMiddleware(const abra::tools::MessageProps &message) {
 }
 
 void Room::HandlePlayerJoin(const abra::tools::MessageProps &message) {
-  auto packet = this->packetBuilder_.Build<payload::PlayerJoin>(message.data);
-  auto &payload = packet->GetPayload();
+  try {
+    auto packet = this->packetBuilder_.Build<payload::PlayerJoin>(message.data);
+    auto &payload = packet->GetPayload();
 
-  boost::asio::ip::udp::endpoint endpoint = {boost::asio::ip::address::from_string(payload.ip),
-                                             kClientUDPPort};
-  RoomClient newClient = {
-      .id = payload.id,
-      .endpoint = endpoint,
-  };
+    boost::asio::ip::udp::endpoint endpoint = {boost::asio::ip::address::from_string(payload.ip),
+                                               kClientUDPPort};
+    RoomClient newClient = {
+        .id = payload.id,
+        .endpoint = endpoint,
+    };
 
-  this->clients_.push_back(newClient);
+    this->clients_.push_back(newClient);
 
-  this->newPlayerHandler_(payload.id);
+    this->logger_.Info("Player joined", "👤");
+
+    this->newPlayerHandler_(payload.id);
+  } catch (std::exception &e) {
+    this->logger_.Error("Failed to handle player join: " + std::string(e.what()), "❌");
+  }
 }

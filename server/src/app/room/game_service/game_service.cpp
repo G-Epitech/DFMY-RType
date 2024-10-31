@@ -75,26 +75,31 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                           const abra::server::ClientUDPMessage &data) {
-  const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
-  auto &[entityId, direction] = packet->GetPayload();
+  try {
+    const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
+    auto &[entityId, direction] = packet->GetPayload();
 
-  if (const auto player = players_.find(player_id); player != players_.end()) {
-    const auto &playerEntity = player->second;
-    const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
-    if (!rigidBody) {
-      return;
+    if (const auto player = players_.find(player_id); player != players_.end()) {
+      const auto &playerEntity = player->second;
+      const auto rigidBody =
+          registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
+      if (!rigidBody) {
+        return;
+      }
+
+      const core::types::Vector2f newDir = {direction.x, direction.y};
+      rigidBody->SetVelocity(newDir * 200);
     }
-
-    const core::types::Vector2f newDir = {direction.x, direction.y};
-    rigidBody->SetVelocity(newDir * 200);
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling player move: " + std::string(e.what()), "❌");
+    return;
   }
 
   logger_.Info("Player " + std::to_string(player_id) + " moved", "🏃‍");
 }
 
 void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
-                                           const abra::server::ClientUDPMessage &data) {
-  auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
+                                           const abra::server::ClientUDPMessage &) {
   const auto player = players_.find(player_id);
   if (player != players_.end()) {
     const auto &playerEntity = player->second;
