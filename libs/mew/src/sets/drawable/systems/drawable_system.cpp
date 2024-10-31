@@ -25,6 +25,9 @@ void DrawableSystem::Run(Registry::Ptr r,
   const auto window = windowManager_->window();
   window->clear();
   for (auto&& [drawable, position] : components) {
+    if (!drawable.visible) {
+      continue;
+    }
     windowManager_->SetView(drawable.view);
     DrawEntity(&drawable, position);
   }
