@@ -73,7 +73,6 @@ void SceneLobby::CreateGEpitechLogo() {
   const auto rect = sf::IntRect{0, 0, 927, 927};
   registry_->AddComponent<Position>(logo, {point, aligns});
   registry_->AddComponent<Drawable>(
-
       logo,
       {Texture{.name = "g-epitech-logo", .scale = 0.35, .rect = rect}, WindowManager::View::HUD});
 }
@@ -99,20 +98,20 @@ void SceneLobby::JoinLobby() {
     status_ = LobbyStatus::kFailed;
     return;
   }
-  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-  mainMessage_ = "Creating the room";
-  secondaryMessage_ = "Please wait...";
-  res = serverConnectionService_->client()->CreateRoom({
+  /*std::this_thread::sleep_for(std::chrono::milliseconds(1200));*/
+  /*mainMessage_ = "Creating the room";
+  secondaryMessage_ = "Please wait...";*/
+  /*res = serverConnectionService_->client()->CreateRoom({
       .name = "MyPtitRoom",
       .nbPlayers = 4,
       .difficulty = 0,
-  });
-  if (!res) {
+  });*/
+  /*if (!res) {
     mainMessage_ = "Creating failed";
     secondaryMessage_ = "Unable to create the lobby";
     status_ = LobbyStatus::kFailed;
     return;
-  }
+  }*/
   std::this_thread::sleep_for(std::chrono::milliseconds(1200));
   status_ = LobbyStatus::kRegistered;
   mainMessage_ = "Joining the room";

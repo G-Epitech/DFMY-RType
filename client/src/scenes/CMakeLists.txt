@@ -8,3 +8,5 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         lobby.cpp
         lobby.hpp
 )
+
+add_subdirectory(utils)
