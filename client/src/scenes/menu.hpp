@@ -70,6 +70,11 @@ class SceneMenu final : public SceneBase {
   void CreateBlinkingCursor() const;
 
   /**
+   * @brief Create the connection button
+   */
+  void blinkingCursorFunction(const Entity& cursor, const sf::Uint32& unicode) const;
+
+  /**
    * @brief Get the connection label color
    * @return sf::Color The connection label color
    */
