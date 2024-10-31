@@ -33,8 +33,8 @@ void SceneMenu::OnCreate() {
   CreateSettingsButton();
   CreateExitButton();
   CreateServerConnectionLabel();
-  CreateInputField();
   CreateBlinkingCursor();
+  CreateInputField();
 }
 
 void SceneMenu::OnActivate() {
@@ -211,23 +211,56 @@ void SceneMenu::CreateInputField() const {
 
 void SceneMenu::CreateBlinkingCursor() const {
   const auto cursor = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 200);
+  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 150);
   constexpr auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(cursor, {point, aligns});
   registry_->AddComponent<Drawable>(cursor, {Text{"|", "main", 20}, WindowManager::View::HUD});
   registry_->AddComponent<Tags>(cursor, Tags({"blink"}));
   registry_->AddComponent<OnTextEntered>(
-      cursor, OnTextEntered{.handler = [this, cursor](const sf::Uint32&) {
-        const auto drawable = registry_->GetComponent<Drawable>(cursor);
-        const auto tags = registry_->GetComponent<Tags>(cursor);
-        if (!tags || !drawable) {
+      cursor, OnTextEntered{.handler = [this, cursor, point](const sf::Uint32& unicode) {
+        const auto entity_drawable = registry_->GetComponent<Drawable>(cursor);
+        const auto entity_tags = registry_->GetComponent<Tags>(cursor);
+        const auto entity_position = registry_->GetComponent<Position>(cursor);
+        const auto all_tags = registry_->GetComponents<Tags>();
+        const auto all_drawables = registry_->GetComponents<Drawable>();
+        const auto all_positions = registry_->GetComponents<Position>();
+        if (!entity_drawable || !entity_tags || !entity_position || !all_tags || !all_drawables ||
+            !all_positions) {
           return;
         }
-        auto& [text, fontName, characterSize, style, color] = std::get<Text>(drawable->drawable);
-        text = "|";
-        tags->AddTag("not_blink");
-        drawable->visible = true;
+        const auto begin = all_tags->begin();
+        const auto end = all_tags->end();
+        std::size_t index = 0;
+        for (auto it = begin; it != end; ++it) {
+          const auto tags = *it;
+          if (!tags) {
+            index += 1;
+            continue;
+          }
+          if ((*tags) & "input_field") {
+            if (index >= all_drawables->size() || !(*all_drawables)[index] ||
+                index >= all_positions->size() || !(*all_positions)[index]) {
+              return;
+            }
+            auto& input_field_drawable = ((*all_drawables)[index]).value();
+            auto& input_field_position = (*all_positions)[index].value();
+            if (!std::holds_alternative<Text>(input_field_drawable.drawable)) {
+              return;
+            }
+            auto text = std::get<Text>(input_field_drawable.drawable);
+            entity_position->point.x =
+                input_field_position.point.x + (input_field_drawable.bounds.width / 2) + 5;
+            if (unicode == 8) {
+              entity_position->point.x -= text.characterSize;
+            }
+          }
+          index += 1;
+        }
+        auto& [text, fontName, characterSize, style, color] =
+            std::get<Text>(entity_drawable->drawable);
+        entity_tags->AddTag("not_blink");
+        entity_drawable->visible = true;
       }});
 }
 
