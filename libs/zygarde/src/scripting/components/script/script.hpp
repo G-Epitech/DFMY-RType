@@ -9,6 +9,7 @@
 
 #include "api.hpp"
 #include "scripting/types/callbacks.hpp"
+#include "scripting/types/values_map.hpp"
 
 namespace zygarde::scripting::systems {
 class ScriptExecutionSystem;

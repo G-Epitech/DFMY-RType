@@ -87,31 +87,19 @@ void SceneLobby::JoinLobby() {
   if (status_ == LobbyStatus::kJoining) {
     return;
   }
-  mainMessage_ = "Registering to the server";
+  mainMessage_ = "Creating the room";
   secondaryMessage_ = "Please wait...";
-  auto res = serverConnectionService_->client()->Register({
-      .username = "ptit'plouf",
-  });
-  if (!res) {
-    mainMessage_ = "Registration failed";
-    secondaryMessage_ = "Unable to register on the server";
-    status_ = LobbyStatus::kFailed;
-    return;
-  }
-  /*std::this_thread::sleep_for(std::chrono::milliseconds(1200));*/
-  /*mainMessage_ = "Creating the room";
-  secondaryMessage_ = "Please wait...";*/
-  /*res = serverConnectionService_->client()->CreateRoom({
+  auto res = serverConnectionService_->client()->CreateRoom({
       .name = "MyPtitRoom",
       .nbPlayers = 4,
       .difficulty = 0,
-  });*/
-  /*if (!res) {
+  });
+  if (!res) {
     mainMessage_ = "Creating failed";
     secondaryMessage_ = "Unable to create the lobby";
     status_ = LobbyStatus::kFailed;
     return;
-  }*/
+  }
   std::this_thread::sleep_for(std::chrono::milliseconds(1200));
   status_ = LobbyStatus::kRegistered;
   mainMessage_ = "Joining the room";

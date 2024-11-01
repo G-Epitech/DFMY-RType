@@ -41,19 +41,20 @@ typename sparse_array<Component>::ptr Registry::GetComponents() const {
 }
 
 template <typename Component>
-Component *Registry::GetComponent(const Entity &e) {
-  typename sparse_array<Component>::ptr components = GetComponents<Component>();
-  if (!components) {
-    return nullptr;
+std::optional<Component *> Registry::GetComponent(const Entity &e) {
+  auto components = GetComponents<Component>();
+
+  if (!components || e.id_ >= components->size()) {
+    return std::nullopt;
   }
 
-  if (components->size() > e.id_) {
-    auto &optionalComponent = (*components)[e.id_];
-    if (optionalComponent) {
-      return &(*optionalComponent);
-    }
+  auto &optionalComponent = (*components)[e.id_];
+
+  if (optionalComponent) {
+    return &(*optionalComponent);
   }
-  return nullptr;
+
+  return std::nullopt;
 }
 
 template <typename Component>

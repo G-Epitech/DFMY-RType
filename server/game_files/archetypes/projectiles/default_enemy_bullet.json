@@ -1,0 +1,52 @@
+{
+  "archetype_name": "default_enemy_bullet",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": true,
+        "velocity": {
+          "x": -300,
+          "y": 0
+        },
+        "drag": 0
+      }
+    },
+    {
+      "name": "position"
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 32,
+          "y": 15
+        },
+        "collisionLayers": [
+          4
+        ],
+        "includeLayers": [
+          1,
+          8
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "enemy_bullet",
+          "bullet"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "baseProjectileScript"
+        }
+      ]
+    }
+  ]
+}

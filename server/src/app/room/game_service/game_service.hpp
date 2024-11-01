@@ -14,6 +14,7 @@
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
+#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
@@ -42,13 +43,6 @@ class GameService {
   void NewPlayer(std::uint64_t player_id);
 
  private:
-  struct EntityStates {
-    std::vector<payload::PlayerState> playerStates;
-    std::vector<payload::EnemyState> enemyStates;
-    std::vector<payload::BulletState> bulletStates;
-  };
-
- private:
   /**
    * @brief Execute the game logic during a tick
    */
@@ -69,23 +63,39 @@ class GameService {
    */
   void HandleMessages();
 
+  /**
+   * @brief Handle player message
+   * @param player_id The player id of the message
+   * @param data The message data
+   */
   void HandlePlayerMessage(const std::uint64_t &player_id,
                            const abra::server::ClientUDPMessage &data);
 
+  /**
+   * @brief Handle player move message
+   * @param player_id The player id
+   * @param data The message data
+   */
   void HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                const abra::server::ClientUDPMessage &data);
 
+  /**
+   * @brief Handle player shoot message
+   * @param player_id Player id
+   * @param data The data of the message
+   */
   void HandlePlayerShootMessage(const std::uint64_t &player_id,
                                 const abra::server::ClientUDPMessage &data);
 
   /**
-   * @brief Send stats to the server
+   * @brief Check if a player is dead
    */
-  void BroadcastEntityStates() const;
+  void CheckDeadPlayers();
 
-  void GatherEntityStates(const std::unique_ptr<EntityStates> &states) const;
-
-  void SendStates(const std::unique_ptr<EntityStates> &states) const;
+  /**
+   * @brief Add game walls
+   */
+  void AddGameWalls();
 
  private:
   /// @brief Game running flag
@@ -111,5 +121,8 @@ class GameService {
 
   /// @brief Logger
   Logger logger_;
+
+  /// @brief Archetype manager
+  std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> archetypeManager_;
 };
 }  // namespace rtype::server::game

@@ -44,7 +44,7 @@ void BlinkSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, const 
       player, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       player, {
-                  .drawable = Texture{.name = "player", .scale = 3, .rect = base},
+                  .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
               });
 
   std::cout << "Player created" << std::endl;
@@ -108,7 +108,7 @@ void BlinkSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const s
       enemy, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       enemy, {
-                 .drawable = Texture{.name = "enemy", .scale = 3, .rect = base},
+                 .drawable = Texture{.name = "enemy", .scale = 2.5, .rect = base},
              });
   enemies_.insert_or_assign(id, enemy);
 }

@@ -175,6 +175,12 @@ class rtype::sdk::game::api::Node {
    */
   void RemoveRoom(std::uint64_t id);
 
+  /**
+   * @brief Handle a closed room
+   * @param roomId The id of the room
+   */
+  void HandleClosedRoom(std::uint64_t roomId);
+
   /// @brief Name of the node
   std::string name_;
 
@@ -216,7 +222,7 @@ class rtype::sdk::game::api::Node {
   static inline std::map<unsigned int, void (Node::*)(const abra::tools::MessageProps &message)>
       masterMessageHandlers_ = {
           {MasterToNodeMsgType::kMsgTypeMTNCreateRoom, &Node::HandleRoomCreation},
-          {MasterToNodeMsgType::kMsgTypeMTNPlayerJoin, &Node::HandlePlayerJoin},
+          {MasterToNodeMsgType::kMsgTypeMTNPlayerJoinRoom, &Node::HandlePlayerJoin},
   };
 
   static inline std::map<unsigned int,

@@ -44,10 +44,10 @@ class EXPORT_ZYGARDE_API MovementSystem final
   void ComputePositionOffset(components::Rigidbody2D *rigidbody);
 
   /**
-   * @brief Update the position
-   * @param position The position of the entity
+   * @brief Apply drag to the rigidbody
+   * @param rigidbody The rigidbody of the entity
    */
-  void UpdatePosition(core::components::Position *position) const;
+  void ApplyDrag(components::Rigidbody2D *rigidbody) const;
 
  private:
   /// @brief Delta time

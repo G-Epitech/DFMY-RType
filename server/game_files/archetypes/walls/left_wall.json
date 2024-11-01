@@ -1,0 +1,38 @@
+{
+  "archetype_name": "left_wall",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": false,
+        "velocity": {
+          "x": 0,
+          "y": 0
+        },
+        "drag": 0
+      }
+    },
+    {
+      "name": "position",
+      "data": {
+        "point": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 1,
+          "y": 2000
+        },
+        "collisionLayers": [
+          3000
+        ]
+      }
+    }
+  ]
+}

@@ -17,13 +17,15 @@ using namespace boost::asio;
 SessionTCP::SessionTCP(boost::asio::ip::tcp::socket socket,
                        std::shared_ptr<std::queue<ClientTCPMessage>> queue,
                        std::shared_ptr<std::mutex> mutex, std::uint64_t clientId,
-                       const std::function<bool(const ClientTCPMessage &)> &middleware)
+                       const std::function<bool(const ClientTCPMessage &)> &middleware,
+                       const std::function<void(std::uint64_t)> &closedSessionHandler)
     : socket_(std::move(socket)),
       buffer_(),
       queue_(std::move(queue)),
       mutex_(std::move(mutex)),
       clientId_(clientId),
       middleware_(middleware),
+      closedSessionHandler_(closedSessionHandler),
       logger_("session_tcp_" + std::to_string(clientId)) {}
 
 SessionTCP::~SessionTCP() {
@@ -45,6 +47,10 @@ void SessionTCP::ListenNewRequest() {
                                   logger_.Info("Connection closed by peer");
                                 } else {
                                   logger_.Error("Error while reading data: " + err.message());
+                                }
+
+                                if (this->closedSessionHandler_ != nullptr) {
+                                  this->closedSessionHandler_(this->clientId_);
                                 }
                                 return;
                               }

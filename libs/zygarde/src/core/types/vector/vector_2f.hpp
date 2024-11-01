@@ -174,6 +174,18 @@ class EXPORT_ZYGARDE_API Vector2f final {
    */
   static void throw_if_negative(Vector2f const &vec);
 
+  /**
+   * @brief Get the magnitude of the vector
+   * @return magnitude
+   */
+  [[nodiscard]] float magnitude() const noexcept;
+
+  /**
+   * @brief Get the normalized vector
+   * @return normalized vector
+   */
+  [[nodiscard]] Vector2f normalized() const noexcept;
+
  public:
   /// @brief x value
   float x = 0;
@@ -181,3 +193,11 @@ class EXPORT_ZYGARDE_API Vector2f final {
   float y = 0;
 };
 }  // namespace zygarde::core::types
+
+/**
+ * @brief Multiply a vector by a scalar
+ * @param scalar Scalar value
+ * @param vec Vector2f object
+ */
+zygarde::core::types::Vector2f operator*(float scalar,
+                                         const zygarde::core::types::Vector2f &vec) noexcept;

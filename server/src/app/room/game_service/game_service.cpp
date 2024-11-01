@@ -9,47 +9,63 @@
 
 #include <utility>
 
-#include "constants/tags.hpp"
-#include "factories/player_factory.hpp"
-#include "libs/zygarde/src/scripting/components/script/script.hpp"
+#include "app/room/filepaths.hpp"
+#include "app/room/game_service/archetype_keys.hpp"
+#include "app/room/game_service/scripts/scripts_registry.hpp"
+#include "libs/zygarde/src/scripting/components/pool/script_pool.hpp"
+#include "scripts/player_script.hpp"
+#include "state_broadcaster/state_broadcaster.hpp"
 
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
 
 GameService::GameService(const size_t &tick_rate)
-    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {}
+    : ticksManager_{tick_rate}, registry_(), enemyManager_(), logger_("game-service") {
+  archetypeManager_ = std::make_shared<zygarde::core::archetypes::ArchetypeManager>();
+}
 
 void GameService::RegistrySetup() {
   registry_ = zygarde::Registry::Create();
   utils::RegistryHelper::RegisterBaseComponents(registry_);
-  utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime());
+  utils::RegistryHelper::RegisterBaseSystems(registry_, ticksManager_.DeltaTime(),
+                                             archetypeManager_);
 }
 
 void GameService::Initialize() {
+  scripts::ScriptsRegistry scriptsRegistry;
+
   ticksManager_.Initialize();
+  archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
   RegistrySetup();
+  AddGameWalls();
 }
 
 int GameService::Run(std::shared_ptr<Room> api) {
   this->api_ = std::move(api);
 
-  Initialize();
-
+  try {
+    Initialize();
+  } catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return EXIT_FAILURE;
+  }
   while (gameRunning_) {
     ticksManager_.Update();
     HandleMessages();
     ExecuteGameLogic();
-    BroadcastEntityStates();
+    StateBroadcaster::Run(registry_, api_);
     ticksManager_.WaitUntilNextTick();
   }
   return EXIT_SUCCESS;
 }
 
 void GameService::ExecuteGameLogic() {
+  archetypeManager_->ExecuteScheduledInvocations(registry_);
   if (!players_.empty()) {
-    enemyManager_.Update(ticksManager_.DeltaTime(), registry_);
+    enemyManager_.Update(ticksManager_.DeltaTime(), registry_, archetypeManager_);
   }
   registry_->RunSystems();
+  CheckDeadPlayers();
   registry_->CleanupDestroyedEntities();
 }
 
@@ -75,95 +91,78 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                           const abra::server::ClientUDPMessage &data) {
-  const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
-  auto &[entityId, direction] = packet->GetPayload();
+  try {
+    const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
+    auto &[entityId, direction] = packet->GetPayload();
 
-  if (const auto player = players_.find(player_id); player != players_.end()) {
-    const auto &playerEntity = player->second;
-    const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
-    if (!rigidBody) {
-      return;
+    if (const auto player = players_.find(player_id); player != players_.end()) {
+      const auto &playerEntity = player->second;
+      auto scriptPool = registry_->GetComponent<scripting::components::ScriptPool>(playerEntity);
+      if (!scriptPool) {
+        return;
+      }
+      auto playerScript = (*scriptPool)->GetScript<scripts::PlayerScript>();
+      if (playerScript) {
+        playerScript->SetMovementDirection({direction.x, direction.y});
+      }
     }
-
-    const core::types::Vector2f newDir = {direction.x, direction.y};
-    rigidBody->SetVelocity(newDir * 200);
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling player move: " + std::string(e.what()), "❌");
+    return;
   }
-
-  logger_.Info("Player " + std::to_string(player_id) + " moved", "🏃‍");
 }
 
 void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
-                                           const abra::server::ClientUDPMessage &data) {
-  auto packet = packetBuilder_.Build<payload::Shoot>(data.bitset);
+                                           const abra::server::ClientUDPMessage &) {
   const auto player = players_.find(player_id);
   if (player != players_.end()) {
     const auto &playerEntity = player->second;
-    const auto script = registry_->GetComponent<scripting::components::Script>(playerEntity);
-    script->SetValue("shoot", true);
+    if (!registry_->HasEntityAtIndex(playerEntity.operator std::size_t())) {
+      return;
+    }
+    auto scriptPool = registry_->GetComponent<scripting::components::ScriptPool>(playerEntity);
+    if (!scriptPool.has_value() || !scriptPool.value()) {
+      return;
+    }
+    auto playerScript = (*scriptPool)->GetScript<scripts::PlayerScript>();
+    if (playerScript) {
+      playerScript->Shoot();
+    } else {
+      logger_.Error("Player script not found");
+    }
   }
 }
 
 void GameService::NewPlayer(std::uint64_t player_id) {
-  Entity player = PlayerFactory::CreatePlayer(
-      registry_, core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0), {96, 48});
+  Entity player = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypePlayerPhoton);
+  auto position = registry_->GetComponent<core::components::Position>(player);
 
+  if (!position.has_value() || !position.value()) {
+    return;
+  }
+
+  (*position)->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
 }
 
-void GameService::BroadcastEntityStates() const {
-  std::unique_ptr<EntityStates> entityStates = std::make_unique<EntityStates>();
+void GameService::CheckDeadPlayers() {
+  auto entitiesToKill = registry_->GetEntitiesToKill();
 
-  GatherEntityStates(entityStates);
-  SendStates(entityStates);
-}
-
-void GameService::GatherEntityStates(const std::unique_ptr<EntityStates> &states) const {
-  const auto components = registry_->GetComponents<core::components::Position>();
-  std::size_t i = 0;
-
-  for (auto &component : *components) {
-    if (!registry_->HasEntityAtIndex(i) || !component.has_value()) {
-      i++;
-      continue;
+  for (auto it = players_.begin(); it != players_.end();) {
+    if (std::find(entitiesToKill.begin(), entitiesToKill.end(), it->second) !=
+        entitiesToKill.end()) {
+      logger_.Info("Player " + std::to_string(it->first) + " died", "💀");
+      it = players_.erase(it);
+    } else {
+      ++it;
     }
-
-    const auto val = component.value();
-    auto ent = registry_->EntityFromIndex(i);
-    const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
-    const auto tags = registry_->GetComponent<core::components::Tags>(ent);
-
-    if (*tags == sdk::game::constants::kPlayerTag) {
-      payload::PlayerState state = {static_cast<std::size_t>(ent), vec, 100};
-      states->playerStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kEnemyTag) {
-      payload::EnemyState state = {static_cast<std::size_t>(ent), vec,
-                                   sdk::game::types::EnemyType::kPata, 100};
-      states->enemyStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kPlayerBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
-                                    sdk::game::types::ProjectileType::kPlayerCommon};
-      states->bulletStates.push_back(state);
-    }
-    if (*tags == sdk::game::constants::kEnemyBulletTag) {
-      payload::BulletState state = {static_cast<std::size_t>(ent), vec,
-                                    sdk::game::types::ProjectileType::kEnemyCommon};
-      states->bulletStates.push_back(state);
-    }
-    i++;
   }
 }
 
-void GameService::SendStates(const std::unique_ptr<EntityStates> &states) const {
-  if (!states->playerStates.empty()) {
-    this->api_->SendPlayersState(states->playerStates);
-  }
-  if (!states->enemyStates.empty()) {
-    this->api_->SendEnemiesState(states->enemyStates);
-  }
-  if (!states->bulletStates.empty()) {
-    this->api_->SendBulletsState(states->bulletStates);
-  }
+void GameService::AddGameWalls() {
+  archetypeManager_->InvokeArchetype(registry_, "top_wall");
+  archetypeManager_->InvokeArchetype(registry_, "bottom_wall");
+  archetypeManager_->InvokeArchetype(registry_, "left_wall");
+  archetypeManager_->InvokeArchetype(registry_, "right_wall");
 }

@@ -20,6 +20,11 @@ class EXPORT_ZYGARDE_API Vector3f final {
   constexpr explicit Vector3f(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
 
   /**
+   * @brief Copy assignment operator
+   */
+  Vector3f& operator=(const Vector3f& other);
+
+  /**
    * @brief Add Vector3f object by another Vector3f object
    */
   Vector3f operator+(const Vector3f& other) const noexcept;

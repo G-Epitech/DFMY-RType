@@ -51,15 +51,19 @@ void Registry::KillEntity(Entity const &e) {
 }
 
 void Registry::DestroyEntity(const Entity &e) {
-  entitiesToKill_.push(e);
+  if (std::find(entitiesToKill_.begin(), entitiesToKill_.end(), e) != entitiesToKill_.end()) {
+    return;
+  }
+  entitiesToKill_.push_back(e);
 }
 
 void Registry::CleanupDestroyedEntities() {
   while (!entitiesToKill_.empty()) {
-    KillEntity(entitiesToKill_.top());
-    entitiesToKill_.pop();
+    KillEntity(entitiesToKill_.back());
+    entitiesToKill_.pop_back();
   }
 }
+
 bool Registry::HasEntityAtIndex(std::size_t idx) const {
   return idx < entities_.size() && entities_.at(idx).has_value();
 }
