@@ -10,6 +10,7 @@
 #include "core/components/tags/tags.hpp"
 #include "sets/drawable/components/components.hpp"
 #include "sets/events/components/components.hpp"
+#include "systems/utils/input/cursor.hpp"
 
 using namespace rtype::client::scenes::utils;
 using namespace zygarde::core::components;
@@ -22,20 +23,22 @@ void Input::Create(const Registry::Ptr& registry, const std::string& tag, const 
                    const Alignment alignment) {
   CreateInputField(registry, tag, position, alignment);
   CreateBlinkingCursor(registry, tag, position, alignment);
+  registry->AddSystem<systems::UtilsInputCursorSystem>();
 }
 
-void Input::CreateInputField(Registry::Ptr registry, std::string tag,
+void Input::CreateInputField(const Registry::Ptr& registry, std::string tag,
                              const core::types::Vector3f position,
                              const core::components::Alignment alignment) {
   const auto input_field = registry->SpawnEntity();
 
   registry->AddComponent<Position>(input_field, {position, alignment});
   registry->AddComponent<Drawable>(input_field, {Text{"", "main", 20}, WindowManager::View::HUD});
-  registry->AddComponent<Tags>(input_field, Tags({tag}));
+  registry->AddComponent<Tags>(input_field, Tags({tag, (tag + "_input")}));
   registry->AddComponent<OnTextEntered>(
       input_field, OnTextEntered{.handler = [registry, input_field](const sf::Uint32& unicode) {
         const auto component = registry->GetComponent<Drawable>(input_field);
-        if (!component) {
+        const auto entity_tags = registry->GetComponent<Tags>(input_field);
+        if (!component || !entity_tags) {
           return;
         }
         auto& drawable = component->drawable;
@@ -50,66 +53,16 @@ void Input::CreateInputField(Registry::Ptr registry, std::string tag,
         } else {
           text += static_cast<char>(unicode);
         }
+        entity_tags->AddTag("input_updated");
       }});
 }
 
-void Input::CreateBlinkingCursor(Registry::Ptr registry, std::string tag,
+void Input::CreateBlinkingCursor(const Registry::Ptr& registry, const std::string& tag,
                                  const core::types::Vector3f position,
                                  const core::components::Alignment alignment) {
   const auto cursor = registry->SpawnEntity();
 
   registry->AddComponent<Position>(cursor, {position, alignment});
   registry->AddComponent<Drawable>(cursor, {Text{"|", "main", 20}, WindowManager::View::HUD});
-  registry->AddComponent<Tags>(cursor, Tags({"blink"}));
-  registry->AddComponent<OnTextEntered>(
-      cursor, OnTextEntered{.handler = [registry, cursor, tag](const sf::Uint32& unicode) {
-        BlinkingCursorFunction(registry, cursor, unicode, tag);
-      }});
-}
-
-void Input::BlinkingCursorFunction(const Registry::Ptr& registry, const Entity& cursor,
-                                   const sf::Uint32& unicode, const std::string& tag) {
-  const auto entity_drawable = registry->GetComponent<Drawable>(cursor);
-  const auto entity_tags = registry->GetComponent<Tags>(cursor);
-  const auto entity_position = registry->GetComponent<Position>(cursor);
-  const auto all_tags = registry->GetComponents<Tags>();
-  const auto all_drawables = registry->GetComponents<Drawable>();
-  const auto all_positions = registry->GetComponents<Position>();
-
-  if (!entity_drawable || !entity_tags || !entity_position || !all_tags || !all_drawables ||
-      !all_positions) {
-    return;
-  }
-
-  const auto begin = all_tags->begin();
-  const auto end = all_tags->end();
-  std::size_t index = 0;
-  for (auto it = begin; it != end; ++it) {
-    const auto tags = *it;
-    if (!tags) {
-      index += 1;
-      continue;
-    }
-    if ((*tags) & tag) {
-      if (index >= all_drawables->size() || !(*all_drawables)[index] ||
-          index >= all_positions->size() || !(*all_positions)[index]) {
-        return;
-      }
-      auto& input_field_drawable = (*all_drawables)[index].value();
-      auto& input_field_position = (*all_positions)[index].value();
-      if (!std::holds_alternative<Text>(input_field_drawable.drawable)) {
-        return;
-      }
-      auto text = std::get<Text>(input_field_drawable.drawable);
-      entity_position->point.x =
-          input_field_position.point.x + (input_field_drawable.bounds.width / 2) + 5;
-      if (unicode == 8) {
-        entity_position->point.x -= text.characterSize;
-      }
-      entity_tags->AddTag("not_blink");
-      entity_drawable->visible = true;
-      return;
-    }
-    index += 1;
-  }
+  registry->AddComponent<Tags>(cursor, Tags({"blink", tag, (tag + "_cursor")}));
 }

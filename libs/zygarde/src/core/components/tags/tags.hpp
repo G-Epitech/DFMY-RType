@@ -52,6 +52,12 @@ class EXPORT_ZYGARDE_API Tags final {
    */
   void RemoveTag(const std::string &tag);
 
+  /**
+   * @brief Get the tags
+   * @return Tags
+   */
+  std::set<std::string>& GetTags();
+
  private:
   std::set<std::string> tags_;
 };

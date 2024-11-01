@@ -34,7 +34,7 @@ void SceneMenu::OnCreate() {
   CreateSettingsButton();
   CreateExitButton();
   CreateServerConnectionLabel();
-  utils::Input::Create(registry_, "input_field",
+  utils::Input::Create(registry_, "username",
                        Vector3f{managers_.window->width_ / 2, managers_.window->height_ / 2 + 150},
                        {HorizontalAlign::kCenter, VerticalAlign::kCenter});
 }
