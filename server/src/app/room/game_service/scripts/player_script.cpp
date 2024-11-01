@@ -16,7 +16,8 @@ PlayerScript::PlayerScript()
     : equippedWeapon_{sdk::game::types::WeaponType::kBasic},
       shootCooldown_{sdk::game::utils::GetFireRate(sdk::game::stats::WeaponBasic::fireRate)},
       lastShootTime_{utils::Timer::Nanoseconds::zero()},
-      isShooting_{false} {}
+      isShooting_{false},
+      props_{} {}
 
 void PlayerScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
   props_.className = std::any_cast<std::string>(customScriptValues.at("className"));
@@ -34,6 +35,7 @@ void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::Scripting
     SpawnBullet(context);
   }
   isShooting_ = false;
+  HandleMovement(context);
 }
 
 void PlayerScript::OnCollisionEnter(
@@ -59,14 +61,28 @@ void PlayerScript::SpawnBullet(const std::shared_ptr<scripting::types::Scripting
   }
   const core::types::Vector3f projectilePos((*position)->point.x + 86, (*position)->point.y + 20,
                                             (*position)->point.z);
-  zygarde::core::archetypes::ArchetypeManager::InvokationParams params;
+  zygarde::core::archetypes::ArchetypeManager::ScheduleInvocationParams params;
   params.archetypeName = tools::kArchetypeBasePlayerBullet;
-  params.registryAttachCallback = [projectilePos](const std::shared_ptr<zygarde::Registry>& registry,
-                                                  const zygarde::Entity& entity) -> void {
+  params.registryAttachCallback = [projectilePos](
+                                      const std::shared_ptr<zygarde::Registry>& registry,
+                                      const zygarde::Entity& entity) -> void {
     auto positionComponent = registry->GetComponent<core::components::Position>(entity);
     if (positionComponent.has_value() && positionComponent.value()) {
       (*positionComponent)->point = projectilePos;
     }
   };
   context->archetypeManager->ScheduleInvocation(params);
+}
+
+void PlayerScript::HandleMovement(
+    const std::shared_ptr<scripting::types::ScriptingContext>& context) {
+  if (!movementDirection_) {
+    return;
+  }
+  auto rb = context->registry->GetComponent<physics::components::Rigidbody2D>(context->me);
+  if (!rb.has_value() || !rb.value()) {
+    return;
+  }
+  (*rb)->SetVelocity(*movementDirection_ * props_.speed);
+  movementDirection_.reset();
 }

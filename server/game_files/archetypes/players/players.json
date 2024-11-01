@@ -25,7 +25,8 @@
           1,
           2,
           4,
-          16
+          16,
+          3000
         ]
       }
     },
@@ -45,7 +46,7 @@
           "customValues": {
             "className": "Photon",
             "health": 100.0,
-            "speed": 1.0,
+            "speed": 300.0,
             "powerCooldown": 1.0,
             "primaryWeapon": "Laser",
             "secondaryWeapon": "Missile"

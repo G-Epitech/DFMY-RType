@@ -32,12 +32,12 @@ void GameService::RegistrySetup() {
 }
 
 void GameService::Initialize() {
-  std::vector<std::string> archetypeDirs = {kDirectoryPlayerArchetypes, kDirectoryEnemyArchetypes,
-                                            kDirectoryProjectileArchetypes};
+  scripts::ScriptsRegistry scriptsRegistry;
 
   ticksManager_.Initialize();
-  archetypeManager_->LoadArchetypes(archetypeDirs, scripts::ScriptsRegistry().GetScripts());
+  archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
   RegistrySetup();
+  AddGameWalls();
   const auto levels = LevelLoader().Run(kDirectoryLevels);
   for (const auto &difficulty : levels) {
     logger_.Info("Loaded difficulty: " + difficulty.name, "📊");
@@ -64,11 +64,12 @@ int GameService::Run(std::shared_ptr<Room> api) {
 }
 
 void GameService::ExecuteGameLogic() {
-  archetypeManager_->ExecuteScheduledInvokations(registry_);
+  archetypeManager_->ExecuteScheduledInvocations(registry_);
   if (!players_.empty()) {
     enemyManager_.Update(ticksManager_.DeltaTime(), registry_, archetypeManager_);
   }
   registry_->RunSystems();
+  CheckDeadPlayers();
   registry_->CleanupDestroyedEntities();
 }
 
@@ -94,21 +95,25 @@ void GameService::HandlePlayerMessage(const std::uint64_t &player_id,
 
 void GameService::HandlePlayerMoveMessage(const std::uint64_t &player_id,
                                           const abra::server::ClientUDPMessage &data) {
-  const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
-  auto &[entityId, direction] = packet->GetPayload();
+  try {
+    const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
+    auto &[entityId, direction] = packet->GetPayload();
 
-  if (const auto player = players_.find(player_id); player != players_.end()) {
-    const auto &playerEntity = player->second;
-    const auto rigidBody = registry_->GetComponent<physics::components::Rigidbody2D>(playerEntity);
-    if (!rigidBody.has_value() || !rigidBody.value()) {
-      return;
+    if (const auto player = players_.find(player_id); player != players_.end()) {
+      const auto &playerEntity = player->second;
+      auto scriptPool = registry_->GetComponent<scripting::components::ScriptPool>(playerEntity);
+      if (!scriptPool) {
+        return;
+      }
+      auto playerScript = (*scriptPool)->GetScript<scripts::PlayerScript>();
+      if (playerScript) {
+        playerScript->SetMovementDirection({direction.x, direction.y});
+      }
     }
-
-    const core::types::Vector2f newDir = {direction.x, direction.y};
-    (*rigidBody)->SetVelocity(newDir * 200);
+  } catch (const std::exception &e) {
+    logger_.Error("Error while handling player move: " + std::string(e.what()), "❌");
+    return;
   }
-
-  logger_.Info("Player " + std::to_string(player_id) + " moved", "🏃‍");
 }
 
 void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
@@ -144,4 +149,25 @@ void GameService::NewPlayer(std::uint64_t player_id) {
   (*position)->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
+}
+
+void GameService::CheckDeadPlayers() {
+  std::vector<zygarde::Entity> entitiesToKill = registry_->GetEntitiesToKill();
+
+  for (auto it = players_.begin(); it != players_.end();) {
+    if (std::find(entitiesToKill.begin(), entitiesToKill.end(), it->second) !=
+        entitiesToKill.end()) {
+      logger_.Info("Player " + std::to_string(it->first) + " died", "💀");
+      it = players_.erase(it);
+    } else {
+      ++it;
+    }
+  }
+}
+
+void GameService::AddGameWalls() {
+  archetypeManager_->InvokeArchetype(registry_, "top_wall");
+  archetypeManager_->InvokeArchetype(registry_, "bottom_wall");
+  archetypeManager_->InvokeArchetype(registry_, "left_wall");
+  archetypeManager_->InvokeArchetype(registry_, "right_wall");
 }

@@ -32,7 +32,7 @@ class EXPORT_ZYGARDE_API ArchetypeLoader final {
    * @param directories Directories to load archetypes from
    * @param scriptsRegistry Registry of scripts containing script names and their constructors
    */
-  ArchetypeLoader(std::vector<std::string> directories,
+  ArchetypeLoader(std::string archetype_directory,
                   const scripting::types::ScriptsMap& scriptsRegistry);
 
   ~ArchetypeLoader() = default;
@@ -85,14 +85,12 @@ class EXPORT_ZYGARDE_API ArchetypeLoader final {
   void InitializeComponentParsers(const scripting::types::ScriptsMap& scriptsRegistry);
 
  private:
-  /// @brief Current path
-  std::string currentPath_;
   /// @brief Archetypes map
   std::map<std::string, std::vector<RegistryAttachCallback>> archetypes_;
   /// @brief Map of component parsers
   std::unordered_map<std::string, ComponentParserFunction> componentParsers_;
   /// @brief Array of directories to load archetypes from
-  std::vector<std::string> directories_;
+  std::string archetypeDirectory_;
 };
 }  // namespace zygarde::core::archetypes
 

@@ -23,9 +23,9 @@ class EnemyManager {
    * @param registry Registry
    * @param archetype_manager Archetype manager instance
    */
-  void Update(const zygarde::utils::Timer::Nanoseconds &delta_time,
-              zygarde::Registry::Const_Ptr registry,
-              const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> &archetype_manager);
+  void Update(
+      const zygarde::utils::Timer::Nanoseconds &delta_time, zygarde::Registry::Const_Ptr registry,
+      const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> &archetype_manager);
 
  private:
   /// @brief Accumulated time (mainly used for spawning enemies)

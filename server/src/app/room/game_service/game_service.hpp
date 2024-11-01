@@ -88,6 +88,16 @@ class GameService {
   void HandlePlayerShootMessage(const std::uint64_t &player_id,
                                 const abra::server::ClientUDPMessage &data);
 
+  /**
+   * @brief Check if a player is dead
+   */
+  void CheckDeadPlayers();
+
+  /**
+   * @brief Add game walls
+   */
+  void AddGameWalls();
+
  private:
   /// @brief Game running flag
   bool gameRunning_{true};
