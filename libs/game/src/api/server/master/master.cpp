@@ -215,7 +215,8 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
 void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
                           const Master::Node &node) {
   payload::InfoRoom infoPayload = {
-      .port = room.port,
+      .gamePort = room.gamePort,
+      .chatPort = room.chatPort,
   };
   snprintf(infoPayload.ip, sizeof(infoPayload.ip), "%s",
            this->nodesSocket_.GetRemoteAddress(node.id).c_str());
@@ -270,7 +271,8 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
         .maxPlayers = payload.nbPlayers,
         .nbPlayers = 0,
         .difficulty = payload.difficulty,
-        .port = payload.port,
+        .gamePort = payload.gamePort,
+        .chatPort = payload.chatPort,
     };
 
     node.rooms_[room.id] = std::move(room);

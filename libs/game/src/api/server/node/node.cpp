@@ -70,7 +70,8 @@ void Node::RegisterNewRoom(uint64_t socketId, const payload::RegisterRoom &regis
       .id = room.id,
       .nbPlayers = room.maxPlayers,
       .difficulty = room.difficulty,
-      .port = registerPayload.port,
+      .gamePort = registerPayload.gamePort,
+      .chatPort = registerPayload.chatPort,
   };
 
   auto success = SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRegisterNewRoom, payload);

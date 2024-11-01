@@ -56,11 +56,13 @@ enum RoomToClientMsgType {
   kMsgTypeRTCPlayersState,  ///< @brief Players state
   kMsgTypeRTCEnemiesState,  ///< @brief Enemies state
   kMsgTypeRTCBulletsState,  ///< @brief Bullets state
+  kMsgTypeRTCChatMessage,   ///< @brief Chat message (TCP)
 };
 
 /// @brief Client >> Room message type
 enum ClientToRoomMsgType {
   kMsgTypeCTRPlayerMove,   ///< @brief Player move
   kMsgTypeCTRPlayerShoot,  ///< @brief Player shoot
+  kMsgTypeCTRSendMessage,  ///< @brief Send a message (TCP)
 };
 }  // namespace rtype::sdk::game::api

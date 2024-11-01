@@ -9,6 +9,7 @@
 
 #include "./game/game.hpp"
 #include "./infos/infos.hpp"
+#include "./message/message.hpp"
 #include "./player/player.hpp"
 #include "./register/register.hpp"
 #include "./room/room.hpp"

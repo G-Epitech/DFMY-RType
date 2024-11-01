@@ -50,7 +50,8 @@ class rtype::sdk::game::api::Master {
     unsigned int maxPlayers;
     unsigned int nbPlayers;
     unsigned int difficulty;
-    unsigned int port;
+    unsigned int gamePort;
+    unsigned int chatPort;
   };
 
   struct Node {
