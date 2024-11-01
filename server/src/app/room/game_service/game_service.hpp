@@ -10,11 +10,11 @@
 #include <cstddef>
 #include <map>
 
-#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "enemy_manager/enemy_manager.hpp"
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
+#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 

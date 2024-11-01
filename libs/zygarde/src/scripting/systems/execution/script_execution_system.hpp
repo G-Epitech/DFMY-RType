@@ -71,6 +71,6 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
   /// @brief Current script index mainly used for utility
   std::size_t currentScriptIndex_ = 0;
   /// @brief Archetype manager instance
-  const std::shared_ptr<core::archetypes::ArchetypeManager> &archetypeManager_;
+  std::shared_ptr<core::archetypes::ArchetypeManager> archetypeManager_;
 };
 }  // namespace zygarde::scripting::systems

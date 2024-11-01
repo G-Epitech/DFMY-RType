@@ -116,7 +116,7 @@ void ArchetypeLoader::InitializeComponentParsers(
          callbacks->emplace_back(
              [scriptsRegistry, map](const zygarde::Entity& entity,
                                     const std::shared_ptr<zygarde::Registry>& registry) {
-               std::vector<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
+               std::list<std::shared_ptr<scripting::components::MonoBehaviour>> scripts;
 
                for (const auto& [scriptName, valuesMap] : map) {
                  auto script = scriptsRegistry.at(scriptName)();

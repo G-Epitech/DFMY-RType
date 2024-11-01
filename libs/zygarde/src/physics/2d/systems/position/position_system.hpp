@@ -29,8 +29,7 @@ class EXPORT_ZYGARDE_API PositionSystem final
    * @param positions The positions to use
    */
   void Run(std::shared_ptr<Registry> r,
-           zipper<components::Rigidbody2D, core::components::Position>
-               components) override;
+           zipper<components::Rigidbody2D, core::components::Position> components) override;
 
  private:
   /**

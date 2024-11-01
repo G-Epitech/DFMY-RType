@@ -46,7 +46,7 @@
           "customValues": {
             "className": "Photon",
             "health": 100.0,
-            "speed": 200.0,
+            "speed": 300.0,
             "powerCooldown": 1.0,
             "primaryWeapon": "Laser",
             "secondaryWeapon": "Missile"

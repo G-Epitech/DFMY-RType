@@ -44,7 +44,7 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, con
       player, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       player, {
-                  .drawable = Texture{.name = "player", .scale = 2.7, .rect = base},
+                  .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
               });
 
   std::cout << "Player created" << std::endl;

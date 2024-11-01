@@ -147,7 +147,7 @@ void GameService::NewPlayer(std::uint64_t player_id) {
 }
 
 void GameService::CheckDeadPlayers() {
-  std::vector<zygarde::Entity> entitiesToKill = registry_->GetEntitiesToKill();
+  auto entitiesToKill = registry_->GetEntitiesToKill();
 
   for (auto it = players_.begin(); it != players_.end();) {
     if (std::find(entitiesToKill.begin(), entitiesToKill.end(), it->second) !=
