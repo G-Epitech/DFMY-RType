@@ -36,7 +36,8 @@ void Room::RegisterNewRoom() {
   payload::RegisterRoom payload = {
       .id = this->roomId_,
       .token = "token",
-      .port = this->clientsSocket_.GetEndpoint().port,
+      .gamePort = this->clientsSocket_.GetEndpoint().port,
+      .chatPort = 0,
   };
 
   this->SendToNode(RoomToNodeMsgType::kMsgTypeRTNRegisterRoom, payload);

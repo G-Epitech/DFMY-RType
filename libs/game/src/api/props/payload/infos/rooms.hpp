@@ -12,8 +12,9 @@
 namespace rtype::sdk::game::api::payload {
 /// @brief Room information - Link to MasterToClientMsgType::kMsgTypeMTCInfoRoom
 struct InfoRoom {
-  char ip[16];        ///< IP of the room
-  unsigned int port;  ///< Port of the room
+  char ip[16];            ///< IP of the room
+  unsigned int gamePort;  ///< Port of the room
+  unsigned int chatPort;  ///< Port of the chat
 };
 
 /// @brief Room status - Internal use for InfoRooms
