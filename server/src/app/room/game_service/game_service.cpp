@@ -41,6 +41,8 @@ void GameService::Initialize() {
   difficultyLoader_.Run(kDirectoryDifficulties);
   auto difficultyData =
       difficultyLoader_.GetDifficultyByType(rtype::sdk::game::types::Difficulty::kEasy);
+  playerSpawner_.Initialize(archetypeManager_, registry_);
+  playerSpawner_.SetDifficulty(difficultyData);
   levelManager_.Initialize(kDirectoryLevels, registry_, archetypeManager_);
   levelManager_.SelectLevel("The Den");
   levelManager_.StartLevel(difficultyData);
@@ -141,14 +143,7 @@ void GameService::HandlePlayerShootMessage(const std::uint64_t &player_id,
 }
 
 void GameService::NewPlayer(std::uint64_t player_id) {
-  Entity player = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypePlayerPhoton);
-  auto position = registry_->GetComponent<core::components::Position>(player);
-
-  if (!position.has_value() || !position.value()) {
-    return;
-  }
-
-  (*position)->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
+  Entity player = playerSpawner_.SpawnPlayer(player_id);
   players_.insert({player_id, player});
   logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
 }

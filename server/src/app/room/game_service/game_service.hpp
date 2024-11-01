@@ -18,6 +18,7 @@
 #include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
+#include "player_spawner/player_spawner.hpp"
 
 namespace rtype::server::game {
 class GameService {
@@ -128,5 +129,8 @@ class GameService {
 
   /// @brief Difficulty loader
   DifficultyLoader difficultyLoader_;
+
+  /// @brief Player spawner
+  PlayerSpawner playerSpawner_;
 };
 }  // namespace rtype::server::game
