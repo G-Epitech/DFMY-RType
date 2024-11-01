@@ -9,9 +9,9 @@
 
 #include <nlohmann/json.hpp>
 
+#include "api.hpp"
 #include "libs/zygarde/includes/components.hpp"
 #include "scripting/types/context.hpp"
-#include "api.hpp"
 
 namespace zygarde::core::archetypes {
 class EXPORT_ZYGARDE_API ComponentParser final {

@@ -22,7 +22,6 @@ class EXPORT_ZYGARDE_API MonoBehaviour {
   using Instance = std::shared_ptr<MonoBehaviour>;
 
  public:
-  MonoBehaviour() = default;
   virtual ~MonoBehaviour() = default;
 
   /**
@@ -35,7 +34,7 @@ class EXPORT_ZYGARDE_API MonoBehaviour {
    * @brief Function each tick by the script execution system
    * @param context Scripting context
    */
-  virtual void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context)  = 0;
+  virtual void FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) = 0;
 
   /**
    * @brief Called when the entity enters a collision

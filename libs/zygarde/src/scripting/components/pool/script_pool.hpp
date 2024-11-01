@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <list>
 #include <memory>
 #include <vector>
 
@@ -23,7 +24,7 @@ class EXPORT_ZYGARDE_API ScriptPool final {
    * @brief Construct a new Script Pool object
    * @param scripts Scripts to add to the pool
    */
-  explicit ScriptPool(std::vector<std::shared_ptr<MonoBehaviour>> scripts);
+  explicit ScriptPool(std::list<std::shared_ptr<MonoBehaviour>> scripts);
 
   /**
    * @brief Construct a new Script Pool object
@@ -55,13 +56,13 @@ class EXPORT_ZYGARDE_API ScriptPool final {
    * @brief Get all scripts from the pool
    * @return Vector of scripts
    */
-  [[nodiscard]] inline std::vector<std::shared_ptr<MonoBehaviour>> GetScripts() noexcept {
+  [[nodiscard]] inline std::list<std::shared_ptr<MonoBehaviour>> GetScripts() noexcept {
     return scripts_;
   }
 
  private:
   /// @brief Vector of scripts
-  std::vector<std::shared_ptr<MonoBehaviour>> scripts_ = {};
+  std::list<std::shared_ptr<MonoBehaviour>> scripts_ = {};
 };
 }  // namespace zygarde::scripting::components
 

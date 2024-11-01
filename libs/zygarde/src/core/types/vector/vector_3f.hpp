@@ -22,7 +22,7 @@ class EXPORT_ZYGARDE_API Vector3f final {
   /**
    * @brief Copy assignment operator
    */
-  Vector3f &operator=(const Vector3f& other);
+  Vector3f& operator=(const Vector3f& other);
 
   /**
    * @brief Add Vector3f object by another Vector3f object
