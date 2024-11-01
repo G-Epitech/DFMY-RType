@@ -30,6 +30,11 @@ Client::~Client() {
     this->threadUDP_.join();
 
     logger_.Info("Client UDP thread stopped", "🛑");
+
+    this->chatTCP_->Close();
+    this->threadChatTCP_.join();
+
+    logger_.Info("Client Chat TCP thread stopped", "🛑");
   }
 }
 

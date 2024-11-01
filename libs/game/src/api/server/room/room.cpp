@@ -12,12 +12,15 @@ using namespace rtype::sdk::game::api;
 Room::Room(std::size_t nodePort, const std::function<void(std::uint64_t)> &newPlayerHandler,
            std::uint64_t roomId)
     : nodeSocket_(kLocalhost, nodePort, [this](auto &msg) { return NodeMessageMiddleware(msg); }),
+      chatSocket_(
+          0, [this](auto &msg) { return ChatMessageMiddleware(msg); }, nullptr),
       logger_("Room"),
       roomId_(roomId) {
   this->newPlayerHandler_ = newPlayerHandler;
 
   InitNodeThread();
   InitClientsThread();
+  InitChatThread();
 }
 
 Room::~Room() {
@@ -30,6 +33,11 @@ Room::~Room() {
   this->clientsThread_.join();
 
   logger_.Info("Clients thread stopped", "🛑");
+
+  this->chatSocket_.Close();
+  this->chatThread_.join();
+
+  logger_.Info("Chat thread stopped", "🛑");
 }
 
 void Room::RegisterNewRoom() {
@@ -37,7 +45,7 @@ void Room::RegisterNewRoom() {
       .id = this->roomId_,
       .token = "token",
       .gamePort = this->clientsSocket_.GetEndpoint().port,
-      .chatPort = 0,
+      .chatPort = static_cast<unsigned int>(this->chatSocket_.GetPort()),
   };
 
   this->SendToNode(RoomToNodeMsgType::kMsgTypeRTNRegisterRoom, payload);
@@ -55,6 +63,12 @@ void Room::InitClientsThread() {
   this->clientsThread_ = std::thread(&abra::server::ServerUDP::Start, &this->clientsSocket_);
 
   logger_.Info("Clients UDP thread started", "🚀");
+}
+
+void Room::InitChatThread() {
+  this->chatThread_ = std::thread(&abra::server::ServerTCP::Start, &this->chatSocket_);
+
+  logger_.Info("Chat TCP thread started", "🚀");
 }
 
 std::queue<std::pair<std::uint64_t, abra::server::ClientUDPMessage>> Room::ExtractQueue() {
@@ -154,6 +168,17 @@ bool Room::NodeMessageMiddleware(const abra::tools::MessageProps &message) {
   return false;
 }
 
+bool Room::ChatMessageMiddleware(const abra::server::ClientTCPMessage &message) {
+  if (chatMessageHandlers_.find(message.messageType) == chatMessageHandlers_.end()) {
+    return true;
+  }
+
+  logger_.Info("Handling message (chat middleware catch)", "🔧");
+  (this->*(chatMessageHandlers_[message.messageType]))(message);
+
+  return false;
+}
+
 void Room::HandlePlayerJoin(const abra::tools::MessageProps &message) {
   try {
     auto packet = this->packetBuilder_.Build<payload::PlayerJoin>(message.data);
@@ -163,7 +188,9 @@ void Room::HandlePlayerJoin(const abra::tools::MessageProps &message) {
                                                kClientUDPPort};
     RoomClient newClient = {
         .id = payload.id,
+        .username = payload.username,
         .endpoint = endpoint,
+        .chatId = this->clients_.size(),
     };
 
     this->clients_.push_back(newClient);
@@ -173,5 +200,26 @@ void Room::HandlePlayerJoin(const abra::tools::MessageProps &message) {
     this->newPlayerHandler_(payload.id);
   } catch (std::exception &e) {
     this->logger_.Error("Failed to handle player join: " + std::string(e.what()), "❌");
+  }
+}
+
+void Room::HandleNewMessage(const abra::server::ClientTCPMessage &message) {
+  try {
+    auto packet = this->packetBuilder_.Build<payload::SendMessage>(message.bitset);
+    auto &payload = packet->GetPayload();
+
+    this->logger_.Info("New message: " + std::string(payload.message), "💬");
+
+    auto clientIt = std::find_if(
+        this->clients_.begin(), this->clients_.end(),
+        [&message](const RoomClient &client) { return client.chatId == message.clientId; });
+
+    payload::ChatMessage chatPayload = {};
+    snprintf(chatPayload.message, sizeof(chatPayload.message), "%s", payload.message);
+    snprintf(chatPayload.username, sizeof(chatPayload.username), "%s", clientIt->username.c_str());
+
+    this->SendToChats(RoomToClientMsgType::kMsgTypeRTCChatMessage, chatPayload);
+  } catch (std::exception &e) {
+    this->logger_.Error("Failed to handle new message: " + std::string(e.what()), "❌");
   }
 }
