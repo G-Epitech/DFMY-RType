@@ -7,7 +7,7 @@
 
 #include "input_cursor.hpp"
 
-using namespace rtype::client::systems::utils::input;
+using namespace rtype::client::systems::ui;
 
 CursorSystem::CursorSystem() = default;
 

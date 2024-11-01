@@ -10,9 +10,9 @@
 #include "core/components/tags/tags.hpp"
 #include "sets/drawable/components/components.hpp"
 #include "sets/events/components/components.hpp"
-#include "systems/utils/input_cursor.hpp"
+#include "systems/ui/input_cursor.hpp"
 
-using namespace rtype::client::scenes::utils;
+using namespace rtype::client::ui;
 using namespace zygarde::core::components;
 using namespace mew::sets::drawable;
 using namespace mew::sets::events;
@@ -25,7 +25,7 @@ void Input::Create(const Registry::Ptr& registry, const std::string& tag, const 
   CreateBlinkingCursor(registry, tag, position, alignment);
 }
 
-void Input::CreateInputField(const Registry::Ptr& registry, std::string tag,
+void Input::CreateInputField(const Registry::Ptr& registry, const std::string& tag,
                              const core::types::Vector3f position,
                              const core::components::Alignment alignment) {
   const auto input_field = registry->SpawnEntity();

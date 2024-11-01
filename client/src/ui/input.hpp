@@ -12,7 +12,7 @@
 #include "core/types/vector/vector_3f.hpp"
 #include "registry.hpp"
 
-namespace rtype::client::scenes::utils {
+namespace rtype::client::ui {
 
 class Input {
  public:
@@ -35,7 +35,7 @@ class Input {
    * @param position Position
    * @param alignment Alignment
    */
-  static void CreateInputField(const Registry::Ptr& registry, std::string tag,
+  static void CreateInputField(const Registry::Ptr& registry, const std::string& tag,
                                core::types::Vector3f position,
                                core::components::Alignment alignment);
 
@@ -51,4 +51,4 @@ class Input {
                                    core::components::Alignment alignment);
 };
 
-}  // namespace rtype::client::scenes::utils
+}  // namespace rtype::client::ui

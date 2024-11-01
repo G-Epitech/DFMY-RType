@@ -20,7 +20,7 @@
 using namespace zygarde::core::components;
 using namespace mew::sets::drawable;
 
-namespace rtype::client::systems::utils::input {
+namespace rtype::client::systems::ui {
 class CursorSystem final : public ASystem<Tags, Drawable, Position> {
  public:
   CursorSystem();
@@ -48,4 +48,4 @@ class CursorSystem final : public ASystem<Tags, Drawable, Position> {
    */
   void CleanAttempts(Tags* tags, const std::string& tag);
 };
-}  // namespace rtype::client::systems::utils::input
+}  // namespace rtype::client::systems::ui
