@@ -70,7 +70,7 @@ void SessionTCP::ListenNewRequest() {
 void SessionTCP::HandleRequest(const std::size_t &size) {
   std::vector<char> buffer = std::vector<char>(buffer_.begin(), buffer_.begin() + size);
 
-  auto bitset = std::make_shared<tools::dynamic_bitset>(buffer);
+  auto bitset = std::make_shared<tools::dynamic_bitset>(buffer, size);
   ClientTCPMessage message = {this->clientId_,
                               tools::PacketUtils::ExportMessageTypeFromBitset(bitset),
                               tools::PacketUtils::ExportMessageIdFromBitset(bitset), bitset};

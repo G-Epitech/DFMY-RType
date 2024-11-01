@@ -153,14 +153,14 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
     auto &multiMessages = multiQueue.front();
 
     std::vector<std::shared_ptr<abra::tools::dynamic_bitset>> data;
-    data.reserve(multiMessages.messages.size());
+    data.reserve(multiMessages.size());
 
-    for (auto &message : multiMessages.messages) {
+    for (auto &message : multiMessages) {
       data.push_back(message.data);
     }
 
-    queue.push({.messageId = multiMessages.messages[0].messageId,
-                .messageType = multiMessages.messages[0].messageType,
+    queue.push({.messageId = multiMessages[0].messageId,
+                .messageType = multiMessages[0].messageType,
                 .protocolType = NetworkProtocolType::kUDP,
                 .data = data});
     multiQueue.pop();

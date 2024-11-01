@@ -52,7 +52,7 @@ void ServerUDP::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
     return;
   }
 
-  auto bitset = std::make_shared<tools::dynamic_bitset>(*buffer);
+  auto bitset = std::make_shared<tools::dynamic_bitset>(*buffer, len);
   auto header = tools::PacketUtils::ExportHeaderFromBitset(bitset);
   std::size_t packetSize = (kPacketHeaderPropsSize + kPacketMessagePropsSize) / 8;
 
@@ -78,7 +78,7 @@ void ServerUDP::ResolveBuffer(std::vector<char> *buffer, std::size_t len) {
   std::vector<char> cleanBuffer(
       buffer->begin(),
       buffer->begin() + static_cast<std::vector<char>::difference_type>(packetSize));
-  auto cleanBitset = std::make_shared<tools::dynamic_bitset>(*buffer);
+  auto cleanBitset = std::make_shared<tools::dynamic_bitset>(cleanBuffer, packetSize);
 
   StoreMessage(cleanBitset);
 
