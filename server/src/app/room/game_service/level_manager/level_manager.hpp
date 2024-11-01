@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "app/room/game_service/difficulty_loader/difficulty_loader.hpp"
+#include "difficulty_loader/difficulty_loader.hpp"
 #include "enemy_spawner/enemy_spawner.hpp"
+#include "level_loader/level_loader.hpp"
 #include "libs/game/src/types/difficulties.hpp"
-#include "loader/level_loader.hpp"
 #include "registry.hpp"
 #include "types/difficulty.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"

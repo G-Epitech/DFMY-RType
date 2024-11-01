@@ -21,7 +21,7 @@ class DifficultyLoader {
   ~DifficultyLoader() = default;
 
   /**
-   * @brief Run the difficulty loader
+   * @brief Run the difficulty level_loader
    * @param directory_path Directory path to load the difficulties from
    * @return A vector of difficulties
    */
@@ -33,6 +33,11 @@ class DifficultyLoader {
    */
   [[nodiscard]] const std::vector<Difficulty> &GetDifficulties() const { return difficulties_; }
 
+  /**
+   * @brief Get a difficulty by its type
+   * @param difficultyType Difficulty type
+   * @return The difficulty data
+   */
   [[nodiscard]] Difficulty GetDifficultyByType(rtype::sdk::game::types::Difficulty difficultyType) const;
 
  private:

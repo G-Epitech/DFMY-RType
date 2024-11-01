@@ -52,8 +52,6 @@ void LevelManager::BuildSpawnCooldowns() {
     for (const auto& [enemyName, enemyCount] : wave.enemies) {
       auto spawnTime = ComputeEnemySpawnCooldown(totalWaveTime, enemyCount);
       waveCooldowns[enemyName] = {spawnTime, zygarde::utils::Timer::Nanoseconds{0}};
-      std::cout << "Enemy " << enemyName << " will spawn every " << spawnTime.count() << "ns"
-                << std::endl;
     }
     spawnCooldowns_.push_back(waveCooldowns);
   }
@@ -66,9 +64,7 @@ void LevelManager::NextWave() {
   }
   currentWave_ = selectedLevel_.waves[currentWaveIndex_];
   float maxTime = currentWave_.maxTime;
-  std::cout << "Wave " << currentWaveIndex_ << " will last " << maxTime << "s" << std::endl;
   currentWaveTime_ = std::chrono::nanoseconds(static_cast<int64_t>(maxTime * 1'000'000'000.0));
-  std::cout << "Starting wave " << currentWaveTime_.count() << std::endl;
 }
 
 zygarde::utils::Timer::Nanoseconds LevelManager::ComputeEnemySpawnCooldown(float wave_max_time,

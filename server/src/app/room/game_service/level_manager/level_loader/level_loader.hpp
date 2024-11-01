@@ -18,7 +18,7 @@ class LevelLoader {
   ~LevelLoader() = default;
 
   /**
-   * @brief Run the level loader
+   * @brief Run the level level_loader
    * @param directory_path Directory path to load the levels from
    * @return A vector of levels
    */

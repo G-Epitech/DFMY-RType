@@ -10,15 +10,13 @@
 #include <cstddef>
 #include <map>
 
-#include "enemy_manager/enemy_manager.hpp"
 #include "level_manager/level_manager.hpp"
-#include "level_manager/loader/level_loader.hpp"
 #include "libs/game/includes/api.hpp"
-#include "registry.hpp"
 #include "ticks/ticks_manager.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
+#include "zygarde/src/registry.hpp"
 
 namespace rtype::server::game {
 class GameService {
@@ -108,9 +106,6 @@ class GameService {
 
   /// @brief Registry containing all entities
   std::shared_ptr<zygarde::Registry> registry_;
-
-  /// @brief Enemy manager
-  EnemyManager enemyManager_;
 
   /// @brief Server network
   std::shared_ptr<rtype::sdk::game::api::Room> api_;
