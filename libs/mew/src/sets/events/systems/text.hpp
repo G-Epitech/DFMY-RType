@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** r-type
 ** File description:
-** base.hpp
+** text.hpp
 */
 
 #pragma once
@@ -14,20 +14,19 @@
 
 namespace mew::sets::events {
 template <EventType EventType, typename KeyEventComponent>
-class EXPORT_MEW_API KeyEventSystemBase final
+class EXPORT_MEW_API TextEventSystemBase final
     : public EventSystemBase<EventType, KeyEventComponent> {
  public:
-  explicit KeyEventSystemBase(managers::WindowManager::Ptr window_manager);
-  ~KeyEventSystemBase() final = default;
+  explicit TextEventSystemBase(managers::WindowManager::Ptr window_manager);
+  ~TextEventSystemBase() final = default;
 
  protected:
   void HandleEvent(const sf::Event &event, Registry::Ptr r,
                    zipper<KeyEventComponent> components) final;
 };
 
-typedef KeyEventSystemBase<kKeyPressed, OnKeyPressed> KeyPressEventSystem;
-typedef KeyEventSystemBase<kKeyReleased, OnKeyReleased> KeyReleaseEventSystem;
+typedef TextEventSystemBase<kTextEntered, OnTextEntered> TextEnteredEventSystem;
 
 }  // namespace mew::sets::events
 
-#include "./key.tpp"
+#include "./text.tpp"

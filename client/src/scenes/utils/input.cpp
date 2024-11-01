@@ -40,7 +40,7 @@ void Input::CreateInputField(const Registry::Ptr& registry, std::string tag,
         if (!component || !entity_tags) {
           return;
         }
-        auto& drawable = component->drawable;
+        auto& drawable = (*component)->drawable;
         if (!std::holds_alternative<Text>(drawable)) {
           return;
         }
@@ -52,7 +52,7 @@ void Input::CreateInputField(const Registry::Ptr& registry, std::string tag,
         } else {
           text += static_cast<char>(unicode);
         }
-        entity_tags->AddTag("input_updated");
+        (*entity_tags)->AddTag("input_updated");
       }});
 }
 
