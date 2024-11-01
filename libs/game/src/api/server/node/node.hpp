@@ -175,6 +175,12 @@ class rtype::sdk::game::api::Node {
    */
   void RemoveRoom(std::uint64_t id);
 
+  /**
+   * @brief Handle a closed room
+   * @param roomId The id of the room
+   */
+  void HandleClosedRoom(std::uint64_t roomId);
+
   /// @brief Name of the node
   std::string name_;
 

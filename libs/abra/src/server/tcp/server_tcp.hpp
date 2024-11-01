@@ -28,7 +28,8 @@ class abra::server::ServerTCP {
    * @param port The TCP port
    * @param middleware The middleware to catch messages from listeners
    */
-  ServerTCP(const int &port, const std::function<bool(const ClientTCPMessage &)> &middleware);
+  ServerTCP(const int &port, const std::function<bool(const ClientTCPMessage &)> &middleware,
+            const std::function<void(std::uint64_t)> &closedSessionHandler);
 
   ~ServerTCP();
 
@@ -123,6 +124,9 @@ class abra::server::ServerTCP {
 
   /// @brief Middleware to catch messages from listeners
   std::function<bool(const ClientTCPMessage &)> middleware_;
+
+  /// @brief Closed session handler
+  std::function<void(std::uint64_t)> closedSessionHandler_;
 
   /// @brief Logger
   tools::Logger logger_;

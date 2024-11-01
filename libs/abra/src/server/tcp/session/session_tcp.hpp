@@ -31,8 +31,8 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
    */
   SessionTCP(boost::asio::ip::tcp::socket socket,
              std::shared_ptr<std::queue<ClientTCPMessage>> queue, std::shared_ptr<std::mutex> mutex,
-             std::uint64_t clientId,
-             const std::function<bool(const ClientTCPMessage&)>& middleware);
+             std::uint64_t clientId, const std::function<bool(const ClientTCPMessage&)>& middleware,
+             const std::function<void(std::uint64_t)>& closedSessionHandler);
 
   /**
    * @brief Destroy the SessionTCP object
@@ -93,6 +93,9 @@ class abra::server::SessionTCP : public std::enable_shared_from_this<SessionTCP>
 
   /// @brief Middleware
   std::function<bool(const ClientTCPMessage&)> middleware_;
+
+  /// @brief Closed session handler
+  std::function<void(std::uint64_t)> closedSessionHandler_;
 
   /// @brief Logger
   tools::Logger logger_;
