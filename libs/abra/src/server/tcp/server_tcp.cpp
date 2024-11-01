@@ -13,10 +13,12 @@ using namespace abra::server;
 using namespace boost::asio;
 
 ServerTCP::ServerTCP(const int &port,
-                     const std::function<bool(const ClientTCPMessage &)> &middleware)
+                     const std::function<bool(const ClientTCPMessage &)> &middleware,
+                     const std::function<void(std::uint64_t)> &closedSessionHandler)
     : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)),
       lastClientId_(0),
       middleware_(middleware),
+      closedSessionHandler_(closedSessionHandler),
       logger_("server_tcp") {
   mutex_ = std::make_shared<std::mutex>();
   queue_ = std::make_shared<std::queue<ClientTCPMessage>>();
@@ -41,8 +43,9 @@ void ServerTCP::AcceptNewConnection() {
       lastClientId_++;
 
       logger_.Info("New connection accepted");
-      auto clientSession = std::make_shared<SessionTCP>(std::move(socket), this->queue_,
-                                                        this->mutex_, clientId, middleware_);
+      auto clientSession =
+          std::make_shared<SessionTCP>(std::move(socket), this->queue_, this->mutex_, clientId,
+                                       middleware_, closedSessionHandler_);
 
       clientSession->Start();
       logger_.Info("Session started with clientID " + std::to_string(clientId));
