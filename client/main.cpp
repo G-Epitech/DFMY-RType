@@ -37,7 +37,7 @@ int MAIN {
                       .frameLimit = APP_WINDOW_FRAME_LIMIT,
                       .iconPath = APP_WINDOW_ICON,
                   })
-                  .WithService<ServerConnectionService>("10.84.109.15", 4848)
+                  .WithService<ServerConnectionService>("127.0.0.1", 4848)
                   .Build();
 
   game.managers.settings->Set(SETTING_APP_VOLUME, SETTING_DEFAULT_APP_VOLUME);
