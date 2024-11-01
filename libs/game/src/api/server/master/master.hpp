@@ -219,6 +219,13 @@ class rtype::sdk::game::api::Master {
    */
   void HandleClosedNodeSession(std::uint64_t nodeId);
 
+  /**
+   * @brief Get a client by its id
+   * @param clientId The client id
+   * @return The client
+   */
+  Client &GetClientById(const std::uint64_t &clientId);
+
   /// @brief Server socket to communicate with clients (TCP)
   abra::server::ServerTCP clientsSocket_;
 

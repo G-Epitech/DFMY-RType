@@ -192,7 +192,7 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
     }
 
     auto &room = node.rooms_[payload.roomId];
-    auto &client = this->clients_[message.clientId];
+    auto &client = GetClientById(message.clientId);
     if (room.nbPlayers >= room.maxPlayers) {
       this->logger_.Warning("Trying to join a full room", "⚠️ ");
       return;
@@ -371,4 +371,15 @@ void Master::HandleClosedNodeSession(std::uint64_t nodeId) {
 
   this->nodes_.erase(nodeIt);
   logger_.Info("Node disconnected", "🌐");
+}
+
+Master::Client &Master::GetClientById(const std::uint64_t &clientId) {
+  auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
+                             [clientId](const Client &c) { return c.id == clientId; });
+
+  if (client == this->clients_.end()) {
+    throw std::runtime_error("Client not found");
+  }
+
+  return this->clients_[std::distance(this->clients_.begin(), client)];
 }
