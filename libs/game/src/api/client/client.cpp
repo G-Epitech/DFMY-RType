@@ -204,6 +204,19 @@ bool Client::Move(const payload::Movement &payload) {
   return success;
 }
 
+bool Client::SendMessage(const std::string &message) {
+  payload::SendMessage payload = {};
+
+  snprintf(payload.message, sizeof(payload.message), "%s", message.c_str());
+
+  auto success = SendChatPayloadTPC(ClientToRoomMsgType::kMsgTypeCTRSendMessage, payload);
+  if (success) {
+    logger_.Info("Send message", "💬");
+  }
+
+  return success;
+}
+
 void Client::ConvertQueueData(std::queue<tools::MessageProps> *queue,
                               std::queue<ServerMessage> *serverQueue,
                               NetworkProtocolType protocolType) {

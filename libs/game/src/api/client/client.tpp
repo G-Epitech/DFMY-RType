@@ -30,6 +30,30 @@ bool api::Client::SendPayloadTCP(const ClientToMasterMsgType &type, const T &pay
 }
 
 template <typename T>
+bool api::Client::SendChatPayloadTPC(const rtype::sdk::game::api::ClientToRoomMsgType &type, const T &payload) {
+  if (!this->chatTCP_.has_value()) {
+    this->logger_.Error("Chat TCP is not initialized", "❌");
+    return false;
+  }
+
+  try {
+    this->packetBuilder_.SetMessageType(type).SetPayloadType(abt::PayloadType::kCustom);
+    auto packet = this->packetBuilder_.Build(payload);
+
+    logger_.Info("Send packet (chat TCP) of type " + std::to_string(type), "📦");
+
+    auto success = this->chatTCP_->Send(packet) == abt::SendMessageStatus::kSuccess;
+    if (!success)
+      logger_.Warning("Failed to send packet of type " + std::to_string(type), "⚠️ ");
+
+    return success;
+  } catch (const std::exception &e) {
+    logger_.Error("Failed to send packet of type " + std::to_string(type) + ": " + e.what(), "❌");
+    return false;
+  }
+}
+
+template <typename T>
 bool api::Client::SendPayloadUDP(const ClientToRoomMsgType &type, const T &payload) {
   if (!this->clientUDP_.has_value())
     return false;

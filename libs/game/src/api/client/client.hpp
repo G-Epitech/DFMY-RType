@@ -117,6 +117,14 @@ class rtype::sdk::game::api::Client {
   [[nodiscard]] bool RefreshInfos(bool game, bool rooms);
 
   /**
+   * @brief Send a chat message
+   * @warning The message must be less than 100. Otherwise, it will be truncated.
+   * @param message The message to send
+   * @return true if the packet is sent, false otherwise
+   */
+  [[nodiscard]] bool SendMessage(const std::string &message);
+
+  /**
    * @brief Resolve players state from a server message
    * @param message The server message (available when extract the queue)
    * @return The list of player states
@@ -201,6 +209,16 @@ class rtype::sdk::game::api::Client {
    */
   template <typename T>
   bool SendPayloadTCP(const ClientToMasterMsgType &type, const T &payload);
+
+  /**
+   * @brief Send a payload to the chat server TCP
+   * @tparam T The payload type
+   * @param type The message type
+   * @param payload The payload to send
+   * @return true if the packet is sent, false otherwise
+   */
+  template <typename T>
+  bool SendChatPayloadTPC(const ClientToRoomMsgType &type, const T &payload);
 
   /**
    * @brief Send a payload to the server UDP
