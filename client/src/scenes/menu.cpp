@@ -12,6 +12,7 @@
 #include "lobby.hpp"
 #include "settings.hpp"
 #include "systems/blink.hpp"
+#include "systems/utils/input_cursor.hpp"
 #include "utils/input.hpp"
 
 using namespace rtype::client::scenes;
@@ -25,6 +26,7 @@ using namespace zygarde::core::types;
 SceneMenu::SceneMenu(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   registry_->RegisterComponent<Tags>();
   registry_->AddSystem<systems::BlinkSystem>();
+  registry_->AddSystem<systems::utils::input::CursorSystem>();
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
 }
 

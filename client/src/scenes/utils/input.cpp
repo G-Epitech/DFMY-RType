@@ -10,7 +10,7 @@
 #include "core/components/tags/tags.hpp"
 #include "sets/drawable/components/components.hpp"
 #include "sets/events/components/components.hpp"
-#include "systems/utils/input/cursor.hpp"
+#include "systems/utils/input_cursor.hpp"
 
 using namespace rtype::client::scenes::utils;
 using namespace zygarde::core::components;
@@ -23,7 +23,6 @@ void Input::Create(const Registry::Ptr& registry, const std::string& tag, const 
                    const Alignment alignment) {
   CreateInputField(registry, tag, position, alignment);
   CreateBlinkingCursor(registry, tag, position, alignment);
-  registry->AddSystem<systems::UtilsInputCursorSystem>();
 }
 
 void Input::CreateInputField(const Registry::Ptr& registry, std::string tag,

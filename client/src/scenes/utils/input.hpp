@@ -18,6 +18,7 @@ class Input {
  public:
   /**
    * @brief Create an input text
+   * @warning Please add the UtilsInputCursorSystem to the registry
    * @param registry Registry to create the input text
    * @param tag Tag Name of the input text
    * @param position Position
