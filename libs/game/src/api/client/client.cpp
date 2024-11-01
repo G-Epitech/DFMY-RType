@@ -124,11 +124,11 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
     InitUDP(payload.ip, payload.gamePort, kClientUDPPort);
     InitChatTCP(payload.ip, payload.chatPort);
 
-    this->isLobbyConnected_ = true;
+    this->isLobbyConnected_ = SendMessage("> Join the room");
 
     logger_.Info(
         "Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.gamePort), "🚪");
-    return true;
+    return this->isLobbyConnected_;
   } catch (const std::exception &e) {
     logger_.Error("Failed to join lobby: " + std::string(e.what()), "❌");
     return false;
