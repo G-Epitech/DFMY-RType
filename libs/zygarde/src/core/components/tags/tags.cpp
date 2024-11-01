@@ -15,11 +15,11 @@ Tags::~Tags() {
 }
 
 bool Tags::operator==(const std::string& tag) const {
-  return tags_.find(tag) != tags_.end();
+  return tags_.contains(tag);
 }
 
 bool Tags::operator&(const std::string& tag) const {
-  return tags_.find(tag) != tags_.end();
+  return tags_.contains(tag);
 }
 
 void Tags::AddTag(const std::string& tag) {
@@ -42,4 +42,8 @@ Tags& Tags::operator=(const Tags& other) {
 Tags& Tags::operator=(Tags&& other) noexcept {
   tags_ = std::move(other.tags_);
   return *this;
+}
+
+std::set<std::string>& Tags::GetTags() {
+  return tags_;
 }
