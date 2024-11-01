@@ -9,6 +9,7 @@
 
 #include "physics/2d/systems/collision/collision_system.hpp"
 #include "physics/2d/systems/movement/movement_system.hpp"
+#include "physics/2d/systems/position/position_system.hpp"
 #include "registry.hpp"
 #include "system_abstract.hpp"
 #include "tools/zipper.hpp"
@@ -34,10 +35,11 @@ TEST(Physics2DSystemsTests, BasicMovement) {
   registry->RegisterComponent<physics::components::Rigidbody2D>();
   registry->RegisterComponent<core::components::Position>();
   registry->AddSystem<physics::systems::MovementSystem>(delta_time);
+  registry->AddSystem<physics::systems::PositionSystem>();
   const auto entity = registry->SpawnEntity();
   core::types::Vector2f velocity{1, 1};
   registry->AddComponent<physics::components::Rigidbody2D>(
-      entity, physics::components::Rigidbody2D(velocity));
+      entity, physics::components::Rigidbody2D(velocity, false, 0.0));
   registry->AddComponent<core::components::Position>(entity, core::components::Position());
   registry->RunSystems();
   const auto position = registry->GetComponent<core::components::Position>(entity);
@@ -50,15 +52,16 @@ TEST(Physics2DSystemsTests, MultipleMovement) {
   registry->RegisterComponent<physics::components::Rigidbody2D>();
   registry->RegisterComponent<core::components::Position>();
   registry->AddSystem<physics::systems::MovementSystem>(delta_time);
+  registry->AddSystem<physics::systems::PositionSystem>();
   const auto entity1 = registry->SpawnEntity();
   core::types::Vector2f velocity1{1, 1};
   registry->AddComponent<physics::components::Rigidbody2D>(
-      entity1, physics::components::Rigidbody2D(velocity1));
+      entity1, physics::components::Rigidbody2D(velocity1, false, 0.0));
   registry->AddComponent<core::components::Position>(entity1, core::components::Position());
   const auto entity2 = registry->SpawnEntity();
   core::types::Vector2f velocity2{2, 2};
   registry->AddComponent<physics::components::Rigidbody2D>(
-      entity2, physics::components::Rigidbody2D(velocity2));
+      entity2, physics::components::Rigidbody2D(velocity2, false, 0.0));
   registry->AddComponent<core::components::Position>(entity2, core::components::Position());
   registry->RunSystems();
   const auto position1 = registry->GetComponent<core::components::Position>(entity1);
