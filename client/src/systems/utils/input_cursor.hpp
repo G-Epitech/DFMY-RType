@@ -17,9 +17,11 @@
 // update.
 #define CURSOR_UPDATE_NB_ATTEMPTS 2
 
+using namespace zygarde::core::components;
+using namespace mew::sets::drawable;
+
 namespace rtype::client::systems::utils::input {
-class CursorSystem final : public ASystem<core::components::Tags, mew::sets::drawable::Drawable,
-                                          core::components::Position> {
+class CursorSystem final : public ASystem<Tags, Drawable, Position> {
  public:
   CursorSystem();
 
@@ -37,14 +39,13 @@ class CursorSystem final : public ASystem<core::components::Tags, mew::sets::dra
    * @param position Position
    */
   static void HandleCursor(const std::shared_ptr<Registry>& r, const std::string& tag,
-                           const mew::sets::drawable::Drawable& drawable,
-                           const core::components::Position& position);
+                           const Drawable& drawable, const Position& position);
 
   /**
    * @brief Clean the attempts
    * @param tags Tags
    * @param tag Tag
    */
-  void CleanAttempts(core::components::Tags* tags, const std::string& tag);
+  void CleanAttempts(Tags* tags, const std::string& tag);
 };
 }  // namespace rtype::client::systems::utils::input

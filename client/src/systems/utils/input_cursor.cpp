@@ -34,11 +34,10 @@ void CursorSystem::Run(const std::shared_ptr<Registry> r, ComponentsPtr componen
 }
 
 void CursorSystem::HandleCursor(const std::shared_ptr<Registry>& r, const std::string& tag,
-                                const mew::sets::drawable::Drawable& drawable,
-                                const core::components::Position& position) {
-  const auto all_tags = r->GetComponents<zygarde::core::components::Tags>();
-  const auto all_positions = r->GetComponents<zygarde::core::components::Position>();
-  const auto all_drawables = r->GetComponents<mew::sets::drawable::Drawable>();
+                                const Drawable& drawable, const Position& position) {
+  const auto all_tags = r->GetComponents<Tags>();
+  const auto all_positions = r->GetComponents<Position>();
+  const auto all_drawables = r->GetComponents<Drawable>();
 
   if (!all_tags || !all_positions || !all_drawables) {
     return;
@@ -75,7 +74,7 @@ void CursorSystem::HandleCursor(const std::shared_ptr<Registry>& r, const std::s
   }
 }
 
-void CursorSystem::CleanAttempts(core::components::Tags* tags, const std::string& tag) {
+void CursorSystem::CleanAttempts(Tags* tags, const std::string& tag) {
   if (attempts_[tag] > CURSOR_UPDATE_NB_ATTEMPTS) {
     tags->RemoveTag("input_updated");
     attempts_[tag] = 0;
