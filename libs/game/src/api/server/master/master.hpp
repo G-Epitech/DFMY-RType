@@ -206,6 +206,18 @@ class rtype::sdk::game::api::Master {
    */
   void SendPlayerJoinToNode(const std::uint64_t &nodeId, const Client &client);
 
+  /**
+   * @brief Handle when a client close the session
+   * @param clientId The client id
+   */
+  void HandleClosedClientSession(std::uint64_t clientId);
+
+  /**
+   * @brief Handle when a node close the session
+   * @param nodeId The node id
+   */
+  void HandleClosedNodeSession(std::uint64_t nodeId);
+
   /// @brief Server socket to communicate with clients (TCP)
   abra::server::ServerTCP clientsSocket_;
 
