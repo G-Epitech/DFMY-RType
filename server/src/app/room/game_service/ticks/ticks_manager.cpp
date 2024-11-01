@@ -20,7 +20,7 @@ TicksManager::TicksManager(const size_t& tick_rate)
 void TicksManager::WaitUntilNextTick() {
   timer_.RefreshDeltaTime();
   auto& deltaTime = timer_.GetDeltaTime();
-  auto deltaTimeInMs = std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+  int64_t deltaTimeInMs = std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
 
   auto waitTime = millisecondsPerTick_.count() - deltaTimeInMs;
   LogWaitTime(waitTime);
@@ -29,7 +29,7 @@ void TicksManager::WaitUntilNextTick() {
   }
 }
 
-void TicksManager::LogWaitTime(long wait_time) {
+void TicksManager::LogWaitTime(int64_t wait_time) {
   auto count = millisecondsPerTick_.count();
   if (wait_time > count) {
     logger_.Warning("Wait time is higher than the tick rate", "⚠️");

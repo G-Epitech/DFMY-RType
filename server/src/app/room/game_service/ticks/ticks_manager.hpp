@@ -50,8 +50,9 @@ class TicksManager {
 
   /**
    * @brief Log the wait time
+   * @param wait_time The wait time
    */
-  void LogWaitTime(long wait_time);
+  void LogWaitTime(int64_t wait_time);
 
  private:
   /// @brief The number of ticks per second

@@ -199,4 +199,5 @@ class EXPORT_ZYGARDE_API Vector2f final {
  * @param scalar Scalar value
  * @param vec Vector2f object
  */
-zygarde::core::types::Vector2f operator*(float scalar, const zygarde::core::types::Vector2f &vec) noexcept;
+zygarde::core::types::Vector2f operator*(float scalar,
+                                         const zygarde::core::types::Vector2f &vec) noexcept;
