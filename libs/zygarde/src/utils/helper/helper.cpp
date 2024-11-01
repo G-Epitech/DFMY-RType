@@ -9,8 +9,9 @@
 
 #include "core/components/components.hpp"
 #include "physics/2d/components/components.hpp"
+#include "physics/2d/systems/position/position_system.hpp"
 #include "physics/2d/systems/systems.hpp"
-#include "scripting/components/script/script.hpp"
+#include "scripting/components/pool/script_pool.hpp"
 #include "scripting/systems/execution/script_execution_system.hpp"
 
 using namespace zygarde::utils;
@@ -33,12 +34,14 @@ void RegistryHelper::RegisterPhysicsComponents(const std::shared_ptr<Registry> &
 }
 
 void RegistryHelper::RegisterScriptingComponents(const std::shared_ptr<Registry> &registry) {
-  registry->RegisterComponent<scripting::components::Script>();
+  registry->RegisterComponent<scripting::components::ScriptPool>();
 }
 
-void RegistryHelper::RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
-                                         const Timer::Nanoseconds &delta_time) {
+void RegistryHelper::RegisterBaseSystems(
+    const std::shared_ptr<Registry> &registry, const Timer::Nanoseconds &delta_time,
+    const std::shared_ptr<core::archetypes::ArchetypeManager> &archetypeManager) {
   registry->AddSystem<physics::systems::MovementSystem>(delta_time);
   registry->AddSystem<physics::systems::CollisionSystem>();
-  registry->AddSystem<scripting::systems::ScriptExecutionSystem>(delta_time);
+  registry->AddSystem<physics::systems::PositionSystem>();
+  registry->AddSystem<scripting::systems::ScriptExecutionSystem>(delta_time, archetypeManager);
 }

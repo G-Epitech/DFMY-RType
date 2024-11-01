@@ -30,8 +30,7 @@ void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEvent(
 template <EventType EventType, typename MouseEventComponent>
 void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEventForEntity(
     std::size_t entity_id, const sf::Event& event,
-    const sparse_array<drawable::Drawable>::ptr& drawables,
-    const MouseEventComponent& component) {
+    const sparse_array<drawable::Drawable>::ptr& drawables, const MouseEventComponent& component) {
   auto window = this->windowManager_->window();
   auto position = window ? window->mapPixelToCoords({event.mouseButton.x, event.mouseButton.y})
                          : sf::Vector2f{0, 0};

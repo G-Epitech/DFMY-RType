@@ -11,10 +11,11 @@
 
 #include "./spare_array.hpp"
 #include "./zipper_iterator.hpp"
+#include "api.hpp"
 
 namespace zygarde::tools {
 template <class... Containers>
-class zipper {
+class EXPORT_ZYGARDE_API zipper {
  public:
   /// @brief Iterator type
   using iterator = zipper_iterator<typename sparse_array<Containers>::ptr...>;

@@ -72,3 +72,16 @@ void Vector2f::throw_if_negative(const Vector2f& vec) {
     throw std::invalid_argument("Vector should be positive");
   }
 }
+
+float Vector2f::magnitude() const noexcept {
+  return std::sqrt(x * x + y * y);
+}
+
+Vector2f Vector2f::normalized() const noexcept {
+  return *this / magnitude();
+}
+
+zygarde::core::types::Vector2f operator*(float scalar,
+                                         const zygarde::core::types::Vector2f& vec) noexcept {
+  return vec * scalar;
+}

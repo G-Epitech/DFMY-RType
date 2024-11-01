@@ -9,6 +9,18 @@ target_include_directories(${SERVER_CORE_LIB} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/s
 
 if (WIN32)
     add_executable(${SERVER_EXECUTABLE} main.cpp ../r-type.rc)
+    file(GLOB_RECURSE DLLS "${CMAKE_CURRENT_BINARY_DIR}/../libs/**/*.dll")
+    add_custom_command(
+            TARGET ${SERVER_EXECUTABLE} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo "DLLs found: ${DLLS}"
+    )
+
+    foreach(DLL ${DLLS})
+        add_custom_command(
+                TARGET ${SERVER_EXECUTABLE} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL} $<TARGET_FILE_DIR:${SERVER_EXECUTABLE}>
+        )
+    endforeach()
 else ()
     add_executable(${SERVER_EXECUTABLE} main.cpp)
     set_target_properties(${SERVER_EXECUTABLE} PROPERTIES
@@ -26,3 +38,5 @@ endif ()
 
 add_subdirectory(src)
 add_subdirectory(tests)
+
+include(commands.cmake)

@@ -1,0 +1,52 @@
+{
+  "archetype_name": "default_player_bullet",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": true,
+        "velocity": {
+          "x": 700,
+          "y": 0
+        },
+        "drag": 0
+      }
+    },
+    {
+      "name": "position"
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 32,
+          "y": 15
+        },
+        "collisionLayers": [
+          8
+        ],
+        "includeLayers": [
+          2,
+          4
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "player_bullet",
+          "bullet"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "baseProjectileScript"
+        }
+      ]
+    }
+  ]
+}
