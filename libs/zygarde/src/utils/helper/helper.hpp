@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "api.hpp"
+#include "core/archetypes/archetype_manager.hpp"
 #include "registry.hpp"
 #include "utils/timer/timer.hpp"
 
@@ -31,8 +32,9 @@ class EXPORT_ZYGARDE_API RegistryHelper final {
    * @param registry The registry you want to register the systems to
    * @param delta_time Reference to the delta time
    */
-  static void RegisterBaseSystems(const std::shared_ptr<Registry> &registry,
-                                  const Timer::Nanoseconds &delta_time);
+  static void RegisterBaseSystems(
+      const std::shared_ptr<Registry> &registry, const Timer::Nanoseconds &delta_time,
+      const std::shared_ptr<core::archetypes::ArchetypeManager> &archetypeManager);
 
  private:
   /**

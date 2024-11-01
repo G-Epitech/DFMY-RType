@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "app/room/game_service/factories/enemy_factory.hpp"
+#include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
@@ -17,10 +17,18 @@ class EnemyManager {
   EnemyManager() = default;
   ~EnemyManager() = default;
 
-  void Update(const zygarde::utils::Timer::Nanoseconds &delta_time,
-              zygarde::Registry::Const_Ptr registry);
+  /**
+   * @brief Update the enemy manager, used for spawning enemies
+   * @param delta_time Delta time
+   * @param registry Registry
+   * @param archetype_manager Archetype manager instance
+   */
+  void Update(
+      const zygarde::utils::Timer::Nanoseconds &delta_time, zygarde::Registry::Const_Ptr registry,
+      const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> &archetype_manager);
 
  private:
+  /// @brief Accumulated time (mainly used for spawning enemies)
   zygarde::utils::Timer::Nanoseconds accumulatedTime_;
 };
 }  // namespace rtype::server::game

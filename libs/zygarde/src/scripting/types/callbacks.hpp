@@ -6,14 +6,6 @@
 */
 
 #pragma once
-/*
-** EPITECH PROJECT, 2024
-** r-type
-** File description:
-** functions.hpp
-*/
-
-#pragma once
 
 #include <any>
 #include <functional>

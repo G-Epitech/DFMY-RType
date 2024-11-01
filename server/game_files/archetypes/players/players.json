@@ -1,0 +1,58 @@
+{
+  "archetype_name": "player_photon",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": false,
+        "drag": 5.0
+      }
+    },
+    {
+      "name": "position"
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 96,
+          "y": 48
+        },
+        "collisionLayers": [
+          1
+        ],
+        "includeLayers": [
+          1,
+          2,
+          4,
+          16,
+          3000
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "player"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "playerScript",
+          "customValues": {
+            "className": "Photon",
+            "health": 100.0,
+            "speed": 300.0,
+            "powerCooldown": 1.0,
+            "primaryWeapon": "Laser",
+            "secondaryWeapon": "Missile"
+          }
+        }
+      ]
+    }
+  ]
+}

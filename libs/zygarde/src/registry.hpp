@@ -9,6 +9,7 @@
 
 #include <any>
 #include <functional>
+#include <list>
 #include <map>
 #include <memory>
 #include <stack>
@@ -74,7 +75,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @return const sparse_array<Component>&
    */
   template <typename Component>
-  Component *GetComponent(Entity const &e);
+  std::optional<Component *> GetComponent(Entity const &e);
 
   /**
    * @brief Spawn an entity with a specific type
@@ -188,6 +189,12 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
     const std::string message_;
   };
 
+  /**
+   * @brief Get the entities to kill (for cleanup)
+   * @return The entities to kill
+   */
+  [[nodiscard]] inline const std::list<Entity> &GetEntitiesToKill() { return entitiesToKill_; }
+
  private:
   /// @brief systems stored
   std::vector<std::shared_ptr<ISystem>> systems_;
@@ -205,7 +212,7 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   std::stack<std::size_t> freeIds_;
 
   /// @brief Entities to kill
-  std::stack<Entity> entitiesToKill_;
+  std::list<Entity> entitiesToKill_;
 
   /// @brief remove functions used to remove components
   using component_destroyer = std::function<void(Registry &, Entity const &)>;
