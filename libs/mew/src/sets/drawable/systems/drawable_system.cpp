@@ -7,7 +7,7 @@
 
 #include "./drawable_system.hpp"
 
-#include <iostream>
+#include <map>
 #include <utility>
 
 using namespace mew::sets::drawable;
@@ -23,14 +23,32 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
 void DrawableSystem::Run(Registry::Ptr r,
                          zipper<drawable::Drawable, zyc::components::Position> components) {
   const auto window = windowManager_->window();
+  std::set<unsigned int, std::greater<>> layers;
+  unsigned int current_layer = 0;
+  bool indexed = false;
+
   window->clear();
-  for (auto&& [drawable, position] : components) {
-    if (!drawable.visible) {
-      continue;
+
+  do {
+    for (auto&& [drawable, position] : components) {
+      if (!drawable.visible) {
+        continue;
+      } else if (drawable.layer == current_layer) {
+        DrawEntity(&drawable, position);
+      } else if (!indexed) {
+        layers.insert(drawable.layer);
+      }
     }
-    windowManager_->SetView(drawable.view);
-    DrawEntity(&drawable, position);
-  }
+    {
+      auto next = layers.begin();
+      if (!layers.empty()) {
+        current_layer = *next;
+        layers.erase(next);
+      }
+      indexed = true;
+    }
+  } while (!layers.empty());
+
   window->display();
 }
 
@@ -67,6 +85,7 @@ std::tuple<float, float> DrawableSystem::GetOrigin(const zyc::components::Positi
 }
 
 void DrawableSystem::DrawEntity(Drawable* drawable, const zyc::components::Position& position) {
+  windowManager_->SetView(drawable->view);
   std::visit(
       [this, position, drawable](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;

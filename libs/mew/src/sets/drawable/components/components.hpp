@@ -45,5 +45,6 @@ struct Drawable {
       managers::WindowManager::View::GAME;  ///< View of the drawable
   sf::FloatRect bounds = {0, 0, 0, 0};      ///< Bounds of the drawable
   bool visible = true;                      ///< Visibility of the drawable
+  unsigned int layer = 0;                   ///< Layer of the drawable
 };
 }  // namespace mew::sets::drawable
