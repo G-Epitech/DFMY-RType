@@ -92,6 +92,11 @@ class GameService {
    */
   void CheckDeadPlayers();
 
+  /**
+   * @brief Add game walls
+   */
+  void AddGameWalls();
+
  private:
   /// @brief Game running flag
   bool gameRunning_{true};

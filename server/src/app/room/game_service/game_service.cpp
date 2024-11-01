@@ -37,6 +37,7 @@ void GameService::Initialize() {
   ticksManager_.Initialize();
   archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
   RegistrySetup();
+  AddGameWalls();
 }
 
 int GameService::Run(std::shared_ptr<Room> api) {
@@ -157,4 +158,11 @@ void GameService::CheckDeadPlayers() {
       ++it;
     }
   }
+}
+
+void GameService::AddGameWalls() {
+  archetypeManager_->InvokeArchetype(registry_, "top_wall");
+  archetypeManager_->InvokeArchetype(registry_, "bottom_wall");
+  archetypeManager_->InvokeArchetype(registry_, "left_wall");
+  archetypeManager_->InvokeArchetype(registry_, "right_wall");
 }
