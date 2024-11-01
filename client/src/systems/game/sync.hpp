@@ -16,13 +16,13 @@
 #include "libs/zygarde/src/system_abstract.hpp"
 
 namespace rtype::client::systems {
-class BlinkSystem final : public ASystem<> {
+class GameSyncSystem final : public ASystem<> {
  public:
   /**
    * @brief Construct a new Game Sync System object
    * @param server_connection_service Pointer to the server connection service
    */
-  explicit BlinkSystem(services::ServerConnectionService::Ptr server_connection_service);
+  explicit GameSyncSystem(services::ServerConnectionService::Ptr server_connection_service);
 
   void Run(Registry::Ptr r) override;
 

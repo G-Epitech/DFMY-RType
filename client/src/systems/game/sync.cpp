@@ -22,10 +22,10 @@ using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 using namespace mew::sets::drawable;
 
-BlinkSystem::BlinkSystem(ServerConnectionService::Ptr server_connection_service)
+GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service)
     : ASystem(), serverConnectionService_{std::move(server_connection_service)} {}
 
-void BlinkSystem::Run(Registry::Ptr r) {
+void GameSyncSystem::Run(Registry::Ptr r) {
   auto queue = serverConnectionService_->client()->ExtractQueue();
   while (!queue.empty()) {
     auto& message = queue.front();
@@ -34,7 +34,7 @@ void BlinkSystem::Run(Registry::Ptr r) {
   }
 }
 
-void BlinkSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
+void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                   const Vector3f& pos) {
   auto player = registry->SpawnEntity();
   static const sf::IntRect base{100, 0, 32, 16};
@@ -51,7 +51,7 @@ void BlinkSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, const 
   players_.insert_or_assign(id, player);
 }
 
-void BlinkSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
+void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                   const Vector3f& pos) {
   auto player = players_.at(id);
   auto positions = registry->GetComponents<Position>();
@@ -66,7 +66,7 @@ void BlinkSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, const 
   }
 }
 
-void BlinkSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
+void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
                                   const sdk::game::api::payload::BulletState& state) {
   const auto bullet = registry->SpawnEntity();
   const auto pos = Vector3f(state.position.x, state.position.y, 0);
@@ -83,7 +83,7 @@ void BlinkSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
   bullets_.insert_or_assign(state.entityId, bullet);
 }
 
-void BlinkSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
+void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                   const Vector3f& pos) {
   auto bullet = bullets_.at(id);
   auto positions = registry->GetComponents<Position>();
@@ -98,7 +98,7 @@ void BlinkSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const 
   }
 }
 
-void BlinkSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
+void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                  const Vector3f& pos) {
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{5, 6, 21, 36};
@@ -113,7 +113,7 @@ void BlinkSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const s
   enemies_.insert_or_assign(id, enemy);
 }
 
-void BlinkSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
+void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
                                  const Vector3f& pos) {
   auto enemy = enemies_.at(id);
   auto positions = registry->GetComponents<Position>();
@@ -128,7 +128,7 @@ void BlinkSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const s
   }
 }
 
-void BlinkSystem::HandleMessage(const Registry::Ptr& registry,
+void GameSyncSystem::HandleMessage(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
   switch (message.messageType) {
     case api::RoomToClientMsgType::kMsgTypeRTCPlayersState:
@@ -140,7 +140,7 @@ void BlinkSystem::HandleMessage(const Registry::Ptr& registry,
   }
 }
 
-void BlinkSystem::HandlePlayers(const Registry::Ptr& registry,
+void GameSyncSystem::HandlePlayers(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
   auto states = serverConnectionService_->client()->ResolvePlayersState(message);
   auto handled = std::set<std::size_t>();
@@ -151,7 +151,7 @@ void BlinkSystem::HandlePlayers(const Registry::Ptr& registry,
   DeleteEntities(registry, handled, &players_);
 }
 
-void BlinkSystem::HandlePlayerState(const Registry::Ptr& registry,
+void GameSyncSystem::HandlePlayerState(const Registry::Ptr& registry,
                                        const api::payload::PlayerState& state,
                                        std::set<std::size_t>* handled) {
   if (players_.contains(state.entityId)) {
@@ -162,7 +162,7 @@ void BlinkSystem::HandlePlayerState(const Registry::Ptr& registry,
   handled->insert(state.entityId);
 }
 
-void BlinkSystem::HandleBullets(const Registry::Ptr& registry,
+void GameSyncSystem::HandleBullets(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
   auto states = serverConnectionService_->client()->ResolveBulletsState(message);
   auto handled = std::set<std::size_t>();
@@ -173,7 +173,7 @@ void BlinkSystem::HandleBullets(const Registry::Ptr& registry,
   DeleteEntities(registry, handled, &bullets_);
 }
 
-void BlinkSystem::HandleBulletState(const Registry::Ptr& registry,
+void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
                                        const api::payload::BulletState& state,
                                        std::set<std::size_t>* handled) {
   if (bullets_.contains(state.entityId)) {
@@ -184,7 +184,7 @@ void BlinkSystem::HandleBulletState(const Registry::Ptr& registry,
   handled->insert(state.entityId);
 }
 
-void BlinkSystem::HandleEnemies(const Registry::Ptr& registry,
+void GameSyncSystem::HandleEnemies(const Registry::Ptr& registry,
                                    const api::Client::ServerMessage& message) {
   auto states = serverConnectionService_->client()->ResolveEnemiesState(message);
   auto handled = std::set<std::size_t>();
@@ -195,7 +195,7 @@ void BlinkSystem::HandleEnemies(const Registry::Ptr& registry,
   DeleteEntities(registry, handled, &enemies_);
 }
 
-void BlinkSystem::HandleEnemyState(const Registry::Ptr& registry,
+void GameSyncSystem::HandleEnemyState(const Registry::Ptr& registry,
                                       const api::payload::EnemyState& state,
                                       std::set<std::size_t>* handled) {
   if (enemies_.contains(state.entityId)) {
@@ -206,7 +206,7 @@ void BlinkSystem::HandleEnemyState(const Registry::Ptr& registry,
   handled->insert(state.entityId);
 }
 
-void BlinkSystem::DeleteEntities(const Registry::Ptr& registry,
+void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
                                     const std::set<std::size_t>& handled,
                                     std::map<std::size_t, Entity>* entities) {
   for (auto it = entities->begin(); it != entities->end();) {
