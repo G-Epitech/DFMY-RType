@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "base/player_base_script.hpp"
 #include "game/includes/constants.hpp"
 #include "game/includes/stats.hpp"
 #include "game/src/utils/projectiles/fire_rate.hpp"
@@ -15,12 +16,10 @@
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {
-class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
+class PlayerScript : public PlayerBaseScript {
  public:
   struct PlayerProps {
     std::string className;
-    float health;
-    float speed;
     float powerCooldown;
     std::string primaryWeapon;
     std::string secondaryWeapon;

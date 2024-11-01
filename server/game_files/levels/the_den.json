@@ -7,11 +7,11 @@
       "enemies": [
         {
           "name": "enemy_pata_normal",
-          "count": 2
+          "count": 5
         },
         {
           "name": "enemy_pata_big",
-          "count": 2
+          "count": 5
         }
       ]
     },

@@ -35,6 +35,7 @@ void EnemySpawner::SpawnEnemy(const std::string& enemy_name) {
   if (scriptPool.has_value() && scriptPool.value()) {
     auto script = scriptPool.value()->GetScript<scripts::PataScript>();
     script->SetBasePosition(position);
+    script->SetDifficultyData(difficulty_.multipliers.enemy);
   }
   if (positionComponent.has_value() && positionComponent.value()) {
     positionComponent.value()->point = position;

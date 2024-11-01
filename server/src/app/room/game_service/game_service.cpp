@@ -38,9 +38,12 @@ void GameService::Initialize() {
   archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
   RegistrySetup();
   AddGameWalls();
-  levelManager_.Initialize(kDirectoryLevels, kDirectoryDifficulties, registry_, archetypeManager_);
+  difficultyLoader_.Run(kDirectoryDifficulties);
+  auto difficultyData =
+      difficultyLoader_.GetDifficultyByType(rtype::sdk::game::types::Difficulty::kEasy);
+  levelManager_.Initialize(kDirectoryLevels, registry_, archetypeManager_);
   levelManager_.SelectLevel("The Den");
-  levelManager_.StartLevel(rtype::sdk::game::types::Difficulty::kEasy);
+  levelManager_.StartLevel(difficultyData);
 }
 
 int GameService::Run(std::shared_ptr<Room> api) {

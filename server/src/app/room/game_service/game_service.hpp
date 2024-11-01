@@ -10,13 +10,14 @@
 #include <cstddef>
 #include <map>
 
+#include "difficulty_loader/difficulty_loader.hpp"
 #include "level_manager/level_manager.hpp"
 #include "libs/game/includes/api.hpp"
 #include "ticks/ticks_manager.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
+#include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
-#include "zygarde/src/registry.hpp"
 
 namespace rtype::server::game {
 class GameService {
@@ -124,5 +125,8 @@ class GameService {
 
   /// @brief Level manager
   LevelManager levelManager_;
+
+  /// @brief Difficulty loader
+  DifficultyLoader difficultyLoader_;
 };
 }  // namespace rtype::server::game

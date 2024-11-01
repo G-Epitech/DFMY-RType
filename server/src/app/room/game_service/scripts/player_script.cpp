@@ -21,8 +21,8 @@ PlayerScript::PlayerScript()
 
 void PlayerScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
   props_.className = std::any_cast<std::string>(customScriptValues.at("className"));
-  props_.health = std::any_cast<float>(customScriptValues.at("health"));
-  props_.speed = std::any_cast<float>(customScriptValues.at("speed"));
+  health_ = std::any_cast<float>(customScriptValues.at("health"));
+  speed_ = std::any_cast<float>(customScriptValues.at("speed"));
   props_.powerCooldown = std::any_cast<float>(customScriptValues.at("powerCooldown"));
   props_.primaryWeapon = std::any_cast<std::string>(customScriptValues.at("primaryWeapon"));
   props_.secondaryWeapon = std::any_cast<std::string>(customScriptValues.at("secondaryWeapon"));
@@ -47,9 +47,9 @@ void PlayerScript::OnCollisionEnter(
     return;
   }
   if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kEnemyBulletTag) {
-    props_.health -= 10;
+    health_ -= 10;
   }
-  if (props_.health <= 0) {
+  if (health_ <= 0) {
     context->registry->DestroyEntity(context->me);
   }
 }
@@ -83,6 +83,6 @@ void PlayerScript::HandleMovement(
   if (!rb.has_value() || !rb.value()) {
     return;
   }
-  (*rb)->SetVelocity(*movementDirection_ * props_.speed);
+  (*rb)->SetVelocity(*movementDirection_ * speed_);
   movementDirection_.reset();
 }

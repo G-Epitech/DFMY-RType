@@ -12,10 +12,8 @@
 using namespace rtype::server::game;
 
 void LevelManager::Initialize(
-    const std::string& levels_path, const std::string& difficulties_path,
-    const std::shared_ptr<zygarde::Registry>& registry,
+    const std::string& levels_path, const std::shared_ptr<zygarde::Registry>& registry,
     const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager>& archetype_manager) {
-  difficultyLoader_.Run(difficulties_path);
   levels_ = LevelLoader().Run(levels_path);
   enemySpawner_.Initialize(archetype_manager, registry);
 }
@@ -38,9 +36,8 @@ void LevelManager::Update(const utils::Timer::Nanoseconds& deltaTime) {
   }
 }
 
-void LevelManager::StartLevel(rtype::sdk::game::types::Difficulty difficulty) {
-  auto difficultyData = difficultyLoader_.GetDifficultyByType(difficulty);
-  enemySpawner_.SetDifficulty(difficultyData);
+void LevelManager::StartLevel(Difficulty difficulty) {
+  enemySpawner_.SetDifficulty(difficulty);
   BuildSpawnCooldowns();
   NextWave();
 }
@@ -53,7 +50,7 @@ void LevelManager::BuildSpawnCooldowns() {
       auto spawnTime = ComputeEnemySpawnCooldown(totalWaveTime, enemyCount);
       waveCooldowns[enemyName] = {spawnTime, zygarde::utils::Timer::Nanoseconds{0}};
     }
-    spawnCooldowns_.push_back(waveCooldowns);
+    levelSpawnCooldowns_.push_back(waveCooldowns);
   }
 }
 
@@ -65,6 +62,7 @@ void LevelManager::NextWave() {
   currentWave_ = selectedLevel_.waves[currentWaveIndex_];
   float maxTime = currentWave_.maxTime;
   currentWaveTime_ = std::chrono::nanoseconds(static_cast<int64_t>(maxTime * 1'000'000'000.0));
+  ongoingSpawnCooldowns_.push_back(levelSpawnCooldowns_[currentWaveIndex_]);
 }
 
 zygarde::utils::Timer::Nanoseconds LevelManager::ComputeEnemySpawnCooldown(float wave_max_time,
@@ -74,18 +72,21 @@ zygarde::utils::Timer::Nanoseconds LevelManager::ComputeEnemySpawnCooldown(float
 }
 
 void LevelManager::UpdateSpawnCooldowns(const utils::Timer::Nanoseconds& deltaTime) {
-  auto& currentWaveCooldowns = spawnCooldowns_[currentWaveIndex_];
-
-  for (auto& [enemyName, spawnProps] : currentWaveCooldowns) {
-    std::cout << currentWaveIndex_ << std::endl;
-    std::cout << "Enemy " << enemyName << " has " << spawnProps.count << " spawned" << std::endl;
-    std::cout << "Enemy Name: " << enemyName << " Spawn Time: " << spawnProps.spawnTime.count()
-              << " Current Spawn Time: " << spawnProps.currentSpawnTime.count() << std::endl;
-    spawnProps.currentSpawnTime += deltaTime;
-    if (CanSpawnEnemy(enemyName, currentWaveCooldowns)) {
-      spawnProps.count++;
-      enemySpawner_.SpawnEnemy(enemyName);
-      spawnProps.currentSpawnTime = zygarde::utils::Timer::Nanoseconds{0};
+  for (auto& spawnCooldowns : ongoingSpawnCooldowns_) {
+    for (auto& [enemyName, spawnProps] : spawnCooldowns) {
+      if (spawnProps.count >= currentWave_.enemies[enemyName]) {
+        continue;
+      }
+      std::cout << currentWaveIndex_ << std::endl;
+      std::cout << "Enemy " << enemyName << " has " << spawnProps.count << " spawned" << std::endl;
+      std::cout << "Enemy Name: " << enemyName << " Spawn Time: " << spawnProps.spawnTime.count()
+                << " Current Spawn Time: " << spawnProps.currentSpawnTime.count() << std::endl;
+      spawnProps.currentSpawnTime += deltaTime;
+      if (CanSpawnEnemy(enemyName, spawnCooldowns)) {
+        spawnProps.count++;
+        enemySpawner_.SpawnEnemy(enemyName);
+        spawnProps.currentSpawnTime = zygarde::utils::Timer::Nanoseconds{0};
+      }
     }
   }
 }
@@ -93,6 +94,5 @@ void LevelManager::UpdateSpawnCooldowns(const utils::Timer::Nanoseconds& deltaTi
 bool LevelManager::CanSpawnEnemy(const std::string& enemy_name,
                                  LevelManager::SpawnCooldowns& waveCooldowns) {
   auto& spawnProps = waveCooldowns[enemy_name];
-  return spawnProps.currentSpawnTime >= spawnProps.spawnTime &&
-         spawnProps.count < currentWave_.enemies[enemy_name];
+  return spawnProps.currentSpawnTime >= spawnProps.spawnTime;
 }

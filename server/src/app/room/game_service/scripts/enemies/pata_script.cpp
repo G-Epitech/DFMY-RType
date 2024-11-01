@@ -14,8 +14,7 @@
 using namespace rtype::server::game::scripts;
 
 PataScript::PataScript()
-    : health_{50},
-      goingUp_{true},
+    : goingUp_{true},
       horizontalSpeed_{0},
       verticalSpeed_{0},
       fireRateDuration_{0},

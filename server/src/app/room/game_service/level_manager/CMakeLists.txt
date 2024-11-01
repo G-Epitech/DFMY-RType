@@ -5,4 +5,3 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
 
 add_subdirectory(level_loader)
 add_subdirectory(enemy_spawner)
-add_subdirectory(difficulty_loader)
