@@ -13,3 +13,4 @@
 #include "./systems/mouse/buttons.hpp"
 #include "./systems/mouse/move.hpp"
 #include "./systems/mouse/scroll.hpp"
+#include "./systems/text_entered.hpp"

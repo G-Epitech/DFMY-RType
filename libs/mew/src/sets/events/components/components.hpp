@@ -48,9 +48,14 @@ struct OnEventHandler<kMouseScrolled> {
   using signature = std::function<void(sf::Vector2f, float)>;
 };
 
+template <>
+struct OnEventHandler<kTextEntered> {
+  using signature = std::function<void(sf::Uint32)>;
+};
+
 template <EventType T>
 struct OnEvent {
-  using Handler = OnEventHandler<T>::signature;
+  using Handler = typename OnEventHandler<T>::signature;
   Handler handler = Handler();  /// @brief Function to call when the event is triggered
 };
 
@@ -81,11 +86,30 @@ struct OnEvent<kMouseMoved> {
   Handler handler = Handler();  /// @brief Function to call when the event is triggered
 };
 
+template <>
+struct OnEvent<kMouseScrolled> {
+  using Handler = OnEventHandler<kMouseScrolled>::signature;
+
+  MouseEventTarget strategy =
+      kAnyTarget;  /// @brief Strategy to determine which entities will receive the event
+  Handler handler = Handler();  /// @brief Function to call when the event is triggered
+};
+
+template <>
+struct OnEvent<kTextEntered> {
+  using Handler = OnEventHandler<kTextEntered>::signature;
+
+  MouseEventTarget strategy =
+      kAnyTarget;  /// @brief Strategy to determine which entities will receive the event
+  Handler handler = Handler();  /// @brief Function to call when the event is triggered
+};
+
 typedef OnEvent<kKeyPressed> OnKeyPressed;
 typedef OnEvent<kKeyReleased> OnKeyReleased;
 typedef OnEvent<kMousePressed> OnMousePressed;
 typedef OnEvent<kMouseReleased> OnMouseReleased;
 typedef OnEvent<kMouseMoved> OnMouseMoved;
 typedef OnEvent<kMouseScrolled> OnMouseScrolled;
+typedef OnEvent<kTextEntered> OnTextEntered;
 
 }  // namespace mew::sets::events

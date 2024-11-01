@@ -73,7 +73,6 @@ void SceneLobby::CreateGEpitechLogo() {
   const auto rect = sf::IntRect{0, 0, 927, 927};
   registry_->AddComponent<Position>(logo, {point, aligns});
   registry_->AddComponent<Drawable>(
-
       logo,
       {Texture{.name = "g-epitech-logo", .scale = 0.35, .rect = rect}, WindowManager::View::HUD});
 }

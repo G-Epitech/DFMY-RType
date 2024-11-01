@@ -1,6 +1,8 @@
 target_sources(mew PRIVATE
         key.hpp
         key.tpp
+        text_entered.hpp
+        text_entered.cpp
         mouse/buttons.hpp
         mouse/buttons.tpp
         mouse/scroll.cpp
