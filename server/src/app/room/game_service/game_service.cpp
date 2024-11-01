@@ -32,12 +32,10 @@ void GameService::RegistrySetup() {
 }
 
 void GameService::Initialize() {
-  std::vector<std::string> archetypeDirs = {kDirectoryPlayerArchetypes, kDirectoryEnemyArchetypes,
-                                            kDirectoryProjectileArchetypes};
   scripts::ScriptsRegistry scriptsRegistry;
 
   ticksManager_.Initialize();
-  archetypeManager_->LoadArchetypes(archetypeDirs, scriptsRegistry.GetScripts());
+  archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
   RegistrySetup();
 }
 

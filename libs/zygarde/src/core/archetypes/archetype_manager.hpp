@@ -34,11 +34,11 @@ class EXPORT_ZYGARDE_API ArchetypeManager final {
 
  public:
   /**
-   * @brief Load archetypes from directories
-   * @param directories Directories to load archetypes from
+   * @brief Load archetypes from archetype_directory
+   * @param archetype_directory Directories to load archetypes from
    * @param scriptsRegistry Registry of scripts containing script names and their constructors
    */
-  void LoadArchetypes(std::vector<std::string> directories,
+  void LoadArchetypes(const std::string& archetype_directory,
                       const scripting::types::ScriptsMap& scriptsRegistry);
 
   /**

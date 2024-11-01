@@ -25,9 +25,9 @@ zygarde::Entity ArchetypeManager::InvokeArchetype(
   return entity;
 }
 
-void ArchetypeManager::LoadArchetypes(std::vector<std::string> directories,
+void ArchetypeManager::LoadArchetypes(const std::string& archetype_directory,
                                       const scripting::types::ScriptsMap& scriptsRegistry) {
-  ArchetypeLoader archetypeLoader(std::move(directories), scriptsRegistry);
+  ArchetypeLoader archetypeLoader(archetype_directory, scriptsRegistry);
 
   archetypes_ = archetypeLoader.Run();
   for (const auto& [name, components] : archetypes_) {
@@ -35,7 +35,8 @@ void ArchetypeManager::LoadArchetypes(std::vector<std::string> directories,
   }
 }
 
-void ArchetypeManager::ScheduleInvocation(const ArchetypeManager::ScheduleInvocationParams& params) {
+void ArchetypeManager::ScheduleInvocation(
+    const ArchetypeManager::ScheduleInvocationParams& params) {
   invokationQueue_.push_back(params);
 }
 

@@ -17,34 +17,31 @@ using namespace zygarde::core::archetypes;
 
 namespace fs = std::filesystem;
 
-ArchetypeLoader::ArchetypeLoader(std::vector<std::string> directories,
+ArchetypeLoader::ArchetypeLoader(std::string archetype_directory,
                                  const scripting::types::ScriptsMap& scriptsRegistry)
-    : currentPath_(fs::current_path().string()),
-      archetypes_(),
-      componentParsers_(),
-      directories_(std::move(directories)) {
+    : archetypes_(), componentParsers_(), archetypeDirectory_(std::move(archetype_directory)) {
   InitializeComponentParsers(scriptsRegistry);
 }
 
 std::map<std::string, std::vector<ArchetypeLoader::RegistryAttachCallback>> ArchetypeLoader::Run() {
-  for (const auto& directory : directories_) {
-    LoadArchetypesFromDirectory(directory);
-  }
+  LoadArchetypesFromDirectory(archetypeDirectory_);
   return archetypes_;
 }
 
 void ArchetypeLoader::LoadArchetypesFromDirectory(const std::string& archetypeDirectory) {
-  std::string directoryPath = currentPath_ + archetypeDirectory;
-  if (!fs::is_directory(directoryPath)) {
-    throw std::runtime_error("Provided path is not a directory!");
+  fs::path directoryPath = fs::current_path().string() + archetypeDirectory;
+
+  if (!fs::exists(directoryPath)) {
+    throw std::runtime_error("Provided path does not exist: " + directoryPath.string());
   }
 
-  for (const auto& entry : fs::directory_iterator(directoryPath)) {
-    if (entry.is_regular_file()) {
-      const auto& filePath = entry.path();
-      if (filePath.extension() == ".json") {
-        LoadArchetypeJSON(filePath.string());
-      }
+  if (!fs::is_directory(directoryPath)) {
+    throw std::runtime_error("Provided path is not a directory: " + directoryPath.string());
+  }
+
+  for (const auto& entry : fs::recursive_directory_iterator(directoryPath)) {
+    if (entry.is_regular_file() && entry.path().extension() == ".json") {
+      LoadArchetypeJSON(entry.path().string());
     }
   }
 }
