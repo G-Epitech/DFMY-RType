@@ -7,7 +7,9 @@
 
 #pragma once
 
+#include "app/room/game_service/difficulty_loader/difficulty_loader.hpp"
 #include "enemy_spawner/enemy_spawner.hpp"
+#include "libs/game/src/types/difficulties.hpp"
 #include "loader/level_loader.hpp"
 #include "registry.hpp"
 #include "types/difficulty.hpp"
@@ -22,14 +24,15 @@ class LevelManager final {
 
  public:
   void Initialize(
-      const std::string& levelsPath, const std::shared_ptr<zygarde::Registry>& registry,
-      const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager>& archetypeManager);
+      const std::string& levels_path, const std::string& difficulties_path,
+      const std::shared_ptr<zygarde::Registry>& registry,
+      const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager>& archetype_manager);
 
   [[nodiscard]] inline std::vector<Level> GetLevels() const { return levels_; }
 
   void SelectLevel(const std::string& level_name);
 
-  void StartLevel(const Difficulty& difficulty);
+  void StartLevel(rtype::sdk::game::types::Difficulty difficulty);
 
   void Update(const utils::Timer::Nanoseconds& deltaTime);
 
@@ -56,8 +59,6 @@ class LevelManager final {
 
   bool CanSpawnEnemy(const std::string& enemy_name, SpawnCooldowns& waveCooldowns);
 
-  void SpawnEnemy(const std::string& enemy_name);
-
   void NextWave();
 
  private:
@@ -72,5 +73,6 @@ class LevelManager final {
   std::vector<zygarde::Entity> currentlySpawnedEnemies_;
 
   EnemySpawner enemySpawner_;
+  DifficultyLoader difficultyLoader_;
 };
 }  // namespace rtype::server::game

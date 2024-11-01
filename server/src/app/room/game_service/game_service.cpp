@@ -38,10 +38,9 @@ void GameService::Initialize() {
   archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
   RegistrySetup();
   AddGameWalls();
-  const auto levels = LevelLoader().Run(kDirectoryLevels);
-  for (const auto &difficulty : levels) {
-    logger_.Info("Loaded difficulty: " + difficulty.name, "📊");
-  }
+  levelManager_.Initialize(kDirectoryLevels, kDirectoryDifficulties, registry_, archetypeManager_);
+  levelManager_.SelectLevel("The Den");
+  levelManager_.StartLevel(rtype::sdk::game::types::Difficulty::kEasy);
 }
 
 int GameService::Run(std::shared_ptr<Room> api) {
@@ -66,7 +65,7 @@ int GameService::Run(std::shared_ptr<Room> api) {
 void GameService::ExecuteGameLogic() {
   archetypeManager_->ExecuteScheduledInvocations(registry_);
   if (!players_.empty()) {
-    enemyManager_.Update(ticksManager_.DeltaTime(), registry_, archetypeManager_);
+    levelManager_.Update(ticksManager_.DeltaTime());
   }
   registry_->RunSystems();
   CheckDeadPlayers();

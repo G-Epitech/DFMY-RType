@@ -11,6 +11,7 @@
 #include <map>
 
 #include "enemy_manager/enemy_manager.hpp"
+#include "level_manager/level_manager.hpp"
 #include "level_manager/loader/level_loader.hpp"
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
@@ -126,7 +127,7 @@ class GameService {
   /// @brief Archetype manager
   std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> archetypeManager_;
 
-  /// @brief Level loader
-  LevelLoader levelLoader_;
+  /// @brief Level manager
+  LevelManager levelManager_;
 };
 }  // namespace rtype::server::game

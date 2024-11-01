@@ -15,15 +15,13 @@ using namespace rtype::server::game;
 
 DifficultyLoader::DifficultyLoader() : difficulties_() {}
 
-std::vector<Difficulty> DifficultyLoader::Run(const std::string& directory_path) {
+void DifficultyLoader::Run(const std::string& directory_path) {
   std::vector<nlohmann::json> jsonDifficulties =
       utils::JsonHelper::ReadJsonFilesFromDirectory(directory_path);
 
   for (const auto& jsonDifficulty : jsonDifficulties) {
     LoadDifficultyData(jsonDifficulty);
   }
-
-  return difficulties_;
 }
 
 void DifficultyLoader::LoadDifficultyData(const nlohmann::json& jsonData) {
@@ -88,4 +86,15 @@ void DifficultyLoader::LoadDifficultyEnemyMultipliers(const nlohmann::json& json
       enemy.contains("fireRate") ? enemy["fireRate"].get<float>() : 1.0f;
   difficulty->multipliers.enemy.damage =
       enemy.contains("damage") ? enemy["damage"].get<float>() : 1.0f;
+}
+
+Difficulty DifficultyLoader::GetDifficultyByType(
+    rtype::sdk::game::types::Difficulty difficultyType) const {
+  auto name = difficultiesMap_[difficultyType];
+  for (const auto& difficulty : difficulties_) {
+    if (difficulty.name == name) {
+      return difficulty;
+    }
+  }
+  throw std::runtime_error("Difficulty not found");
 }

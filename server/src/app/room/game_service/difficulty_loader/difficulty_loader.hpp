@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "libs/game/src/types/difficulties.hpp"
 #include "types/difficulty.hpp"
 
 namespace rtype::server::game {
@@ -24,7 +25,15 @@ class DifficultyLoader {
    * @param directory_path Directory path to load the difficulties from
    * @return A vector of difficulties
    */
-  std::vector<Difficulty> Run(const std::string &directory_path);
+  void Run(const std::string &directory_path);
+
+  /**
+   * @brief Get the difficulties
+   * @return A vector of difficulties
+   */
+  [[nodiscard]] const std::vector<Difficulty> &GetDifficulties() const { return difficulties_; }
+
+  [[nodiscard]] Difficulty GetDifficultyByType(rtype::sdk::game::types::Difficulty difficultyType) const;
 
  private:
   /**
@@ -66,5 +75,14 @@ class DifficultyLoader {
  private:
   /// @brief Vector of difficulties
   std::vector<Difficulty> difficulties_;
+
+  /// @brief Map of difficulty names
+  static inline std::map<rtype::sdk::game::types::Difficulty, std::string> difficultiesMap_ = {
+      {rtype::sdk::game::types::Difficulty::kEasy, "easy"},
+      {rtype::sdk::game::types::Difficulty::kDefault, "default"},
+      {rtype::sdk::game::types::Difficulty::kMedium, "medium"},
+      {rtype::sdk::game::types::Difficulty::kHard, "hard"},
+      {rtype::sdk::game::types::Difficulty::kInsane, "insane"},
+  };
 };
 }  // namespace rtype::server::game
