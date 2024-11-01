@@ -30,7 +30,7 @@ class abra::client::AbstractClient : public abra::client::InterfaceClient {
    * @warning This method will clear the queue
    * @return The queue of multi messages
    */
-  std::queue<tools::MultipleMessagesProps> ExtractMultiQueue() override;
+  std::queue<std::vector<tools::MultipleMessageProps>> ExtractMultiQueue() override;
 
  protected:
   /**

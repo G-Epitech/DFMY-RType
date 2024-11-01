@@ -37,7 +37,7 @@ enum class PayloadType {
  * @warning Do not exceed the maximum values delimited in bits
  */
 struct PacketHeaderProps {
-  unsigned payloadLength : kPacketHeaderPayloadLengthSize = 0;  // 0..1023  (10 bits)
+  unsigned payloadLength : kPacketHeaderPayloadLengthSize = 0;  // 0..2048  (11 bits)
   unsigned payloadType : kPacketHeaderPayloadTypeSize = 0;      // 0..15    (4 bits)
   unsigned offsetFlag : kPacketHeaderFlagSize = 0;              // 0..1     (1 bit)
   unsigned turnFlag : kPacketHeaderFlagSize = 0;                // 0..1     (1 bit)
