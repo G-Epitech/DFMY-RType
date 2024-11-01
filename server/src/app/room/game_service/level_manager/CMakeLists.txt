@@ -4,3 +4,4 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
 )
 
 add_subdirectory(loader)
+add_subdirectory(enemy_spawner)

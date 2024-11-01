@@ -23,7 +23,7 @@ struct Wave {
   /// @brief Duration of the wave (before the next wave starts)
   float maxTime;
   /// @brief Enemies that will spawn during the wave
-  std::vector<WaveEnemy> enemies;
+  std::map<std::string, int> enemies;
 };
 
 struct Level {

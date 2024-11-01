@@ -67,13 +67,9 @@ void LevelLoader::LoadLevelWaveTimeData(const nlohmann::json& jsonData, Wave* wa
 
 void LevelLoader::LoadLevelWaveEnemyData(const nlohmann::json& jsonData, Wave* wave) {
   for (const auto& enemyData : jsonData["enemies"]) {
-    WaveEnemy enemy;
-
     if (!enemyData.contains("name") || !enemyData.contains("count")) {
       throw std::runtime_error("Enemy data is missing name or count!");
     }
-    enemy.name = enemyData["name"].get<std::string>();
-    enemy.count = enemyData["count"].get<int>();
-    wave->enemies.push_back(enemy);
+    wave->enemies[enemyData["name"].get<std::string>()] = enemyData["count"].get<int>();
   }
 }
