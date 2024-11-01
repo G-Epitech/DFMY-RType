@@ -88,6 +88,13 @@ class rtype::sdk::game::api::Client {
   [[nodiscard]] std::queue<ServerMessage> ExtractQueue();
 
   /**
+   * @brief Extract chat queue of messages
+   * @warning The queue is cleared after the extraction
+   * @return The queue of messages
+   */
+  [[nodiscard]] std::vector<payload::ChatMessage> ExtractChatQueue();
+
+  /**
    * @brief Register a shoot
    * @param payload The shoot payload
    * @return true if the packet is sent, false otherwise
@@ -168,12 +175,22 @@ class rtype::sdk::game::api::Client {
   /**
    * @brief Initialize the UDP connection
    */
-  void InitUDP();
+  void InitUDP(std::string ip, unsigned int port, unsigned int localPort);
 
   /**
    * @brief Start the UDP connection (run the IO contexte)
    */
   void ListenUDP();
+
+  /**
+   * @brief Initialize the chat TCP connection
+   */
+  void InitChatTCP(std::string ip, unsigned int port);
+
+  /**
+   * @brief Start the chat TCP connection (run the IO service)
+   */
+  void ListenChatTCP();
 
   /**
    * @brief Send a payload to the server TCP
@@ -248,6 +265,9 @@ class rtype::sdk::game::api::Client {
   /// @brief The ABRA Client TCP instance (main connection)
   abra::client::ClientTCP clientTCP_;
 
+  /// @brief The ABRA Client TCP instance (chat connection)
+  std::optional<abra::client::ClientTCP> chatTCP_;
+
   /// @brief The ABRA Client UDP instance (specific game connection)
   /// @warning The UDP connection is used for the game only, it's not initialized by default
   std::optional<abra::client::ClientUDP> clientUDP_;
@@ -260,6 +280,9 @@ class rtype::sdk::game::api::Client {
 
   /// @brief The thread to listen the server (UDP)
   std::thread threadUDP_;
+
+  /// @brief The thread to listen the chat server (TCP)
+  std::thread threadChatTCP_;
 
   /// @brief Boolean to know if the client is connected to the server
   /// @warning It's a r-type protocol information, it's not related to the TCP connection

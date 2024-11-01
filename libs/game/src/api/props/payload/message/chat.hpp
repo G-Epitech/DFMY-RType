@@ -9,8 +9,8 @@
 
 namespace rtype::sdk::game::api::payload {
 /// @brief Message send by a user in a chat - Link to RoomToClientMsgType::kMsgTypeRTCChatMessage
-  struct ChatMessage {
-    char username[20];
-    char message[100];
-  };
+struct ChatMessage {
+  char username[20];
+  char message[100];
+};
 }  // namespace rtype::sdk::game::api::payload

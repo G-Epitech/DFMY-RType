@@ -42,13 +42,26 @@ void Client::ListenTCP() {
   this->clientTCP_.Listen();
 }
 
-void Client::InitUDP() {
+void Client::InitUDP(std::string ip, unsigned int port, unsigned int localPort) {
+  this->clientUDP_.emplace(ip, port, localPort);
+
   this->threadUDP_ = std::thread(&Client::ListenUDP, this);
   logger_.Info("Client UDP thread started", "🚀");
 }
 
 void Client::ListenUDP() {
   this->clientUDP_->Listen();
+}
+
+void Client::InitChatTCP(std::string ip, unsigned int port) {
+  this->chatTCP_.emplace(ip, port, nullptr);
+
+  this->threadChatTCP_ = std::thread(&Client::ListenChatTCP, this);
+  logger_.Info("Client Chat TCP thread started", "🚀");
+}
+
+void Client::ListenChatTCP() {
+  this->chatTCP_->Listen();
 }
 
 bool Client::IsConnected() const {
@@ -103,13 +116,13 @@ bool Client::HandleJoinLobbyInfos(const MessageProps &message) {
     auto packet = this->packetBuilder_.Build<payload::InfoRoom>(message.data);
     auto payload = packet->GetPayload();
 
-    logger_.Info("Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.port),
-                 "🚪");
-
-    this->clientUDP_.emplace(payload.ip, payload.port, kClientUDPPort);
-    InitUDP();
+    InitUDP(payload.ip, payload.gamePort, kClientUDPPort);
+    InitChatTCP(payload.ip, payload.chatPort);
 
     this->isLobbyConnected_ = true;
+
+    logger_.Info(
+        "Joining lobby " + std::string(payload.ip) + ":" + std::to_string(payload.gamePort), "🚪");
     return true;
   } catch (const std::exception &e) {
     logger_.Error("Failed to join lobby: " + std::string(e.what()), "❌");
@@ -124,7 +137,6 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
   Client::ConvertQueueData(&queueTCP, &queue, NetworkProtocolType::kTCP);
 
   if (!this->isLobbyConnected_) {
-    logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
     return queue;
   }
 
@@ -149,9 +161,28 @@ std::queue<Client::ServerMessage> Client::ExtractQueue() {
     multiQueue.pop();
   }
 
-  // logger_.Info("Extracted " + std::to_string(queue.size()) + " messages", "📬");
-
   return queue;
+}
+
+std::vector<payload::ChatMessage> Client::ExtractChatQueue() {
+  auto queue = this->chatTCP_->ExtractQueue();
+  auto vector = std::vector<payload::ChatMessage>();
+
+  while (!queue.empty()) {
+    auto &message = queue.front();
+    if (message.messageType != RoomToClientMsgType::kMsgTypeRTCChatMessage) {
+      queue.pop();
+      continue;
+    }
+
+    auto packet = this->packetBuilder_.Build<payload::ChatMessage>(message.data);
+    auto payload = packet->GetPayload();
+
+    vector.push_back(payload);
+    queue.pop();
+  }
+
+  return vector;
 }
 
 bool Client::Shoot(const payload::Shoot &payload) {
