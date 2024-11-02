@@ -14,6 +14,7 @@
 #include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
+#include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 
 using namespace rtype::client::systems;
 using namespace rtype::client::components;
@@ -47,6 +48,8 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
       player, {
                   .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
               });
+  registry->AddComponent<physics::components::Rigidbody2D>(
+      player, {.velocity = {state.velocity.x, state.velocity.y}});
 
   std::cout << "Player created" << std::endl;
   players_.insert_or_assign(state.entityId, player);
@@ -54,17 +57,19 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
 
 void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry,
                                   const api::payload::PlayerState& state) {
-  auto player = players_.at(state.entityId);
-  auto positions = registry->GetComponents<Position>();
-  auto entity_id = static_cast<std::size_t>(player);
-  Vector3f pos{state.position.x, state.position.y, 0};
+  const auto player = players_.at(state.entityId);
+  const auto entity_id = static_cast<std::size_t>(player);
+  const auto positions = registry->GetComponents<Position>();
+  const auto rigidbodies = registry->GetComponents<physics::components::Rigidbody2D>();
+  const Vector3f pos{state.position.x, state.position.y, 0};
 
-  if (entity_id >= positions->size()) {
+  if (entity_id >= positions->size() || entity_id >= rigidbodies->size()) {
     std::cerr << "Invalid player id" << std::endl;
     return;
   }
-  if ((*positions)[entity_id]) {
+  if ((*positions)[entity_id] && (*rigidbodies)[entity_id]) {
     (*positions)[entity_id]->point = pos;
+    (*rigidbodies)[entity_id]->SetVelocity({state.velocity.x, state.velocity.y});
   }
 }
 
