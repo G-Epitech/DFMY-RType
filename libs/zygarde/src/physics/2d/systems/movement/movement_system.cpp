@@ -36,7 +36,6 @@ void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {
   }
 }
 
-#include <iostream>
 void MovementSystem::ApplyDrag(physics::components::Rigidbody2D* rigidbody) const {
   float drag = rigidbody->GetDrag();
 
@@ -52,9 +51,6 @@ void MovementSystem::ApplyDrag(physics::components::Rigidbody2D* rigidbody) cons
   }
   core::types::Vector2f velocity = rigidbody->GetVelocity();
   float deltaTimeSec = utils::Timer::ToSeconds(deltaTime_);
-  std::cout << "Velocity: " << velocity.x << " " << velocity.y
-            << "Magnitude: " << velocity.magnitude() << "DeltaTimeSec: " << deltaTimeSec
-            << std::endl;
   if (velocity.magnitude() > 0) {
     core::types::Vector2f dragForce = -drag * velocity;
     core::types::Vector2f dragVector = dragForce * deltaTimeSec;

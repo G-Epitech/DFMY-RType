@@ -50,7 +50,7 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
                   .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
               });
   registry->AddComponent<physics::components::Rigidbody2D>(
-      player, physics::components::Rigidbody2D(velocity));
+      player, physics::components::Rigidbody2D(velocity, PLAYER_KINEMATIC, PLAYER_DRAG));
 
   std::cout << "Player created" << std::endl;
   players_.insert_or_assign(state.entityId, player);
@@ -78,6 +78,7 @@ void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
                                   const sdk::game::api::payload::BulletState& state) {
   const auto bullet = registry->SpawnEntity();
   const auto pos = Vector3f(state.position.x, state.position.y, 0);
+  const Vector2f velocity{state.velocity.x, state.velocity.y};
 
   registry->AddComponent<components::ServerEntityId>(bullet, {.id = state.entityId});
   registry->AddComponent<zygarde::core::components::Position>(
@@ -88,44 +89,51 @@ void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
                                    {
                                        .drawable = TextureMapper::MapBulletType(state.bulletType),
                                    });
+  registry->AddComponent<physics::components::Rigidbody2D>(
+      bullet, physics::components::Rigidbody2D(velocity, BULLET_KINEMATIC, BULLET_DRAG));
   bullets_.insert_or_assign(state.entityId, bullet);
 }
 
-void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const Vector3f& pos) {
-  auto bullet = bullets_.at(id);
-  auto positions = registry->GetComponents<Position>();
-  auto entity_id = static_cast<std::size_t>(bullet);
+void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry,
+                                  const sdk::game::api::payload::BulletState& state) {
+  const auto bullet = bullets_.at(state.entityId);
+  const auto positions = registry->GetComponents<Position>();
+  const auto entity_id = static_cast<std::size_t>(bullet);
 
   if (entity_id >= positions->size()) {
     std::cerr << "Invalid bullet id" << std::endl;
     return;
   }
   if ((*positions)[entity_id]) {
-    (*positions)[entity_id]->point = pos;
+    (*positions)[entity_id]->point = Vector3f{state.position.x, state.position.y, 0};
   }
 }
 
-void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                 const Vector3f& pos) {
+void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry,
+                                 const api::payload::EnemyState& state) {
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{5, 6, 21, 36};
+  const Vector3f pos{state.position.x, state.position.y, 0};
+  const Vector2f velocity{state.velocity.x, state.velocity.y};
 
-  registry->AddComponent<ServerEntityId>(enemy, {.id = id});
+  registry->AddComponent<ServerEntityId>(enemy, {.id = state.entityId});
   registry->AddComponent<Position>(
       enemy, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       enemy, {
                  .drawable = Texture{.name = "enemy", .scale = 2.5, .rect = base},
              });
-  enemies_.insert_or_assign(id, enemy);
+  registry->AddComponent<physics::components::Rigidbody2D>(
+      enemy, physics::components::Rigidbody2D(velocity, ENEMY_KINEMATIC, ENEMY_DRAG));
+  enemies_.insert_or_assign(state.entityId, enemy);
 }
 
-void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                 const Vector3f& pos) {
-  auto enemy = enemies_.at(id);
-  auto positions = registry->GetComponents<Position>();
-  auto entity_id = static_cast<std::size_t>(enemy);
+void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry,
+                                 const api::payload::EnemyState& state) {
+  const auto enemy = enemies_.at(state.entityId);
+  const auto positions = registry->GetComponents<Position>();
+  const auto entity_id = static_cast<std::size_t>(enemy);
+  const Vector3f pos{state.position.x, state.position.y, 0};
 
   if (entity_id >= positions->size()) {
     std::cerr << "Invalid enemy id" << std::endl;
@@ -185,7 +193,7 @@ void GameSyncSystem::HandleBulletState(const Registry::Ptr& registry,
                                        const api::payload::BulletState& state,
                                        std::set<std::size_t>* handled) {
   if (bullets_.contains(state.entityId)) {
-    UpdateBullet(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    UpdateBullet(registry, state);
   } else {
     CreateBullet(registry, state);
   }
@@ -207,9 +215,9 @@ void GameSyncSystem::HandleEnemyState(const Registry::Ptr& registry,
                                       const api::payload::EnemyState& state,
                                       std::set<std::size_t>* handled) {
   if (enemies_.contains(state.entityId)) {
-    UpdateEnemy(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    UpdateEnemy(registry, state);
   } else {
-    CreateEnemy(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    CreateEnemy(registry, state);
   }
   handled->insert(state.entityId);
 }

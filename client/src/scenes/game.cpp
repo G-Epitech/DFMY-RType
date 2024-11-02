@@ -52,7 +52,6 @@ void SceneGame::OnCreate() {
 
 void SceneGame::Update(DeltaTime delta_time) {
   deltaTime_ = delta_time;
-  std::cout << "Delta time: " << std::to_string(delta_time.count()) << std::endl;
   registry_->RunSystems();
 }
 
