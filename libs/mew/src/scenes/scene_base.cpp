@@ -52,6 +52,7 @@ void SceneBase::AddDefaultSystems() {
   registry_->AddSystem<events::MouseMoveEventSystem>(managers_.window);
   registry_->AddSystem<events::KeyPressEventSystem>(managers_.window);
   registry_->AddSystem<events::KeyReleaseEventSystem>(managers_.window);
+  registry_->AddSystem<events::TextEnteredEventSystem>(managers_.window);
 }
 
 void SceneBase::RegisterDefaultComponents() {
@@ -63,4 +64,5 @@ void SceneBase::RegisterDefaultComponents() {
   registry_->RegisterComponent<events::OnMouseMoved>();
   registry_->RegisterComponent<events::OnKeyPressed>();
   registry_->RegisterComponent<events::OnKeyReleased>();
+  registry_->RegisterComponent<events::OnTextEntered>();
 }

@@ -46,7 +46,7 @@ class abra::client::InterfaceClient {
    * @warning This method will clear the queue
    * @return The queue of multi messages
    */
-  virtual std::queue<tools::MultipleMessagesProps> ExtractMultiQueue() = 0;
+  virtual std::queue<std::vector<tools::MultipleMessageProps>> ExtractMultiQueue() = 0;
 
   /// @brief The mutex for the queue
   std::mutex Mutex;
@@ -69,7 +69,7 @@ class abra::client::InterfaceClient {
   std::queue<tools::MessageProps> queue_;
 
   /// @brief The queue of multi packets
-  std::queue<tools::MultipleMessagesProps> multiPackets_;
+  std::queue<std::vector<tools::MultipleMessageProps>> multiPackets_;
 
   /// @brief The map of messages for multi packets
   std::map<unsigned, tools::MultipleMessagesProps> pendingMultiPackets_;

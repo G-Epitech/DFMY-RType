@@ -50,7 +50,8 @@ class rtype::sdk::game::api::Master {
     unsigned int maxPlayers;
     unsigned int nbPlayers;
     unsigned int difficulty;
-    unsigned int port;
+    unsigned int gamePort;
+    unsigned int chatPort;
   };
 
   struct Node {
@@ -205,6 +206,25 @@ class rtype::sdk::game::api::Master {
    * @param client The client
    */
   void SendPlayerJoinToNode(const std::uint64_t &nodeId, const Client &client);
+
+  /**
+   * @brief Handle when a client close the session
+   * @param clientId The client id
+   */
+  void HandleClosedClientSession(std::uint64_t clientId);
+
+  /**
+   * @brief Handle when a node close the session
+   * @param nodeId The node id
+   */
+  void HandleClosedNodeSession(std::uint64_t nodeId);
+
+  /**
+   * @brief Get a client by its id
+   * @param clientId The client id
+   * @return The client
+   */
+  Client &GetClientById(const std::uint64_t &clientId);
 
   /// @brief Server socket to communicate with clients (TCP)
   abra::server::ServerTCP clientsSocket_;

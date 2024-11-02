@@ -40,7 +40,9 @@ class rtype::sdk::game::api::Room {
 
   struct RoomClient {
     std::uint64_t id;                         ///< The client id
+    std::string username;                     ///< The client username
     boost::asio::ip::udp::endpoint endpoint;  ///< The client endpoint (remote)
+    std::uint64_t chatId;                     ///< The chat id
   };
 
   /**
@@ -103,6 +105,11 @@ class rtype::sdk::game::api::Room {
   void InitClientsThread();
 
   /**
+   * @brief Initialize the chat thread
+   */
+  void InitChatThread();
+
+  /**
    * @brief Find a user by its endpoint
    * @param endpoint The endpoint to find
    * @return The user id
@@ -128,6 +135,15 @@ class rtype::sdk::game::api::Room {
   bool SendToClients(RoomToClientMsgType type, const T &payload);
 
   /**
+   * @brief Send message to all clients in the room by the chat socket
+   * @tparam T The type of the payload
+   * @param type The type of the message
+   * @param payload The payload to send
+   */
+  template <typename T>
+  bool SendToChats(RoomToClientMsgType type, const T &payload);
+
+  /**
    * @brief Middleware to handle node messages
    * @param message The message of the node (NodeToRoomMsgType)
    * @return True if the message must be push in the queue of messages
@@ -135,10 +151,23 @@ class rtype::sdk::game::api::Room {
   bool NodeMessageMiddleware(const abra::tools::MessageProps &message);
 
   /**
+   * @brief Middleware to handle chat messages
+   * @param message The message of the node (NodeToRoomMsgType)
+   * @return True if the message must be push in the queue of messages
+   */
+  bool ChatMessageMiddleware(const abra::server::ClientTCPMessage &message);
+
+  /**
    * @brief Handle the player join
    * @param message The message of the node
    */
   void HandlePlayerJoin(const abra::tools::MessageProps &message);
+
+  /**
+   * @brief Handle the new message
+   * @param message The message of the chat
+   */
+  void HandleNewMessage(const abra::server::ClientTCPMessage &message);
 
   /// @brief Server socket to communicate with clients (TCP)
   abra::client::ClientTCP nodeSocket_;
@@ -151,6 +180,12 @@ class rtype::sdk::game::api::Room {
 
   /// @brief The thread that will run the clients socket
   std::thread clientsThread_;
+
+  /// @brief Server socket to communicate with clients (chat) (TCP)
+  abra::server::ServerTCP chatSocket_;
+
+  /// @brief The thread that will run the chat socket
+  std::thread chatThread_;
 
   /// @brief Logger
   abra::tools::Logger logger_;
@@ -170,6 +205,12 @@ class rtype::sdk::game::api::Room {
   static inline std::map<unsigned int, void (Room::*)(const abra::tools::MessageProps &message)>
       nodeMessageHandlers_ = {
           {NodeToRoomMsgType::kMsgTypeNTRPlayerJoin, &Room::HandlePlayerJoin},
+  };
+
+  static inline std::map<unsigned int,
+                         void (Room::*)(const abra::server::ClientTCPMessage &message)>
+      chatMessageHandlers_ = {
+          {ClientToRoomMsgType::kMsgTypeCTRSendMessage, &Room::HandleNewMessage},
   };
 };
 

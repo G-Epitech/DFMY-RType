@@ -37,7 +37,7 @@ struct MultipleMessageProps {
 
 /// @brief Structure of multiple messages
 struct MultipleMessagesProps {
-  std::optional<MultipleMessageProps *> lastMessage;  // The last message
-  std::vector<MultipleMessageProps> messages;         // The messages
+  MultipleMessageProps* lastMessage = nullptr;  // The last message
+  std::vector<MultipleMessageProps> messages;   // The messages
 };
 }  // namespace abra::tools

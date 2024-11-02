@@ -11,8 +11,12 @@ using namespace rtype::sdk::game::api;
 
 Master::Master(int clientsPort, int nodesPort)
     : logger_("masterAPI"),
-      clientsSocket_(clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); }),
-      nodesSocket_(nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); }) {
+      clientsSocket_(
+          clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); },
+          [this](auto id) { HandleClosedClientSession(id); }),
+      nodesSocket_(
+          nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); },
+          [this](auto id) { HandleClosedNodeSession(id); }) {
   this->InitClientsThread();
   this->InitNodesThread();
 }
@@ -188,7 +192,7 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
     }
 
     auto &room = node.rooms_[payload.roomId];
-    auto &client = this->clients_[message.clientId];
+    auto &client = GetClientById(message.clientId);
     if (room.nbPlayers >= room.maxPlayers) {
       this->logger_.Warning("Trying to join a full room", "⚠️ ");
       return;
@@ -211,7 +215,8 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
 void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
                           const Master::Node &node) {
   payload::InfoRoom infoPayload = {
-      .port = room.port,
+      .gamePort = room.gamePort,
+      .chatPort = room.chatPort,
   };
   snprintf(infoPayload.ip, sizeof(infoPayload.ip), "%s",
            this->nodesSocket_.GetRemoteAddress(node.id).c_str());
@@ -266,7 +271,8 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
         .maxPlayers = payload.nbPlayers,
         .nbPlayers = 0,
         .difficulty = payload.difficulty,
-        .port = payload.port,
+        .gamePort = payload.gamePort,
+        .chatPort = payload.chatPort,
     };
 
     node.rooms_[room.id] = std::move(room);
@@ -307,6 +313,11 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
         SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
       }
     }
+
+    auto &node = this->nodes_[message.clientId];
+    node.rooms_.erase(payload.id);
+
+    logger_.Info("Room game ended", "🎮");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling room game ended: " + std::string(e.what()), "❌");
   }
@@ -325,4 +336,50 @@ void Master::SendInfos(std::uint64_t clientId, bool game, bool rooms) {
 void Master::Join() {
   this->clientsThread_.join();
   this->nodesThread_.join();
+}
+
+void Master::HandleClosedClientSession(std::uint64_t clientId) {
+  auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
+                             [clientId](const Client &c) { return c.id == clientId; });
+
+  if (client == this->clients_.end()) {
+    return;
+  }
+
+  this->clients_.erase(client);
+  logger_.Info("Client disconnected", "👤");
+}
+
+void Master::HandleClosedNodeSession(std::uint64_t nodeId) {
+  auto nodeIt = this->nodes_.find(nodeId);
+
+  if (nodeIt == this->nodes_.end()) {
+    return;
+  }
+
+  payload::GameEnd end = {
+      .score = 0,
+      .time = 0,
+      .win = false,
+  };
+
+  for (auto &client : this->clients_) {
+    if (client.nodeId == nodeId) {
+      SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client.id);
+    }
+  }
+
+  this->nodes_.erase(nodeIt);
+  logger_.Info("Node disconnected", "🌐");
+}
+
+Master::Client &Master::GetClientById(const std::uint64_t &clientId) {
+  auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
+                             [clientId](const Client &c) { return c.id == clientId; });
+
+  if (client == this->clients_.end()) {
+    throw std::runtime_error("Client not found");
+  }
+
+  return this->clients_[std::distance(this->clients_.begin(), client)];
 }
