@@ -22,7 +22,6 @@ void Select::CreateSelectField(const Registry::Ptr& registry, const Select::Prop
   registry->SpawnEntity<SelectValueEntity>(props);
 }
 void Select::RegisterDependencies(Registry& registry) {
-  std::cout << "Registering dependencies" << std::endl;
   SelectContainerEntity::RegisterDependencies(registry);
   SelectValueEntity::RegisterDependencies(registry);
 }

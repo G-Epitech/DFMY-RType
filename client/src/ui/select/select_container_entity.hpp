@@ -50,5 +50,15 @@ class SelectContainerEntity final : Entity {
    */
   static void OnHover(Entity& entity, const Select::Properties& props, const sf::Vector2f& pos,
                       const mew::sets::events::MouseEventTarget& target);
+
+  /**
+   * @brief On mouse click event
+   * @param entity Current entity
+   * @param props Properties of the select
+   * @param pos Position of the mouse
+   * @param target Target of the event
+   */
+  static void OnClick(Entity& entity, const Select::Properties& props, const sf::Vector2f& pos,
+                      const mew::sets::events::MouseEventTarget& target);
 };
 }  // namespace rtype::client::ui

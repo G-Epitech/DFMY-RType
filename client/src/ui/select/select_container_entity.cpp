@@ -44,6 +44,15 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
                              const sf::Vector2f& pos, const MouseEventTarget& target) mutable {
                 return OnHover(entity, props, pos, target);
               }});
+  registry_->AddComponent<OnMousePressed>(
+      *this, {.strategy = MouseEventTarget::kAnyTarget,
+              .handler = [entity = static_cast<Entity>(*this), props](
+                             const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                             const MouseEventTarget& target) mutable {
+                if (button == sf::Mouse::Button::Left) {
+                  return OnClick(entity, props, pos, target);
+                }
+              }});
 }
 
 void SelectContainerEntity::RegisterDependencies(Registry& registry) {
@@ -69,4 +78,15 @@ void SelectContainerEntity::OnHover(Entity& entity, const Select::Properties& pr
   } else {
     rectangle.fillColor = props.selectedColor;
   }
+}
+void SelectContainerEntity::OnClick(Entity& entity, const Select::Properties& props,
+                                    const sf::Vector2f& pos, const MouseEventTarget& target) {
+  auto select_container = entity.GetComponent<SelectContainer>();
+
+  if (!select_container || select_container->expanded ||
+      !select_container->selectedOption.has_value()) {
+    return;
+  }
+  select_container->expanded = true;
+  std::cout << "Select expanded" << std::endl;
 }
