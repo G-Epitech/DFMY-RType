@@ -86,6 +86,7 @@ void GameService::ExecuteGameLogic() {
   }
   registry_->RunSystems();
   CheckDeadPlayers();
+  levelManager_.CheckDeadEnemies(registry_->GetEntitiesToKill());
   registry_->CleanupDestroyedEntities();
   UpdatePlayerScores();
   CheckGameEnd();

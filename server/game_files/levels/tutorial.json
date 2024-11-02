@@ -3,7 +3,7 @@
   "description": "Tutorial level",
   "waves": [
     {
-      "maxTime": 30.0,
+      "maxTime": 10.0,
       "enemies": [
         {
           "name": "enemy_pata_normal",
