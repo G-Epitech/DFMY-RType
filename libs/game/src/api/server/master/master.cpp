@@ -109,6 +109,17 @@ void Master::SendGameInfos(std::uint64_t clientId) {
       .nbUsers = static_cast<unsigned int>(this->clients_.size()),
   };
 
+  auto scores = this->database_.GetBestScores(5);
+  for (unsigned int i = 0; i < scores.size(); i++) {
+    snprintf(infos.leaderboard[i].name, sizeof(infos.leaderboard[i].name), "%s",
+             scores[i].roomName.c_str());
+    infos.leaderboard[i].score = scores[i].score;
+    infos.leaderboard[i].win = scores[i].win;
+
+    std::cout << "Room: " << scores[i].roomName << std::endl;
+    std::cout << "Score: " << scores[i].score << std::endl;
+  }
+
   auto success = SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoGame, infos, clientId);
   if (!success) {
     logger_.Warning("Failed to send game infos", "⚠️ ");
@@ -317,6 +328,14 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
     }
 
     auto &node = this->nodes_[message.clientId];
+    auto &room = node.rooms_[payload.id];
+
+    this->database_.InsertScore({
+        .roomName = room.name,
+        .score = static_cast<int64_t>(payload.score),
+        .win = payload.win,
+    });
+
     node.rooms_.erase(payload.id);
 
     logger_.Info("Room game ended", "🎮");
