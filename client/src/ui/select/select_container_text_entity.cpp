@@ -43,6 +43,6 @@ void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
       *this, Tags({Select::ContainerTextIdTagOf(props.id), Select::IdTagOf(props.id)}));
 }
 
-void SelectContainerTextEntity::RegisterDependencies(Registry& registry) {
-  registry.RegisterComponent<Tags>();
+void SelectContainerTextEntity::RegisterDependencies(const zygarde::Registry::Ptr& registry) {
+  registry->RegisterComponent<Tags>();
 }

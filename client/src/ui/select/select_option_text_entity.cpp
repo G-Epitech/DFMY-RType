@@ -36,12 +36,16 @@ void SelectOptionTextEntity::OnSpawn(std::size_t index, const Select::Properties
                        .characterSize = static_cast<unsigned int>(props.size.y * 0.5f),
                        .color = sf::Color::White};
 
-  registry_->AddComponent<Drawable>(*this, {.drawable = drawable, .layer = 30});
+  registry_->AddComponent<Drawable>(*this, {
+                                               .drawable = drawable,
+                                               .visible = props.expanded,
+                                               .layer = 30,
+                                           });
   registry_->AddComponent<Position>(*this, position);
   registry_->AddComponent<Tags>(
       *this, Tags({Select::OptionTextIdTagOf(value), Select::OptionIdTagOf(props.id)}));
 }
 
-void SelectOptionTextEntity::RegisterDependencies(Registry& registry) {
-  registry.RegisterComponent<Tags>();
+void SelectOptionTextEntity::RegisterDependencies(const zygarde::Registry::Ptr& registry) {
+  registry->RegisterComponent<Tags>();
 }

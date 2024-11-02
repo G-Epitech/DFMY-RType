@@ -23,7 +23,7 @@ using namespace porygon;
 
 SceneStart::SceneStart(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
-  Select::RegisterDependencies(*registry_);
+  Select::RegisterDependencies(registry_);
 }
 
 void SceneStart::OnCreate() {

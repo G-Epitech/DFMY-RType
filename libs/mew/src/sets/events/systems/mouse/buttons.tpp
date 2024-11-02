@@ -36,20 +36,14 @@ void MouseButtonEventSystem<EventType, MouseEventComponent>::HandleEventForEntit
                          : sf::Vector2f{0, 0};
   if (!window) {
     return;
-  } else if (component.strategy == events::MouseEventTarget::kAnyTarget) {
-    return component.handler(event.mouseButton.button, position, events::kAnyTarget);
   }
-
   auto target = MouseStrategyUtils::GetCurrentTarget<MouseEventComponent>(position, component,
                                                                           drawables, entity_id);
   auto v = component.strategy & target;
-  switch (v) {
-    case kLocalTarget:
-    case kOtherTarget:
-      return component.handler(event.mouseButton.button, position,
-                               static_cast<MouseEventTarget>(target));
-    default:
-      return;
+  if (v == events::kNoTarget) {
+    return;
   }
+  return component.handler(event.mouseButton.button, position,
+                           static_cast<MouseEventTarget>(target));
 }
 }  // namespace mew::sets::events

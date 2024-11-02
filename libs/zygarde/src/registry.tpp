@@ -71,14 +71,14 @@ typename sparse_array<Component>::reference_type Registry::AddComponent(Entity c
 
 template <typename Component>
 typename sparse_array<Component>::reference_type Registry::AddComponent(Entity const &to,
-                                                                        Component &c) {
+                                                                        const Component &c) {
   auto components = GetComponents<Component>();
   const auto size = components->size();
 
   if (size <= to.id_) {
     components->resize(static_cast<size_t>(to) + 1);
   }
-  return components->emplaceAt(static_cast<size_t>(to), std::forward<Component>(c));
+  return components->emplaceAt(static_cast<size_t>(to), c);
 }
 
 template <typename Component, typename... Params>

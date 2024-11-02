@@ -270,7 +270,7 @@ std::vector<payload::BulletState> Client::ResolveBulletsState(
 }
 
 bool api::Client::WaitForMessage(MasterToClientMsgType type,
-                                 bool (Client:: *handler)(const abt::MessageProps &message)) {
+                                 bool (Client::*handler)(const abt::MessageProps &message)) {
   std::size_t timeout = kServerResponseTimeout;
   abt::MessageProps message;
   bool success = false;

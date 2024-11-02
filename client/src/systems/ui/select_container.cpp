@@ -15,19 +15,20 @@ using namespace rtype::client::systems::ui;
 void SelectContainerSystem::Run(std::shared_ptr<Registry> r, ZippedComponents components) {
   for (auto&& [drawable, position, container] : components) {
     UpdateOptionsVisibility(r, container);
-    if (!container.expanded) {
-      continue;
+    AggregateClickPerformed(r, &container);
+    if (container.expanded) {
+      std::string new_label = container.placeholder;
+
+      UpdateOptionsState(r, container, &new_label);
+      UpdateContainerLabel(r, container, new_label);
     }
-    std::string new_label = container.placeholder;
-    UpdateOptionsState(r, container, &new_label);
-    UpdateContainerLabel(r, container, new_label);
   }
 }
 
 void SelectContainerSystem::UpdateOptionsState(const std::shared_ptr<Registry>& r,
                                                const SelectContainer& container,
                                                std::string* new_label) {
-  if (!container.selectedOption) {
+  if (!container.selectedOption || !container.expanded) {
     return;
   }
   auto options = r->GetMatchingEntities<SelectOption, Drawable>();
@@ -80,4 +81,18 @@ void SelectContainerSystem::UpdateOptionsVisibility(const std::shared_ptr<Regist
       drawable.visible = container.expanded;
     }
   }
+}
+
+void SelectContainerSystem::AggregateClickPerformed(const std::shared_ptr<Registry>& r,
+                                                    SelectContainer* container) {
+  auto entities = r->GetMatchingEntities<SelectOption>();
+
+  for (auto&& [option] : entities) {
+    if (option.selectId != container->selectId) {
+      continue;
+    }
+    container->clickPerformed |= option.clickPerformed;
+    option.clickPerformed = false;
+  }
+  container->expanded = container->clickPerformed;
 }

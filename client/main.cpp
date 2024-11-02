@@ -26,7 +26,7 @@ using namespace rtype::client::builder;
 int MAIN {
   auto builder = GameBuilder();
 
-  Services::RegisterServices(builder);
+  Services::RegisterServices(&builder);
   builder.WithWindowProperties({
       .title = APP_WINDOW_TITLE,
       .videoMode = {APP_WINDOW_WIDTH, APP_WINDOW_HEIGHT},
@@ -38,10 +38,10 @@ int MAIN {
   {
     auto game = builder.Build();
 
-    Settings::LoadSettings(game);
-    Resources::LoadResources(game);
-    Scenes::LoadScenes(game);
-    Scenes::SetEntryScene(game);
+    Settings::LoadSettings(&game);
+    Resources::LoadResources(&game);
+    Scenes::LoadScenes(&game);
+    Scenes::SetEntryScene(&game);
 
     return game.Run();
   }

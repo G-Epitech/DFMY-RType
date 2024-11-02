@@ -156,7 +156,8 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @param c Component to add
    */
   template <typename Component>
-  typename sparse_array<Component>::reference_type AddComponent(Entity const &to, Component &c);
+  typename sparse_array<Component>::reference_type AddComponent(Entity const &to,
+                                                                const Component &c);
 
   /**
    * @brief Emplace a component to an entity

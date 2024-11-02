@@ -34,7 +34,7 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
   };
 
   registry_->AddComponent<SelectContainer>(*this, {
-                                                      .expanded = false,
+                                                      .expanded = props.expanded,
                                                       .selectedOption = selectedOption,
                                                       .selectId = props.id,
                                                       .placeholder = props.placeholder,
@@ -51,22 +51,20 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
                 return OnHover(entity, target);
               }});
   registry_->AddComponent<OnMousePressed>(
-      *this, {.strategy = MouseEventTarget::kLocalTarget,
+      *this, {.strategy = MouseEventTarget::kAnyTarget,
               .handler = [registry = registry_, entity = static_cast<Entity>(*this)](
                              const sf::Mouse::Button& button, const sf::Vector2f& pos,
                              const MouseEventTarget& target) mutable {
-                if (button == sf::Mouse::Button::Left) {
-                  return OnClick(registry, entity);
-                }
+                return OnClick(registry, entity, button, target);
               }});
 }
 
-void SelectContainerEntity::RegisterDependencies(Registry& registry) {
-  registry.RegisterComponent<SelectContainer>();
-  registry.RegisterComponent<Tags>();
+void SelectContainerEntity::RegisterDependencies(const zygarde::Registry::Ptr& registry) {
+  registry->RegisterComponent<SelectContainer>();
+  registry->RegisterComponent<Tags>();
 }
 
-void SelectContainerEntity::OnHover(Entity& entity, const MouseEventTarget& target) {
+void SelectContainerEntity::OnHover(const Entity& entity, const MouseEventTarget& target) {
   auto select_container = entity.GetComponent<SelectContainer>();
   auto drawable_component = entity.GetComponent<Drawable>();
 
@@ -84,27 +82,19 @@ void SelectContainerEntity::OnHover(Entity& entity, const MouseEventTarget& targ
     rectangle.fillColor = select_container->selectedColor;
   }
 }
-void SelectContainerEntity::OnClick(const Registry::Ptr& registry, Entity& entity) {
+
+void SelectContainerEntity::OnClick(const Registry::Ptr& registry, const Entity& entity,
+                                    const sf::Mouse::Button& button,
+                                    const MouseEventTarget& target) {
   auto select_container = entity.GetComponent<SelectContainer>();
 
-  if (!select_container || select_container->expanded ||
-      !select_container->selectedOption.has_value()) {
+  if (!select_container) {
     return;
   }
-  FoldAllOtherSelects(registry, select_container->selectId);
-  select_container->expanded = true;
-  std::cout << "Select " << select_container->selectId << " expanded" << std::endl;
-}
-
-void SelectContainerEntity::FoldAllOtherSelects(const Registry::Ptr& registry,
-                                                const std::string& id) {
-  auto select_containers = registry->GetComponents<SelectContainer>();
-
-  for (auto& select_container : *select_containers) {
-    if (!select_container || select_container->selectId == id) {
-      continue;
-    }
-    std::cout << "Select " << select_container->selectId << " folded" << std::endl;
-    select_container->expanded = false;
+  select_container->clickPerformed = target == MouseEventTarget::kLocalTarget;
+  if (button != sf::Mouse::Button::Left || !select_container->selectedOption.has_value() ||
+      target != MouseEventTarget::kLocalTarget) {
+    return;
   }
+  select_container->expanded = !select_container->expanded;
 }

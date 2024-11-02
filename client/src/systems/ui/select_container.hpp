@@ -26,6 +26,21 @@ class SelectContainerSystem final : public ASystem<Drawable, Position, SelectCon
 
  private:
   /**
+   * @brief Update the expanded state
+   * @param r Registry
+   * @param container Container to update
+   */
+  static void AggregateClickPerformed(const std::shared_ptr<Registry>& r,
+                                      SelectContainer* container);
+  /**
+   * @brief Run the options routines
+   * @param r Registry
+   * @param container Container to run the routines on
+   * @param new_label New label
+   */
+  static void RunOptionsRoutines(const std::shared_ptr<Registry>& r,
+                                 const SelectContainer& container, std::string* new_label);
+  /**
    * @brief Update the options state
    * @param r Registry
    * @param container Select container

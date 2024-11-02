@@ -25,8 +25,8 @@ using namespace zygarde::core::types;
 SelectOptionEntity::SelectOptionEntity(std::size_t idx, std::shared_ptr<Registry> registry)
     : Entity(idx, std::move(registry)) {}
 
-void SelectOptionEntity::RegisterDependencies(Registry& registry) {
-  registry.RegisterComponent<SelectOption>();
+void SelectOptionEntity::RegisterDependencies(const zygarde::Registry::Ptr& registry) {
+  registry->RegisterComponent<SelectOption>();
 }
 void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& props,
                                  const std::string& value, const std::string& label) {
@@ -52,7 +52,7 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
   registry_->AddComponent<SelectOption>(*this, option);
   registry_->AddComponent<Drawable>(*this, {
                                                .drawable = rectangle,
-                                               .visible = true,
+                                               .visible = props.expanded,
                                                .layer = 30,
                                            });
   registry_->AddComponent<Position>(*this, position);
@@ -72,7 +72,7 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
                 }
               }});
 }
-void SelectOptionEntity::OnHover(Entity& entity,
+void SelectOptionEntity::OnHover(const Entity& entity,
                                  const mew::sets::events::MouseEventTarget& target) {
   auto select_option = entity.GetComponent<SelectOption>();
 
@@ -82,7 +82,7 @@ void SelectOptionEntity::OnHover(Entity& entity,
   select_option->hovered = target == MouseEventTarget::kLocalTarget;
 }
 
-void SelectOptionEntity::OnClick(const Registry::Ptr& registry, Entity& entity) {
+void SelectOptionEntity::OnClick(const Registry::Ptr& registry, const Entity& entity) {
   auto select_option = entity.GetComponent<SelectOption>();
   auto select_components = registry->GetComponents<SelectContainer>();
   if (!select_option || !select_components) {
@@ -91,6 +91,7 @@ void SelectOptionEntity::OnClick(const Registry::Ptr& registry, Entity& entity) 
   for (auto& select : *select_components) {
     if (select && select->selectId == select_option->selectId) {
       select->selectedOption = select_option->value;
+      select_option->clickPerformed = true;
       break;
     }
   }

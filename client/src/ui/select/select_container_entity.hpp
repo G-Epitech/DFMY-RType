@@ -23,7 +23,7 @@ class SelectContainerEntity final : Entity {
    * @brief Register the dependencies of the entity
    * @param registry Registry to register the dependencies
    */
-  static void RegisterDependencies(zygarde::Registry& registry);
+  static void RegisterDependencies(const zygarde::Registry::Ptr& registry);
 
  protected:
   /**
@@ -48,17 +48,17 @@ class SelectContainerEntity final : Entity {
    * @param pos Position of the mouse
    * @param target Target of the event
    */
-  static void OnHover(Entity& entity, const mew::sets::events::MouseEventTarget& target);
+  static void OnHover(const Entity& entity, const mew::sets::events::MouseEventTarget& target);
 
   /**
    * @brief On mouse click event
+   * @param registry Registry
    * @param entity Current entity
-   * @param props Properties of the select
-   * @param pos Position of the mouse
+   * @param button Button clicked
    * @param target Target of the event
    */
-  static void OnClick(const Registry::Ptr& registry, Entity& entity);
-
-  static void FoldAllOtherSelects(const Registry::Ptr& registry, const std::string& id);
+  static void OnClick(const Registry::Ptr& registry, const Entity& entity,
+                      const sf::Mouse::Button& button,
+                      const mew::sets::events::MouseEventTarget& target);
 };
 }  // namespace rtype::client::ui

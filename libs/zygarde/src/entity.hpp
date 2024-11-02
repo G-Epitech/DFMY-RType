@@ -59,7 +59,7 @@ class EXPORT_ZYGARDE_API Entity {
    * @return Component*
    */
   template <typename Component>
-  Component* GetComponent();
+  Component* GetComponent() const;
 
  protected:
   /// @brief Entity id

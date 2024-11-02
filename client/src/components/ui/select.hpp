@@ -27,6 +27,8 @@ struct SelectContainer {
   sf::Color disabledColor;
   /// @brief Hover color of the select
   sf::Color hoveredColor;
+  /// @brief Clicked
+  bool clickPerformed = false;
 };
 
 struct SelectOption {
@@ -42,5 +44,7 @@ struct SelectOption {
   bool disabled = false;
   /// @brief Select id of the option
   std::string selectId;
+  /// @brief Clicked
+  bool clickPerformed = false;
 };
 }  // namespace rtype::client::components

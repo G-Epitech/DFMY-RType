@@ -23,7 +23,7 @@ class SelectOptionTextEntity final : Entity {
    * @brief Register the dependencies of the entity
    * @param registry Registry to register the dependencies
    */
-  static void RegisterDependencies(zygarde::Registry &registry);
+  static void RegisterDependencies(const zygarde::Registry::Ptr &registry);
 
  protected:
   /**

@@ -16,6 +16,6 @@ class Settings {
    * @brief Load the settings of the game
    * @param game Game to load the settings
    */
-  static void LoadSettings(mew::game::Game &game);
+  static void LoadSettings(mew::game::Game *game);
 };
 }  // namespace rtype::client::builder

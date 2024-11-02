@@ -16,13 +16,13 @@
 using namespace rtype::client::builder;
 using namespace rtype::client::scenes;
 
-void Scenes::LoadScenes(mew::game::Game &game) {
-  game.managers.scenes->RegisterScene<SceneMenu>();
-  game.managers.scenes->RegisterScene<SceneSettings>();
-  game.managers.scenes->RegisterScene<SceneLobby>();
-  game.managers.scenes->RegisterScene<SceneGame>();
-  game.managers.scenes->RegisterScene<SceneStart>();
+void Scenes::LoadScenes(mew::game::Game *game) {
+  game->managers.scenes->RegisterScene<SceneMenu>();
+  game->managers.scenes->RegisterScene<SceneSettings>();
+  game->managers.scenes->RegisterScene<SceneLobby>();
+  game->managers.scenes->RegisterScene<SceneGame>();
+  game->managers.scenes->RegisterScene<SceneStart>();
 }
-void Scenes::SetEntryScene(mew::game::Game &game) {
-  game.managers.scenes->GoToScene<SceneMenu>();
+void Scenes::SetEntryScene(mew::game::Game *game) {
+  game->managers.scenes->GoToScene<SceneMenu>();
 }

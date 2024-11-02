@@ -16,6 +16,6 @@ class Services {
    * @brief Load the services of the game
    * @param builder Game to load the services
    */
-  static void RegisterServices(mew::game::GameBuilder &builder);
+  static void RegisterServices(mew::game::GameBuilder *builder);
 };
 }  // namespace rtype::client::builder

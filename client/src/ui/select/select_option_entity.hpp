@@ -23,7 +23,7 @@ class SelectOptionEntity final : Entity {
    * @brief Register the dependencies of the entity
    * @param registry Registry to register the dependencies
    */
-  static void RegisterDependencies(zygarde::Registry &registry);
+  static void RegisterDependencies(const zygarde::Registry::Ptr &registry);
 
  protected:
   /**
@@ -50,7 +50,7 @@ class SelectOptionEntity final : Entity {
    * @param registry Registry
    * @param entity Entity
    */
-  static void OnClick(const Registry::Ptr &registry, Entity &entity);
+  static void OnClick(const Registry::Ptr &registry, const Entity &entity);
 
   /**
    * @brief On mouse moved event
@@ -58,6 +58,6 @@ class SelectOptionEntity final : Entity {
    * @param props Properties of the select
    * @param target Target of the event
    */
-  static void OnHover(Entity &entity, const mew::sets::events::MouseEventTarget &target);
+  static void OnHover(const Entity &entity, const mew::sets::events::MouseEventTarget &target);
 };
 }  // namespace rtype::client::ui

@@ -18,6 +18,8 @@ class Select {
   struct Properties {
     /// @brief Id of the select
     std::string id;
+    /// @brief Expanded state of the select
+    bool expanded = false;
     /// @brief Position of the select
     zygarde::core::types::Vector3f position;
     /// @brief Display size of the select
@@ -72,7 +74,7 @@ class Select {
    * @brief Register the dependencies of the entity
    * @param registry Registry to register the dependencies
    */
-  static void RegisterDependencies(zygarde::Registry& registry);
+  static void RegisterDependencies(const zygarde::Registry::Ptr& registry);
 
   /**
    * @brief Create a new select

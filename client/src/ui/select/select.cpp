@@ -28,12 +28,12 @@ void Select::CreateSelectField(const Registry::Ptr& registry, const Select::Prop
   registry->SpawnEntity<SelectContainerEntity>(props);
   registry->SpawnEntity<SelectContainerTextEntity>(props);
 }
-void Select::RegisterDependencies(Registry& registry) {
+void Select::RegisterDependencies(const Registry::Ptr& registry) {
   SelectContainerEntity::RegisterDependencies(registry);
   SelectContainerTextEntity::RegisterDependencies(registry);
   SelectOptionEntity::RegisterDependencies(registry);
   SelectOptionTextEntity::RegisterDependencies(registry);
-  registry.AddSystem<SelectContainerSystem>();
+  registry->AddSystem<SelectContainerSystem>();
 }
 
 void Select::CreateOptions(const Registry::Ptr& registry, const Select::Properties& props) {
