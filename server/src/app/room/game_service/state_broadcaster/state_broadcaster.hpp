@@ -58,7 +58,7 @@ class StateBroadcaster final {
    * @param rigidbodies Rigidbody of the entity
    */
   static void ProcessEntity(const std::unique_ptr<EntityStates> &states, const Entity &entity,
-                            const Vector2f &position, const Tags *tags,
+                            const Vector3f &position, const Tags *tags,
                             const Rigidbody2D *rigidbodies) noexcept;
 
   /**
@@ -70,7 +70,7 @@ class StateBroadcaster final {
    * @param tags Tags of the entity
    */
   static void GatherEnemyState(const std::unique_ptr<EntityStates> &states, const Entity &entity,
-                               const Vector2f &position, const Vector2f &velocity,
+                               const Vector3f &position, const Vector2f &velocity,
                                const Tags *tags) noexcept;
 
   /**
@@ -82,7 +82,7 @@ class StateBroadcaster final {
    * @param tags Tags of the entity
    */
   static void GatherProjectileState(const std::unique_ptr<EntityStates> &states,
-                                    const Entity &entity, const Vector2f &position,
+                                    const Entity &entity, const Vector3f &position,
                                     const Vector2f &velocity, const Tags *tags) noexcept;
   /**
    * Sends the states to the clients of the lobby

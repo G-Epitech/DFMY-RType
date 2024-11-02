@@ -39,11 +39,10 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
                                   const api::payload::PlayerState& state) {
   auto player = registry->SpawnEntity();
   static const sf::IntRect base{100, 0, 32, 16};
-  const Vector3f pos{state.position.x, state.position.y, 0};
 
   registry->AddComponent<ServerEntityId>(player, {.id = state.entityId});
   registry->AddComponent<Position>(
-      player, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
+      player, {.point = state.position, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       player, {
                   .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
@@ -61,14 +60,13 @@ void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry,
   const auto entity_id = static_cast<std::size_t>(player);
   const auto positions = registry->GetComponents<Position>();
   const auto rigidbodies = registry->GetComponents<physics::components::Rigidbody2D>();
-  const Vector3f pos{state.position.x, state.position.y, 0};
 
   if (entity_id >= positions->size() || entity_id >= rigidbodies->size()) {
     std::cerr << "Invalid player id" << std::endl;
     return;
   }
   if ((*positions)[entity_id] && (*rigidbodies)[entity_id]) {
-    (*positions)[entity_id]->point = pos;
+    (*positions)[entity_id]->point = state.position;
     (*rigidbodies)[entity_id]->SetVelocity({state.velocity.x, state.velocity.y});
   }
 }
@@ -111,11 +109,10 @@ void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry,
                                  const api::payload::EnemyState& state) {
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{5, 6, 21, 36};
-  const Vector3f pos{state.position.x, state.position.y, 0};
 
   registry->AddComponent<ServerEntityId>(enemy, {.id = state.entityId});
   registry->AddComponent<Position>(
-      enemy, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
+      enemy, {.point = state.position, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
       enemy, {
                  .drawable = Texture{.name = "enemy", .scale = 2.5, .rect = base},
@@ -130,14 +127,13 @@ void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry,
   const auto enemy = enemies_.at(state.entityId);
   const auto positions = registry->GetComponents<Position>();
   const auto entity_id = static_cast<std::size_t>(enemy);
-  const Vector3f pos{state.position.x, state.position.y, 0};
 
   if (entity_id >= positions->size()) {
     std::cerr << "Invalid enemy id" << std::endl;
     return;
   }
   if ((*positions)[entity_id]) {
-    (*positions)[entity_id]->point = pos;
+    (*positions)[entity_id]->point = state.position;
   }
 }
 

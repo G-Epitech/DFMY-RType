@@ -22,29 +22,28 @@ void StateBroadcaster::Run(const std::shared_ptr<Registry>& registry,
 
 void StateBroadcaster::GatherEntityStates(const std::shared_ptr<Registry>& registry,
                                           const std::unique_ptr<EntityStates>& states) noexcept {
-  const auto components = registry->GetComponents<Position>();
+  const auto positions = registry->GetComponents<Position>();
   std::size_t i = 0;
 
-  for (auto& component : *components) {
-    if (!registry->HasEntityAtIndex(i) || !component.has_value()) {
+  for (auto& position : *positions) {
+    if (!registry->HasEntityAtIndex(i) || !position.has_value()) {
       i++;
       continue;
     }
 
-    const auto val = component.value();
-    auto ent = registry->EntityFromIndex(i);
-    const Vector2f vec = {val.point.x, val.point.y};
-    const auto tags = registry->GetComponent<Tags>(ent);
-    const auto rigidbodies = registry->GetComponent<Rigidbody2D>(ent);
+    const auto [point, aligns] = position.value();
+    auto entity = registry->EntityFromIndex(i);
+    const auto tags = registry->GetComponent<Tags>(entity);
+    const auto rigidbodies = registry->GetComponent<Rigidbody2D>(entity);
     if (tags.has_value() && tags.value() && rigidbodies.has_value() && rigidbodies.value()) {
-      ProcessEntity(states, ent, vec, *tags, *rigidbodies);
+      ProcessEntity(states, entity, point, *tags, *rigidbodies);
     }
     i++;
   }
 }
 
 void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states,
-                                     const Entity& entity, const Vector2f& position,
+                                     const Entity& entity, const Vector3f& position,
                                      const Tags* tags, const Rigidbody2D* rigidbodies) noexcept {
   const Tags tagsToCheck{*tags};
   const core::types::Vector2f velocity = rigidbodies->GetVelocity();
@@ -73,7 +72,7 @@ void StateBroadcaster::SendStates(const std::shared_ptr<Room>& api,
   }
 }
 void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& states,
-                                        const Entity& entity, const Vector2f& position,
+                                        const Entity& entity, const Vector3f& position,
                                         const Vector2f& velocity, const Tags* tags) noexcept {
   if (*tags == sdk::game::constants::kPataTag) {
     const payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
@@ -83,7 +82,7 @@ void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& sta
 }
 
 void StateBroadcaster::GatherProjectileState(const std::unique_ptr<EntityStates>& states,
-                                             const Entity& entity, const Vector2f& position,
+                                             const Entity& entity, const Vector3f& position,
                                              const Vector2f& velocity, const Tags* tags) noexcept {
   if (*tags == sdk::game::constants::kPlayerBulletTag) {
     const payload::BulletState state = {static_cast<std::size_t>(entity), position, velocity,
