@@ -39,4 +39,10 @@ void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
 
   registry_->AddComponent<Drawable>(*this, {drawable});
   registry_->AddComponent<Position>(*this, {position, aligns});
+  registry_->AddComponent<Tags>(
+      *this, Tags({Select::ContainerTextIdTagOf(props.id), Select::IdTagOf(props.id)}));
+}
+
+void SelectContainerTextEntity::RegisterDependencies(Registry& registry) {
+  registry.RegisterComponent<Tags>();
 }

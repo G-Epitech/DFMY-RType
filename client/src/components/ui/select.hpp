@@ -27,8 +27,6 @@ struct SelectOption {
   std::string value;
   /// @brief Is the option selected
   bool selected = false;
-  /// @brief Is the option hovered
-  bool hovered = false;
   /// @brief Select id of the option
   std::string selectId;
 };

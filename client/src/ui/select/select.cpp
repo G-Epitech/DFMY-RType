@@ -26,7 +26,9 @@ void Select::CreateSelectField(const Registry::Ptr& registry, const Select::Prop
 }
 void Select::RegisterDependencies(Registry& registry) {
   SelectContainerEntity::RegisterDependencies(registry);
+  SelectContainerTextEntity::RegisterDependencies(registry);
   SelectOptionEntity::RegisterDependencies(registry);
+  SelectOptionTextEntity::RegisterDependencies(registry);
 }
 
 void Select::CreateOptions(const Registry::Ptr& registry, const Select::Properties& props) {
@@ -35,7 +37,7 @@ void Select::CreateOptions(const Registry::Ptr& registry, const Select::Properti
   for (const auto& [value, label] : props.options) {
     std::cout << "Creating option: " << label << std::endl;
     registry->SpawnEntity<SelectOptionEntity>(index, props, value, label);
-    registry->SpawnEntity<SelectOptionTextEntity>(index, props, label);
+    registry->SpawnEntity<SelectOptionTextEntity>(index, props, value, label);
     index += 1;
   }
 }

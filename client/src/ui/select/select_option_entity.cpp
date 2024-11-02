@@ -11,12 +11,14 @@
 
 #include "client/src/components/ui/select.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
+#include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/core/types/vector/vector.hpp"
 
 using namespace rtype::client::ui;
 using namespace rtype::client::components;
 using namespace mew::sets::drawable;
+using namespace mew::sets::events;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 
@@ -39,7 +41,6 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
       .label = label,
       .value = value,
       .selected = false,
-      .hovered = false,
       .selectId = props.id,
   };
   Position position = {
@@ -54,4 +55,29 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
                                                .layer = 30,
                                            });
   registry_->AddComponent<Position>(*this, position);
+  registry_->AddComponent<OnMouseMoved>(
+      *this, {.strategy = MouseEventTarget::kAnyTarget,
+              .handler = [entity = static_cast<Entity>(*this), props](
+                             const sf::Vector2f& pos, const MouseEventTarget& target) mutable {
+                return OnHover(entity, props, target);
+              }});
+}
+void SelectOptionEntity::OnHover(Entity& entity, const Select::Properties& props,
+                                 const mew::sets::events::MouseEventTarget& target) {
+  auto drawable_component = entity.GetComponent<Drawable>();
+  auto select_option = entity.GetComponent<SelectOption>();
+
+  if (!select_option || !drawable_component ||
+      !std::holds_alternative<Rectangle>(drawable_component->drawable)) {
+    return;
+  }
+  auto& rectangle = std::get<Rectangle>(drawable_component->drawable);
+
+  if (target == MouseEventTarget::kLocalTarget) {
+    rectangle.fillColor = props.hoveredColor;
+  } else if (select_option->selected) {
+    rectangle.fillColor = props.selectedColor;
+  } else {
+    rectangle.fillColor = props.disabledColor;
+  }
 }

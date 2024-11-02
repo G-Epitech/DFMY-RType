@@ -24,7 +24,7 @@ SelectOptionTextEntity::SelectOptionTextEntity(std::size_t idx, std::shared_ptr<
     : Entity(idx, std::move(registry)) {}
 
 void SelectOptionTextEntity::OnSpawn(std::size_t index, const Select::Properties& props,
-                                     const std::string& label) {
+                                     const std::string& value, const std::string& label) {
   Position position = {
       .point = Vector3f(props.position.x + props.size.x * 0.5f,
                         props.position.y + (static_cast<float>(index + 1) * (props.size.y + 1) -
@@ -36,6 +36,12 @@ void SelectOptionTextEntity::OnSpawn(std::size_t index, const Select::Properties
                        .characterSize = static_cast<unsigned int>(props.size.y * 0.5f),
                        .color = sf::Color::White};
 
-  registry_->AddComponent<Drawable>(*this, {drawable});
+  registry_->AddComponent<Drawable>(*this, {.drawable = drawable, .layer = 30});
   registry_->AddComponent<Position>(*this, position);
+  registry_->AddComponent<Tags>(
+      *this, Tags({Select::OptionTextIdTagOf(value), Select::IdTagOf(props.id)}));
+}
+
+void SelectOptionTextEntity::RegisterDependencies(Registry& registry) {
+  registry.RegisterComponent<Tags>();
 }

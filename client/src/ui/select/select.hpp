@@ -35,6 +35,31 @@ class Select {
   };
 
   /**
+   * @brief Get the tage for a select option text
+   * @param id Id of the option
+   * @return Tag of the select option text
+   */
+  static inline std::string OptionTextIdTagOf(const std::string& id) {
+    return "select:option-text:id=" + id;
+  }
+
+  /**
+   * @brief Get the tage for a select option text
+   * @param id Id of the select
+   * @return Tag of the select option text
+   */
+  static inline std::string ContainerTextIdTagOf(const std::string& id) {
+    return "select:container-text:id=" + id;
+  }
+
+  /**
+   * @brief Get the tage for a select option text
+   * @param id Id of the select
+   * @return Tag of the select option text
+   */
+  static inline std::string IdTagOf(const std::string& id) { return "select:id=" + id; }
+
+  /**
    * @brief Register the dependencies of the entity
    * @param registry Registry to register the dependencies
    */

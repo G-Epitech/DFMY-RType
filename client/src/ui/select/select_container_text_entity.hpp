@@ -15,6 +15,13 @@ namespace rtype::client::ui {
 class SelectContainerTextEntity final : Entity {
   friend class zygarde::Registry;
 
+ public:
+  /**
+   * @brief Register the dependencies of the entity
+   * @param registry Registry to register the dependencies
+   */
+  static void RegisterDependencies(zygarde::Registry& registry);
+
  protected:
   /**
    * @brief Construct a new Select Entity object

@@ -18,6 +18,13 @@ namespace rtype::client::ui {
 class SelectOptionTextEntity final : Entity {
   friend class zygarde::Registry;
 
+ public:
+  /**
+   * @brief Register the dependencies of the entity
+   * @param registry Registry to register the dependencies
+   */
+  static void RegisterDependencies(zygarde::Registry &registry);
+
  protected:
   /**
    * @brief Construct a new Select Entity object
@@ -35,6 +42,7 @@ class SelectOptionTextEntity final : Entity {
    * @param value Id of the option
    * @param label Text of the option
    */
-  void OnSpawn(std::size_t index, const Select::Properties &props, const std::string &label);
+  void OnSpawn(std::size_t index, const Select::Properties &props, const std::string &value,
+               const std::string &label);
 };
 }  // namespace rtype::client::ui
