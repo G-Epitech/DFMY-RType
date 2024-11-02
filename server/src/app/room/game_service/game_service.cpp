@@ -11,6 +11,7 @@
 
 #include "app/room/filepaths.hpp"
 #include "app/room/game_service/scripts/scripts_registry.hpp"
+#include "libs/game/src/constants/tags.hpp"
 #include "network/state_broadcaster/state_broadcaster.hpp"
 #include "scripting/components/pool/script_pool.hpp"
 #include "scripts/player_script.hpp"
@@ -85,6 +86,7 @@ void GameService::ExecuteGameLogic() {
     levelManager_.Update(ticksManager_.DeltaTime());
   }
   registry_->RunSystems();
+  CheckTooFarEntities();
   CheckDeadPlayers();
   levelManager_.CheckDeadEnemies(registry_->GetEntitiesToKill());
   registry_->CleanupDestroyedEntities();
@@ -132,6 +134,9 @@ void GameService::HandleGameEnd() {
     logger_.Info("Game ended, players lost", "💥");
   }
   const auto totalScore = ComputeTotalScore();
+  if (totalScore == 0) {
+    win_ = false;
+  }
   logger_.Info("Total score: " + std::to_string(totalScore), "🏆");
   this->api_->EndGame(totalScore, totalGameTime_, win_);
 }
@@ -160,5 +165,35 @@ unsigned int GameService::ComputeTotalScore() const {
   for (const auto &deadPlayer : deadPlayers_) {
     totalScore += deadPlayer.second.score;
   }
+  if (scorePenalty_ > totalScore) {
+    return 0;
+  }
+  totalScore -= scorePenalty_;
   return totalScore;
+}
+
+void GameService::CheckTooFarEntities() {
+  const auto entities = registry_->GetEntities();
+  std::cout << "Entities size: " << entities.size() << std::endl;
+  for (const auto &entity : entities) {
+    if (!entity) {
+      continue;
+    }
+    const auto &entity_value = entity.value();
+    const auto position = registry_->GetComponent<core::components::Position>(entity_value);
+    if (!position.has_value() || !position.value()) {
+      continue;
+    }
+    const auto point = position.value()->point;
+    if (point.x < -100 || point.x > 2100 || point.y < -100 || point.y > 1200) {
+      registry_->DestroyEntity(entity_value);
+      auto tagComponent = registry_->GetComponent<Tags>(entity_value);
+      if (!tagComponent.has_value() || !tagComponent.value()) {
+        continue;
+      }
+      if ((*tagComponent.value()) & rtype::sdk::game::constants::kEnemyTag) {
+        scorePenalty_ += 100;
+      }
+    }
+  }
 }
