@@ -14,6 +14,7 @@
 using namespace rtype::client;
 using namespace rtype::client::scenes;
 using namespace mew::sets::events;
+using namespace mew::sets;
 using namespace mew::sets::drawable;
 using namespace mew::managers;
 using namespace zygarde::core::components;
@@ -149,7 +150,7 @@ void SceneLeaderboard::CreateScoreRectangle(const std::size_t &index, const sf::
   registry_->AddComponent<Position>(entry, {point, aligns});
   registry_->AddComponent<Drawable>(
       entry,
-      {Rectangle{sf::Color::Transparent, size, sf::Color::White, 3.0}, WindowManager::View::HUD});
+      {drawable::Rectangle{sf::Color::Transparent, size, sf::Color::White, 3.0}, WindowManager::View::HUD});
 }
 
 void SceneLeaderboard::CreateScoreTitle(const std::size_t &index,
