@@ -39,7 +39,8 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
                                   const api::payload::PlayerState& state) {
   auto player = registry->SpawnEntity();
   static const sf::IntRect base{100, 0, 32, 16};
-  Vector3f pos{state.position.x, state.position.y, 0};
+  const Vector3f pos{state.position.x, state.position.y, 0};
+  const Vector2f velocity{state.velocity.x, state.velocity.y};
 
   registry->AddComponent<ServerEntityId>(player, {.id = state.entityId});
   registry->AddComponent<Position>(
@@ -49,7 +50,7 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
                   .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
               });
   registry->AddComponent<physics::components::Rigidbody2D>(
-      player, {.velocity = {state.velocity.x, state.velocity.y}});
+      player, physics::components::Rigidbody2D(velocity));
 
   std::cout << "Player created" << std::endl;
   players_.insert_or_assign(state.entityId, player);
