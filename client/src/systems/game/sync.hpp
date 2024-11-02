@@ -50,19 +50,18 @@ class GameSyncSystem final : public ASystem<> {
   /**
    * @brief Create a player
    * @param registry The registry
-   * @param id The id of the player
-   * @param pos The position of the player
+   * @param state State of the player
    */
-  void CreatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+  void CreatePlayer(const std::shared_ptr<Registry> &registry,
+                    const api::payload::PlayerState &state);
+
   /**
    * @brief Update a player
    * @param registry The registry
-   * @param id Id of the player
-   * @param pos Position of the player
+   * @param state State of the player
    */
-  void UpdatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+  void UpdatePlayer(const std::shared_ptr<Registry> &registry,
+                    const api::payload::PlayerState &state);
 
   /**
    * @brief Create a bullet

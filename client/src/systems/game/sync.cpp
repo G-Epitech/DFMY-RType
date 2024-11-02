@@ -34,12 +34,13 @@ void GameSyncSystem::Run(Registry::Ptr r) {
   }
 }
 
-void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const Vector3f& pos) {
+void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
+                                  const api::payload::PlayerState& state) {
   auto player = registry->SpawnEntity();
   static const sf::IntRect base{100, 0, 32, 16};
+  Vector3f pos{state.position.x, state.position.y, 0};
 
-  registry->AddComponent<ServerEntityId>(player, {.id = id});
+  registry->AddComponent<ServerEntityId>(player, {.id = state.entityId});
   registry->AddComponent<Position>(
       player, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
   registry->AddComponent<Drawable>(
@@ -48,14 +49,15 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry, con
               });
 
   std::cout << "Player created" << std::endl;
-  players_.insert_or_assign(id, player);
+  players_.insert_or_assign(state.entityId, player);
 }
 
-void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                  const Vector3f& pos) {
-  auto player = players_.at(id);
+void GameSyncSystem::UpdatePlayer(const std::shared_ptr<Registry>& registry,
+                                  const api::payload::PlayerState& state) {
+  auto player = players_.at(state.entityId);
   auto positions = registry->GetComponents<Position>();
   auto entity_id = static_cast<std::size_t>(player);
+  Vector3f pos{state.position.x, state.position.y, 0};
 
   if (entity_id >= positions->size()) {
     std::cerr << "Invalid player id" << std::endl;
@@ -155,9 +157,9 @@ void GameSyncSystem::HandlePlayerState(const Registry::Ptr& registry,
                                        const api::payload::PlayerState& state,
                                        std::set<std::size_t>* handled) {
   if (players_.contains(state.entityId)) {
-    UpdatePlayer(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    UpdatePlayer(registry, state);
   } else {
-    CreatePlayer(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    CreatePlayer(registry, state);
   }
   handled->insert(state.entityId);
 }
