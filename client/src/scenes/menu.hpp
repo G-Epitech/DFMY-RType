@@ -45,6 +45,11 @@ class SceneMenu final : public SceneBase {
   void CreatePlayButton() const;
 
   /**
+   * @brief Create the leaderboard button
+   */
+  void CreateLeaderboardButton() const;
+
+  /**
    * @brief Create the settings button
    */
   void CreateSettingsButton() const;

@@ -9,6 +9,7 @@
 #include "./src/constants/window.hpp"
 #include "./src/scenes/game.hpp"
 #include "./src/scenes/lobby.hpp"
+#include "./src/scenes/leaderboard.hpp"
 #include "./src/scenes/menu.hpp"
 #include "./src/scenes/settings.hpp"
 #include "libs/mew/src/game/builder.hpp"
@@ -55,6 +56,7 @@ int MAIN {
                                       sf::Shader::Fragment);
 
   game.managers.scenes->RegisterScene<SceneMenu>();
+  game.managers.scenes->RegisterScene<SceneLeaderboard>();
   game.managers.scenes->RegisterScene<SceneSettings>();
   game.managers.scenes->RegisterScene<SceneLobby>();
   game.managers.scenes->RegisterScene<SceneGame>();

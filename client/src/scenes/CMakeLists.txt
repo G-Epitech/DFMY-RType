@@ -7,6 +7,8 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         settings.cpp
         lobby.cpp
         lobby.hpp
+        leaderboard.cpp
+        leaderboard.hpp
 )
 
 add_subdirectory(utils)
