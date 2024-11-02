@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "abra/includes/database.hpp"
-#include "abra/src/tools/logger/logger.hpp"
+#include "libs/abra/includes/database.hpp"
+#include "libs/abra/src/tools/logger/logger.hpp"
 #include "libs/game/src/api/server/database/props/scores.hpp"
 #include "libs/game/src/core.hpp"
 

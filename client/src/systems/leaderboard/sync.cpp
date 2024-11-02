@@ -10,20 +10,16 @@
 #include <set>
 #include <utility>
 
-#include "client/src/services/server_connection_service.hpp"
-#include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
-#include "libs/mew/src/sets/drawable/drawable.hpp"
-#include "libs/zygarde/src/core/components/components.hpp"
-
 using namespace rtype::client::systems;
 using namespace rtype::client::components;
 using namespace rtype::client::services;
-using namespace zygarde::core::components;
 using namespace zygarde::core::types;
-using namespace mew::sets::drawable;
 
-LeaderboardSyncSystem::LeaderboardSyncSystem(ServerConnectionService::Ptr server_connection_service)
-    : ASystem(), serverConnectionService_{std::move(server_connection_service)} {}
+LeaderboardSyncSystem::LeaderboardSyncSystem(ServerConnectionService::Ptr server_connection_service,
+                                             std::shared_ptr<std::vector<payload::Score>> scores)
+    : ASystem(),
+      serverConnectionService_{std::move(server_connection_service)},
+      scores_(std::move(scores)) {}
 
 void LeaderboardSyncSystem::Run(Registry::Ptr r) {
   if (!serverConnectionService_->Connected()) {
@@ -32,8 +28,16 @@ void LeaderboardSyncSystem::Run(Registry::Ptr r) {
 
   auto queue = serverConnectionService_->client()->ExtractQueue();
   while (!queue.empty()) {
-    auto& message = queue.front();
-    // ah
+    auto &message = queue.front();
+    if (message.messageType == MasterToClientMsgType::kMsgTypeMTCInfoGame) {
+      auto infos = serverConnectionService_->client()->ResolveGameInfo(message);
+
+      scores_->clear();
+      for (auto &score : infos.leaderboard) {
+        scores_->push_back(score);
+      }
+    }
+
     queue.pop();
   }
 }

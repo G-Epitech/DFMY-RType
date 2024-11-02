@@ -13,6 +13,7 @@
 #include "client/src/services/server_connection_service.hpp"
 #include "components/server_entity_id.hpp"
 #include "core/types/vector/vector_2f.hpp"
+#include "libs/game/includes/api.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
 
 namespace rtype::client::systems {
@@ -22,7 +23,8 @@ class LeaderboardSyncSystem final : public ASystem<> {
    * @brief Construct a new Leaderboard Sync System object
    * @param server_connection_service Pointer to the server connection service
    */
-  explicit LeaderboardSyncSystem(services::ServerConnectionService::Ptr server_connection_service);
+  explicit LeaderboardSyncSystem(services::ServerConnectionService::Ptr server_connection_service,
+                                 std::shared_ptr<std::vector<payload::Score>> scores);
 
   void Run(Registry::Ptr r) override;
 
@@ -31,5 +33,8 @@ class LeaderboardSyncSystem final : public ASystem<> {
    * @brief Pointer to the server connection manager
    */
   services::ServerConnectionService::Ptr serverConnectionService_;
+
+  /// @brief Scores
+  std::shared_ptr<std::vector<payload::Score>> scores_;
 };
 }  // namespace rtype::client::systems
