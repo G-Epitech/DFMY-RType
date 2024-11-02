@@ -24,8 +24,9 @@ ChatInputSystem::ChatInputSystem(WindowManager::Ptr window_manager,
 
 void ChatInputSystem::Run(Registry::Ptr r, zipper<Tags, Drawable> components) {
   const auto events = windowManager_->GetDeferredEvents();
+
   for (auto&& [tags, drawable] : components) {
-    if (tags & "chat") {
+    if (tags & "chat_input") {
       for (const auto& event : events) {
         if (event.type == sf::Event::KeyPressed) {
           auto&& component = std::get<Text>(drawable.drawable);
@@ -34,8 +35,9 @@ void ChatInputSystem::Run(Registry::Ptr r, zipper<Tags, Drawable> components) {
               auto res = serverConnectionService_->client()->SendMessage(component.text);
               if (!res) {
                 std::cerr << "Failed to send message: '" << component.text << "'" << std::endl;
+              } else {
+                component.text = "";
               }
-              component.text = "";
             }
           }
         }

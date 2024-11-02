@@ -35,16 +35,16 @@ void Input::CreateInputField(const Registry::Ptr& registry, const std::string& t
 
   registry->AddComponent<Position>(input_field, {position, alignment});
   registry->AddComponent<Drawable>(input_field, {Text{"", "main"}, WindowManager::View::HUD});
-  registry->AddComponent<Tags>(input_field, Tags({tag, (tag + "_input")}));
+  registry->AddComponent<Tags>(input_field, Tags({tag, (tag + "_input"), "disabled"}));
   registry->AddComponent<OnTextEntered>(
       input_field, OnTextEntered{.handler = [registry, input_field,
                                              settings_manager](const sf::Uint32& unicode) {
         const auto component = registry->GetComponent<Drawable>(input_field);
-        const auto entity_tags = registry->GetComponent<Tags>(input_field);
+        auto entity_tags = registry->GetComponent<Tags>(input_field);
         if (!component || !entity_tags) {
           return;
         }
-        if (!settings_manager->Get<bool>(SETTING_GAME_CHAT_OPEN)) {
+        if ((*entity_tags) && (*(entity_tags.value()) & "disabled")) {
           return;
         }
         auto& drawable = (*component)->drawable;
@@ -72,5 +72,5 @@ void Input::CreateBlinkingCursor(const Registry::Ptr& registry, const std::strin
 
   registry->AddComponent<Position>(cursor, {position, alignment});
   registry->AddComponent<Drawable>(cursor, {Text{"|", "main"}, WindowManager::View::HUD});
-  registry->AddComponent<Tags>(cursor, Tags({"blink", (tag + "_cursor")}));
+  registry->AddComponent<Tags>(cursor, Tags({"blink", tag, (tag + "_cursor"), "disabled"}));
 }

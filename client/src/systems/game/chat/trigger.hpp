@@ -35,5 +35,13 @@ class ChatTriggerSystem final : public ASystem<Tags> {
 
   /// @brief Settings manager
   SettingsManager::Ptr settingsManager_;
+
+  static bool IsChatOpenKey(const sf::Event& event);
+
+  static bool IsChatCloseKey(const sf::Event& event);
+
+  static void OpenChat(Tags& tags);
+
+  static void CloseChat(Tags& tags);
 };
 }  // namespace rtype::client::systems

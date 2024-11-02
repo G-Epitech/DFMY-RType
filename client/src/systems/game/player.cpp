@@ -27,6 +27,10 @@ void PlayerSystem::Run(Registry::Ptr r) {
   const auto events = windowManager_->GetDeferredEvents();
   const auto key_map = settingsManager_->Get<KeyMap>(SETTING_GAME_KEYMAP);
 
+  if (settingsManager_->Get<bool>(SETTING_GAME_CHAT_OPEN)) {
+    return;
+  }
+
   // If a key is pressed, we send a message to the server
   for (const auto &event : events) {
     const auto action_keyboard = key_map.GetActionFromKey(event.key.code);

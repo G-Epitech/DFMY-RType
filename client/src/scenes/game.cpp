@@ -17,6 +17,7 @@
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "menu.hpp"
 #include "physics/2d/systems/systems.hpp"
+#include "systems/blink.hpp"
 #include "systems/game/chat/input.hpp"
 #include "systems/game/chat/messages.hpp"
 #include "systems/game/chat/trigger.hpp"
@@ -57,6 +58,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
   registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service);
   registry_->AddSystem<ChatTriggerSystem>(window_manager, settings_manager);
+  registry_->AddSystem<BlinkSystem>();
 }
 
 void SceneGame::OnCreate() {
