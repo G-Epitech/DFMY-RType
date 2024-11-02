@@ -19,6 +19,7 @@
 #include "./entity.hpp"
 #include "./system_interface.hpp"
 #include "./tools/spare_array.hpp"
+#include "./tools/zipper.hpp"
 
 namespace zygarde {
 
@@ -116,6 +117,14 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    * @return std::vector<std::optional<Entity>>&
    */
   [[nodiscard]] std::vector<std::optional<Entity>> &GetEntities();
+
+  /**
+   * @brief Get the entities matching the components
+   * @tparam Components Components to match
+   * @return Zipped components
+   */
+  template <typename... Components>
+  [[nodiscard]] zipper<Components...> GetMatchingEntities();
 
   /**
    * @brief Check if an entity has a component

@@ -48,8 +48,7 @@ class SelectContainerEntity final : Entity {
    * @param pos Position of the mouse
    * @param target Target of the event
    */
-  static void OnHover(Entity& entity, const Select::Properties& props,
-                      const mew::sets::events::MouseEventTarget& target);
+  static void OnHover(Entity& entity, const mew::sets::events::MouseEventTarget& target);
 
   /**
    * @brief On mouse click event
@@ -58,8 +57,7 @@ class SelectContainerEntity final : Entity {
    * @param pos Position of the mouse
    * @param target Target of the event
    */
-  static void OnClick(const Registry::Ptr& registry, Entity& entity,
-                      const Select::Properties& props);
+  static void OnClick(const Registry::Ptr& registry, Entity& entity);
 
   static void FoldAllOtherSelects(const Registry::Ptr& registry, const std::string& id);
 };

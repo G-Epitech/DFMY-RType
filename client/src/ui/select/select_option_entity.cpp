@@ -48,6 +48,7 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
                         props.position.y + (static_cast<float>(index + 1) * (props.size.y + 1))),
       .aligns = {HorizontalAlign::kLeft, VerticalAlign::kCenter}};
 
+  registry_->AddComponent<Tags>(*this, Tags({Select::OptionIdTagOf(props.id)}));
   registry_->AddComponent<SelectOption>(*this, option);
   registry_->AddComponent<Drawable>(*this, {
                                                .drawable = rectangle,
@@ -57,27 +58,40 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
   registry_->AddComponent<Position>(*this, position);
   registry_->AddComponent<OnMouseMoved>(
       *this, {.strategy = MouseEventTarget::kAnyTarget,
-              .handler = [entity = static_cast<Entity>(*this), props](
+              .handler = [entity = static_cast<Entity>(*this)](
                              const sf::Vector2f& pos, const MouseEventTarget& target) mutable {
-                return OnHover(entity, props, target);
+                return OnHover(entity, target);
+              }});
+  registry_->AddComponent<OnMousePressed>(
+      *this, {.strategy = MouseEventTarget::kLocalTarget,
+              .handler = [registry = registry_, entity = static_cast<Entity>(*this)](
+                             const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                             const MouseEventTarget& target) mutable {
+                if (button == sf::Mouse::Button::Left) {
+                  return OnClick(registry, entity);
+                }
               }});
 }
-void SelectOptionEntity::OnHover(Entity& entity, const Select::Properties& props,
+void SelectOptionEntity::OnHover(Entity& entity,
                                  const mew::sets::events::MouseEventTarget& target) {
-  auto drawable_component = entity.GetComponent<Drawable>();
   auto select_option = entity.GetComponent<SelectOption>();
 
-  if (!select_option || !drawable_component ||
-      !std::holds_alternative<Rectangle>(drawable_component->drawable)) {
+  if (!select_option) {
     return;
   }
-  auto& rectangle = std::get<Rectangle>(drawable_component->drawable);
+  select_option->hovered = target == MouseEventTarget::kLocalTarget;
+}
 
-  if (target == MouseEventTarget::kLocalTarget) {
-    rectangle.fillColor = props.hoveredColor;
-  } else if (select_option->selected) {
-    rectangle.fillColor = props.selectedColor;
-  } else {
-    rectangle.fillColor = props.disabledColor;
+void SelectOptionEntity::OnClick(const Registry::Ptr& registry, Entity& entity) {
+  auto select_option = entity.GetComponent<SelectOption>();
+  auto select_components = registry->GetComponents<SelectContainer>();
+  if (!select_option || !select_components) {
+    return;
+  }
+  for (auto& select : *select_components) {
+    if (select && select->selectId == select_option->selectId) {
+      select->selectedOption = select_option->value;
+      break;
+    }
   }
 }

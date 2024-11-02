@@ -47,12 +47,10 @@ class SelectOptionEntity final : Entity {
 
   /**
    * @brief On mouse click event
-   * @param entity Current entity
-   * @param props Properties of the select
-   * @param pos Position of the mouse
-   * @param target Target of the event
+   * @param registry Registry
+   * @param entity Entity
    */
-  static void OnClick(const Registry::Ptr &registry, Entity &entity, const std::string &id);
+  static void OnClick(const Registry::Ptr &registry, Entity &entity);
 
   /**
    * @brief On mouse moved event
@@ -60,7 +58,6 @@ class SelectOptionEntity final : Entity {
    * @param props Properties of the select
    * @param target Target of the event
    */
-  static void OnHover(Entity &entity, const Select::Properties &props,
-                      const mew::sets::events::MouseEventTarget &target);
+  static void OnHover(Entity &entity, const mew::sets::events::MouseEventTarget &target);
 };
 }  // namespace rtype::client::ui

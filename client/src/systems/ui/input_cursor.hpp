@@ -7,25 +7,26 @@
 
 #pragma once
 
-#include "core/components/position/position.hpp"
-#include "core/components/tags/tags.hpp"
-#include "sets/drawable/components/components.hpp"
-#include "system_abstract.hpp"
+#include "libs/mew/src/sets/drawable/components/components.hpp"
+#include "libs/zygarde/src/core/components/position/position.hpp"
+#include "libs/zygarde/src/core/components/tags/tags.hpp"
+#include "libs/zygarde/src/system_abstract.hpp"
 
 // Here we use a MACRO to define the number of attempts to update the cursor. It's because the
 // cursor position depends on the text bounds and the text bounds may be updated after our cursor
 // update.
 #define CURSOR_UPDATE_NB_ATTEMPTS 2
 
+namespace rtype::client::systems::ui {
+
 using namespace zygarde::core::components;
 using namespace mew::sets::drawable;
 
-namespace rtype::client::systems::ui {
 class CursorSystem final : public ASystem<Tags, Drawable, Position> {
  public:
   CursorSystem();
 
-  void Run(std::shared_ptr<Registry> r, ComponentsPtr components) override;
+  void Run(std::shared_ptr<Registry> r, ZippedComponents components) override;
 
  private:
   /// @brief Map of attempts to update the cursor

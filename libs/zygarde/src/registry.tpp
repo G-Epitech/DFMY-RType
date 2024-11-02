@@ -124,3 +124,8 @@ Entity Registry::SpawnEntity(Args &&...args) {
   e.OnSpawn(std::forward<Args>(args)...);
   return e;
 }
+
+template <typename... Components>
+[[nodiscard]] zipper<Components...> Registry::GetMatchingEntities() {
+  return zipper<Components...>(GetComponents<Components>()...);
+}

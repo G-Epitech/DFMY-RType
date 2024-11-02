@@ -12,7 +12,7 @@ rtype::client::systems::BlinkSystem::BlinkSystem() {
 }
 
 void rtype::client::systems::BlinkSystem::Run(std::shared_ptr<Registry> r,
-                                              ComponentsPtr components) {
+                                              ZippedComponents components) {
   const auto begin = components.begin();
   const auto end = components.end();
 

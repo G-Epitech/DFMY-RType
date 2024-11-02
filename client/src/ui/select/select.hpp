@@ -48,6 +48,15 @@ class Select {
    * @param id Id of the select
    * @return Tag of the select option text
    */
+  static inline std::string OptionIdTagOf(const std::string& id) {
+    return "select:option:id=" + id;
+  }
+
+  /**
+   * @brief Get the tage for a select option text
+   * @param id Id of the select
+   * @return Tag of the select option text
+   */
   static inline std::string ContainerTextIdTagOf(const std::string& id) {
     return "select:container-text:id=" + id;
   }

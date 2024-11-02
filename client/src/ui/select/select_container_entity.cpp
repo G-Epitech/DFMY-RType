@@ -24,7 +24,7 @@ SelectContainerEntity::SelectContainerEntity(std::size_t idx, std::shared_ptr<Re
 
 void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
   std::optional<std::string> selectedOption =
-      props.options.empty() ? std::nullopt : std::make_optional(props.options.begin()->second);
+      props.options.empty() ? std::nullopt : std::make_optional(props.options.begin()->first);
   auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
   auto drawable = Rectangle{
       .fillColor = selectedOption ? props.selectedColor : props.disabledColor,
@@ -33,23 +33,30 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
       .size = {props.size.x, props.size.y},
   };
 
-  registry_->AddComponent<SelectContainer>(
-      *this, {.expanded = false, .selectedOption = selectedOption, .selectId = props.id});
+  registry_->AddComponent<SelectContainer>(*this, {
+                                                      .expanded = false,
+                                                      .selectedOption = selectedOption,
+                                                      .selectId = props.id,
+                                                      .placeholder = props.placeholder,
+                                                      .selectedColor = props.selectedColor,
+                                                      .disabledColor = props.disabledColor,
+                                                      .hoveredColor = props.hoveredColor,
+                                                  });
   registry_->AddComponent<Drawable>(*this, {drawable});
   registry_->AddComponent<Position>(*this, {props.position, aligns});
   registry_->AddComponent<OnMouseMoved>(
       *this, {.strategy = MouseEventTarget::kAnyTarget,
-              .handler = [entity = static_cast<Entity>(*this), props](
+              .handler = [entity = static_cast<Entity>(*this)](
                              const sf::Vector2f& pos, const MouseEventTarget& target) mutable {
-                return OnHover(entity, props, target);
+                return OnHover(entity, target);
               }});
   registry_->AddComponent<OnMousePressed>(
       *this, {.strategy = MouseEventTarget::kLocalTarget,
-              .handler = [registry = registry_, entity = static_cast<Entity>(*this), props](
+              .handler = [registry = registry_, entity = static_cast<Entity>(*this)](
                              const sf::Mouse::Button& button, const sf::Vector2f& pos,
                              const MouseEventTarget& target) mutable {
                 if (button == sf::Mouse::Button::Left) {
-                  return OnClick(registry, entity, props);
+                  return OnClick(registry, entity);
                 }
               }});
 }
@@ -59,8 +66,7 @@ void SelectContainerEntity::RegisterDependencies(Registry& registry) {
   registry.RegisterComponent<Tags>();
 }
 
-void SelectContainerEntity::OnHover(Entity& entity, const Select::Properties& props,
-                                    const MouseEventTarget& target) {
+void SelectContainerEntity::OnHover(Entity& entity, const MouseEventTarget& target) {
   auto select_container = entity.GetComponent<SelectContainer>();
   auto drawable_component = entity.GetComponent<Drawable>();
 
@@ -71,24 +77,23 @@ void SelectContainerEntity::OnHover(Entity& entity, const Select::Properties& pr
   auto& rectangle = std::get<Rectangle>(drawable_component->drawable);
 
   if (!select_container->selectedOption.has_value()) {
-    rectangle.fillColor = props.disabledColor;
+    rectangle.fillColor = select_container->disabledColor;
   } else if (target == MouseEventTarget::kLocalTarget) {
-    rectangle.fillColor = props.hoveredColor;
+    rectangle.fillColor = select_container->hoveredColor;
   } else {
-    rectangle.fillColor = props.selectedColor;
+    rectangle.fillColor = select_container->selectedColor;
   }
 }
-void SelectContainerEntity::OnClick(const Registry::Ptr& registry, Entity& entity,
-                                    const Select::Properties& props) {
+void SelectContainerEntity::OnClick(const Registry::Ptr& registry, Entity& entity) {
   auto select_container = entity.GetComponent<SelectContainer>();
 
   if (!select_container || select_container->expanded ||
       !select_container->selectedOption.has_value()) {
     return;
   }
-  FoldAllOtherSelects(registry, props.id);
+  FoldAllOtherSelects(registry, select_container->selectId);
   select_container->expanded = true;
-  std::cout << "Select " << props.id << " expanded" << std::endl;
+  std::cout << "Select " << select_container->selectId << " expanded" << std::endl;
 }
 
 void SelectContainerEntity::FoldAllOtherSelects(const Registry::Ptr& registry,

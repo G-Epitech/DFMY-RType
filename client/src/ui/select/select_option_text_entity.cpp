@@ -39,7 +39,7 @@ void SelectOptionTextEntity::OnSpawn(std::size_t index, const Select::Properties
   registry_->AddComponent<Drawable>(*this, {.drawable = drawable, .layer = 30});
   registry_->AddComponent<Position>(*this, position);
   registry_->AddComponent<Tags>(
-      *this, Tags({Select::OptionTextIdTagOf(value), Select::IdTagOf(props.id)}));
+      *this, Tags({Select::OptionTextIdTagOf(value), Select::OptionIdTagOf(props.id)}));
 }
 
 void SelectOptionTextEntity::RegisterDependencies(Registry& registry) {
