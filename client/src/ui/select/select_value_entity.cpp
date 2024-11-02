@@ -28,16 +28,18 @@ void SelectValueEntity::RegisterDependencies(Registry& registry) {
 }
 
 void SelectValueEntity::OnSpawn(const Select::Properties& props) {
-  auto label = props.options.empty() ? "No options" : props.options.begin()->second;
+  auto label = props.options.empty() ? props.placeholder : props.options.begin()->second;
   auto characterSize = static_cast<unsigned int>(props.size.y * 0.5f);
-  auto position = Vector3f(props.position.x + 10, props.position.y);
-  auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+  auto position = Vector3f(props.position.x + props.size.x * 0.5f, props.position.y);
+  auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
-  auto drawable = Text{.text = label,
-                       .fontName = "main",
-                       .characterSize = characterSize,
-                       .characterSizeUnit = Text::CharacterSizeUnit::kPixels,
-                       .color = sf::Color::White};
+  auto drawable =
+      Text{.text = label,
+           .fontName = "main",
+           .characterSize = characterSize,
+           .characterSizeUnit = Text::CharacterSizeUnit::kPixels,
+           .style = props.options.empty() ? sf::Text::Style::Italic : sf::Text::Style::Regular,
+           .color = sf::Color::White};
 
   registry_->AddComponent<Drawable>(*this, {drawable});
   registry_->AddComponent<Position>(*this, {position, aligns});

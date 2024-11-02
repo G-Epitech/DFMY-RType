@@ -24,6 +24,7 @@ using namespace mew::sets::events;
 using namespace mew::managers;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
+using namespace rtype::client::ui;
 
 SceneMenu::SceneMenu(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   registry_->RegisterComponent<Tags>();
@@ -39,10 +40,9 @@ void SceneMenu::OnCreate() {
   CreateSettingsButton();
   CreateExitButton();
   CreateServerConnectionLabel();
-  ui::Input::Create(
-      registry_, "username",
-      Vector3f{managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 150},
-      {HorizontalAlign::kCenter, VerticalAlign::kCenter});
+  Input::Create(registry_, "username",
+                Vector3f{managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 150},
+                {HorizontalAlign::kCenter, VerticalAlign::kCenter});
 }
 
 void SceneMenu::OnActivate() {

@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include <SFML/System/Vector2.hpp>
+
 #include "./select.hpp"
+#include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/registry.hpp"
 
@@ -36,5 +39,16 @@ class SelectContainerEntity final : Entity {
    * @param props Properties of the select field
    */
   void OnSpawn(const Select::Properties& props);
+
+ private:
+  /**
+   * @brief On mouse moved event
+   * @param entity Current entity
+   * @param props Properties of the select
+   * @param pos Position of the mouse
+   * @param target Target of the event
+   */
+  static void OnHover(Entity& entity, const Select::Properties& props, const sf::Vector2f& pos,
+                      const mew::sets::events::MouseEventTarget& target);
 };
 }  // namespace rtype::client::ui

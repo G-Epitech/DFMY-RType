@@ -145,30 +145,11 @@ void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Pos
   text_.setStyle(text.style);
   text_.setCharacterSize(text.characterSize);
   text_.setFillColor(text.color);
-  text_.setPosition(0, 0);
+  text_.setPosition(position.point.x, position.point.y);
   text_.setOutlineColor(text.color);
   text_.setOutlineThickness(text.style == sf::Text::Style::Underlined ? 1 : 0);
-  text_.setOrigin(0, 0);
-
-  {
-    auto rect = text_.getGlobalBounds();
-    auto real_position = position.point;
-    real_position.x -= rect.left;
-    real_position.y -= rect.top;
-    text_.setPosition(real_position.x, real_position.y);
-  }
-
-  auto bounds = text_.getGlobalBounds();
-
-  if (text.characterSizeUnit == Text::CharacterSizeUnit::kPixels) {
-    auto scale = static_cast<float>(text.characterSize) / bounds.height;
-    text_.setScale(scale, scale);
-    bounds = text_.getGlobalBounds();
-  } else {
-    text_.setScale(1, 1);
-  }
-
-  const auto origin = GetOrigin(position, bounds);
+  
+  const auto origin = GetOrigin(position, text_.getGlobalBounds());
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
   windowManager_->window()->draw(text_, render_states);

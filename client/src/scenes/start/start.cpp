@@ -34,8 +34,10 @@ void SceneStart::CreateStaticLabels() {
   auto center = managers_.window->GetCenter();
   static const Select::Properties props = {
       .id = "room",
-      .position = Vector3f(center.x, center.y - 200),
+      .position = Vector3f(center.x - 250, center.y - 200),
       .size = Vector2f(500, 30),
+      .placeholder = "No rooms available",
+      .options = {{"1", "Room 1"}, {"2", "Room 2"}, {"3", "Room 3"}},
   };
 
   registry_->SpawnEntity<TitleEntity>("Select a room", Vector3f(center.x, center.y - 300));

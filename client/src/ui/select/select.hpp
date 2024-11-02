@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <SFML/Graphics/Color.hpp>
+
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/registry.hpp"
 
@@ -20,8 +22,16 @@ class Select {
     zygarde::core::types::Vector3f position;
     /// @brief Display size of the select
     zygarde::core::types::Vector2f size;
+    /// @brief Placeholder of the select when no options are available
+    std::string placeholder;
     /// @brief Options of the select
     std::map<std::string, std::string> options;
+    /// @brief Color when an option is selected
+    sf::Color selectedColor = sf::Color(116, 117, 116);
+    /// @brief Color when no option are available
+    sf::Color disabledColor = sf::Color(43, 43, 43);
+    /// @brief Hover color of the select
+    sf::Color hoveredColor = sf::Color(148, 148, 148);
   };
 
   /**
