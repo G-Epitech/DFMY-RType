@@ -23,7 +23,7 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
 void DrawableSystem::Run(Registry::Ptr r,
                          zipper<drawable::Drawable, zyc::components::Position> components) {
   const auto window = windowManager_->window();
-  std::set<unsigned int, std::greater<>> layers = {0};
+  std::set<unsigned int, std::less<>> layers = {0};
   unsigned int current_layer = 0;
   bool indexed = false;
 
