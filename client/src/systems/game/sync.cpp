@@ -98,19 +98,20 @@ void GameSyncSystem::UpdateBullet(const std::shared_ptr<Registry>& registry, con
   }
 }
 
-void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
-                                 const Vector3f& pos) {
+void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry,
+                                 const sdk::game::api::payload::EnemyState& state) {
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{5, 6, 21, 36};
+  core::types::Vector3f pos{state.position.x, state.position.y, 0};
 
-  registry->AddComponent<ServerEntityId>(enemy, {.id = id});
+  registry->AddComponent<ServerEntityId>(enemy, {.id = state.entityId});
   registry->AddComponent<Position>(
       enemy, {.point = pos, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
-  registry->AddComponent<Drawable>(
-      enemy, {
-                 .drawable = Texture{.name = "enemy", .scale = 2.5, .rect = base},
-             });
-  enemies_.insert_or_assign(id, enemy);
+  registry->AddComponent<Drawable>(enemy,
+                                   {
+                                       .drawable = TextureMapper::MapEnemyType(state.enemyType),
+                                   });
+  enemies_.insert_or_assign(state.entityId, enemy);
 }
 
 void GameSyncSystem::UpdateEnemy(const std::shared_ptr<Registry>& registry, const std::size_t& id,
@@ -201,7 +202,7 @@ void GameSyncSystem::HandleEnemyState(const Registry::Ptr& registry,
   if (enemies_.contains(state.entityId)) {
     UpdateEnemy(registry, state.entityId, Vector3f{state.position.x, state.position.y});
   } else {
-    CreateEnemy(registry, state.entityId, Vector3f{state.position.x, state.position.y});
+    CreateEnemy(registry, state);
   }
   handled->insert(state.entityId);
 }

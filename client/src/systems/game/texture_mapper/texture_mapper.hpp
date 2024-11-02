@@ -9,6 +9,7 @@
 
 #include "game/src/types/projectile.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
+#include "types/enemies.hpp"
 
 namespace rtype::client::systems {
 class TextureMapper final {
@@ -21,5 +22,12 @@ class TextureMapper final {
    * @return Texture component
    */
   static mew::sets::drawable::Texture MapBulletType(sdk::game::types::ProjectileType type) noexcept;
+
+  /**
+   * Map enemy type to texture
+   * @param type Type of the enemy
+   * @return Texture component
+   */
+  static mew::sets::drawable::Texture MapEnemyType(sdk::game::types::EnemyType type) noexcept;
 };
 }  // namespace rtype::client::systems

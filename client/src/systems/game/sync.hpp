@@ -87,8 +87,8 @@ class GameSyncSystem final : public ASystem<> {
    * @param id The id of the enemy
    * @param pos The position of the enemy
    */
-  void CreateEnemy(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                   const zygarde::core::types::Vector3f &pos);
+  void CreateEnemy(const std::shared_ptr<Registry> &registry,
+                   const sdk::game::api::payload::EnemyState &state);
 
   /**
    * @brief Update an enemy
