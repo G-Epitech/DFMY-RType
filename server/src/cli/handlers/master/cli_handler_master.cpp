@@ -42,6 +42,14 @@ rtype::server::BaseContext CliHandlerMaster::BuildCtx() {
   std::size_t port = static_cast<std::size_t>(config.Get<int>("PORT"));
   auto token = config.Get<std::string>("TOKEN");
   std::size_t nodePort = static_cast<std::size_t>(config.Get<int>("NODE_PORT"));
-  MasterCtxProps props = MasterCtxProps(token, nodePort);
+
+  auto dbHost = config.Get<std::string>("DB_HOST");
+  auto dbPort = static_cast<std::size_t>(config.Get<int>("DB_PORT"));
+  auto dbUsername = config.Get<std::string>("DB_USERNAME");
+  auto dbPassword = config.Get<std::string>("DB_PASSWORD");
+  auto dbName = config.Get<std::string>("DB_NAME");
+
+  MasterCtxProps props = MasterCtxProps(token, nodePort, dbHost, std::to_string(dbPort), dbUsername,
+                                        dbPassword, dbName);
   return {name, port, ServerType::kMaster, props};
 }
