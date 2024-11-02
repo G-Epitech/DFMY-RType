@@ -40,13 +40,36 @@ class PlayerScript : public PlayerBaseScript {
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
                         const physics::types::Collision2D::ptr& collision) override;
 
+  /**
+   * @brief Activate the player's shooting
+   */
   inline void Shoot() { isShooting_ = true; }
 
+  /**
+   * @brief Set the player's movement direction
+   * @param direction The direction to move to
+   */
   inline void SetMovementDirection(const core::types::Vector2f& direction) {
     movementDirection_ = direction;
   }
 
+  /**
+   * @brief Get the player's score
+   * @return The player's score
+   */
+  [[nodiscard]] inline std::size_t GetScore() const { return score_; }
+
+  /**
+   * @brief Add a score to the player
+   * @param score The score to add
+   */
+  inline void IncreaseScore(int score) { score_ += score; }
+
  private:
+  /**
+   * @brief Handle the player's movement
+   * @param context The scripting context
+   */
   void HandleMovement(const std::shared_ptr<scripting::types::ScriptingContext>& context);
 
  private:
@@ -55,5 +78,6 @@ class PlayerScript : public PlayerBaseScript {
   std::chrono::nanoseconds lastShootTime_;
   bool isShooting_;
   std::optional<core::types::Vector2f> movementDirection_;
+  int score_{0};
 };
 }  // namespace rtype::server::game::scripts

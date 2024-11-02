@@ -26,5 +26,10 @@ class ShootHelper {
   static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context,
                           const zygarde::core::types::Vector3f& position_offset,
                           float damage_multiplier, const std::string& projectile_archetype);
+
+ private:
+  static core::types::Vector3f GetProjectilePosition(
+      const std::shared_ptr<scripting::types::ScriptingContext>& context,
+      const zygarde::core::types::Vector3f& position_offset);
 };
 }  // namespace rtype::server::game::scripts
