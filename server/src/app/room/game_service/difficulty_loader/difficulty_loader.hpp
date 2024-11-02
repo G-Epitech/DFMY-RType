@@ -12,10 +12,10 @@
 #include <vector>
 
 #include "libs/game/src/types/difficulties.hpp"
-#include "types/difficulty.hpp"
+#include "types/difficulty_data.hpp"
 
 namespace rtype::server::game {
-class DifficultyLoader {
+class DifficultyLoader final {
  public:
   DifficultyLoader();
   ~DifficultyLoader() = default;
@@ -31,14 +31,14 @@ class DifficultyLoader {
    * @brief Get the difficulties
    * @return A vector of difficulties
    */
-  [[nodiscard]] const std::vector<Difficulty> &GetDifficulties() const { return difficulties_; }
+  [[nodiscard]] const std::vector<DifficultyData> &GetDifficulties() const { return difficulties_; }
 
   /**
    * @brief Get a difficulty by its type
-   * @param difficultyType Difficulty type
+   * @param difficultyType DifficultyData type
    * @return The difficulty data
    */
-  [[nodiscard]] Difficulty GetDifficultyByType(rtype::sdk::game::types::Difficulty difficultyType) const;
+  [[nodiscard]] DifficultyData GetDifficultyByType(rtype::sdk::game::types::Difficulty difficultyType) const;
 
  private:
   /**
@@ -50,36 +50,36 @@ class DifficultyLoader {
   /**
    * @brief Load a difficulty metadata from a JSON object (name, description, etc.)
    * @param jsonData JSON object to load the metadata from
-   * @param difficulty Difficulty to load the metadata into
+   * @param difficulty DifficultyData to load the metadata into
    */
-  static void LoadDifficultyMetadata(const nlohmann::json &jsonData, Difficulty *difficulty);
+  static void LoadDifficultyMetadata(const nlohmann::json &jsonData, DifficultyData *difficulty);
 
   /**
    * @brief Load difficulty multipliers from a JSON object
    * @param jsonData JSON object to load the multipliers from
-   * @param difficulty Difficulty to load the multipliers into
+   * @param difficulty DifficultyData to load the multipliers into
    */
-  static void LoadDifficultyMultipliers(const nlohmann::json &jsonData, Difficulty *difficulty);
+  static void LoadDifficultyMultipliers(const nlohmann::json &jsonData, DifficultyData *difficulty);
 
   /**
    * @brief Load player difficulty multipliers from a JSON object
    * @param jsonData JSON object to load the player multipliers from
-   * @param difficulty Difficulty to load the player multipliers into
+   * @param difficulty DifficultyData to load the player multipliers into
    */
   static void LoadDifficultyPlayerMultipliers(const nlohmann::json &jsonData,
-                                              Difficulty *difficulty);
+                                              DifficultyData *difficulty);
 
   /**
    * @brief Load enemy difficulty multipliers from a JSON object
    * @param jsonData JSON object to load the enemy multipliers from
-   * @param difficulty Difficulty to load the enemy multipliers into
+   * @param difficulty DifficultyData to load the enemy multipliers into
    */
   static void LoadDifficultyEnemyMultipliers(const nlohmann::json &jsonData,
-                                             Difficulty *difficulty);
+                                             DifficultyData *difficulty);
 
  private:
   /// @brief Vector of difficulties
-  std::vector<Difficulty> difficulties_;
+  std::vector<DifficultyData> difficulties_;
 
   /// @brief Map of difficulty names
   static inline std::map<rtype::sdk::game::types::Difficulty, std::string> difficultiesMap_ = {

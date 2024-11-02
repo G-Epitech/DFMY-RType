@@ -24,7 +24,7 @@ struct RoomCtxProps {
   /// @brief Max players in the room
   std::size_t maxPlayers;
 
-  /// @brief Difficulty of the room
+  /// @brief DifficultyData of the room
   std::size_t difficulty;
 
   /**

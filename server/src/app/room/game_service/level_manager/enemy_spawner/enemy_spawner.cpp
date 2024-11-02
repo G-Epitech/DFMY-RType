@@ -23,7 +23,7 @@ void EnemySpawner::Initialize(
   registry_ = registry;
 }
 
-void EnemySpawner::SpawnEnemy(const std::string& enemy_name) {
+void EnemySpawner::SpawnEnemy(const std::string& enemy_archetype_name) {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution dist(80.0f, 1000.0f);

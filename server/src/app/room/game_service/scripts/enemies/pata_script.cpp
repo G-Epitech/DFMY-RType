@@ -9,8 +9,8 @@
 
 #include "app/room/game_service/archetype_keys.hpp"
 #include "constants/tags.hpp"
-#include "scripts/helpers/damage_take_script.hpp"
-#include "scripts/helpers/shoot_script.hpp"
+#include "scripts/helpers/damage_helper.hpp"
+#include "scripts/helpers/shoot_helper.hpp"
 #include "zygarde/src/core/components/tags/tags.hpp"
 
 using namespace rtype::server::game::scripts;

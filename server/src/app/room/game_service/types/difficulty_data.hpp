@@ -32,7 +32,7 @@ struct DifficultyMultipliers {
   DifficultyEnemyMultipliers enemy;
 };
 
-struct Difficulty {
+struct DifficultyData {
   /// @brief Name of the difficulty
   std::string name;
   /// @brief Description of the difficulty

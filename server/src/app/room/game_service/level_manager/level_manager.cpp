@@ -28,15 +28,15 @@ void LevelManager::SelectLevel(const std::string& level_name) {
   throw std::runtime_error("Level not found");
 }
 
-void LevelManager::Update(const utils::Timer::Nanoseconds& deltaTime) {
-  currentWaveTime_ -= deltaTime;
-  UpdateSpawnCooldowns(deltaTime);
+void LevelManager::Update(const utils::Timer::Nanoseconds& delta_time) {
+  currentWaveTime_ -= delta_time;
+  UpdateSpawnCooldowns(delta_time);
   if (currentWaveTime_ <= utils::Timer::Nanoseconds{0}) {
     NextWave();
   }
 }
 
-void LevelManager::StartLevel(Difficulty difficulty) {
+void LevelManager::StartLevel(DifficultyData difficulty) {
   enemySpawner_.SetDifficulty(difficulty);
   BuildSpawnCooldowns();
   NextWave();
@@ -77,10 +77,6 @@ void LevelManager::UpdateSpawnCooldowns(const utils::Timer::Nanoseconds& deltaTi
       if (spawnProps.count >= currentWave_.enemies[enemyName]) {
         continue;
       }
-      std::cout << currentWaveIndex_ << std::endl;
-      std::cout << "Enemy " << enemyName << " has " << spawnProps.count << " spawned" << std::endl;
-      std::cout << "Enemy Name: " << enemyName << " Spawn Time: " << spawnProps.spawnTime.count()
-                << " Current Spawn Time: " << spawnProps.currentSpawnTime.count() << std::endl;
       spawnProps.currentSpawnTime += deltaTime;
       if (CanSpawnEnemy(enemyName, spawnCooldowns)) {
         spawnProps.count++;

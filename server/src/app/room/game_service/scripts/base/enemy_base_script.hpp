@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "types/difficulty.hpp"
+#include "types/difficulty_data.hpp"
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {

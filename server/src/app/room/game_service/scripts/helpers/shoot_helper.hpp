@@ -16,8 +16,15 @@ class ShootHelper {
   ShootHelper() = delete;
   ~ShootHelper() = delete;
 
+  /**
+   * @brief Spawn a bullet
+   * @param context Context of the entity
+   * @param position_offset Offset of the position
+   * @param damage_multiplier Damage multiplier to apply
+   * @param projectile_archetype Archetype of the projectile
+   */
   static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context,
-                          const zygarde::core::types::Vector3f& position_offset, float damage_mul,
-                          const std::string& projectile_archetype);
+                          const zygarde::core::types::Vector3f& position_offset,
+                          float damage_multiplier, const std::string& projectile_archetype);
 };
 }  // namespace rtype::server::game::scripts

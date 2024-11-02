@@ -12,7 +12,7 @@
 #include "types/level.hpp"
 
 namespace rtype::server::game {
-class LevelLoader {
+class LevelLoader final {
  public:
   LevelLoader();
   ~LevelLoader() = default;

@@ -7,26 +7,41 @@
 
 #pragma once
 
-#include "types/difficulty.hpp"
+#include "types/difficulty_data.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
 
 namespace rtype::server::game {
-class EnemySpawner {
+class EnemySpawner final {
  public:
   EnemySpawner() = default;
   ~EnemySpawner() = default;
 
+  /**
+   * @brief Initialize the enemy spawner
+   * @param archetypeManager Archetype manager
+   * @param registry Registry
+   */
   void Initialize(
       const std::shared_ptr<zygarde::core::archetypes::ArchetypeManager>& archetypeManager,
       const std::shared_ptr<zygarde::Registry>& registry);
 
-  void SpawnEnemy(const std::string& enemy_name);
+  /**
+   * @param enemy_archetype_name The name of the enemy archetype
+   */
+  void SpawnEnemy(const std::string& enemy_archetype_name);
 
-  inline void SetDifficulty(const Difficulty& difficulty) noexcept { difficulty_ = difficulty; }
+  /**
+   * @brief Set the difficulty data that the enemy spawner should use
+   * @param difficulty The difficulty data to use
+   */
+  inline void SetDifficulty(const DifficultyData& difficulty) noexcept { difficulty_ = difficulty; }
 
  private:
-  Difficulty difficulty_;
+  /// @brief The difficulty data
+  DifficultyData difficulty_;
+  /// @brief The archetype manager
   std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> archetypeManager_;
+  /// @brief The registry
   std::shared_ptr<zygarde::Registry> registry_;
 };
 }  // namespace rtype::server::game

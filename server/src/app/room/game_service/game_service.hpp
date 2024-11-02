@@ -101,7 +101,7 @@ class GameService {
   /// @brief Level manager
   LevelManager levelManager_;
 
-  /// @brief Difficulty loader
+  /// @brief DifficultyData loader
   DifficultyLoader difficultyLoader_;
 
   /// @brief Player spawner

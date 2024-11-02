@@ -25,7 +25,7 @@ void DifficultyLoader::Run(const std::string& directory_path) {
 }
 
 void DifficultyLoader::LoadDifficultyData(const nlohmann::json& jsonData) {
-  Difficulty difficulty;
+  DifficultyData difficulty;
 
   LoadDifficultyMetadata(jsonData, &difficulty);
   LoadDifficultyMultipliers(jsonData, &difficulty);
@@ -33,7 +33,7 @@ void DifficultyLoader::LoadDifficultyData(const nlohmann::json& jsonData) {
 }
 
 void DifficultyLoader::LoadDifficultyMetadata(const nlohmann::json& jsonData,
-                                              Difficulty* difficulty) {
+                                              DifficultyData* difficulty) {
   if (jsonData.contains("difficulty")) {
     difficulty->name = jsonData["difficulty"];
   } else {
@@ -47,7 +47,7 @@ void DifficultyLoader::LoadDifficultyMetadata(const nlohmann::json& jsonData,
 }
 
 void DifficultyLoader::LoadDifficultyMultipliers(const nlohmann::json& jsonData,
-                                                 Difficulty* difficulty) {
+                                                 DifficultyData* difficulty) {
   if (jsonData.contains("multipliers")) {
     LoadDifficultyPlayerMultipliers(jsonData["multipliers"], difficulty);
     LoadDifficultyEnemyMultipliers(jsonData["multipliers"], difficulty);
@@ -55,7 +55,7 @@ void DifficultyLoader::LoadDifficultyMultipliers(const nlohmann::json& jsonData,
 }
 
 void DifficultyLoader::LoadDifficultyPlayerMultipliers(const nlohmann::json& jsonData,
-                                                       Difficulty* difficulty) {
+                                                       DifficultyData* difficulty) {
   if (!jsonData.contains("player")) {
     return;
   }
@@ -72,7 +72,7 @@ void DifficultyLoader::LoadDifficultyPlayerMultipliers(const nlohmann::json& jso
 }
 
 void DifficultyLoader::LoadDifficultyEnemyMultipliers(const nlohmann::json& jsonData,
-                                                      Difficulty* difficulty) {
+                                                      DifficultyData* difficulty) {
   if (!jsonData.contains("enemy")) {
     return;
   }
@@ -88,7 +88,7 @@ void DifficultyLoader::LoadDifficultyEnemyMultipliers(const nlohmann::json& json
       enemy.contains("damage") ? enemy["damage"].get<float>() : 1.0f;
 }
 
-Difficulty DifficultyLoader::GetDifficultyByType(
+DifficultyData DifficultyLoader::GetDifficultyByType(
     rtype::sdk::game::types::Difficulty difficultyType) const {
   auto name = difficultiesMap_[difficultyType];
   for (const auto& difficulty : difficulties_) {
@@ -96,5 +96,5 @@ Difficulty DifficultyLoader::GetDifficultyByType(
       return difficulty;
     }
   }
-  throw std::runtime_error("Difficulty not found");
+  throw std::runtime_error("DifficultyData not found");
 }

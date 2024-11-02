@@ -15,6 +15,12 @@ class DamageHelper {
   DamageHelper() = delete;
   ~DamageHelper() = delete;
 
+  /**
+   * @brief Handle the damage taken by an entity
+   * @param health Health of the entity
+   * @param context Context of the entity
+   * @param other_entity Entity that caused the damage
+   */
   static void HandleDamageTake(float* health,
                                const std::shared_ptr<scripting::types::ScriptingContext>& context,
                                const Entity& other_entity);
