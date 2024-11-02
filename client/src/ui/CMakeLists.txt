@@ -5,6 +5,8 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         select/select.hpp
         select/select_container_entity.hpp
         select/select_container_entity.cpp
-        select/select_value_entity.cpp
-        select/select_value_entity.hpp
+        select/select_container_text_entity.cpp
+        select/select_container_text_entity.hpp
+        select/select_option_entity.cpp
+        select/select_option_entity.hpp
 )

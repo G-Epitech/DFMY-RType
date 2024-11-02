@@ -37,7 +37,7 @@ void SceneStart::CreateStaticLabels() {
       .position = Vector3f(center.x - 250, center.y - 200),
       .size = Vector2f(500, 30),
       .placeholder = "No rooms available",
-      .options = {{"1", "Room 1"}, {"2", "Room 2"}, {"3", "Room 3"}},
+      .options = {{"1", "Room 1"}, {"2", "Room 2"}, {"3", "Room 3"}, {"4", "Room 4"}},
   };
   static const Select::Properties props2 = {
       .id = "difficulty",
@@ -49,5 +49,5 @@ void SceneStart::CreateStaticLabels() {
 
   registry_->SpawnEntity<TitleEntity>("Select a room", Vector3f(center.x, center.y - 300));
   Select::Create(registry_, props1);
-  Select::Create(registry_, props2);
+  // Select::Create(registry_, props2);
 }

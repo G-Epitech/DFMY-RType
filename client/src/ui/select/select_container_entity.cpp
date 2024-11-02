@@ -37,7 +37,6 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
       *this, {.expanded = false, .selectedOption = selectedOption, .selectId = props.id});
   registry_->AddComponent<Drawable>(*this, {drawable});
   registry_->AddComponent<Position>(*this, {props.position, aligns});
-  registry_->AddComponent<Tags>(*this, Tags({Select::IdTagOf(props.id)}));
   registry_->AddComponent<OnMouseMoved>(
       *this, {.strategy = MouseEventTarget::kAnyTarget,
               .handler = [entity = static_cast<Entity>(*this), props](

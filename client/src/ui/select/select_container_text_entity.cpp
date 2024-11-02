@@ -5,7 +5,7 @@
 ** select_value_entity.cpp
 */
 
-#include "select_value_entity.hpp"
+#include "select_container_text_entity.hpp"
 
 #include <utility>
 
@@ -20,17 +20,15 @@ using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 using namespace mew::sets::drawable;
 
-SelectValueEntity::SelectValueEntity(std::size_t idx, std::shared_ptr<Registry> registry)
+SelectContainerTextEntity::SelectContainerTextEntity(std::size_t idx,
+                                                     std::shared_ptr<Registry> registry)
     : Entity(idx, std::move(registry)) {}
 
-void SelectValueEntity::RegisterDependencies(Registry& registry) {
-  registry.RegisterComponent<Tags>();
-}
-
-void SelectValueEntity::OnSpawn(const Select::Properties& props) {
+void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
   auto label = props.options.empty() ? props.placeholder : props.options.begin()->second;
   auto characterSize = static_cast<unsigned int>(props.size.y * 0.5f);
-  auto position = Vector3f(props.position.x + props.size.x * 0.5f, props.position.y);
+  auto position =
+      Vector3f(props.position.x + props.size.x * 0.5f, props.position.y - (props.size.y * 0.15f));
   auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   auto drawable =
@@ -43,5 +41,4 @@ void SelectValueEntity::OnSpawn(const Select::Properties& props) {
 
   registry_->AddComponent<Drawable>(*this, {drawable});
   registry_->AddComponent<Position>(*this, {position, aligns});
-  registry_->AddComponent<Tags>(*this, Tags({Select::ValueTagOf(props.id)}));
 }

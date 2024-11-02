@@ -12,24 +12,17 @@
 #include "libs/zygarde/src/registry.hpp"
 
 namespace rtype::client::ui {
-class SelectValueEntity final : Entity {
+class SelectContainerTextEntity final : Entity {
   friend class zygarde::Registry;
-
- public:
-  /**
-   * @brief Register the dependencies of the entity
-   * @param registry Registry to register the dependencies
-   */
-  static void RegisterDependencies(zygarde::Registry& registry);
 
  protected:
   /**
    * @brief Construct a new Select Entity object
    * @param props Properties of the select
    */
-  SelectValueEntity(std::size_t idx, std::shared_ptr<Registry> registry);
+  SelectContainerTextEntity(std::size_t idx, std::shared_ptr<Registry> registry);
 
-  ~SelectValueEntity() final = default;
+  ~SelectContainerTextEntity() final = default;
 
   /**
    * @brief Create the select field

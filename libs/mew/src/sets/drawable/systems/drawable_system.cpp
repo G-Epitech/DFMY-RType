@@ -23,13 +23,20 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
 void DrawableSystem::Run(Registry::Ptr r,
                          zipper<drawable::Drawable, zyc::components::Position> components) {
   const auto window = windowManager_->window();
-  std::set<unsigned int, std::greater<>> layers;
+  std::set<unsigned int, std::greater<>> layers = {0};
   unsigned int current_layer = 0;
   bool indexed = false;
 
   window->clear();
 
   do {
+    {
+      auto next = layers.begin();
+      if (!layers.empty()) {
+        current_layer = *next;
+        layers.erase(next);
+      }
+    }
     for (auto&& [drawable, position] : components) {
       if (!drawable.visible) {
         continue;
@@ -39,14 +46,7 @@ void DrawableSystem::Run(Registry::Ptr r,
         layers.insert(drawable.layer);
       }
     }
-    {
-      auto next = layers.begin();
-      if (!layers.empty()) {
-        current_layer = *next;
-        layers.erase(next);
-      }
-      indexed = true;
-    }
+    indexed = true;
   } while (!layers.empty());
 
   window->display();
@@ -148,7 +148,7 @@ void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Pos
   text_.setPosition(position.point.x, position.point.y);
   text_.setOutlineColor(text.color);
   text_.setOutlineThickness(text.style == sf::Text::Style::Underlined ? 1 : 0);
-  
+
   const auto origin = GetOrigin(position, text_.getGlobalBounds());
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
