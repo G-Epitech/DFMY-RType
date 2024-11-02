@@ -29,13 +29,14 @@ void ChatMessagesSystem::Run(Registry::Ptr r) {
 
   for (const auto& message : messages) {
     MoveAllPositions(r);
-    AddMesage(r, message);
+    AddMessage(r, message);
   }
+  CleanupOldMessages(r);
 }
 
 void ChatMessagesSystem::MoveAllPositions(Registry::Ptr r) {
   for (auto&& entity : oldMessages_) {
-    auto&& position = r->GetComponent<Position>(entity);
+    auto&& position = r->GetComponent<Position>(entity.first);
     if (position) {
       auto&& pos = *position;
       pos->point.y -= 20;
@@ -43,8 +44,8 @@ void ChatMessagesSystem::MoveAllPositions(Registry::Ptr r) {
   }
 }
 
-void ChatMessagesSystem::AddMesage(const Registry::Ptr& r,
-                                   const api::payload::ChatMessage& message) {
+void ChatMessagesSystem::AddMessage(const Registry::Ptr& r,
+                                    const api::payload::ChatMessage& message) {
   const auto entity = r->SpawnEntity();
   const Vector3f point{10, windowManager_->height_ - 80, 0};
   constexpr Alignment aligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
@@ -54,5 +55,17 @@ void ChatMessagesSystem::AddMesage(const Registry::Ptr& r,
 
   r->AddComponent<Position>(entity, Position{point, aligns});
   r->AddComponent<Drawable>(entity, {Text{finalText, "main"}, WindowManager::View::HUD});
-  oldMessages_.push_back(entity);
+  oldMessages_[entity] = std::chrono::system_clock::now();
+}
+
+void ChatMessagesSystem::CleanupOldMessages(Registry::Ptr r) {
+  for (auto&& entity : oldMessages_) {
+    std::chrono::time_point<std::chrono::system_clock> time = entity.second;
+    const auto&& now = std::chrono::system_clock::now();
+    const auto&& diff = std::chrono::duration_cast<std::chrono::seconds>(now - time).count();
+    if (diff >= CHAT_MESSAGE_SECONDS_LIFETIME) {
+      r->KillEntity(entity.first);
+      oldMessages_.erase(entity.first);
+    }
+  }
 }

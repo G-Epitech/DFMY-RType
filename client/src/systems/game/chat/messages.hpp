@@ -15,6 +15,8 @@
 using namespace mew::managers;
 using namespace zygarde::core::components;
 
+#define CHAT_MESSAGE_SECONDS_LIFETIME 10
+
 namespace rtype::client::systems {
 
 class ChatMessagesSystem final : public ASystem<> {
@@ -36,8 +38,8 @@ class ChatMessagesSystem final : public ASystem<> {
   /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
 
-  /// @brief Last messages
-  std::vector<Entity> oldMessages_;
+  /// @brief Last messages entites with their time
+  std::map<Entity, std::chrono::time_point<std::chrono::system_clock>> oldMessages_;
 
   /**
    * @brief Move all positions of the messages
@@ -50,6 +52,12 @@ class ChatMessagesSystem final : public ASystem<> {
    * @param r The registry
    * @param message The message to add
    */
-  void AddMesage(const Registry::Ptr &r, const api::payload::ChatMessage &message);
+  void AddMessage(const Registry::Ptr &r, const api::payload::ChatMessage &message);
+
+  /**
+   * @brief Cleanup old messages
+   * @param r The registry
+   */
+  void CleanupOldMessages(Registry::Ptr r);
 };
 }  // namespace rtype::client::systems
