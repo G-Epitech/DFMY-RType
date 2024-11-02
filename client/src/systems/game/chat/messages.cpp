@@ -59,13 +59,16 @@ void ChatMessagesSystem::AddMessage(const Registry::Ptr& r,
 }
 
 void ChatMessagesSystem::CleanupOldMessages(Registry::Ptr r) {
-  for (auto&& entity : oldMessages_) {
-    std::chrono::time_point<std::chrono::system_clock> time = entity.second;
+  auto it = oldMessages_.begin();
+  while (it != oldMessages_.end()) {
+    std::chrono::time_point<std::chrono::system_clock> time = it->second;
     const auto&& now = std::chrono::system_clock::now();
     const auto&& diff = std::chrono::duration_cast<std::chrono::seconds>(now - time).count();
     if (diff >= CHAT_MESSAGE_SECONDS_LIFETIME) {
-      r->KillEntity(entity.first);
-      oldMessages_.erase(entity.first);
+      r->KillEntity(it->first);
+      it = oldMessages_.erase(it);
+    } else {
+      ++it;
     }
   }
 }

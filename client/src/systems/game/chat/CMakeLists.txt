@@ -3,4 +3,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         input.hpp
         messages.cpp
         messages.hpp
+        trigger.cpp
+        trigger.hpp
 )

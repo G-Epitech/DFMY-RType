@@ -10,7 +10,10 @@
 
 #include "core/components/position/position.hpp"
 #include "core/types/vector/vector_3f.hpp"
+#include "managers/settings_manager.hpp"
 #include "registry.hpp"
+
+using namespace mew::managers;
 
 namespace rtype::client::scenes::utils {
 
@@ -25,7 +28,8 @@ class Input {
    * @param alignment Alignment
    */
   static void Create(const Registry::Ptr& registry, const std::string& tag,
-                     core::types::Vector3f position, core::components::Alignment alignment);
+                     core::types::Vector3f position, core::components::Alignment alignment,
+                     SettingsManager::Ptr settings_manager);
 
  private:
   /**
@@ -34,10 +38,12 @@ class Input {
    * @param tag Tag Name of the input field
    * @param position Position
    * @param alignment Alignment
+   * @param settings_manager Settings Manager
    */
-  static void CreateInputField(const Registry::Ptr& registry, std::string tag,
+  static void CreateInputField(const Registry::Ptr& registry, const std::string& tag,
                                core::types::Vector3f position,
-                               core::components::Alignment alignment);
+                               core::components::Alignment alignment,
+                               SettingsManager::Ptr settings_manager);
 
   /**
    * @brief Create a blinking cursor

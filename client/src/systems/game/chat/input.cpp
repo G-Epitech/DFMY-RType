@@ -27,9 +27,9 @@ void ChatInputSystem::Run(Registry::Ptr r, zipper<Tags, Drawable> components) {
   for (auto&& [tags, drawable] : components) {
     if (tags & "chat") {
       for (const auto& event : events) {
-        if (event.type == sf::Event::TextEntered) {
+        if (event.type == sf::Event::KeyPressed) {
           auto&& component = std::get<Text>(drawable.drawable);
-          if (event.text.unicode == '\r' || event.text.unicode == '\n') {
+          if (event.key.code == sf::Keyboard::Enter) {
             if (!component.text.empty()) {
               auto res = serverConnectionService_->client()->SendMessage(component.text);
               if (!res) {

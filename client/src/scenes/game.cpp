@@ -11,6 +11,7 @@
 #include "client/src/systems/game/background.hpp"
 #include "client/src/systems/game/player.hpp"
 #include "client/src/systems/game/sync.hpp"
+#include "constants/settings.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
@@ -18,6 +19,7 @@
 #include "physics/2d/systems/systems.hpp"
 #include "systems/game/chat/input.hpp"
 #include "systems/game/chat/messages.hpp"
+#include "systems/game/chat/trigger.hpp"
 #include "systems/utils/input_cursor.hpp"
 #include "utils/input.hpp"
 
@@ -51,9 +53,10 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
 
   registry_->AddSystem<systems::utils::input::CursorSystem>();
   utils::Input::Create(registry_, "chat", Vector3f{10, managers_.window->height_ - 50},
-                       {HorizontalAlign::kLeft, VerticalAlign::kCenter});
+                       {HorizontalAlign::kLeft, VerticalAlign::kCenter}, settings_manager);
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
   registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service);
+  registry_->AddSystem<ChatTriggerSystem>(window_manager, settings_manager);
 }
 
 void SceneGame::OnCreate() {
