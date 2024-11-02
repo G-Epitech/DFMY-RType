@@ -12,54 +12,54 @@
 
 using namespace rtype::server::game;
 
-void StateBroadcaster::Run(const std::shared_ptr<zygarde::Registry>& registry,
-                           const std::shared_ptr<rtype::sdk::game::api::Room>& api) {
+void StateBroadcaster::Run(const std::shared_ptr<Registry>& registry,
+                           const std::shared_ptr<Room>& api) {
   std::unique_ptr<EntityStates> entityStates = std::make_unique<EntityStates>();
 
   GatherEntityStates(registry, entityStates);
   SendStates(api, entityStates);
 }
 
-void StateBroadcaster::GatherEntityStates(const std::shared_ptr<zygarde::Registry>& registry,
+void StateBroadcaster::GatherEntityStates(const std::shared_ptr<Registry>& registry,
                                           const std::unique_ptr<EntityStates>& states) noexcept {
-  const auto components = registry->GetComponents<core::components::Position>();
+  const auto positions = registry->GetComponents<Position>();
   std::size_t i = 0;
 
-  for (auto& component : *components) {
-    if (!registry->HasEntityAtIndex(i) || !component.has_value()) {
+  for (auto& position : *positions) {
+    if (!registry->HasEntityAtIndex(i) || !position.has_value()) {
       i++;
       continue;
     }
 
-    const auto val = component.value();
-    auto ent = registry->EntityFromIndex(i);
-    const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
-    const auto tags = registry->GetComponent<core::components::Tags>(ent);
-    if (tags.has_value() && tags.value()) {
-      ProcessEntity(states, ent, vec, *tags);
+    const auto [point, aligns] = position.value();
+    auto entity = registry->EntityFromIndex(i);
+    const auto tags = registry->GetComponent<Tags>(entity);
+    const auto rigidbodies = registry->GetComponent<Rigidbody2D>(entity);
+    if (tags.has_value() && tags.value() && rigidbodies.has_value() && rigidbodies.value()) {
+      ProcessEntity(states, entity, point, *tags, *rigidbodies);
     }
     i++;
   }
 }
 
 void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states,
-                                     const Entity& entity,
-                                     const rtype::sdk::game::utils::types::vector_2f& vec,
-                                     const core::components::Tags* tags) noexcept {
-  const core::components::Tags tagsToCheck{*tags};
+                                     const Entity& entity, const Vector3f& position,
+                                     const Tags* tags, const Rigidbody2D* rigidbodies) noexcept {
+  const Tags tagsToCheck{*tags};
+  const core::types::Vector2f velocity = rigidbodies->GetVelocity();
   if (tagsToCheck & sdk::game::constants::kPlayerTag) {
-    payload::PlayerState state = {static_cast<std::size_t>(entity), vec, 100};
+    const payload::PlayerState state = {static_cast<std::size_t>(entity), position, 100, velocity};
     states->playerStates.push_back(state);
   }
   if (tagsToCheck & sdk::game::constants::kEnemyTag) {
-    GatherEnemyState(states, entity, vec, &tagsToCheck);
+    GatherEnemyState(states, entity, position, velocity, &tagsToCheck);
   }
   if (tagsToCheck & sdk::game::constants::kBulletTag) {
-    GatherProjectileState(states, entity, vec, &tagsToCheck);
+    GatherProjectileState(states, entity, position, velocity, &tagsToCheck);
   }
 }
 
-void StateBroadcaster::SendStates(const std::shared_ptr<rtype::sdk::game::api::Room>& api,
+void StateBroadcaster::SendStates(const std::shared_ptr<Room>& api,
                                   const std::unique_ptr<EntityStates>& states) {
   if (!states->playerStates.empty()) {
     api->SendPlayersState(states->playerStates);
@@ -72,28 +72,26 @@ void StateBroadcaster::SendStates(const std::shared_ptr<rtype::sdk::game::api::R
   }
 }
 void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& states,
-                                        const zygarde::Entity& entity,
-                                        const sdk::game::utils::types::vector_2f& vec,
-                                        const core::components::Tags* tags) noexcept {
+                                        const Entity& entity, const Vector3f& position,
+                                        const Vector2f& velocity, const Tags* tags) noexcept {
   if (*tags == sdk::game::constants::kPataTag) {
-    payload::EnemyState state = {static_cast<std::size_t>(entity), vec,
-                                 sdk::game::types::EnemyType::kPata, 100};
+    const payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
+                                       sdk::game::types::EnemyType::kPata, 100};
     states->enemyStates.push_back(state);
   }
 }
 
 void StateBroadcaster::GatherProjectileState(const std::unique_ptr<EntityStates>& states,
-                                             const zygarde::Entity& entity,
-                                             const sdk::game::utils::types::vector_2f& vec,
-                                             const core::components::Tags* tags) noexcept {
+                                             const Entity& entity, const Vector3f& position,
+                                             const Vector2f& velocity, const Tags* tags) noexcept {
   if (*tags == sdk::game::constants::kPlayerBulletTag) {
-    payload::BulletState state = {static_cast<std::size_t>(entity), vec,
-                                  sdk::game::types::ProjectileType::kPlayerCommon};
+    const payload::BulletState state = {static_cast<std::size_t>(entity), position, velocity,
+                                        sdk::game::types::ProjectileType::kPlayerCommon};
     states->bulletStates.push_back(state);
   }
   if (*tags == sdk::game::constants::kEnemyBulletTag) {
-    payload::BulletState state = {static_cast<std::size_t>(entity), vec,
-                                  sdk::game::types::ProjectileType::kEnemyCommon};
+    const payload::BulletState state = {static_cast<std::size_t>(entity), position, velocity,
+                                        sdk::game::types::ProjectileType::kEnemyCommon};
     states->bulletStates.push_back(state);
   }
 }

@@ -9,3 +9,4 @@
 
 #include "./collision/collision_system.hpp"
 #include "./movement/movement_system.hpp"
+#include "./position/position_system.hpp"
