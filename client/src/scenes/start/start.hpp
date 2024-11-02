@@ -35,6 +35,16 @@ class SceneStart final : public SceneBase {
    */
   void CreateStaticLabels();
 
+  /**
+   * @brief Create the select fields
+   */
+  void CreateNodeSelect();
+
+  /**
+   * @brief Create the select fields
+   */
+  void CreateRoomSelect();
+
   /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
 };

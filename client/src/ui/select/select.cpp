@@ -12,7 +12,6 @@
 #include "./select_option_entity.hpp"
 #include "./select_option_text_entity.hpp"
 #include "client/src/systems/ui/select_container.hpp"
-#include "client/src/systems/ui/select_options.hpp"
 
 using namespace rtype::client::ui;
 using namespace zygarde::core::components;
@@ -40,9 +39,18 @@ void Select::CreateOptions(const Registry::Ptr& registry, const Select::Properti
   std::size_t index = 0;
 
   for (const auto& [value, label] : props.options) {
-    std::cout << "Creating option: " << label << std::endl;
     registry->SpawnEntity<SelectOptionEntity>(index, props, value, label);
     registry->SpawnEntity<SelectOptionTextEntity>(index, props, value, label);
     index += 1;
   }
+}
+
+std::optional<std::string> Select::GetValue(const Registry::Ptr& registry, const std::string& id) {
+  auto containers = registry->GetMatchingEntities<SelectContainer>();
+  for (auto&& [container] : containers) {
+    if (container.selectId == id) {
+      return container.selectedOption;
+    }
+  }
+  return std::nullopt;
 }

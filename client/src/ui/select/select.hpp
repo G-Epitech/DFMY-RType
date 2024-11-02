@@ -83,6 +83,14 @@ class Select {
    */
   static void Create(const Registry::Ptr& registry, const Properties& props);
 
+  /**
+   * @brief Get the value of a select
+   * @param registry Registry to get the value
+   * @param id Id of the select
+   * @return Current value of the select
+   */
+  static std::optional<std::string> GetValue(const Registry::Ptr& registry, const std::string& id);
+
  private:
   /**
    * @brief Create the select field
