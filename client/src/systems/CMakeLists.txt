@@ -3,4 +3,5 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         blink.cpp
 )
 add_subdirectory(game)
+add_subdirectory(leaderboard)
 add_subdirectory(utils)
