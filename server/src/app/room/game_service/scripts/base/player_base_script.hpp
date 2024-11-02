@@ -16,9 +16,13 @@ class PlayerBaseScript : public zygarde::scripting::components::MonoBehaviour {
   void SetDifficultyData(DifficultyPlayerMultipliers multipliers);
 
  protected:
+  void ComputeShootCooldown();
+
+ protected:
   float health_;
-  float fireRate_;
-  float damage_;
+  float fireRateMultiplier_;
+  float damageMultiplier_;
   float speed_;
+  std::chrono::nanoseconds shootCooldown_;
 };
 }  // namespace rtype::server::game::scripts

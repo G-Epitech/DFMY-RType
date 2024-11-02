@@ -50,7 +50,6 @@ class PlayerScript : public PlayerBaseScript {
  private:
   PlayerProps props_;
   sdk::game::types::WeaponType equippedWeapon_;
-  std::chrono::nanoseconds shootCooldown_;
   std::chrono::nanoseconds lastShootTime_;
   bool isShooting_;
   std::optional<core::types::Vector2f> movementDirection_;

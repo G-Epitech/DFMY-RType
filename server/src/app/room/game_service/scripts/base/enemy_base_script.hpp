@@ -16,9 +16,10 @@ class EnemyBaseScript : public zygarde::scripting::components::MonoBehaviour {
   void SetDifficultyData(DifficultyEnemyMultipliers multipliers);
 
  protected:
-  float health_;
-  float fireRate_;
-  float damage_;
   float speed_;
+  float health_;
+  float damageMultiplier_;
+  float fireRateMultiplier_;
+  std::chrono::duration<double> shootCooldown_;
 };
 }  // namespace rtype::server::game::scripts

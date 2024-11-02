@@ -14,7 +14,6 @@ using namespace rtype::server::game::scripts;
 
 PlayerScript::PlayerScript()
     : equippedWeapon_{sdk::game::types::WeaponType::kBasic},
-      shootCooldown_{sdk::game::utils::GetFireRate(sdk::game::stats::WeaponBasic::fireRate)},
       lastShootTime_{utils::Timer::Nanoseconds::zero()},
       isShooting_{false},
       props_{} {}
@@ -26,6 +25,7 @@ void PlayerScript::OnEnable(const scripting::types::ValuesMap& customScriptValue
   props_.powerCooldown = std::any_cast<float>(customScriptValues.at("powerCooldown"));
   props_.primaryWeapon = std::any_cast<std::string>(customScriptValues.at("primaryWeapon"));
   props_.secondaryWeapon = std::any_cast<std::string>(customScriptValues.at("secondaryWeapon"));
+  shootCooldown_ = sdk::game::utils::GetFireRate(sdk::game::stats::WeaponBasic::fireRate);
 }
 
 void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {

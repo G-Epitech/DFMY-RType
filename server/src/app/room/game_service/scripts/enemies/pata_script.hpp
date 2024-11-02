@@ -34,7 +34,6 @@ class PataScript : public EnemyBaseScript {
   bool goingUp_;
   float verticalSpeed_;
   float horizontalSpeed_;
-  std::chrono::duration<double> fireRateDuration_;
   zygarde::core::types::Vector3f basePosition_;
   float upperLimit_;
   float lowerLimit_;

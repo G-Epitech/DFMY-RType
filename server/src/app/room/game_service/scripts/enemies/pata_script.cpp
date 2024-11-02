@@ -17,7 +17,6 @@ PataScript::PataScript()
     : goingUp_{true},
       horizontalSpeed_{0},
       verticalSpeed_{0},
-      fireRateDuration_{0},
       basePosition_(0, 0, 0),
       upperLimit_(),
       lowerLimit_(),
@@ -32,7 +31,7 @@ void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingCo
     return;
   }
   lastShootTime_ += context->deltaTime;
-  if (lastShootTime_ >= fireRateDuration_) {
+  if (lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
     SpawnBullet(context);
   }
@@ -76,7 +75,7 @@ void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues)
   verticalSpeed_ = std::any_cast<float>(customScriptValues.at("verticalSpeed"));
   upperLimitOffset_ = std::any_cast<float>(customScriptValues.at("upperLimitOffset"));
   lowerLimitOffset_ = std::any_cast<float>(customScriptValues.at("lowerLimitOffset"));
-  fireRateDuration_ = static_cast<const std::chrono::duration<double>>(
+  shootCooldown_ = static_cast<const std::chrono::duration<double>>(
       std::any_cast<float>(customScriptValues.at("fireRate")));
 }
 

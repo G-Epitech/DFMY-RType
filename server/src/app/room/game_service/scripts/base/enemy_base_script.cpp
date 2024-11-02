@@ -9,8 +9,9 @@
 
 void rtype::server::game::scripts::EnemyBaseScript::SetDifficultyData(
     rtype::server::game::DifficultyEnemyMultipliers multipliers) {
-  health_ *= multipliers.health;
-  fireRate_ *= multipliers.fireRate;
-  damage_ *= multipliers.damage;
   speed_ *= multipliers.speed;
+  health_ *= multipliers.health;
+  damageMultiplier_ = multipliers.damage;
+  fireRateMultiplier_ = multipliers.fireRate;
+  shootCooldown_ = std::chrono::duration<double>(shootCooldown_ / fireRateMultiplier_);
 }
