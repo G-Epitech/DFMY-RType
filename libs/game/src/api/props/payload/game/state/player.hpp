@@ -18,5 +18,6 @@ struct PlayerState {
   std::size_t entityId = 0;          ///< @brief The entity id of the player
   utils::types::vector_2f position;  ///< @brief The position of the player
   std::size_t health = 0;            ///< @brief The health of the player
+  utils::types::vector_2f velocity;  ///< @brief The velocity of the player
 };
 }  // namespace rtype::sdk::game::api::payload

@@ -11,6 +11,7 @@
 
 #include "core/components/tags/tags.hpp"
 #include "libs/game/includes/api.hpp"
+#include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "registry.hpp"
 
 namespace rtype::server::game {
@@ -52,11 +53,13 @@ class StateBroadcaster final {
    * @param entity Entity to process
    * @param vec Position of the entity
    * @param tags Tags of the entity
+   * @param rigidbodies Rigidbody of the entity
    */
   static void ProcessEntity(const std::unique_ptr<EntityStates> &states,
                             const zygarde::Entity &entity,
                             const sdk::game::utils::types::vector_2f &vec,
-                            const core::components::Tags *tags) noexcept;
+                            const core::components::Tags *tags,
+                            const physics::components::Rigidbody2D *rigidbodies) noexcept;
 
   /**
    * Gather the enemy states according to their tags

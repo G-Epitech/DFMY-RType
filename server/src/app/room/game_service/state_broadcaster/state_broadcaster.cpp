@@ -35,8 +35,9 @@ void StateBroadcaster::GatherEntityStates(const std::shared_ptr<zygarde::Registr
     auto ent = registry->EntityFromIndex(i);
     const sdk::game::utils::types::vector_2f vec = {val.point.x, val.point.y};
     const auto tags = registry->GetComponent<core::components::Tags>(ent);
-    if (tags.has_value() && tags.value()) {
-      ProcessEntity(states, ent, vec, *tags);
+    const auto rigidbodies = registry->GetComponent<physics::components::Rigidbody2D>(ent);
+    if (tags.has_value() && tags.value() && rigidbodies.has_value() && rigidbodies.value()) {
+      ProcessEntity(states, ent, vec, *tags, *rigidbodies);
     }
     i++;
   }
@@ -45,10 +46,15 @@ void StateBroadcaster::GatherEntityStates(const std::shared_ptr<zygarde::Registr
 void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states,
                                      const Entity& entity,
                                      const rtype::sdk::game::utils::types::vector_2f& vec,
-                                     const core::components::Tags* tags) noexcept {
+                                     const core::components::Tags* tags,
+                                     const physics::components::Rigidbody2D* rigidbodies) noexcept {
   const core::components::Tags tagsToCheck{*tags};
   if (tagsToCheck & sdk::game::constants::kPlayerTag) {
-    payload::PlayerState state = {static_cast<std::size_t>(entity), vec, 100};
+    const payload::PlayerState state = {
+        static_cast<std::size_t>(entity),
+        vec,
+        100,
+        {rigidbodies->GetVelocity().x, rigidbodies->GetVelocity().y}};
     states->playerStates.push_back(state);
   }
   if (tagsToCheck & sdk::game::constants::kEnemyTag) {
