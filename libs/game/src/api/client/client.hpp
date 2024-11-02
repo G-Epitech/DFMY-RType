@@ -114,7 +114,7 @@ class rtype::sdk::game::api::Client {
    * @param rooms Refresh the rooms infos
    * @return true if the packet is sent, false otherwise
    */
-  [[nodiscard]] bool RefreshInfos(bool game, bool rooms);
+  bool RefreshInfos(bool game, bool rooms);
 
   /**
    * @brief Send a chat message
