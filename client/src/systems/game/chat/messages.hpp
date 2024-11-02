@@ -39,8 +39,17 @@ class ChatMessagesSystem final : public ASystem<> {
   /// @brief Last messages
   std::vector<Entity> oldMessages_;
 
+  /**
+   * @brief Move all positions of the messages
+   * @param r The registry
+   */
   void MoveAllPositions(Registry::Ptr r);
 
-  void AddMesage(Registry::Ptr r, api::payload::ChatMessage message);
+  /**
+   * @brief Add a message to the chat
+   * @param r The registry
+   * @param message The message to add
+   */
+  void AddMesage(const Registry::Ptr &r, const api::payload::ChatMessage &message);
 };
 }  // namespace rtype::client::systems

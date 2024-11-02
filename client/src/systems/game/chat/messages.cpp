@@ -43,12 +43,16 @@ void ChatMessagesSystem::MoveAllPositions(Registry::Ptr r) {
   }
 }
 
-void ChatMessagesSystem::AddMesage(Registry::Ptr r, api::payload::ChatMessage message) {
-  auto entity = r->SpawnEntity();
-  const Vector3f point{windowManager_->width_ - 100, windowManager_->height_ - 120, 0};
-  constexpr Alignment aligns{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+void ChatMessagesSystem::AddMesage(const Registry::Ptr& r,
+                                   const api::payload::ChatMessage& message) {
+  const auto entity = r->SpawnEntity();
+  const Vector3f point{10, windowManager_->height_ - 80, 0};
+  constexpr Alignment aligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+  const std::string name = message.username;
+  const std::string text = message.message;
+  const std::string finalText = "[" + name + "] " + text;
 
   r->AddComponent<Position>(entity, Position{point, aligns});
-  r->AddComponent<Drawable>(entity, {Text{message.message, "main"}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(entity, {Text{finalText, "main"}, WindowManager::View::HUD});
   oldMessages_.push_back(entity);
 }
