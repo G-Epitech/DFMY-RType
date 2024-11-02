@@ -7,8 +7,8 @@
 
 #include "settings.hpp"
 
+#include "client/src/components/ui/radio.hpp"
 #include "client/src/constants/settings.hpp"
-#include "components/radio.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "menu.hpp"

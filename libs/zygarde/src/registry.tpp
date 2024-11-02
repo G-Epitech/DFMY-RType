@@ -108,7 +108,7 @@ Entity Registry::SpawnEntity(Args &&...args) {
     entities_.resize(newId + 1);
   }
   T e(newId, GetShared());
-  entities_.at(newId) = e;
+  entities_.at(newId) = static_cast<Entity>(e);
   e.OnSpawn(std::forward<Args>(args)...);
   return e;
 }

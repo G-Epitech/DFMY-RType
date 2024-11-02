@@ -16,11 +16,16 @@ namespace mew::sets::drawable {
 
 /// @brief Text Component use in an ECS
 struct Text {
-  std::string text;                           ///< Text to display
-  std::string fontName;                       ///< Font name
-  unsigned int characterSize = 12;            ///< Character size
-  sf::Text::Style style = sf::Text::Regular;  ///< Style of the text
-  sf::Color color = sf::Color::White;         ///< Color of the text
+  enum class CharacterSizeUnit {
+    kDefault,  ///< Default
+    kPixels    ///< Pixels
+  };
+  std::string text;                                                   ///< Text to display
+  std::string fontName;                                               ///< Font name
+  unsigned int characterSize = 12;                                    ///< Character size
+  CharacterSizeUnit characterSizeUnit = CharacterSizeUnit::kDefault;  ///< Character size unit
+  sf::Text::Style style = sf::Text::Regular;                          ///< Style of the text
+  sf::Color color = sf::Color::White;                                 ///< Color of the text
 };
 
 /// @brief Texture Component use in an ECS
@@ -32,10 +37,10 @@ struct Texture {
 
 /// @brief Rectangle Component use in an ECS
 struct Rectangle {
-  sf::Color color;                                  ///< Color of the rectangle
-  sf::Vector2f size;                                ///< Size of the rectangle
-  sf::Color outlineColor = sf::Color::Transparent;  ///< Outline color of the rectangle
-  float outlineThickness = 0.0;                     ///< Outline size of the rectangle
+  sf::Color fillColor = sf::Color::Transparent;  ///< Color of the rectangle
+  sf::Color outlineColor = sf::Color::Transparent;                        ///< Color of the outline
+  float outlineThickness = 0;                    ///< Thickness of the outline
+  sf::Vector2f size;                             ///< Size of the rectangle
 };
 
 /// @brief Drawable Component use in an ECS

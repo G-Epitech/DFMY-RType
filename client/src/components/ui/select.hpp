@@ -7,13 +7,15 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
+
 namespace rtype::client::components {
 struct SelectContainer {
   /// @brief Is the container expanded
   bool expanded = false;
-  /// @brief Current label of the container
-  std::string label;
+  /// @brief Current selected option
+  std::optional<std::string> selectedOption = std::nullopt;
   /// @brief Current value of the container
   std::string selectId;
 };

@@ -145,12 +145,30 @@ void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Pos
   text_.setStyle(text.style);
   text_.setCharacterSize(text.characterSize);
   text_.setFillColor(text.color);
-  text_.setPosition(position.point.x, position.point.y);
-
+  text_.setPosition(0, 0);
   text_.setOutlineColor(text.color);
   text_.setOutlineThickness(text.style == sf::Text::Style::Underlined ? 1 : 0);
+  text_.setOrigin(0, 0);
 
-  const auto origin = GetOrigin(position, text_.getGlobalBounds());
+  {
+    auto rect = text_.getGlobalBounds();
+    auto real_position = position.point;
+    real_position.x -= rect.left;
+    real_position.y -= rect.top;
+    text_.setPosition(real_position.x, real_position.y);
+  }
+
+  auto bounds = text_.getGlobalBounds();
+
+  if (text.characterSizeUnit == Text::CharacterSizeUnit::kPixels) {
+    auto scale = static_cast<float>(text.characterSize) / bounds.height;
+    text_.setScale(scale, scale);
+    bounds = text_.getGlobalBounds();
+  } else {
+    text_.setScale(1, 1);
+  }
+
+  const auto origin = GetOrigin(position, bounds);
   text_.setOrigin(std::get<0>(origin), std::get<1>(origin));
 
   windowManager_->window()->draw(text_, render_states);
@@ -162,15 +180,15 @@ void DrawableSystem::DrawEntityRectangle(const Rectangle& rectangle,
   const auto render_states = shader ? shader.get() : sf::RenderStates::Default;
 
   if (shader) {
-    shader->setUniform("objectColor", sf::Glsl::Vec4(rectangle.color));
+    shader->setUniform("objectColor", sf::Glsl::Vec4(rectangle.fillColor));
     shader->setUniform("hasTexture", false);
   }
 
-  shape_.setFillColor(rectangle.color);
+  shape_.setFillColor(rectangle.fillColor);
   shape_.setSize(rectangle.size);
   shape_.setPosition(position.point.x, position.point.y);
-  shape_.setOutlineColor(rectangle.outlineColor);
   shape_.setOutlineThickness(rectangle.outlineThickness);
+  shape_.setOutlineColor(rectangle.outlineColor);
 
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));

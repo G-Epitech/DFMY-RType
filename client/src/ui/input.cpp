@@ -44,7 +44,8 @@ void Input::CreateInputField(const Registry::Ptr& registry, const std::string& t
         if (!std::holds_alternative<Text>(drawable)) {
           return;
         }
-        auto& [text, fontName, characterSize, style, color] = std::get<Text>(drawable);
+        auto& [text, fontName, characterSize, characterSizeUnit, style, color] =
+            std::get<Text>(drawable);
         if (unicode == 8) {
           if (!text.empty()) {
             text.pop_back();
