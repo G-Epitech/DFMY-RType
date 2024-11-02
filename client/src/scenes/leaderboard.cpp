@@ -149,8 +149,8 @@ void SceneLeaderboard::CreateScoreRectangle(const std::size_t &index, const sf::
 
   registry_->AddComponent<Position>(entry, {point, aligns});
   registry_->AddComponent<Drawable>(
-      entry,
-      {drawable::Rectangle{sf::Color::Transparent, size, sf::Color::White, 3.0}, WindowManager::View::HUD});
+      entry, {drawable::Rectangle{sf::Color::Transparent, size, sf::Color::White, 3.0},
+              WindowManager::View::HUD});
 }
 
 void SceneLeaderboard::CreateScoreTitle(const std::size_t &index,
