@@ -16,16 +16,11 @@ namespace mew::sets::drawable {
 
 /// @brief Text Component use in an ECS
 struct Text {
-  enum class CharacterSizeUnit {
-    kDefault,  ///< Default
-    kPixels    ///< Pixels
-  };
-  std::string text;                                                   ///< Text to display
-  std::string fontName;                                               ///< Font name
-  unsigned int characterSize = 12;                                    ///< Character size
-  CharacterSizeUnit characterSizeUnit = CharacterSizeUnit::kDefault;  ///< Character size unit
-  sf::Text::Style style = sf::Text::Regular;                          ///< Style of the text
-  sf::Color color = sf::Color::White;                                 ///< Color of the text
+  std::string text;                           ///< Text to display
+  std::string fontName;                       ///< Font name
+  unsigned int characterSize = 12;            ///< Character size
+  sf::Text::Style style = sf::Text::Regular;  ///< Style of the text
+  sf::Color color = sf::Color::White;         ///< Color of the text
 };
 
 /// @brief Texture Component use in an ECS

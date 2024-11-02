@@ -9,4 +9,6 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         select/select_container_text_entity.hpp
         select/select_option_entity.cpp
         select/select_option_entity.hpp
+        select/select_option_text_entity.cpp
+        select/select_option_text_entity.hpp
 )

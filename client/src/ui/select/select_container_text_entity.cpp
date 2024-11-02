@@ -26,7 +26,6 @@ SelectContainerTextEntity::SelectContainerTextEntity(std::size_t idx,
 
 void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
   auto label = props.options.empty() ? props.placeholder : props.options.begin()->second;
-  auto characterSize = static_cast<unsigned int>(props.size.y * 0.5f);
   auto position =
       Vector3f(props.position.x + props.size.x * 0.5f, props.position.y - (props.size.y * 0.15f));
   auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
@@ -34,8 +33,7 @@ void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
   auto drawable =
       Text{.text = label,
            .fontName = "main",
-           .characterSize = characterSize,
-           .characterSizeUnit = Text::CharacterSizeUnit::kPixels,
+           .characterSize = static_cast<unsigned int>(props.size.y * 0.5f),
            .style = props.options.empty() ? sf::Text::Style::Italic : sf::Text::Style::Regular,
            .color = sf::Color::White};
 
