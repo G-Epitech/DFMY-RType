@@ -26,8 +26,6 @@ SceneLeaderboard::SceneLeaderboard(DependenciesHandler::Ptr services)
   this->scores_ = std::make_shared<std::vector<payload::Score>>();
   this->serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
 
-  managers_.sound->LoadSoundBuffer("assets/sounds/button_click.ogg", "buttons:click");
-
   registry_->AddSystem<LeaderboardSyncSystem>(serverConnectionService_, scores_);
   registry_->RegisterComponent<Tags>();
 }

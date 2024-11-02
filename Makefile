@@ -127,5 +127,6 @@ format-check:
 
 setup-database:
 			@(cat $(SQL_PATH) | mysql -u root -p) && echo "Database setup done."
+.PHONY: setup-database
 
 DEFAULT_GOAL := all

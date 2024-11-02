@@ -20,7 +20,9 @@ LeaderboardSyncSystem::LeaderboardSyncSystem(ServerConnectionService::Ptr server
     : ASystem(),
       serverConnectionService_{std::move(server_connection_service)},
       scores_(std::move(scores)) {
-  this->serverConnectionService_->client()->RefreshInfos(true, false);
+  if (this->serverConnectionService_->Connected()) {
+    this->serverConnectionService_->client()->RefreshInfos(true, false);
+  }
 }
 
 void LeaderboardSyncSystem::Run(Registry::Ptr r) {
