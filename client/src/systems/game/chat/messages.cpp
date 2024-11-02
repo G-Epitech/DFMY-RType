@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "client/src/constants/settings.hpp"
+#include "constants/chat.hpp"
 #include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
@@ -19,10 +20,19 @@ using namespace mew::sets::drawable;
 using namespace core::components;
 
 ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
-                                       ServerConnectionService::Ptr server_connection_service)
+                                       ServerConnectionService::Ptr server_connection_service,
+                                       const std::string& username, Registry::Ptr r)
     : ASystem(),
       windowManager_(std::move(window_manager)),
-      serverConnectionService_{std::move(server_connection_service)} {}
+      serverConnectionService_{std::move(server_connection_service)} {
+  const auto entity = r->SpawnEntity();
+  const Vector3f point{170, windowManager_->height_ - 50, 0};
+  constexpr Alignment aligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
+  const std::string final = "[" + username + "]";
+
+  r->AddComponent<Position>(entity, Position{point, aligns});
+  r->AddComponent<Drawable>(entity, {Text{final, "main"}, WindowManager::View::HUD});
+}
 
 void ChatMessagesSystem::Run(Registry::Ptr r) {
   const auto messages = serverConnectionService_->client()->ExtractChatQueue();
@@ -30,6 +40,7 @@ void ChatMessagesSystem::Run(Registry::Ptr r) {
   for (const auto& message : messages) {
     MoveAllPositions(r);
     AddMessage(r, message);
+    AddUsername(r, message);
   }
   CleanupOldMessages(r);
 }
@@ -47,14 +58,24 @@ void ChatMessagesSystem::MoveAllPositions(Registry::Ptr r) {
 void ChatMessagesSystem::AddMessage(const Registry::Ptr& r,
                                     const api::payload::ChatMessage& message) {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{10, windowManager_->height_ - 80, 0};
+  const Vector3f point{CHAT_MESSAGE_PIXELS_LEFT, windowManager_->height_ - 80, 0};
   constexpr Alignment aligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
-  const std::string name = message.username;
-  const std::string text = message.message;
-  const std::string finalText = "[" + name + "] " + text;
 
   r->AddComponent<Position>(entity, Position{point, aligns});
-  r->AddComponent<Drawable>(entity, {Text{finalText, "main"}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(entity, {Text{message.message, "main"}, WindowManager::View::HUD});
+  oldMessages_[entity] = std::chrono::system_clock::now();
+}
+
+void ChatMessagesSystem::AddUsername(const Registry::Ptr& r,
+                                     const api::payload::ChatMessage& message) {
+  const auto entity = r->SpawnEntity();
+  const Vector3f point{CHAT_NAME_PIXELS_LEFT, windowManager_->height_ - 80, 0};
+  constexpr Alignment aligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
+  const std::string name = message.username;
+  const std::string finalMessage = "[" + name + "]";
+
+  r->AddComponent<Position>(entity, Position{point, aligns});
+  r->AddComponent<Drawable>(entity, {Text{finalMessage, "main"}, WindowManager::View::HUD});
   oldMessages_[entity] = std::chrono::system_clock::now();
 }
 

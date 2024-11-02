@@ -52,11 +52,13 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->AddSystem<physics::systems::MovementSystem>(deltaTime_);
   registry_->AddSystem<physics::systems::PositionSystem>();
 
+  const auto username = settings_manager->Get<std::string>(SETTING_PLAYER_USERNAME);
   registry_->AddSystem<systems::utils::input::CursorSystem>();
-  utils::Input::Create(registry_, "chat", Vector3f{10, managers_.window->height_ - 50},
+  utils::Input::Create(registry_, "chat", Vector3f{180, managers_.window->height_ - 50},
                        {HorizontalAlign::kLeft, VerticalAlign::kCenter}, settings_manager);
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
-  registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service);
+  registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service, username,
+                                           registry_);
   registry_->AddSystem<ChatTriggerSystem>(window_manager, settings_manager);
   registry_->AddSystem<BlinkSystem>();
 }

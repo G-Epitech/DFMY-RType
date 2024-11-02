@@ -42,7 +42,7 @@ void ServerConnectionService::Connect() {
       clientMutex_.unlock();
 
       auto res = client->Register({
-          .username = "ptit'plouf",
+          .username = "0123456789012345678",
       });
       if (!res) {
         throw std::runtime_error("Failed to register to server");

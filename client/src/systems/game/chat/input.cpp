@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "client/src/constants/settings.hpp"
+#include "constants/chat.hpp"
 #include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
@@ -32,7 +33,8 @@ void ChatInputSystem::Run(Registry::Ptr r, zipper<Tags, Drawable> components) {
           auto&& component = std::get<Text>(drawable.drawable);
           if (event.key.code == sf::Keyboard::Enter) {
             if (!component.text.empty()) {
-              auto res = serverConnectionService_->client()->SendMessage(component.text);
+              auto res = serverConnectionService_->client()->SendMessage(
+                  component.text.substr(0, CHAT_MESSAGE_MAX_LENGTH - 1));
               if (!res) {
                 std::cerr << "Failed to send message: '" << component.text << "'" << std::endl;
               } else {
