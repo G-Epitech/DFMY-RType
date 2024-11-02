@@ -30,8 +30,6 @@ void rtype::server::game::scripts::ShootHelper::SpawnBullet(
     if (positionComponent.has_value() && positionComponent.value()) {
       (*positionComponent)->point = projectilePos;
     }
-    (*positionComponent)->aligns.vertical = core::components::VerticalAlign::kCenter;
-    (*positionComponent)->aligns.horizontal = core::components::HorizontalAlign::kCenter;
     auto scriptPool = registry->GetComponent<scripting::components::ScriptPool>(entity);
     if (!scriptPool.has_value() || !scriptPool.value()) {
       return;

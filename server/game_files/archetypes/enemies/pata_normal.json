@@ -15,8 +15,8 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 61,
-          "y": 61
+          "x": 52.5,
+          "y": 60
         },
         "collisionLayers": [
           2

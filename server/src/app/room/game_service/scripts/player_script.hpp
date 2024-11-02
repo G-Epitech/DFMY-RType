@@ -16,7 +16,7 @@
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {
-static constexpr core::types::Vector3f kPlayerProjectileOffsetPosition{80.0f, 0.0f, 0.0f};
+static constexpr core::types::Vector3f kPlayerProjectileOffsetPosition{80.0f, 20.0f, 0.0f};
 }
 
 namespace rtype::server::game::scripts {
