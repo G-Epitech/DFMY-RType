@@ -28,7 +28,7 @@ zygarde::Entity PlayerSpawner::SpawnPlayer(std::uint64_t player_id) {
   if (!position.has_value() || !position.value()) {
     return player;
   }
-  (*position)->point = core::types::Vector3f(487.0f, 100.0f + (100.0f * player_id), 0);
+  (*position)->point = VECTOR3F_PLAYER_OFFSET(player_id);
 
   auto scriptPool = registry_->GetComponent<zygarde::scripting::components::ScriptPool>(player);
   if (!scriptPool.has_value() || !scriptPool.value()) {

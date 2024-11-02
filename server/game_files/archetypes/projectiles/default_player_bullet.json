@@ -6,7 +6,7 @@
       "data": {
         "isKinematic": true,
         "velocity": {
-          "x": 1200,
+          "x": 1500,
           "y": 0
         },
         "drag": 0
@@ -19,8 +19,8 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 32,
-          "y": 15
+          "x": 66,
+          "y": 32
         },
         "collisionLayers": [
           8

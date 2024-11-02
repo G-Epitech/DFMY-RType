@@ -10,6 +10,9 @@
 #include "types/difficulty_data.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
 
+#define VECTOR3F_PLAYER_OFFSET(player_id) \
+  (core::types::Vector3f(487.0f, 100.0f + (100.0f * (player_id)), 0.0f))
+
 namespace rtype::server::game {
 class PlayerSpawner {
  public:

@@ -13,6 +13,10 @@
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game::scripts {
+static constexpr zygarde::core::types::Vector3f kPataProjectileOffsetPosition{-40, 30, 0};
+}
+
+namespace rtype::server::game::scripts {
 class PataScript : public EnemyBaseScript {
  public:
   PataScript();
@@ -37,8 +41,5 @@ class PataScript : public EnemyBaseScript {
   float upperLimitOffset_;
   float lowerLimitOffset_;
   zygarde::utils::Timer::Nanoseconds lastShootTime_;
-
- private:
-  static constexpr zygarde::core::types::Vector3f kProjectileOffsetPosition_{-40, 10, 0};
 };
 }  // namespace rtype::server::game::scripts

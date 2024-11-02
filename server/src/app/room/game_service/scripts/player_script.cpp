@@ -37,7 +37,7 @@ void PlayerScript::FixedUpdate(const std::shared_ptr<scripting::types::Scripting
   lastShootTime_ += context->deltaTime;
   if (isShooting_ && lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
-    ShootHelper::SpawnBullet(context, kProjectileOffsetPosition_, damageMultiplier_,
+    ShootHelper::SpawnBullet(context, kPlayerProjectileOffsetPosition, damageMultiplier_,
                              tools::kArchetypeBasePlayerBullet);
   }
   isShooting_ = false;

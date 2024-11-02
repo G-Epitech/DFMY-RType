@@ -35,7 +35,7 @@ void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingCo
   lastShootTime_ += context->deltaTime;
   if (lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
-    ShootHelper::SpawnBullet(context, kProjectileOffsetPosition_, damageMultiplier_,
+    ShootHelper::SpawnBullet(context, kPataProjectileOffsetPosition, damageMultiplier_,
                              tools::kArchetypeBaseEnemyBullet);
   }
   if (!position || !rb) {

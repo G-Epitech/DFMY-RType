@@ -26,9 +26,10 @@ void EnemySpawner::Initialize(
 void EnemySpawner::SpawnEnemy(const std::string& enemy_archetype_name) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution dist(80.0f, 1000.0f);
+  std::uniform_real_distribution dist(kEnemySpawnMinPositionY, kEnemySpawnMaxPositionY);
 
-  const core::types::Vector3f position(2000, dist(gen), 0);
+  const core::types::Vector3f position(kInitialEnemySpawnPositionX, dist(gen),
+                                       kInitialEnemySpawnPositionZ);
   auto entity = archetypeManager_->InvokeArchetype(registry_, enemy_archetype_name);
   auto scriptPool = registry_->GetComponent<zygarde::scripting::components::ScriptPool>(entity);
   auto positionComponent = registry_->GetComponent<core::components::Position>(entity);

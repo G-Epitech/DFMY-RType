@@ -11,6 +11,13 @@
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
 
 namespace rtype::server::game {
+constexpr float kInitialEnemySpawnPositionX = 2000.0f;
+constexpr float kInitialEnemySpawnPositionZ = 0.0f;
+constexpr float kEnemySpawnMinPositionY = 100.0f;
+constexpr float kEnemySpawnMaxPositionY = 800.0f;
+}  // namespace rtype::server::game
+
+namespace rtype::server::game {
 class EnemySpawner final {
  public:
   EnemySpawner() = default;

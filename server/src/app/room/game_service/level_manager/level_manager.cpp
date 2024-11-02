@@ -61,14 +61,15 @@ void LevelManager::NextWave() {
   }
   currentWave_ = selectedLevel_.waves[currentWaveIndex_];
   float maxTime = currentWave_.maxTime;
-  currentWaveTime_ = std::chrono::nanoseconds(static_cast<int64_t>(maxTime * 1'000'000'000.0));
+  currentWaveTime_ =
+      std::chrono::nanoseconds(static_cast<int64_t>(maxTime * kNanosecondsPerSecond));
   ongoingSpawnCooldowns_.push_back(levelSpawnCooldowns_[currentWaveIndex_]);
 }
 
 zygarde::utils::Timer::Nanoseconds LevelManager::ComputeEnemySpawnCooldown(float wave_max_time,
                                                                            int enemy_count) {
-  return zygarde::utils::Timer::Nanoseconds{
-      static_cast<int64_t>(wave_max_time / static_cast<float>(enemy_count) * 1'000'000'000.0)};
+  return zygarde::utils::Timer::Nanoseconds{static_cast<int64_t>(
+      wave_max_time / static_cast<float>(enemy_count) * kNanosecondsPerSecond)};
 }
 
 void LevelManager::UpdateSpawnCooldowns(const utils::Timer::Nanoseconds& deltaTime) {

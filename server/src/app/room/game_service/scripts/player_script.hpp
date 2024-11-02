@@ -16,6 +16,10 @@
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {
+static constexpr core::types::Vector3f kPlayerProjectileOffsetPosition{80.0f, 0.0f, 0.0f};
+}
+
+namespace rtype::server::game::scripts {
 class PlayerScript : public PlayerBaseScript {
  public:
   struct PlayerProps {
@@ -51,8 +55,5 @@ class PlayerScript : public PlayerBaseScript {
   std::chrono::nanoseconds lastShootTime_;
   bool isShooting_;
   std::optional<core::types::Vector2f> movementDirection_;
-
- private:
-  static constexpr core::types::Vector3f kProjectileOffsetPosition_{86, 20, 0};
 };
 }  // namespace rtype::server::game::scripts

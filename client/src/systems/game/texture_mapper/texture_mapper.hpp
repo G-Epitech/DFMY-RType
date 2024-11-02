@@ -8,8 +8,8 @@
 #pragma once
 
 #include "game/src/types/projectile.hpp"
+#include "libs/game/src/types/enemies.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
-#include "types/enemies.hpp"
 
 namespace rtype::client::systems {
 class TextureMapper final {

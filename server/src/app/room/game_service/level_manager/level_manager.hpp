@@ -16,6 +16,11 @@
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game {
+static constexpr float kNanosecondsPerSecond = 1'000'000'000.0;
+}
+// namespace rtype::server::game
+
+namespace rtype::server::game {
 class LevelManager final {
  public:
   LevelManager() = default;
