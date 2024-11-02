@@ -7,12 +7,17 @@
 
 #pragma once
 
+#include "scripts/base/enemy_base_script.hpp"
 #include "zygarde/src/physics/2d/components/components.hpp"
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game::scripts {
-class PataScript : public zygarde::scripting::components::MonoBehaviour {
+static constexpr zygarde::core::types::Vector3f kPataProjectileOffsetPosition{-40, 30, 0};
+}
+
+namespace rtype::server::game::scripts {
+class PataScript : public EnemyBaseScript {
  public:
   PataScript();
   ~PataScript() override = default;
@@ -27,14 +32,9 @@ class PataScript : public zygarde::scripting::components::MonoBehaviour {
   void SetBasePosition(const zygarde::core::types::Vector3f& basePosition);
 
  private:
-  static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
-
- private:
-  float health_;
   bool goingUp_;
   float verticalSpeed_;
   float horizontalSpeed_;
-  std::chrono::duration<double> fireRateDuration_;
   zygarde::core::types::Vector3f basePosition_;
   float upperLimit_;
   float lowerLimit_;

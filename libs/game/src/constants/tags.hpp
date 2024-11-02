@@ -14,6 +14,7 @@ static inline std::string kPlayerTag = "player";
 
 static inline std::string kEnemyTag = "enemy";
 static inline std::string kPataTag = "pata";
+static inline std::string kPataBigTag = "pata_big";
 
 static inline std::string kBulletTag = "bullet";
 static inline std::string kEnemyBulletTag = "enemy_bullet";

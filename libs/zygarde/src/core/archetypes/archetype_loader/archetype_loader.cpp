@@ -11,7 +11,6 @@
 #include <utility>
 
 #include "core/archetypes/component_parser/component_parser.hpp"
-#include "scripting/components/pool/script_pool.hpp"
 
 using namespace zygarde::core::archetypes;
 

@@ -17,7 +17,7 @@
 using namespace zygarde::core::components;
 using namespace zygarde::physics::components;
 
-namespace rtype::server::game {
+namespace rtype::server::game::network {
 class StateBroadcaster final {
  public:
   StateBroadcaster() = delete;
@@ -92,4 +92,4 @@ class StateBroadcaster final {
   static void SendStates(const std::shared_ptr<Room> &api,
                          const std::unique_ptr<EntityStates> &states);
 };
-}  // namespace rtype::server::game
+}  // namespace rtype::server::game::network

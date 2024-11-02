@@ -14,10 +14,23 @@ using namespace rtype::sdk;
 Texture TextureMapper::MapBulletType(const sdk::game::types::ProjectileType type) noexcept {
   switch (type) {
     case game::types::ProjectileType::kPlayerCommon: {
-      return Texture{.name = "player", .scale = 1.5, .rect = {200, 120, 32, 15}};
+      return Texture{.name = "player", .scale = 3, .rect = {249, 90, 16, 4}};
     }
     default: {
-      return Texture{.name = "player", .scale = 1.5, .rect = {265, 120, 32, 15}};
+      return Texture{.name = "player", .scale = 1.5, .rect = {300, 121, 32, 10}};
+    }
+  }
+}
+mew::sets::drawable::Texture TextureMapper::MapEnemyType(game::types::EnemyType type) noexcept {
+  switch (type) {
+    case game::types::EnemyType::kPata: {
+      return Texture{.name = "enemy", .scale = 2.5, .rect = {5, 6, 21, 24}};
+    }
+    case game::types::EnemyType::kPataBig: {
+      return Texture{.name = "enemy", .scale = 3.5, .rect = {5, 6, 21, 24}};
+    }
+    default: {
+      return Texture{.name = "enemy", .scale = 2.5, .rect = {5, 6, 21, 24}};
     }
   }
 }

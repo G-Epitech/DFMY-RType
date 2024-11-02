@@ -13,7 +13,7 @@
 #include "scripting/components/mono_behaviour/mono_behaviour.hpp"
 #include "scripting/components/pool/script_pool.hpp"
 #include "scripting/components/script/script.hpp"
-#include "scripting/types/context.hpp"
+#include "scripting/types/scripting_context.hpp"
 #include "system_abstract.hpp"
 #include "utils/timer/timer.hpp"
 

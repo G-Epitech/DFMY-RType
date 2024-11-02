@@ -12,3 +12,4 @@
 #include "types/mode.hpp"
 #include "types/projectile.hpp"
 #include "types/weapons.hpp"
+#include "types/difficulties.hpp"
