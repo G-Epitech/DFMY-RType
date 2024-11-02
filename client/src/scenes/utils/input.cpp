@@ -31,7 +31,7 @@ void Input::CreateInputField(const Registry::Ptr& registry, std::string tag,
   const auto input_field = registry->SpawnEntity();
 
   registry->AddComponent<Position>(input_field, {position, alignment});
-  registry->AddComponent<Drawable>(input_field, {Text{"", "main", 20}, WindowManager::View::HUD});
+  registry->AddComponent<Drawable>(input_field, {Text{"", "main"}, WindowManager::View::HUD});
   registry->AddComponent<Tags>(input_field, Tags({tag, (tag + "_input")}));
   registry->AddComponent<OnTextEntered>(
       input_field, OnTextEntered{.handler = [registry, input_field](const sf::Uint32& unicode) {
@@ -62,6 +62,6 @@ void Input::CreateBlinkingCursor(const Registry::Ptr& registry, const std::strin
   const auto cursor = registry->SpawnEntity();
 
   registry->AddComponent<Position>(cursor, {position, alignment});
-  registry->AddComponent<Drawable>(cursor, {Text{"|", "main", 20}, WindowManager::View::HUD});
+  registry->AddComponent<Drawable>(cursor, {Text{"|", "main"}, WindowManager::View::HUD});
   registry->AddComponent<Tags>(cursor, Tags({"blink", (tag + "_cursor")}));
 }

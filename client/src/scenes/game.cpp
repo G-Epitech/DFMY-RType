@@ -17,6 +17,7 @@
 #include "menu.hpp"
 #include "physics/2d/systems/systems.hpp"
 #include "systems/game/chat/input.hpp"
+#include "systems/game/chat/messages.hpp"
 #include "systems/utils/input_cursor.hpp"
 #include "utils/input.hpp"
 
@@ -53,6 +54,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
                        Vector3f{managers_.window->width_ - 100, managers_.window->height_ - 100},
                        {HorizontalAlign::kCenter, VerticalAlign::kCenter});
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
+  registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service);
 }
 
 void SceneGame::OnCreate() {
