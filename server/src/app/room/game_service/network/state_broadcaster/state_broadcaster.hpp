@@ -91,5 +91,11 @@ class StateBroadcaster final {
    */
   static void SendStates(const std::shared_ptr<Room> &api,
                          const std::unique_ptr<EntityStates> &states);
+
+  static void AddDummyBulletState(const std::unique_ptr<EntityStates> &states) noexcept;
+
+  static void AddDummyPlayerState(const std::unique_ptr<EntityStates> &states) noexcept;
+
+  static void AddDummyEnemyState(const std::unique_ptr<EntityStates> &states) noexcept;
 };
 }  // namespace rtype::server::game::network

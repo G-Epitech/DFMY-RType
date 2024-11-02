@@ -45,7 +45,7 @@ void GameService::LevelAndDifficultySetup() {
   playerSpawner_.Initialize(archetypeManager_, registry_);
   playerSpawner_.SetDifficulty(difficultyData);
   levelManager_.Initialize(kDirectoryLevels, registry_, archetypeManager_);
-  levelManager_.SelectLevel("Tutorial");
+  levelManager_.SelectLevel("The Den");
   levelManager_.StartLevel(difficultyData);
 }
 
