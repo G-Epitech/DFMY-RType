@@ -28,9 +28,6 @@ class PataScript : public EnemyBaseScript {
   void SetBasePosition(const zygarde::core::types::Vector3f& basePosition);
 
  private:
-  static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
-
- private:
   bool goingUp_;
   float verticalSpeed_;
   float horizontalSpeed_;
@@ -40,5 +37,8 @@ class PataScript : public EnemyBaseScript {
   float upperLimitOffset_;
   float lowerLimitOffset_;
   zygarde::utils::Timer::Nanoseconds lastShootTime_;
+
+ private:
+  static constexpr zygarde::core::types::Vector3f kProjectileOffsetPosition_{-40, 10, 0};
 };
 }  // namespace rtype::server::game::scripts

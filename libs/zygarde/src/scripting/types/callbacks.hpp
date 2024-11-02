@@ -13,9 +13,9 @@
 #include <memory>
 #include <string>
 
-#include "context.hpp"
 #include "physics/2d/types/collision_2d.hpp"
 #include "registry.hpp"
+#include "scripting_context.hpp"
 
 namespace zygarde::scripting::types {
 /// @brief Fixed Update callback function

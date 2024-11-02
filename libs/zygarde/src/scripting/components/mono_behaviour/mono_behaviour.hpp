@@ -12,7 +12,7 @@
 #include "api.hpp"
 #include "physics/2d/types/collision_2d.hpp"
 #include "registry.hpp"
-#include "scripting/types/context.hpp"
+#include "scripting/types/scripting_context.hpp"
 #include "scripting/types/values_map.hpp"
 
 namespace zygarde::scripting::components {

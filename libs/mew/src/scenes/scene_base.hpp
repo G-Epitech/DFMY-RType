@@ -47,7 +47,7 @@ class EXPORT_MEW_API SceneBase : public IScene {
 
  protected:
   /**
-   * @brief Build common scene with global context
+   * @brief Build helpers scene with global context
    * @param context Context provided by the scenes manager
    */
   explicit SceneBase(porygon::DependenciesHandler::Ptr services);

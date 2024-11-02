@@ -45,13 +45,14 @@ class PlayerScript : public PlayerBaseScript {
  private:
   void HandleMovement(const std::shared_ptr<scripting::types::ScriptingContext>& context);
 
-  static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
-
  private:
   PlayerProps props_;
   sdk::game::types::WeaponType equippedWeapon_;
   std::chrono::nanoseconds lastShootTime_;
   bool isShooting_;
   std::optional<core::types::Vector2f> movementDirection_;
+
+ private:
+  static constexpr core::types::Vector3f kProjectileOffsetPosition_{86, 20, 0};
 };
 }  // namespace rtype::server::game::scripts
