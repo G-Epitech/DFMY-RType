@@ -107,7 +107,7 @@ class LevelManager final {
    * @param waveCooldowns The wave cooldowns
    * @return True if the enemy can be spawned, false otherwise
    */
-  static bool CanSpawnEnemy(const std::string& enemy_name, SpawnCooldowns& waveCooldowns);
+  static bool CanSpawnEnemy(const std::string& enemy_name, const SpawnCooldowns& waveCooldowns);
 
   /**
    * @brief Move to the next wave

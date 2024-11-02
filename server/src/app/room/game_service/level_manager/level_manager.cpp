@@ -88,7 +88,7 @@ void LevelManager::UpdateSpawnCooldowns(const utils::Timer::Nanoseconds& deltaTi
 }
 
 bool LevelManager::CanSpawnEnemy(const std::string& enemy_name,
-                                 LevelManager::SpawnCooldowns& waveCooldowns) {
-  auto& spawnProps = waveCooldowns[enemy_name];
+                                 const LevelManager::SpawnCooldowns& waveCooldowns) {
+  const auto& spawnProps = waveCooldowns.at(enemy_name);
   return spawnProps.currentSpawnTime >= spawnProps.spawnTime;
 }

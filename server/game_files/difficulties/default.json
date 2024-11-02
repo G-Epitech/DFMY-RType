@@ -5,7 +5,7 @@
     "player": {
       "health": 1.0,
       "damage": 1.0,
-      "speed": 4.0,
+      "speed": 1.0,
       "fireRate": 1.0
     },
     "enemy": {

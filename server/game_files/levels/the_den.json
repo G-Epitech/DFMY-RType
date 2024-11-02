@@ -3,7 +3,7 @@
   "description": "The Den is a dark and dangerous place. The creatures that live here are not to be trifled with.",
   "waves": [
     {
-      "maxTime": 10.0,
+      "maxTime": 15.0,
       "enemies": [
         {
           "name": "enemy_pata_normal",

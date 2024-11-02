@@ -89,4 +89,4 @@ class StateBroadcaster final {
   static void SendStates(const std::shared_ptr<rtype::sdk::game::api::Room> &api,
                          const std::unique_ptr<EntityStates> &states);
 };
-}  // namespace rtype::server::game
+}  // namespace rtype::server::game::network

@@ -38,7 +38,8 @@ class DifficultyLoader final {
    * @param difficultyType DifficultyData type
    * @return The difficulty data
    */
-  [[nodiscard]] DifficultyData GetDifficultyByType(rtype::sdk::game::types::Difficulty difficultyType) const;
+  [[nodiscard]] DifficultyData GetDifficultyByType(
+      rtype::sdk::game::types::Difficulty difficultyType) const;
 
  private:
   /**

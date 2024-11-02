@@ -5,10 +5,11 @@
 ** ShootScript.cpp
 */
 
+#include "shoot_helper.hpp"
+
 #include "core/components/position/position.hpp"
 #include "scripting/components/pool/script_pool.hpp"
 #include "scripts/projectiles/default_projectile_script.hpp"
-#include "shoot_helper.hpp"
 
 void rtype::server::game::scripts::ShootHelper::SpawnBullet(
     const std::shared_ptr<scripting::types::ScriptingContext>& context,

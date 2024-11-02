@@ -6,6 +6,7 @@
 */
 
 #include "damage_helper.hpp"
+
 #include "scripting/components/pool/script_pool.hpp"
 #include "scripts/projectiles/default_projectile_script.hpp"
 
