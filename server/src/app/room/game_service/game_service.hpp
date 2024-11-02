@@ -27,8 +27,9 @@ class GameService {
   /**
    * @brief Construct a new Game Service object
    * @param tick_rate The tick rate of the game
+   * @param difficulty The difficulty of the game
    */
-  explicit GameService(const std::size_t &tick_rate);
+  GameService(const std::size_t &tick_rate, std::size_t difficulty);
 
   ~GameService() = default;
 
@@ -71,6 +72,9 @@ class GameService {
    */
   void AddGameWalls();
 
+  /**
+   * @brief Setup the level and difficulty
+   */
   void LevelAndDifficultySetup();
 
  private:
@@ -109,5 +113,8 @@ class GameService {
 
   /// @brief Message handler
   network::MessageHandler messageHandler_;
+
+  /// @brief
+  std::size_t difficulty_;
 };
 }  // namespace rtype::server::game

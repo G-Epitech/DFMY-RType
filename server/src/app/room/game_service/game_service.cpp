@@ -16,8 +16,8 @@
 using namespace rtype::server::game;
 using namespace rtype::sdk::game::api;
 
-GameService::GameService(const size_t &tick_rate)
-    : ticksManager_{tick_rate}, registry_(), logger_("game-service") {
+GameService::GameService(const size_t &tick_rate, std::size_t difficulty)
+    : ticksManager_{tick_rate}, registry_(), logger_("game-service"), difficulty_(difficulty) {
   archetypeManager_ = std::make_shared<zygarde::core::archetypes::ArchetypeManager>();
 }
 
@@ -38,7 +38,7 @@ void GameService::AddGameWalls() {
 void GameService::LevelAndDifficultySetup() {
   difficultyLoader_.Run(kDirectoryDifficulties);
   auto difficultyData =
-      difficultyLoader_.GetDifficultyByType(rtype::sdk::game::types::Difficulty::kEasy);
+      difficultyLoader_.GetDifficultyByType(static_cast<sdk::game::types::Difficulty>(difficulty_));
   playerSpawner_.Initialize(archetypeManager_, registry_);
   playerSpawner_.SetDifficulty(difficultyData);
   levelManager_.Initialize(kDirectoryLevels, registry_, archetypeManager_);

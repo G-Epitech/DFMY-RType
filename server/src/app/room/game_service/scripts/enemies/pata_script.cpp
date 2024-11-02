@@ -73,8 +73,13 @@ void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues)
   verticalSpeed_ = std::any_cast<float>(customScriptValues.at("verticalSpeed"));
   upperLimitOffset_ = std::any_cast<float>(customScriptValues.at("upperLimitOffset"));
   lowerLimitOffset_ = std::any_cast<float>(customScriptValues.at("lowerLimitOffset"));
-  shootCooldown_ = static_cast<const std::chrono::duration<double>>(
-      std::any_cast<float>(customScriptValues.at("fireRate")));
+  auto fireRate = std::any_cast<float>(customScriptValues.at("fireRate"));
+
+  if (fireRate > 0) {
+    shootCooldown_ = std::chrono::duration<double>(1.0 / fireRate);
+  } else {
+    shootCooldown_ = std::chrono::duration<double>::max();
+  }
 }
 
 void PataScript::SetBasePosition(const core::types::Vector3f& basePosition) {

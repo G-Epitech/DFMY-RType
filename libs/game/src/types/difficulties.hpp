@@ -10,9 +10,9 @@
 namespace rtype::sdk::game::types {
 enum Difficulty {
   kEasy = 0,
-  kDefault = 1,
-  kMedium = 2,
-  kHard = 3,
-  kInsane = 4,
+  kDefault,
+  kMedium,
+  kHard,
+  kInsane,
 };
 }

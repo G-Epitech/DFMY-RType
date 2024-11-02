@@ -29,7 +29,7 @@ void EnemySpawner::SpawnEnemy(const std::string& enemy_archetype_name) {
   std::uniform_real_distribution dist(80.0f, 1000.0f);
 
   const core::types::Vector3f position(2000, dist(gen), 0);
-  auto entity = archetypeManager_->InvokeArchetype(registry_, tools::kArchetypeEnemyPataNormal);
+  auto entity = archetypeManager_->InvokeArchetype(registry_, enemy_archetype_name);
   auto scriptPool = registry_->GetComponent<zygarde::scripting::components::ScriptPool>(entity);
   auto positionComponent = registry_->GetComponent<core::components::Position>(entity);
   if (scriptPool.has_value() && scriptPool.value()) {

@@ -6,7 +6,7 @@
       "data": {
         "isKinematic": true,
         "velocity": {
-          "x": 700,
+          "x": 1200,
           "y": 0
         },
         "drag": 0

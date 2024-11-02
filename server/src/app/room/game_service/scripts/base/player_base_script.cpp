@@ -9,7 +9,7 @@
 
 using namespace rtype::server::game::scripts;
 
-void rtype::server::game::scripts::PlayerBaseScript::SetDifficultyData(
+void PlayerBaseScript::SetDifficultyData(
     rtype::server::game::DifficultyPlayerMultipliers multipliers) {
   health_ *= multipliers.health;
   speed_ *= multipliers.speed;
