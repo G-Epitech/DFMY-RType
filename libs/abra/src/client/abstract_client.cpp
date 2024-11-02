@@ -126,6 +126,8 @@ void AbstractClient::ResolveMultiPackets(unsigned int messageId) {
   if (pendingMultiPackets_[messageId].lastMessage != nullptr &&
       pendingMultiPackets_[messageId].messages.size() ==
           pendingMultiPackets_[messageId].lastMessage->offset + 1) {
+    std::unique_lock<std::mutex> lock(this->Mutex);
+
     this->multiPackets_.push(std::move(pendingMultiPackets_[messageId].messages));
     pendingMultiPackets_.erase(messageId);
 

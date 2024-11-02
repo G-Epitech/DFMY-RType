@@ -11,7 +11,11 @@
 
 #include "core/components/tags/tags.hpp"
 #include "libs/game/includes/api.hpp"
+#include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "registry.hpp"
+
+using namespace zygarde::core::components;
+using namespace zygarde::physics::components;
 
 namespace rtype::server::game::network {
 class StateBroadcaster final {
@@ -23,8 +27,7 @@ class StateBroadcaster final {
    * @param registry Registry of the game
    * @param api API of the lobby
    */
-  static void Run(const std::shared_ptr<zygarde::Registry> &registry,
-                  const std::shared_ptr<rtype::sdk::game::api::Room> &api);
+  static void Run(const std::shared_ptr<Registry> &registry, const std::shared_ptr<Room> &api);
 
  private:
   /// @brief Struct to store the entity states
@@ -39,54 +42,54 @@ class StateBroadcaster final {
 
  private:
   /**
-   * Gather the entity states from the registry
-   * @brief registry Registry of the game
+   * @brief Gather the entity states from the registry
+   * @param registry Registry of the game
    * @param states EntityStates object to store the states
    */
-  static void GatherEntityStates(const std::shared_ptr<zygarde::Registry> &registry,
+  static void GatherEntityStates(const std::shared_ptr<Registry> &registry,
                                  const std::unique_ptr<EntityStates> &states) noexcept;
 
   /**
    * Process the entity and store the states in the EntityStates object
    * @param states EntityStates object to store the states
    * @param entity Entity to process
-   * @param vec Position of the entity
+   * @param position Position of the entity
    * @param tags Tags of the entity
+   * @param rigidbodies Rigidbody of the entity
    */
-  static void ProcessEntity(const std::unique_ptr<EntityStates> &states,
-                            const zygarde::Entity &entity,
-                            const sdk::game::utils::types::vector_2f &vec,
-                            const core::components::Tags *tags) noexcept;
+  static void ProcessEntity(const std::unique_ptr<EntityStates> &states, const Entity &entity,
+                            const Vector3f &position, const Tags *tags,
+                            const Rigidbody2D *rigidbodies) noexcept;
 
   /**
    * Gather the enemy states according to their tags
    * @param states EntityStates object to store the states
    * @param entity Entity to process
-   * @param vec Position of the entity
+   * @param position Position of the entity
+   * @param velocity Velocity of the entity
    * @param tags Tags of the entity
    */
-  static void GatherEnemyState(const std::unique_ptr<EntityStates> &states,
-                               const zygarde::Entity &entity,
-                               const sdk::game::utils::types::vector_2f &vec,
-                               const core::components::Tags *tags) noexcept;
+  static void GatherEnemyState(const std::unique_ptr<EntityStates> &states, const Entity &entity,
+                               const Vector3f &position, const Vector2f &velocity,
+                               const Tags *tags) noexcept;
 
   /**
    * Gather the projectile states according to their tags
    * @param states EntityStates object to store the states
    * @param entity Entity to process
-   * @param vec Position of the entity
+   * @param position Position of the entity
+   * @param velocity Velocity of the entity
    * @param tags Tags of the entity
    */
   static void GatherProjectileState(const std::unique_ptr<EntityStates> &states,
-                                    const zygarde::Entity &entity,
-                                    const sdk::game::utils::types::vector_2f &vec,
-                                    const core::components::Tags *tags) noexcept;
+                                    const Entity &entity, const Vector3f &position,
+                                    const Vector2f &velocity, const Tags *tags) noexcept;
   /**
    * Sends the states to the clients of the lobby
    * @param api API of the lobby
    * @param states EntityStates object containing the states
    */
-  static void SendStates(const std::shared_ptr<rtype::sdk::game::api::Room> &api,
+  static void SendStates(const std::shared_ptr<Room> &api,
                          const std::unique_ptr<EntityStates> &states);
 };
 }  // namespace rtype::server::game::network
