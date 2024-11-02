@@ -13,7 +13,7 @@
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
 
-namespace rtype::server::game {
+namespace rtype::server::game::network {
 class StateBroadcaster final {
  public:
   StateBroadcaster() = delete;

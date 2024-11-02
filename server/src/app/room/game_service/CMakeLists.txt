@@ -7,10 +7,10 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
 )
 
 add_subdirectory(ticks)
-add_subdirectory(state_broadcaster)
 add_subdirectory(scripts)
 add_subdirectory(level_manager)
 add_subdirectory(types)
 add_subdirectory(utils)
 add_subdirectory(difficulty_loader)
 add_subdirectory(player_spawner)
+add_subdirectory(network)

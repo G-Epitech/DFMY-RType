@@ -10,7 +10,7 @@
 #include "constants/tags.hpp"
 #include "core/components/position/position.hpp"
 
-using namespace rtype::server::game;
+using namespace rtype::server::game::network;
 
 void StateBroadcaster::Run(const std::shared_ptr<zygarde::Registry>& registry,
                            const std::shared_ptr<rtype::sdk::game::api::Room>& api) {

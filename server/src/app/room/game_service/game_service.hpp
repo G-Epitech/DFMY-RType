@@ -13,12 +13,13 @@
 #include "difficulty_loader/difficulty_loader.hpp"
 #include "level_manager/level_manager.hpp"
 #include "libs/game/includes/api.hpp"
+#include "network/message_handler/message_handler.hpp"
+#include "player_spawner/player_spawner.hpp"
 #include "ticks/ticks_manager.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
-#include "player_spawner/player_spawner.hpp"
 
 namespace rtype::server::game {
 class GameService {
@@ -61,35 +62,6 @@ class GameService {
   void RegistrySetup();
 
   /**
-   * @brief Handle messages from the server
-   */
-  void HandleMessages();
-
-  /**
-   * @brief Handle player message
-   * @param player_id The player id of the message
-   * @param data The message data
-   */
-  void HandlePlayerMessage(const std::uint64_t &player_id,
-                           const abra::server::ClientUDPMessage &data);
-
-  /**
-   * @brief Handle player move message
-   * @param player_id The player id
-   * @param data The message data
-   */
-  void HandlePlayerMoveMessage(const std::uint64_t &player_id,
-                               const abra::server::ClientUDPMessage &data);
-
-  /**
-   * @brief Handle player shoot message
-   * @param player_id Player id
-   * @param data The data of the message
-   */
-  void HandlePlayerShootMessage(const std::uint64_t &player_id,
-                                const abra::server::ClientUDPMessage &data);
-
-  /**
    * @brief Check if a player is dead
    */
   void CheckDeadPlayers();
@@ -98,6 +70,8 @@ class GameService {
    * @brief Add game walls
    */
   void AddGameWalls();
+
+  void LevelAndDifficultySetup();
 
  private:
   /// @brief Game running flag
@@ -132,5 +106,8 @@ class GameService {
 
   /// @brief Player spawner
   PlayerSpawner playerSpawner_;
+
+  /// @brief Message handler
+  network::MessageHandler messageHandler_;
 };
 }  // namespace rtype::server::game
