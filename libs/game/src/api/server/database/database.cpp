@@ -9,7 +9,10 @@
 
 using namespace rtype::sdk::game::api;
 
-Database::Database(const abra::database::MySQL::ConnectionProps &props) : db_(props) {}
+Database::Database(const abra::database::MySQL::ConnectionProps &props)
+    : db_(props), logger_("Database") {
+  logger_.Info("Database connected", "💽");
+}
 
 void Database::InsertScore(const schema::Score &score) {
   std::string query = "INSERT INTO scores (room_name, score, win) VALUES ('" + score.roomName +

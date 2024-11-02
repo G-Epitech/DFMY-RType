@@ -8,6 +8,7 @@
 #pragma once
 
 #include "abra/includes/database.hpp"
+#include "abra/src/tools/logger/logger.hpp"
 #include "libs/game/src/api/server/database/props/scores.hpp"
 #include "libs/game/src/core.hpp"
 
@@ -39,4 +40,7 @@ class rtype::sdk::game::api::Database {
  private:
   /// @brief The MySQL database
   abra::database::MySQL db_;
+
+  /// @brief The logger
+  abra::tools::Logger logger_;
 };

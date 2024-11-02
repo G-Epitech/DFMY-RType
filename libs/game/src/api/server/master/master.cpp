@@ -9,8 +9,10 @@
 
 using namespace rtype::sdk::game::api;
 
-Master::Master(int clientsPort, int nodesPort)
+Master::Master(int clientsPort, int nodesPort,
+               const abra::database::MySQL::ConnectionProps &databaseProps)
     : logger_("masterAPI"),
+      database_(databaseProps),
       clientsSocket_(
           clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); },
           [this](auto id) { HandleClosedClientSession(id); }),
