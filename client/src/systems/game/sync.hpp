@@ -15,6 +15,13 @@
 #include "core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
 
+#define PLAYER_KINEMATIC false
+#define PLAYER_DRAG 5.0f
+#define ENEMY_KINEMATIC false
+#define ENEMY_DRAG 0.0f
+#define BULLET_KINEMATIC true
+#define BULLET_DRAG 0.0f
+
 namespace rtype::client::systems {
 class GameSyncSystem final : public ASystem<> {
  public:
@@ -50,19 +57,18 @@ class GameSyncSystem final : public ASystem<> {
   /**
    * @brief Create a player
    * @param registry The registry
-   * @param id The id of the player
-   * @param pos The position of the player
+   * @param state State of the player
    */
-  void CreatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+  void CreatePlayer(const std::shared_ptr<Registry> &registry,
+                    const api::payload::PlayerState &state);
+
   /**
    * @brief Update a player
    * @param registry The registry
-   * @param id Id of the player
-   * @param pos Position of the player
+   * @param state State of the player
    */
-  void UpdatePlayer(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+  void UpdatePlayer(const std::shared_ptr<Registry> &registry,
+                    const api::payload::PlayerState &state);
 
   /**
    * @brief Create a bullet
@@ -75,35 +81,31 @@ class GameSyncSystem final : public ASystem<> {
   /**
    * @brief Update a bullet
    * @param registry The registry
-   * @param id Id of the bullet
-   * @param pos Position of the bullet
+   * @param state State of the bullet
    */
-  void UpdateBullet(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                    const zygarde::core::types::Vector3f &pos);
+  void UpdateBullet(const std::shared_ptr<Registry> &registry,
+                    const api::payload::BulletState &state);
 
   /**
    * @brief Create an enemy
    * @param registry The registry
-   * @param id The id of the enemy
-   * @param pos The position of the enemy
+   * @param state State of the enemy
    */
-  void CreateEnemy(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                   const zygarde::core::types::Vector3f &pos);
+  void CreateEnemy(const std::shared_ptr<Registry> &registry,
+                   const api::payload::EnemyState &state);
 
   /**
    * @brief Update an enemy
    * @param registry The registry
-   * @param id Id of the enemy
-   * @param pos Position of the enemy
+   * @param state State of the enemy
    */
-  void UpdateEnemy(const std::shared_ptr<Registry> &registry, const std::size_t &id,
-                   const zygarde::core::types::Vector3f &pos);
+  void UpdateEnemy(const std::shared_ptr<Registry> &registry,
+                   const api::payload::EnemyState &state);
 
   /**
    * @brief Handle a message from the server
    * @param registry The registry
    * @param message Message from the server
-   * @param handled Set of handled entities
    */
   void HandleMessage(const Registry::Ptr &registry, const api::Client::ServerMessage &message);
 

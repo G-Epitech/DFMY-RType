@@ -27,9 +27,13 @@ void MovementSystem::ComputePositionOffset(components::Rigidbody2D* rigidbody) {
     movementOffset_ = core::types::Vector2f::zero();
     return;
   }
-  float deltaTimeSec = utils::Timer::ToSeconds(deltaTime_);
-  rigidbody->SetMovementOffset(
-      core::types::Vector2f(velocity.x * deltaTimeSec, velocity.y * deltaTimeSec));
+  if (deltaTime_ > utils::Timer::Nanoseconds::zero()) {
+    auto deltaTimeSec = utils::Timer::ToSeconds(deltaTime_);
+    rigidbody->SetMovementOffset(
+        core::types::Vector2f(velocity.x * deltaTimeSec, velocity.y * deltaTimeSec));
+  } else {
+    rigidbody->SetMovementOffset(core::types::Vector2f::zero());
+  }
 }
 
 void MovementSystem::ApplyDrag(physics::components::Rigidbody2D* rigidbody) const {
@@ -38,8 +42,11 @@ void MovementSystem::ApplyDrag(physics::components::Rigidbody2D* rigidbody) cons
   if (drag == 0) {
     return;
   }
-  if (drag == 100) {
+  if (drag >= 100) {
     rigidbody->SetVelocity(core::types::Vector2f(0, 0));
+    return;
+  }
+  if (deltaTime_ < utils::Timer::Nanoseconds::zero()) {
     return;
   }
   core::types::Vector2f velocity = rigidbody->GetVelocity();

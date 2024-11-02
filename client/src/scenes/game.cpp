@@ -15,6 +15,7 @@
 #include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "menu.hpp"
+#include "physics/2d/systems/systems.hpp"
 
 using namespace mew::sets::events;
 using namespace mew::sets::drawable;
@@ -35,14 +36,23 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
 
   registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<ServerEntityId>();
+  registry_->RegisterComponent<physics::components::Rigidbody2D>();
 
   registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
   registry_->AddSystem<BackgroundSystem>();
   registry_->AddSystem<PlayerSystem>(settings_manager, window_manager, server_connection_service);
+
+  registry_->AddSystem<physics::systems::MovementSystem>(deltaTime_);
+  registry_->AddSystem<physics::systems::PositionSystem>();
 }
 
 void SceneGame::OnCreate() {
   LoadResources();
+}
+
+void SceneGame::Update(DeltaTime delta_time) {
+  deltaTime_ = delta_time;
+  registry_->RunSystems();
 }
 
 void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {

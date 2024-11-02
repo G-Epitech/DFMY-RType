@@ -9,6 +9,7 @@
 
 #include "client/src/services/server_connection_service.hpp"
 #include "libs/mew/src/scenes/scene_base.hpp"
+#include "libs/zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::client::scenes {
 
@@ -26,6 +27,8 @@ class SceneGame final : public SceneBase {
    * @brief Default destructor
    */
   ~SceneGame() override = default;
+
+  void Update(DeltaTime delta_time) override;
 
  protected:
   void OnCreate() override;
@@ -54,5 +57,11 @@ class SceneGame final : public SceneBase {
 
   /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
+
+  /// @brief Delta time
+  zygarde::utils::Timer::Nanoseconds deltaTime_{};
+
+  /// @brief Last time point
+  DeltaTime lastTimePoint_{};
 };
 }  // namespace rtype::client::scenes
