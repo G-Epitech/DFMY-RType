@@ -115,9 +115,6 @@ void Master::SendGameInfos(std::uint64_t clientId) {
              scores[i].roomName.c_str());
     infos.leaderboard[i].score = scores[i].score;
     infos.leaderboard[i].win = scores[i].win;
-
-    std::cout << "Room: " << scores[i].roomName << std::endl;
-    std::cout << "Score: " << scores[i].score << std::endl;
   }
 
   auto success = SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoGame, infos, clientId);
