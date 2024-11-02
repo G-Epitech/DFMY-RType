@@ -63,5 +63,5 @@ void Input::CreateBlinkingCursor(const Registry::Ptr& registry, const std::strin
 
   registry->AddComponent<Position>(cursor, {position, alignment});
   registry->AddComponent<Drawable>(cursor, {Text{"|", "main", 20}, WindowManager::View::HUD});
-  registry->AddComponent<Tags>(cursor, Tags({"blink", tag, (tag + "_cursor")}));
+  registry->AddComponent<Tags>(cursor, Tags({"blink", (tag + "_cursor")}));
 }

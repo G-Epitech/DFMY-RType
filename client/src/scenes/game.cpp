@@ -16,6 +16,9 @@
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "menu.hpp"
 #include "physics/2d/systems/systems.hpp"
+#include "systems/game/chat/input.hpp"
+#include "systems/utils/input_cursor.hpp"
+#include "utils/input.hpp"
 
 using namespace mew::sets::events;
 using namespace mew::sets::drawable;
@@ -44,6 +47,12 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
 
   registry_->AddSystem<physics::systems::MovementSystem>(deltaTime_);
   registry_->AddSystem<physics::systems::PositionSystem>();
+
+  registry_->AddSystem<systems::utils::input::CursorSystem>();
+  utils::Input::Create(registry_, "chat",
+                       Vector3f{managers_.window->width_ - 100, managers_.window->height_ - 100},
+                       {HorizontalAlign::kCenter, VerticalAlign::kCenter});
+  registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
 }
 
 void SceneGame::OnCreate() {
