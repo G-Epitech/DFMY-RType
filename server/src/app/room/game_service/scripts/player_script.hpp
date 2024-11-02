@@ -57,7 +57,7 @@ class PlayerScript : public PlayerBaseScript {
    * @brief Get the player's score
    * @return The player's score
    */
-  [[nodiscard]] inline std::size_t GetScore() const { return score_; }
+  [[nodiscard]] inline int GetScore() const { return score_; }
 
   /**
    * @brief Add a score to the player
