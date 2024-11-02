@@ -13,6 +13,7 @@ TESTS_ABRA_NAME 	= abra_tests
 TESTS_ZYGARDE_NAME 	= zygrade_tests
 TESTS_PORYGON_NAME 	= porygon_tests
 BUILD_PATH 			= $(shell pwd)/build
+SQL_PATH 			= $(shell pwd)/server/game.schema.sql
 
 COVERAGE_IGNORE_TARGETS = 	tests \
 							cmake-build-debug-coverage \
@@ -123,5 +124,8 @@ format:
 format-check:
 			@@clang-format --dry-run -i $(LINT_FILES)
 .PHONY: format-check
+
+setup-database:
+			@(cat $(SQL_PATH) | mysql -u root -p) && echo "Database setup done."
 
 DEFAULT_GOAL := all
