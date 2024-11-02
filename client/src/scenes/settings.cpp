@@ -27,7 +27,6 @@ SceneSettings::SceneSettings(DependenciesHandler::Ptr services) : SceneBase(std:
   settingsManager_ = services_->Get<SettingsManager>();
 
   managers_.resources->LoadTexture("assets/ui/menu.png", "menu");
-  managers_.sound->LoadSoundBuffer("assets/sounds/button_click.ogg", "buttons:click");
 
   registry_->RegisterComponent<Radio>();
 }
