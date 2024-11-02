@@ -14,7 +14,6 @@
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
 #include "registry.hpp"
 
-using namespace rtype::sdk::game::utils::types;
 using namespace zygarde::core::components;
 using namespace zygarde::physics::components;
 
@@ -59,7 +58,7 @@ class StateBroadcaster final {
    * @param rigidbodies Rigidbody of the entity
    */
   static void ProcessEntity(const std::unique_ptr<EntityStates> &states, const Entity &entity,
-                            const vector_2f &position, const Tags *tags,
+                            const Vector2f &position, const Tags *tags,
                             const Rigidbody2D *rigidbodies) noexcept;
 
   /**
@@ -71,7 +70,7 @@ class StateBroadcaster final {
    * @param tags Tags of the entity
    */
   static void GatherEnemyState(const std::unique_ptr<EntityStates> &states, const Entity &entity,
-                               const vector_2f &position, const vector_2f &velocity,
+                               const Vector2f &position, const Vector2f &velocity,
                                const Tags *tags) noexcept;
 
   /**
@@ -83,8 +82,8 @@ class StateBroadcaster final {
    * @param tags Tags of the entity
    */
   static void GatherProjectileState(const std::unique_ptr<EntityStates> &states,
-                                    const Entity &entity, const vector_2f &position,
-                                    const vector_2f &velocity, const Tags *tags) noexcept;
+                                    const Entity &entity, const Vector2f &position,
+                                    const Vector2f &velocity, const Tags *tags) noexcept;
   /**
    * Sends the states to the clients of the lobby
    * @param api API of the lobby

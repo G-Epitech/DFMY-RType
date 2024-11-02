@@ -40,7 +40,6 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
   auto player = registry->SpawnEntity();
   static const sf::IntRect base{100, 0, 32, 16};
   const Vector3f pos{state.position.x, state.position.y, 0};
-  const Vector2f velocity{state.velocity.x, state.velocity.y};
 
   registry->AddComponent<ServerEntityId>(player, {.id = state.entityId});
   registry->AddComponent<Position>(
@@ -50,7 +49,7 @@ void GameSyncSystem::CreatePlayer(const std::shared_ptr<Registry>& registry,
                   .drawable = Texture{.name = "player", .scale = 2.9, .rect = base},
               });
   registry->AddComponent<physics::components::Rigidbody2D>(
-      player, physics::components::Rigidbody2D(velocity, PLAYER_KINEMATIC, PLAYER_DRAG));
+      player, physics::components::Rigidbody2D(state.velocity, PLAYER_KINEMATIC, PLAYER_DRAG));
 
   std::cout << "Player created" << std::endl;
   players_.insert_or_assign(state.entityId, player);
@@ -78,7 +77,6 @@ void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
                                   const sdk::game::api::payload::BulletState& state) {
   const auto bullet = registry->SpawnEntity();
   const auto pos = Vector3f(state.position.x, state.position.y, 0);
-  const Vector2f velocity{state.velocity.x, state.velocity.y};
 
   registry->AddComponent<components::ServerEntityId>(bullet, {.id = state.entityId});
   registry->AddComponent<zygarde::core::components::Position>(
@@ -90,7 +88,7 @@ void GameSyncSystem::CreateBullet(const std::shared_ptr<Registry>& registry,
                                        .drawable = TextureMapper::MapBulletType(state.bulletType),
                                    });
   registry->AddComponent<physics::components::Rigidbody2D>(
-      bullet, physics::components::Rigidbody2D(velocity, BULLET_KINEMATIC, BULLET_DRAG));
+      bullet, physics::components::Rigidbody2D(state.velocity, BULLET_KINEMATIC, BULLET_DRAG));
   bullets_.insert_or_assign(state.entityId, bullet);
 }
 
@@ -114,7 +112,6 @@ void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry,
   auto enemy = registry->SpawnEntity();
   static const sf::IntRect base{5, 6, 21, 36};
   const Vector3f pos{state.position.x, state.position.y, 0};
-  const Vector2f velocity{state.velocity.x, state.velocity.y};
 
   registry->AddComponent<ServerEntityId>(enemy, {.id = state.entityId});
   registry->AddComponent<Position>(
@@ -124,7 +121,7 @@ void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry,
                  .drawable = Texture{.name = "enemy", .scale = 2.5, .rect = base},
              });
   registry->AddComponent<physics::components::Rigidbody2D>(
-      enemy, physics::components::Rigidbody2D(velocity, ENEMY_KINEMATIC, ENEMY_DRAG));
+      enemy, physics::components::Rigidbody2D(state.velocity, ENEMY_KINEMATIC, ENEMY_DRAG));
   enemies_.insert_or_assign(state.entityId, enemy);
 }
 
