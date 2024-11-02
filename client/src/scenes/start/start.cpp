@@ -30,6 +30,26 @@ void SceneStart::OnCreate() {
   CreateStaticLabels();
   CreateNodeSelect();
   CreateRoomSelect();
+  CreateNodeSelectLabel();
+  CreateRoomSelectLabel();
+}
+
+void SceneStart::Update(DeltaTime delta_time) {
+  auto center = managers_.window->GetCenter();
+
+  counter_ += 1;
+  if (counter_ == 500) {
+    static const Select::Properties props = {
+        .id = "node",
+        .position = Vector3f(center.x - 470, center.y - 200),
+        .size = Vector2f(370, 25),
+        .placeholder = "No node available",
+        .options = {{"1", "Node 12"}, {"2", "Node 25"}, {"3", "Node 13"}, {"4", "Node 14"}},
+        .selectedOption = Select::GetValue(registry_, "node"),
+    };
+    Select::Update(registry_, props);
+  }
+  registry_->RunSystems();
 }
 
 void SceneStart::CreateStaticLabels() {
@@ -37,7 +57,7 @@ void SceneStart::CreateStaticLabels() {
 
   registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
       "Let's start",
-      Vector3f(center.x, center.y - 400),
+      Vector3f(center.x, 180),
       "main",
       40,
       sf::Color::White,
@@ -45,7 +65,7 @@ void SceneStart::CreateStaticLabels() {
   });
   registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
       "Select a node and a room to start",
-      Vector3f(center.x, center.y - 350),
+      Vector3f(center.x, 230),
       "main",
       13,
       sf::Color::White,
@@ -63,14 +83,6 @@ void SceneStart::CreateNodeSelect() {
       .options = {{"1", "Node 1"}, {"2", "Node 2"}, {"3", "Node 3"}, {"4", "Node 4"}},
   };
 
-  registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
-      "Node",
-      Vector3f(center.x - 470, center.y - 230),
-      "main",
-      13,
-      sf::Color::White,
-      {HorizontalAlign::kLeft, VerticalAlign::kCenter},
-  });
   Select::Create(registry_, props);
 }
 
@@ -81,9 +93,26 @@ void SceneStart::CreateRoomSelect() {
       .position = Vector3f(center.x + 100, center.y - 200),
       .size = Vector2f(370, 25),
       .placeholder = "No room available",
-      .options = {{"1", "Room 1"}, {"2", "Room 2"}, {"3", "Room 3"}, {"4", "Room 4"}},
+      .options = {},
   };
 
+  Select::Create(registry_, props);
+}
+
+void SceneStart::CreateNodeSelectLabel() {
+  auto center = managers_.window->GetCenter();
+  registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
+      "Node",
+      Vector3f(center.x - 470, center.y - 230),
+      "main",
+      13,
+      sf::Color::White,
+      {HorizontalAlign::kLeft, VerticalAlign::kCenter},
+  });
+}
+
+void SceneStart::CreateRoomSelectLabel() {
+  auto center = managers_.window->GetCenter();
   registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
       "Room",
       Vector3f(center.x + 100, center.y - 230),
@@ -92,5 +121,4 @@ void SceneStart::CreateRoomSelect() {
       sf::Color::White,
       {HorizontalAlign::kLeft, VerticalAlign::kCenter},
   });
-  Select::Create(registry_, props);
 }

@@ -30,6 +30,8 @@ class SceneStart final : public SceneBase {
  private:
   void OnCreate() override;
 
+  void Update(DeltaTime delta_time) override;
+
   /**
    * @brief Add the static labels
    */
@@ -44,6 +46,18 @@ class SceneStart final : public SceneBase {
    * @brief Create the select fields
    */
   void CreateRoomSelect();
+
+  /**
+   * @brief Create the select fields
+   */
+  void CreateNodeSelectLabel();
+
+  /**
+   * @brief Create the select fields
+   */
+  void CreateRoomSelectLabel();
+
+  std::size_t counter_ = 0;
 
   /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;

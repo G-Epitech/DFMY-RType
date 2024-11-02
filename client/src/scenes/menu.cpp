@@ -108,7 +108,8 @@ void SceneMenu::CreatePlayButton() const {
 
 void SceneMenu::CreateLeaderboardButton() const {
   const auto leaderboard_button = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 75);
+  const auto point =
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 75);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(leaderboard_button, {point, aligns});
@@ -151,7 +152,7 @@ void SceneMenu::CreateLeaderboardButton() const {
 void SceneMenu::CreateSettingsButton() const {
   const auto settings_button = registry_->SpawnEntity();
   const auto point =
-      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 75);
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 110);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(settings_button, {point, aligns});
@@ -193,7 +194,8 @@ void SceneMenu::CreateSettingsButton() const {
 
 void SceneMenu::CreateExitButton() const {
   const auto exit_button = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 110);
+  const auto point =
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 145);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,

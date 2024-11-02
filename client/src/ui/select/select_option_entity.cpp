@@ -30,6 +30,7 @@ void SelectOptionEntity::RegisterDependencies(const zygarde::Registry::Ptr& regi
 }
 void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& props,
                                  const std::string& value, const std::string& label) {
+  std::optional<std::string> selected_option = Select::GetDefaultOption(props);
   Rectangle rectangle = {
       .fillColor = sf::Color::Transparent,
       .outlineColor = sf::Color(94, 94, 94),
@@ -40,7 +41,7 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
   SelectOption option = {
       .label = label,
       .value = value,
-      .selected = false,
+      .selected = selected_option && *selected_option == value,
       .selectId = props.id,
   };
   Position position = {

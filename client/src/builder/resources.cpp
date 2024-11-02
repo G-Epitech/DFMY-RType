@@ -19,4 +19,5 @@ void Resources::LoadResources(mew::game::Game *game) {
                                        sf::Shader::Fragment);
   game->managers.resources->LoadShader("assets/shaders/tritanopia.frag", "tritanopia",
                                        sf::Shader::Fragment);
+  game->managers.sound->LoadSoundBuffer("assets/sounds/button_click.ogg", "buttons:click");
 }

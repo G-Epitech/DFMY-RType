@@ -25,7 +25,8 @@ SelectContainerTextEntity::SelectContainerTextEntity(std::size_t idx,
     : Entity(idx, std::move(registry)) {}
 
 void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
-  auto label = props.options.empty() ? props.placeholder : props.options.begin()->second;
+  std::optional<std::string> selected_option = Select::GetDefaultOption(props);
+  auto label = selected_option ? props.options.at(*selected_option) : props.placeholder;
   auto position =
       Vector3f(props.position.x + props.size.x * 0.5f, props.position.y - (props.size.y * 0.15f));
   auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};

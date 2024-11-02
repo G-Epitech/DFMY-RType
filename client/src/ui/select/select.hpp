@@ -9,10 +9,19 @@
 
 #include <SFML/Graphics/Color.hpp>
 
+#include "client/src/components/ui/select.hpp"
+#include "libs/mew/src/sets/drawable/components/components.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/registry.hpp"
 
 namespace rtype::client::ui {
+
+using namespace zygarde::core::components;
+using namespace rtype::client::components;
+using namespace zygarde::core::types;
+using namespace rtype::client::components;
+using namespace mew::sets::drawable;
+
 class Select {
  public:
   struct Properties {
@@ -28,6 +37,8 @@ class Select {
     std::string placeholder;
     /// @brief Options of the select (value/id, label)
     std::map<std::string, std::string> options;
+    /// @brief Selected option of the select
+    std::optional<std::string> selectedOption = std::nullopt;
     /// @brief Color when an option is selected
     sf::Color selectedColor = sf::Color(116, 117, 116);
     /// @brief Color when no option are available
@@ -35,15 +46,6 @@ class Select {
     /// @brief Hover color of the select
     sf::Color hoveredColor = sf::Color(148, 148, 148);
   };
-
-  /**
-   * @brief Get the tage for a select option text
-   * @param id Id of the option
-   * @return Tag of the select option text
-   */
-  static inline std::string OptionTextIdTagOf(const std::string& id) {
-    return "select:option-text:id=" + id;
-  }
 
   /**
    * @brief Get the tage for a select option text
@@ -84,12 +86,28 @@ class Select {
   static void Create(const Registry::Ptr& registry, const Properties& props);
 
   /**
+   * @brief Update a select
+   * @param registry Registry to update the select
+   * @param props Properties of the select
+   */
+  static void Update(const Registry::Ptr& registry, const Properties& props);
+
+  /**
    * @brief Get the value of a select
    * @param registry Registry to get the value
    * @param id Id of the select
    * @return Current value of the select
    */
   static std::optional<std::string> GetValue(const Registry::Ptr& registry, const std::string& id);
+
+  /**
+   * @brief Set the value of a select
+   * @param registry Registry to set the value
+   * @param id Id of the select
+   * @param value Value to set
+   * @return New value of the select
+   */
+  static std::optional<std::string> GetDefaultOption(const Properties& props);
 
  private:
   /**
@@ -105,5 +123,15 @@ class Select {
    * @param props Properties of the options
    */
   static void CreateOptions(const Registry::Ptr& registry, const Properties& props);
+
+  /**
+   * @brief Get the container of a select
+   * @param registry Registry to get the container
+   * @param props Properties of the select
+   * @param container of the select
+   * @return Last container selected value
+   */
+  static void RemoveOldContainer(const Registry::Ptr& registry, const Select::Properties& props,
+                                 SelectContainer* container);
 };
 }  // namespace rtype::client::ui

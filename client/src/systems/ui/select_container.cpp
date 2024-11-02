@@ -58,8 +58,7 @@ void SelectContainerSystem::UpdateContainerLabel(const std::shared_ptr<Registry>
 
 void SelectContainerSystem::UpdateOption(const SelectContainer& container, SelectOption* option,
                                          Drawable* drawable) {
-  option->selected = option->value == (*container.selectedOption);
-  drawable->visible = container.expanded;
+  option->selected = container.selectedOption && option->value == (*container.selectedOption);
   if (!std::holds_alternative<Rectangle>(drawable->drawable)) {
     return;
   }

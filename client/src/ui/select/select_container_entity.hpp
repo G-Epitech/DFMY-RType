@@ -57,8 +57,7 @@ class SelectContainerEntity final : Entity {
    * @param button Button clicked
    * @param target Target of the event
    */
-  static void OnClick(const Registry::Ptr& registry, const Entity& entity,
-                      const sf::Mouse::Button& button,
+  static void OnClick(const Entity& entity, const sf::Mouse::Button& button,
                       const mew::sets::events::MouseEventTarget& target);
 };
 }  // namespace rtype::client::ui

@@ -23,11 +23,12 @@ SelectContainerEntity::SelectContainerEntity(std::size_t idx, std::shared_ptr<Re
     : Entity(idx, std::move(registry)) {}
 
 void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
-  std::optional<std::string> selectedOption =
-      props.options.empty() ? std::nullopt : std::make_optional(props.options.begin()->first);
+  std::optional<std::string> selected_option = Select::GetDefaultOption(props);
+
   auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+
   auto drawable = Rectangle{
-      .fillColor = selectedOption ? props.selectedColor : props.disabledColor,
+      .fillColor = selected_option ? props.selectedColor : props.disabledColor,
       .outlineColor = sf::Color::White,
       .outlineThickness = 2,
       .size = {props.size.x, props.size.y},
@@ -35,7 +36,7 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
 
   registry_->AddComponent<SelectContainer>(*this, {
                                                       .expanded = props.expanded,
-                                                      .selectedOption = selectedOption,
+                                                      .selectedOption = selected_option,
                                                       .selectId = props.id,
                                                       .placeholder = props.placeholder,
                                                       .selectedColor = props.selectedColor,
@@ -52,10 +53,10 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
               }});
   registry_->AddComponent<OnMousePressed>(
       *this, {.strategy = MouseEventTarget::kAnyTarget,
-              .handler = [registry = registry_, entity = static_cast<Entity>(*this)](
+              .handler = [entity = static_cast<Entity>(*this)](
                              const sf::Mouse::Button& button, const sf::Vector2f& pos,
                              const MouseEventTarget& target) mutable {
-                return OnClick(registry, entity, button, target);
+                return OnClick(entity, button, target);
               }});
 }
 
@@ -83,8 +84,7 @@ void SelectContainerEntity::OnHover(const Entity& entity, const MouseEventTarget
   }
 }
 
-void SelectContainerEntity::OnClick(const Registry::Ptr& registry, const Entity& entity,
-                                    const sf::Mouse::Button& button,
+void SelectContainerEntity::OnClick(const Entity& entity, const sf::Mouse::Button& button,
                                     const MouseEventTarget& target) {
   auto select_container = entity.GetComponent<SelectContainer>();
 

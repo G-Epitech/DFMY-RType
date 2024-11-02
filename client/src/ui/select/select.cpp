@@ -54,3 +54,54 @@ std::optional<std::string> Select::GetValue(const Registry::Ptr& registry, const
   }
   return std::nullopt;
 }
+
+void Select::Update(const Registry::Ptr& registry, const Select::Properties& props) {
+  auto containers_entities = registry->GetMatchingEntities<SelectContainer, Position, Drawable>();
+  std::optional<std::size_t> container_index = std::nullopt;
+
+  const auto begin = containers_entities.begin();
+  const auto end = containers_entities.end();
+  for (auto it = begin; it != end; ++it) {
+    auto&& [index, components] = ~it;
+    auto&& [container, position, drawable] = components;
+    if (container.selectId == props.id) {
+      RemoveOldContainer(registry, props, &container);
+      container_index = index;
+      break;
+    }
+  }
+  if (container_index) {
+    registry->KillEntity(registry->EntityFromIndex(*container_index));
+  }
+  Create(registry, props);
+}
+
+void Select::RemoveOldContainer(const Registry::Ptr& registry, const Select::Properties& props,
+                                SelectContainer* container) {
+  auto options = registry->GetMatchingEntities<Tags>();
+  std::list<std::size_t> to_remove;
+
+  const auto begin = options.begin();
+  const auto end = options.end();
+  for (auto it = begin; it != end; ++it) {
+    auto&& [index, components] = ~it;
+    auto&& [tags] = components;
+    if ((tags & Select::IdTagOf(props.id)) || (tags & Select::OptionIdTagOf(props.id))) {
+      to_remove.push_back(index);
+    }
+  }
+
+  std::for_each(to_remove.begin(), to_remove.end(), [&registry](std::size_t index) {
+    registry->KillEntity(registry->EntityFromIndex(index));
+  });
+}
+
+std::optional<std::string> Select::GetDefaultOption(const Select::Properties& props) {
+  std::optional<std::string> selected_option = props.selectedOption;
+
+  if (!selected_option || (selected_option && !props.options.contains(*selected_option))) {
+    selected_option =
+        props.options.empty() ? std::nullopt : std::make_optional(props.options.begin()->first);
+  }
+  return selected_option;
+}
