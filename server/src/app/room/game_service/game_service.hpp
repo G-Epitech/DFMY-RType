@@ -46,16 +46,22 @@ class GameService {
    */
   void NewPlayer(std::uint64_t player_id);
 
+  /**
+   * @brief Get the number of players
+   * @return The number of players
+   */
+  std::size_t GetNbPlayers() const;
+
+  /**
+   * @brief Initialize the game service
+   */
+  int Initialize();
+
  private:
   /**
    * @brief Execute the game logic during a tick
    */
   void ExecuteGameLogic();
-
-  /**
-   * @brief Initialize the game service
-   */
-  void Initialize();
 
   /**
    * @brief Setup the registry
@@ -114,7 +120,10 @@ class GameService {
   /// @brief Message handler
   network::MessageHandler messageHandler_;
 
-  /// @brief
+  /// @brief Difficulty of the game
   std::size_t difficulty_;
+
+  /// @brief Player counter
+  std::size_t playerCounter_;
 };
 }  // namespace rtype::server::game

@@ -95,7 +95,7 @@ void SceneLobby::JoinLobby() {
   secondaryMessage_ = "Please wait...";
   auto res = serverConnectionService_->client()->CreateRoom({
       .name = "MyPtitRoom",
-      .nbPlayers = 4,
+      .nbPlayers = 2,
       .difficulty = 0,
   });
   if (!res) {
@@ -164,7 +164,6 @@ void SceneLobby::WaitGameStart() {
     if (message.messageType == api::MasterToClientMsgType::kMsgTypeMTCGameStarted) {
       mainMessage_ = "Starting...";
       secondaryMessage_ = "The game is starting, please wait";
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       status_ = LobbyStatus::kIn;
     }
     queue.pop();

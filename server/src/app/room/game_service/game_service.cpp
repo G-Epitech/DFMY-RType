@@ -19,6 +19,7 @@ using namespace rtype::sdk::game::api;
 GameService::GameService(const size_t &tick_rate, std::size_t difficulty)
     : ticksManager_{tick_rate}, registry_(), logger_("game-service"), difficulty_(difficulty) {
   archetypeManager_ = std::make_shared<zygarde::core::archetypes::ArchetypeManager>();
+  playerCounter_ = 0;
 }
 
 void GameService::RegistrySetup() {
@@ -46,25 +47,26 @@ void GameService::LevelAndDifficultySetup() {
   levelManager_.StartLevel(difficultyData);
 }
 
-void GameService::Initialize() {
-  scripts::ScriptsRegistry scriptsRegistry;
+int GameService::Initialize() {
+  try {
+    scripts::ScriptsRegistry scriptsRegistry;
 
-  ticksManager_.Initialize();
-  archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
-  RegistrySetup();
-  AddGameWalls();
-  LevelAndDifficultySetup();
+    archetypeManager_->LoadArchetypes(kDirectoryArchetypes, scriptsRegistry.GetScripts());
+    RegistrySetup();
+    AddGameWalls();
+    LevelAndDifficultySetup();
+  } catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
 }
 
 int GameService::Run(std::shared_ptr<Room> api) {
   this->api_ = std::move(api);
 
-  try {
-    Initialize();
-  } catch (const std::exception &e) {
-    std::cerr << e.what() << std::endl;
-    return EXIT_FAILURE;
-  }
+  ticksManager_.Initialize();
   while (gameRunning_) {
     ticksManager_.Update();
     messageHandler_.Run(registry_, api_, players_);
@@ -88,7 +90,12 @@ void GameService::ExecuteGameLogic() {
 void GameService::NewPlayer(std::uint64_t player_id) {
   Entity player = playerSpawner_.SpawnPlayer(player_id);
   players_.insert({player_id, player});
-  logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️");
+  playerCounter_++;
+  logger_.Info("Player " + std::to_string(player_id) + " joined the game", "❇️ ");
+}
+
+std::size_t GameService::GetNbPlayers() const {
+  return playerCounter_;
 }
 
 void GameService::CheckDeadPlayers() {
