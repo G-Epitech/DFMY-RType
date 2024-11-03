@@ -13,7 +13,7 @@
 #include "libs/mew/src/sets/events/events.hpp"
 #include "lobby.hpp"
 #include "settings.hpp"
-#include "systems/blink.hpp"
+#include "src/systems/animations/blink.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::services;

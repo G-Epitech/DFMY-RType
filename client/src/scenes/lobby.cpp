@@ -48,6 +48,10 @@ void SceneLobby::Update(std::chrono::nanoseconds delta_time) {
   if (status_ == LobbyStatus::kIn) {
     managers_.scenes->GoToScene<SceneGame>();
   }
+
+  if (status_ == LobbyStatus::kWaitingPlayers) {
+    WaitGameStart();
+  }
 }
 
 void SceneLobby::CreateStatusText() {
@@ -93,7 +97,7 @@ void SceneLobby::JoinLobby() {
   secondaryMessage_ = "Please wait...";
   auto res = serverConnectionService_->client()->CreateRoom({
       .name = "MyPtitRoom",
-      .nbPlayers = 4,
+      .nbPlayers = 2,
       .difficulty = 0,
   });
   if (!res) {
@@ -116,10 +120,9 @@ void SceneLobby::JoinLobby() {
     status_ = LobbyStatus::kFailed;
     return;
   }
-  mainMessage_ = "Success";
-  secondaryMessage_ = "You are now in the lobby. The game will start soon";
-  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-  status_ = LobbyStatus::kIn;
+  mainMessage_ = "Waiting for players";
+  secondaryMessage_ = "Please wait until all players are ready";
+  status_ = LobbyStatus::kWaitingPlayers;
 }
 
 void SceneLobby::UpdateStatusText() {
@@ -152,5 +155,19 @@ void SceneLobby::UpdateStatusText() {
     secondary_text_component.text = secondaryMessage_;
   } catch (const std::bad_variant_access &e) {
     return;
+  }
+}
+
+void SceneLobby::WaitGameStart() {
+  auto queue = serverConnectionService_->client()->ExtractQueue();
+
+  while (!queue.empty()) {
+    auto &message = queue.front();
+    if (message.messageType == api::MasterToClientMsgType::kMsgTypeMTCGameStarted) {
+      mainMessage_ = "Starting...";
+      secondaryMessage_ = "The game is starting, please wait";
+      status_ = LobbyStatus::kIn;
+    }
+    queue.pop();
   }
 }

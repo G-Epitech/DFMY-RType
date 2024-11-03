@@ -9,18 +9,27 @@
 
 using namespace rtype::sdk::game::api;
 
-Master::Master(int clientsPort, int nodesPort,
+Master::Master(int clientsPort, int nodesPort, std::string token,
                const abra::database::MySQL::ConnectionProps &databaseProps)
     : logger_("masterAPI"),
       database_(databaseProps),
+      token_(token),
+      monitor_(
+          token, [this](auto id) { HandleNewMonitorClient(id); },
+          [this](auto &type, auto id) { HandleEventMonitor(type, id); }),
       clientsSocket_(
           clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); },
           [this](auto id) { HandleClosedClientSession(id); }),
       nodesSocket_(
           nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); },
           [this](auto id) { HandleClosedNodeSession(id); }) {
-  this->InitClientsThread();
-  this->InitNodesThread();
+  this->
+
+      InitClientsThread();
+
+  this->
+
+      InitNodesThread();
 }
 
 Master::~Master() {
@@ -94,9 +103,11 @@ void Master::HandleRefreshInfos(const abra::server::ClientTCPMessage &message) {
 }
 
 void Master::AddNewClient(std::uint64_t clientId, const std::string &username) {
-  Client client = {.id = clientId, .username = username, .inRoom = false};
+  ClientProps client = {.id = clientId, .username = username, .inRoom = false};
 
   this->clients_.push_back(client);
+
+  this->monitor_.SendPlayersToClients(this->clients_);
   logger_.Info("New client connected: " + username, "👤");
 }
 
@@ -216,14 +227,16 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
     SendInfoRoom(message.clientId, room, node);
     SendPlayerJoinToNode(node.id, client);
 
+    this->monitor_.SendPlayersToClients(this->clients_);
+    this->monitor_.SendNodesToClients(this->nodes_);
+
     logger_.Info("Client joined room: " + room.name, "🏠");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling join room: " + std::string(e.what()), "❌");
   }
 }
 
-void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
-                          const Master::Node &node) {
+void Master::SendInfoRoom(std::uint64_t clientId, const RoomProps &room, const NodeProps &node) {
   payload::InfoRoom infoPayload = {
       .gamePort = room.gamePort,
       .chatPort = room.chatPort,
@@ -234,7 +247,7 @@ void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
   SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoRoom, infoPayload, clientId);
 }
 
-void Master::SendPlayerJoinToNode(const std::uint64_t &nodeId, const Master::Client &client) {
+void Master::SendPlayerJoinToNode(const std::uint64_t &nodeId, const ClientProps &client) {
   payload::PlayerJoinRoom joinPayload = {
       .id = client.id,
       .roomId = client.roomId,
@@ -251,13 +264,15 @@ void Master::HandleRegisterNode(const abra::server::ClientTCPMessage &message) {
     auto packet = this->packetBuilder_.Build<payload::RegisterNode>(message.bitset);
     auto payload = packet->GetPayload();
 
-    Node node = {
+    NodeProps node = {
         .id = message.clientId,
         .name = payload.name,
         .maxRooms = payload.maxRooms,
     };
 
     this->nodes_[node.id] = std::move(node);
+
+    this->monitor_.SendNodesToClients(this->nodes_);
     logger_.Info("New node registered: " + this->nodes_[node.id].name, "🌐");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling register node: " + std::string(e.what()), "❌");
@@ -275,7 +290,7 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
     }
 
     auto &node = this->nodes_[message.clientId];
-    Room room = {
+    RoomProps room = {
         .id = payload.id,
         .name = payload.name,
         .maxPlayers = payload.nbPlayers,
@@ -286,6 +301,8 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
     };
 
     node.rooms_[room.id] = std::move(room);
+
+    this->monitor_.SendNodesToClients(this->nodes_);
     logger_.Info("New room registered: " + std::string(node.rooms_[room.id].name), "🏠");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling register room: " + std::string(e.what()), "❌");
@@ -335,6 +352,7 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
 
     node.rooms_.erase(payload.id);
 
+    this->monitor_.SendNodesToClients(this->nodes_);
     logger_.Info("Room game ended", "🎮");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling room game ended: " + std::string(e.what()), "❌");
@@ -358,13 +376,15 @@ void Master::Join() {
 
 void Master::HandleClosedClientSession(std::uint64_t clientId) {
   auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
-                             [clientId](const Client &c) { return c.id == clientId; });
+                             [clientId](const ClientProps &c) { return c.id == clientId; });
 
   if (client == this->clients_.end()) {
     return;
   }
 
   this->clients_.erase(client);
+
+  this->monitor_.SendPlayersToClients(this->clients_);
   logger_.Info("Client disconnected", "👤");
 }
 
@@ -388,16 +408,46 @@ void Master::HandleClosedNodeSession(std::uint64_t nodeId) {
   }
 
   this->nodes_.erase(nodeIt);
+
+  this->monitor_.SendPlayersToClients(this->clients_);
+  this->monitor_.SendNodesToClients(this->nodes_);
   logger_.Info("Node disconnected", "🌐");
 }
 
-Master::Client &Master::GetClientById(const std::uint64_t &clientId) {
+ClientProps &Master::GetClientById(const std::uint64_t &clientId) {
   auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
-                             [clientId](const Client &c) { return c.id == clientId; });
+                             [clientId](const ClientProps &c) { return c.id == clientId; });
 
   if (client == this->clients_.end()) {
     throw std::runtime_error("Client not found");
   }
 
   return this->clients_[std::distance(this->clients_.begin(), client)];
+}
+
+void Master::HandleNewMonitorClient(std::uint64_t clientId) {
+  this->monitor_.SendPlayersToClient(clientId, this->clients_);
+  this->monitor_.SendNodesToClient(clientId, this->nodes_);
+}
+
+void Master::HandleEventMonitor(const std::string &eventType, std::uint64_t ctxId) {
+  if (eventType == "kick") {
+    auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
+                               [ctxId](const ClientProps &c) { return c.id == ctxId; });
+
+    if (client == this->clients_.end()) {
+      return;
+    }
+
+    payload::GameEnd end = {
+        .score = 0,
+        .time = 0,
+        .win = false,
+    };
+    SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client->id);
+
+    this->clients_.erase(client);
+
+    this->monitor_.SendPlayersToClients(this->clients_);
+  }
 }

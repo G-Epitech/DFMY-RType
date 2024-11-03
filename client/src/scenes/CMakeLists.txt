@@ -11,5 +11,7 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         leaderboard.hpp
         register.cpp
         register.hpp
+        end.cpp
+        end.hpp
 )
 add_subdirectory(start)

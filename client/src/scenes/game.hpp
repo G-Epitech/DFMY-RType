@@ -55,6 +55,11 @@ class SceneGame final : public SceneBase {
    */
   void LoadResources();
 
+  /**
+   * @brief Init fade
+   */
+  void InitFade();
+
   /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
 

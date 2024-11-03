@@ -16,6 +16,8 @@
 #include "./src/scenes/menu.hpp"
 #include "./src/scenes/settings.hpp"
 #include "libs/mew/src/game/builder.hpp"
+#include "libs/mew/src/game/game.hpp"
+#include "scenes/end.hpp"
 
 using namespace mew::game;
 using namespace rtype::client::builder;
