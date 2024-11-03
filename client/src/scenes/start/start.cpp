@@ -53,17 +53,17 @@ void SceneStart::CreateStaticLabels() {
 
   registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
       "Let's start",
-      Vector3f(center.x, 165),
+      Vector3f(center.x, 150),
       "main",
-      40,
+      50,
       sf::Color::White,
       {HorizontalAlign::kCenter, VerticalAlign::kCenter},
   });
   registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
       "Select a node and a room to start",
-      Vector3f(center.x, 215),
+      Vector3f(center.x, 210),
       "main",
-      13,
+      17,
       sf::Color::White,
       {HorizontalAlign::kCenter, VerticalAlign::kCenter},
   });
@@ -141,7 +141,7 @@ void SceneStart::CreateControls() {
                                 .label = "New room",
                                 .fontName = "main",
                                 .position = Vector3f(center.x - 90, center.y - 280),
-                                .size = Vector2f(100, 20),
+                                .size = Vector2f(115, 25),
                                 .disabled = false,
                                 .action =
                                     [](const sf::Mouse::Button &button, const sf::Vector2f pos,
@@ -155,7 +155,7 @@ void SceneStart::CreateControls() {
                      .label = "Refresh",
                      .fontName = "main",
                      .position = Vector3f(center.x - 210, center.y - 280),
-                     .size = Vector2f(100, 20),
+                     .size = Vector2f(100, 25),
                      .disabled = false,
                      .action = [this](const sf::Mouse::Button &button, const sf::Vector2f pos,
                                       const MouseEventTarget &target) { roomsService_->Refresh(); },
@@ -165,7 +165,7 @@ void SceneStart::CreateControls() {
                                 .label = "Join room",
                                 .fontName = "main",
                                 .position = Vector3f(center.x + 60, center.y - 280),
-                                .size = Vector2f(150, 20),
+                                .size = Vector2f(150, 25),
                                 .disabled = false,
                                 .color = sf::Color(17, 21, 138),
                                 .action =
