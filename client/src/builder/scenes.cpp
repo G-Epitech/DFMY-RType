@@ -15,6 +15,7 @@
 #include "client/src/scenes/settings.hpp"
 #include "client/src/scenes/start/start.hpp"
 #include "scenes/end.hpp"
+#include "scenes/start/create_room.hpp"
 
 using namespace rtype::client::builder;
 using namespace rtype::client::scenes;
@@ -26,6 +27,7 @@ void Scenes::LoadScenes(mew::game::Game *game) {
   game->managers.scenes->RegisterScene<SceneLobby>();
   game->managers.scenes->RegisterScene<SceneGame>();
   game->managers.scenes->RegisterScene<SceneStart>();
+  game->managers.scenes->RegisterScene<SceneCreateRoom>();
   game->managers.scenes->RegisterScene<SceneLeaderboard>();
   game->managers.scenes->RegisterScene<SceneEnd>();
 }
