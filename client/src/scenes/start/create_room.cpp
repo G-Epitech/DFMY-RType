@@ -85,14 +85,12 @@ void SceneCreateRoom::CreateCreateButton() const {
                          for (std::size_t i = 0; i < all_tags->size(); i++) {
                            if (!(*all_tags)[i])
                              continue;
-                           if ((*all_tags)[i].value() & "connection_input") {
+                           if ((*all_tags)[i].value() & "create_room_input") {
                              auto& drawable = (*all_drawables)[i];
                              auto& text = std::get<Text>(drawable->drawable);
                              if (text.text.empty() || difficulty_ == 0 || nbPlayers_ == 0) {
                                return;
                              }
-                             std::cout << "Connecting to server with username: " << text.text
-                                       << std::endl;
                              api::payload::CreateRoom payload{};
                              payload.difficulty = difficulty_;
                              payload.nbPlayers = nbPlayers_;
@@ -224,7 +222,7 @@ void SceneCreateRoom::CreateDifficultyNumber(unsigned int number, const sf::Vect
                                                                   const sf::Vector2f& pos,
                                                                   const MouseEventTarget& target) {
                        if (button == sf::Mouse::Button::Left) {
-                         difficulty_ = number;
+                         difficulty_ = number + 1;
                          auto drawables = registry_->GetComponents<Drawable>();
 
                          auto& dr = (*drawables)[static_cast<std::size_t>(difficulty_number)];
@@ -263,7 +261,7 @@ void SceneCreateRoom::CreateDifficultyNumber(unsigned int number, const sf::Vect
                          if (target == MouseEventTarget::kLocalTarget) {
                            text.style = sf::Text::Style::Underlined;
                          } else {
-                           if (difficulty_ != number) {
+                           if (difficulty_ != number + 1) {
                              text.style = sf::Text::Style::Regular;
                            }
                          }
