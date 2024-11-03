@@ -9,8 +9,10 @@
 
 using namespace rtype::sdk::game::api;
 
-Master::Master(int clientsPort, int nodesPort)
+Master::Master(int clientsPort, int nodesPort,
+               const abra::database::MySQL::ConnectionProps &databaseProps)
     : logger_("masterAPI"),
+      database_(databaseProps),
       clientsSocket_(
           clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); },
           [this](auto id) { HandleClosedClientSession(id); }),
@@ -106,6 +108,14 @@ void Master::SendGameInfos(std::uint64_t clientId) {
   payload::InfoGame infos = {
       .nbUsers = static_cast<unsigned int>(this->clients_.size()),
   };
+
+  auto scores = this->database_.GetBestScores(5);
+  for (unsigned int i = 0; i < scores.size(); i++) {
+    snprintf(infos.leaderboard[i].name, sizeof(infos.leaderboard[i].name), "%s",
+             scores[i].roomName.c_str());
+    infos.leaderboard[i].score = scores[i].score;
+    infos.leaderboard[i].win = scores[i].win;
+  }
 
   auto success = SendToClient(MasterToClientMsgType::kMsgTypeMTCInfoGame, infos, clientId);
   if (!success) {
@@ -315,6 +325,14 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
     }
 
     auto &node = this->nodes_[message.clientId];
+    auto &room = node.rooms_[payload.id];
+
+    this->database_.InsertScore({
+        .roomName = room.name,
+        .score = static_cast<int64_t>(payload.score),
+        .win = payload.win,
+    });
+
     node.rooms_.erase(payload.id);
 
     logger_.Info("Room game ended", "🎮");

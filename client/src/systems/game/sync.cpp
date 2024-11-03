@@ -113,10 +113,10 @@ void GameSyncSystem::CreateEnemy(const std::shared_ptr<Registry>& registry,
   registry->AddComponent<ServerEntityId>(enemy, {.id = state.entityId});
   registry->AddComponent<Position>(
       enemy, {.point = state.position, .aligns = {HorizontalAlign::kLeft, VerticalAlign::kTop}});
-  registry->AddComponent<Drawable>(
-      enemy, {
-                 .drawable = Texture{.name = "enemy", .scale = 2.5, .rect = base},
-             });
+  registry->AddComponent<Drawable>(enemy,
+                                   {
+                                       .drawable = TextureMapper::MapEnemyType(state.enemyType),
+                                   });
   registry->AddComponent<physics::components::Rigidbody2D>(
       enemy, physics::components::Rigidbody2D(state.velocity, ENEMY_KINEMATIC, ENEMY_DRAG));
   enemies_.insert_or_assign(state.entityId, enemy);

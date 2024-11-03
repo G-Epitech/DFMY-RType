@@ -9,6 +9,7 @@
 #include "./src/constants/window.hpp"
 #include "./src/scenes/game.hpp"
 #include "./src/scenes/lobby.hpp"
+#include "./src/scenes/leaderboard.hpp"
 #include "./src/scenes/menu.hpp"
 #include "./src/scenes/settings.hpp"
 #include "libs/mew/src/game/builder.hpp"
@@ -57,11 +58,15 @@ int MAIN {
   game.managers.resources->LoadShader("assets/shaders/tritanopia.frag", "tritanopia",
                                       sf::Shader::Fragment);
 
+  game.managers.sound->LoadSoundBuffer("assets/sounds/button_click.ogg", "buttons:click");
+
   game.managers.scenes->RegisterScene<SceneMenu>();
+  game.managers.scenes->RegisterScene<SceneLeaderboard>();
   game.managers.scenes->RegisterScene<SceneSettings>();
   game.managers.scenes->RegisterScene<SceneLobby>();
   game.managers.scenes->RegisterScene<SceneGame>();
   game.managers.scenes->GoToScene<SceneMenu>();
+
 
   return game.Run();
 }

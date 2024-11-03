@@ -150,6 +150,8 @@ void DrawableSystem::DrawEntityRectangle(const Rectangle& rectangle,
   shape_.setFillColor(rectangle.color);
   shape_.setSize(rectangle.size);
   shape_.setPosition(position.point.x, position.point.y);
+  shape_.setOutlineColor(rectangle.outlineColor);
+  shape_.setOutlineThickness(rectangle.outlineThickness);
 
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));

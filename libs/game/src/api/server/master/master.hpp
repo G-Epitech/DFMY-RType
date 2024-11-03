@@ -16,6 +16,7 @@
 #include "libs/game/src/api/props/message.hpp"
 #include "libs/game/src/api/props/network.hpp"
 #include "libs/game/src/api/props/payload/payload.hpp"
+#include "libs/game/src/api/server/database/database.hpp"
 #include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
@@ -28,8 +29,10 @@ class rtype::sdk::game::api::Master {
    * @brief Construct a new Server API instance
    * @param clientsPort The port of the clients socket
    * @param nodesPort The port of the nodes socket
+   * @param databaseProps The properties of the database
    */
-  explicit Master(int clientsPort, int nodesPort);
+  explicit Master(int clientsPort, int nodesPort,
+                  const abra::database::MySQL::ConnectionProps &databaseProps);
 
   /**
    * @brief Delete the Server API instance
@@ -249,6 +252,9 @@ class rtype::sdk::game::api::Master {
 
   /// @brief Vector of nodes
   std::map<std::uint64_t, Node> nodes_;
+
+  /// @brief Database
+  Database database_;
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Master::*)(const abra::server::ClientTCPMessage &)>

@@ -12,7 +12,14 @@
 rtype::server::Master::Master(const BaseContext &ctx)
     : ctx_(),
       api_(static_cast<int>(ctx.port),
-           static_cast<int>(std::get<MasterCtxProps>(ctx.props).nodePort)) {
+           static_cast<int>(std::get<MasterCtxProps>(ctx.props).nodePort),
+           {
+               .host = std::get<MasterCtxProps>(ctx.props).dbHost,
+               .port = std::get<MasterCtxProps>(ctx.props).dbPort,
+               .username = std::get<MasterCtxProps>(ctx.props).dbUsername,
+               .password = std::get<MasterCtxProps>(ctx.props).dbPassword,
+               .database = std::get<MasterCtxProps>(ctx.props).dbName,
+           }) {
   ctx_ = {.name = ctx.name,
           .port = ctx.port,
           .type = ctx.type,

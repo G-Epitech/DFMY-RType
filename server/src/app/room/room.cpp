@@ -14,7 +14,7 @@ rtype::server::Room::Room(const BaseContext &ctx)
       api_(std::make_shared<rtype::sdk::game::api::Room>(
           ctx_.port, [this](std::uint64_t id) { this->gameService_.NewPlayer(id); },
           std::get<RoomCtxProps>(ctx.props).id)),
-      gameService_(ctx_.props.ticks) {}
+      gameService_(ctx_.props.ticks, ctx_.props.difficulty) {}
 
 int rtype::server::Room::Run() {
   api_->RegisterNewRoom();

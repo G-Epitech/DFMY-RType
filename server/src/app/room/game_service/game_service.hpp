@@ -10,11 +10,14 @@
 #include <cstddef>
 #include <map>
 
-#include "enemy_manager/enemy_manager.hpp"
+#include "difficulty_loader/difficulty_loader.hpp"
+#include "level_manager/level_manager.hpp"
 #include "libs/game/includes/api.hpp"
-#include "registry.hpp"
+#include "network/message_handler/message_handler.hpp"
+#include "player_spawner/player_spawner.hpp"
 #include "ticks/ticks_manager.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
+#include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
 #include "zygarde/src/utils/timer/timer.hpp"
 
@@ -24,8 +27,9 @@ class GameService {
   /**
    * @brief Construct a new Game Service object
    * @param tick_rate The tick rate of the game
+   * @param difficulty The difficulty of the game
    */
-  explicit GameService(const std::size_t &tick_rate);
+  GameService(const std::size_t &tick_rate, std::size_t difficulty);
 
   ~GameService() = default;
 
@@ -59,35 +63,6 @@ class GameService {
   void RegistrySetup();
 
   /**
-   * @brief Handle messages from the server
-   */
-  void HandleMessages();
-
-  /**
-   * @brief Handle player message
-   * @param player_id The player id of the message
-   * @param data The message data
-   */
-  void HandlePlayerMessage(const std::uint64_t &player_id,
-                           const abra::server::ClientUDPMessage &data);
-
-  /**
-   * @brief Handle player move message
-   * @param player_id The player id
-   * @param data The message data
-   */
-  void HandlePlayerMoveMessage(const std::uint64_t &player_id,
-                               const abra::server::ClientUDPMessage &data);
-
-  /**
-   * @brief Handle player shoot message
-   * @param player_id Player id
-   * @param data The data of the message
-   */
-  void HandlePlayerShootMessage(const std::uint64_t &player_id,
-                                const abra::server::ClientUDPMessage &data);
-
-  /**
    * @brief Check if a player is dead
    */
   void CheckDeadPlayers();
@@ -96,6 +71,11 @@ class GameService {
    * @brief Add game walls
    */
   void AddGameWalls();
+
+  /**
+   * @brief Setup the level and difficulty
+   */
+  void LevelAndDifficultySetup();
 
  private:
   /// @brief Game running flag
@@ -106,9 +86,6 @@ class GameService {
 
   /// @brief Registry containing all entities
   std::shared_ptr<zygarde::Registry> registry_;
-
-  /// @brief Enemy manager
-  EnemyManager enemyManager_;
 
   /// @brief Server network
   std::shared_ptr<rtype::sdk::game::api::Room> api_;
@@ -124,5 +101,20 @@ class GameService {
 
   /// @brief Archetype manager
   std::shared_ptr<zygarde::core::archetypes::ArchetypeManager> archetypeManager_;
+
+  /// @brief Level manager
+  LevelManager levelManager_;
+
+  /// @brief DifficultyData loader
+  DifficultyLoader difficultyLoader_;
+
+  /// @brief Player spawner
+  PlayerSpawner playerSpawner_;
+
+  /// @brief Message handler
+  network::MessageHandler messageHandler_;
+
+  /// @brief
+  std::size_t difficulty_;
 };
 }  // namespace rtype::server::game

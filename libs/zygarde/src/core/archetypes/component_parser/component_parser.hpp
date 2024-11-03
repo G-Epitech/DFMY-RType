@@ -11,7 +11,7 @@
 
 #include "api.hpp"
 #include "libs/zygarde/includes/components.hpp"
-#include "scripting/types/context.hpp"
+#include "scripting/types/scripting_context.hpp"
 
 namespace zygarde::core::archetypes {
 class EXPORT_ZYGARDE_API ComponentParser final {

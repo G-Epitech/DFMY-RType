@@ -9,16 +9,16 @@
 
 #include "app/room/game_service/archetype_keys.hpp"
 #include "constants/tags.hpp"
+#include "scripts/helpers/damage_helper.hpp"
+#include "scripts/helpers/shoot_helper.hpp"
 #include "zygarde/src/core/components/tags/tags.hpp"
 
 using namespace rtype::server::game::scripts;
 
 PataScript::PataScript()
-    : health_{50},
-      goingUp_{true},
+    : goingUp_{true},
       horizontalSpeed_{0},
       verticalSpeed_{0},
-      fireRateDuration_{0},
       basePosition_(0, 0, 0),
       upperLimit_(),
       lowerLimit_(),
@@ -33,9 +33,10 @@ void PataScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingCo
     return;
   }
   lastShootTime_ += context->deltaTime;
-  if (lastShootTime_ >= fireRateDuration_) {
+  if (lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
-    SpawnBullet(context);
+    ShootHelper::SpawnBullet(context, kPataProjectileOffsetPosition, damageMultiplier_,
+                             tools::kArchetypeBaseEnemyBullet);
   }
   if (!position || !rb) {
     return;
@@ -62,12 +63,7 @@ void PataScript::OnCollisionEnter(
   }
 
   if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerBulletTag) {
-    health_ -= 10;
-    std::cout << "Pata health: " << health_ << std::endl;
-  }
-  if (health_ <= 0) {
-    context->registry->DestroyEntity(context->me);
-    return;
+    DamageHelper::HandleDamageTake(&health_, context, entity);
   }
 }
 
@@ -77,28 +73,13 @@ void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues)
   verticalSpeed_ = std::any_cast<float>(customScriptValues.at("verticalSpeed"));
   upperLimitOffset_ = std::any_cast<float>(customScriptValues.at("upperLimitOffset"));
   lowerLimitOffset_ = std::any_cast<float>(customScriptValues.at("lowerLimitOffset"));
-  fireRateDuration_ = static_cast<const std::chrono::duration<double>>(
-      std::any_cast<float>(customScriptValues.at("fireRate")));
-}
+  auto fireRate = std::any_cast<float>(customScriptValues.at("fireRate"));
 
-void PataScript::SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
-  auto position = context->registry->GetComponent<core::components::Position>(context->me);
-  if (!position.has_value() || !position.value()) {
-    return;
+  if (fireRate > 0) {
+    shootCooldown_ = std::chrono::duration<double>(1.0 / fireRate);
+  } else {
+    shootCooldown_ = std::chrono::duration<double>::max();
   }
-  const core::types::Vector3f projectilePos((*position)->point.x - 40, (*position)->point.y + 10,
-                                            (*position)->point.z);
-  zygarde::core::archetypes::ArchetypeManager::ScheduleInvocationParams params;
-  params.archetypeName = tools::kArchetypeBaseEnemyBullet;
-  params.registryAttachCallback = [projectilePos](
-                                      const std::shared_ptr<zygarde::Registry>& registry,
-                                      const zygarde::Entity& entity) -> void {
-    auto positionComponent = registry->GetComponent<core::components::Position>(entity);
-    if (positionComponent.has_value() && positionComponent.value()) {
-      (*positionComponent)->point = projectilePos;
-    }
-  };
-  context->archetypeManager->ScheduleInvocation(params);
 }
 
 void PataScript::SetBasePosition(const core::types::Vector3f& basePosition) {

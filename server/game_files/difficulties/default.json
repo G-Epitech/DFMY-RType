@@ -1,0 +1,18 @@
+{
+  "difficulty": "default",
+  "description": "The default difficulty",
+  "multipliers": {
+    "player": {
+      "health": 1.0,
+      "damage": 1.0,
+      "speed": 1.0,
+      "fireRate": 1.0
+    },
+    "enemy": {
+      "health": 1.0,
+      "damage": 1.0,
+      "speed": 1.0,
+      "fireRate": 4.0
+    }
+  }
+}

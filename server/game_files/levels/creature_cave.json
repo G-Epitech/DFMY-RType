@@ -1,0 +1,32 @@
+{
+  "name": "Creature Cave",
+  "description": "A cave full of creatures.",
+  "waves": [
+    {
+      "maxTime": 15.0,
+      "enemies": [
+        {
+          "name": "enemy_pata_normal",
+          "count": 10
+        },
+        {
+          "name": "enemy_pata_big",
+          "count": 10
+        }
+      ]
+    },
+    {
+      "maxTime": 60.0,
+      "enemies": [
+        {
+          "name": "enemy_pata_normal",
+          "count": 30
+        },
+        {
+          "name": "enemy_pata_big",
+          "count": 30
+        }
+      ]
+    }
+  ]
+}

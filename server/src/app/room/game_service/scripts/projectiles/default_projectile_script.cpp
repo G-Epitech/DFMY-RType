@@ -5,11 +5,11 @@
 ** base_projectile.cpp
 */
 
-#include "base_projectile_script.hpp"
+#include "default_projectile_script.hpp"
 
 using namespace rtype::server::game::scripts;
 
-void rtype::server::game::scripts::BaseProjectileScript::FixedUpdate(
+void rtype::server::game::scripts::DefaultProjectileScript::FixedUpdate(
     const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   const auto posComponent =
       context->registry->GetComponent<core::components::Position>(context->me);
@@ -21,10 +21,10 @@ void rtype::server::game::scripts::BaseProjectileScript::FixedUpdate(
   }
 }
 
-void BaseProjectileScript::OnCollisionEnter(
+void DefaultProjectileScript::OnCollisionEnter(
     const std::shared_ptr<scripting::types::ScriptingContext>& context,
     const physics::types::Collision2D::ptr& collision) {
   context->registry->DestroyEntity(context->me);
 }
 
-void BaseProjectileScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {}
+void DefaultProjectileScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {}

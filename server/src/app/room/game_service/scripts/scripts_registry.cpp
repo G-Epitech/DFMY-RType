@@ -9,7 +9,7 @@
 
 #include "enemies/pata_script.hpp"
 #include "player_script.hpp"
-#include "projectiles/base_projectile_script.hpp"
+#include "projectiles/default_projectile_script.hpp"
 
 using namespace rtype::server::game::scripts;
 
@@ -18,7 +18,7 @@ ScriptsRegistry::ScriptsRegistry() : scripts_() {
     return std::make_shared<PlayerScript>();
   };
   scripts_["baseProjectileScript"] = []() -> scripting::components::MonoBehaviour::Instance {
-    return std::make_shared<BaseProjectileScript>();
+    return std::make_shared<DefaultProjectileScript>();
   };
   scripts_["pataScript"] = []() -> scripting::components::MonoBehaviour::Instance {
     return std::make_shared<PataScript>();

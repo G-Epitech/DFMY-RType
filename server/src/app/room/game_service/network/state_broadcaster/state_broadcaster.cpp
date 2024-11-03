@@ -10,7 +10,7 @@
 #include "constants/tags.hpp"
 #include "core/components/position/position.hpp"
 
-using namespace rtype::server::game;
+using namespace rtype::server::game::network;
 
 void StateBroadcaster::Run(const std::shared_ptr<Registry>& registry,
                            const std::shared_ptr<Room>& api) {
@@ -77,6 +77,11 @@ void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& sta
   if (*tags == sdk::game::constants::kPataTag) {
     const payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
                                        sdk::game::types::EnemyType::kPata, 100};
+    states->enemyStates.push_back(state);
+  }
+  if (*tags == sdk::game::constants::kPataBigTag) {
+    payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
+                                 sdk::game::types::EnemyType::kPataBig, 100};
     states->enemyStates.push_back(state);
   }
 }

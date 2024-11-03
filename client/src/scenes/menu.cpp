@@ -7,6 +7,7 @@
 
 #include "menu.hpp"
 
+#include "leaderboard.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "lobby.hpp"
@@ -31,6 +32,7 @@ SceneMenu::SceneMenu(DependenciesHandler::Ptr services) : SceneBase(std::move(se
 void SceneMenu::OnCreate() {
   CreateTitle();
   CreatePlayButton();
+  CreateLeaderboardButton();
   CreateSettingsButton();
   CreateExitButton();
   CreateServerConnectionLabel();
@@ -96,9 +98,51 @@ void SceneMenu::CreatePlayButton() const {
                                 }});
 }
 
+void SceneMenu::CreateLeaderboardButton() const {
+  const auto leaderboard_button = registry_->SpawnEntity();
+  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 75);
+  const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+
+  registry_->AddComponent<Position>(leaderboard_button, {point, aligns});
+  registry_->AddComponent<Drawable>(leaderboard_button,
+                                    {Text{"Leaderboard", "main", 20}, WindowManager::View::HUD});
+  registry_->AddComponent<OnMousePressed>(
+      leaderboard_button,
+      OnMousePressed{.strategy = MouseEventTarget::kLocalTarget,
+                     .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
+                                       const MouseEventTarget& target) {
+                       if (button == sf::Mouse::Button::Left) {
+                         managers_.scenes->GoToScene<SceneLeaderboard>();
+                       }
+                     }});
+  registry_->AddComponent<OnMouseMoved>(
+      leaderboard_button,
+      OnMouseMoved{.strategy = MouseEventTarget::kAnyTarget,
+                   .handler = [this, leaderboard_button](const sf::Vector2f& pos,
+                                                         const MouseEventTarget& target) {
+                     auto drawables = registry_->GetComponents<Drawable>();
+
+                     auto& dr = (*drawables)[static_cast<std::size_t>(leaderboard_button)];
+
+                     if (dr) {
+                       auto& drawable = dr.value();
+                       auto& variant = drawable.drawable;
+
+                       if (std::holds_alternative<Text>(variant)) {
+                         auto& text = std::get<Text>(variant);
+                         if (target == MouseEventTarget::kLocalTarget) {
+                           text.style = sf::Text::Style::Underlined;
+                         } else {
+                           text.style = sf::Text::Style::Regular;
+                         }
+                       }
+                     }
+                   }});
+}
+
 void SceneMenu::CreateSettingsButton() const {
   const auto settings_button = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 75);
+  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 110);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(settings_button, {point, aligns});
@@ -140,7 +184,7 @@ void SceneMenu::CreateSettingsButton() const {
 
 void SceneMenu::CreateExitButton() const {
   const auto exit_button = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 110);
+  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 145);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,

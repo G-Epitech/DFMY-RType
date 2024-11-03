@@ -4,6 +4,7 @@
   "dependencies": [
     "boost-system",
     "boost-asio",
+    "boost-mysql",
     "boost-program-options",
     "boost-process",
     "gtest",

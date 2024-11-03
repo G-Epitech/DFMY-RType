@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "base/player_base_script.hpp"
 #include "game/includes/constants.hpp"
 #include "game/includes/stats.hpp"
 #include "game/src/utils/projectiles/fire_rate.hpp"
@@ -15,12 +16,14 @@
 #include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
 
 namespace rtype::server::game::scripts {
-class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
+static constexpr core::types::Vector3f kPlayerProjectileOffsetPosition{80.0f, 20.0f, 0.0f};
+}
+
+namespace rtype::server::game::scripts {
+class PlayerScript : public PlayerBaseScript {
  public:
   struct PlayerProps {
     std::string className;
-    float health;
-    float speed;
     float powerCooldown;
     std::string primaryWeapon;
     std::string secondaryWeapon;
@@ -46,12 +49,9 @@ class PlayerScript : public zygarde::scripting::components::MonoBehaviour {
  private:
   void HandleMovement(const std::shared_ptr<scripting::types::ScriptingContext>& context);
 
-  static void SpawnBullet(const std::shared_ptr<scripting::types::ScriptingContext>& context);
-
  private:
   PlayerProps props_;
   sdk::game::types::WeaponType equippedWeapon_;
-  std::chrono::nanoseconds shootCooldown_;
   std::chrono::nanoseconds lastShootTime_;
   bool isShooting_;
   std::optional<core::types::Vector2f> movementDirection_;
