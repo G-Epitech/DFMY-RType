@@ -73,6 +73,7 @@ void Node::RegisterNewRoom(uint64_t socketId, const payload::RegisterRoom &regis
       .gamePort = registerPayload.gamePort,
       .chatPort = registerPayload.chatPort,
   };
+  snprintf(payload.name, sizeof(payload.name), "%s", room.name.c_str());
 
   auto success = SendToMaster(NodeToMasterMsgType::kMsgTypeNTMRegisterNewRoom, payload);
   if (success) {

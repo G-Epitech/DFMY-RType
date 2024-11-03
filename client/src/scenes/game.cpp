@@ -10,7 +10,6 @@
 #include "client/src/components/server_entity_id.hpp"
 #include "client/src/constants/chat.hpp"
 #include "client/src/constants/settings.hpp"
-#include "client/src/systems/blink.hpp"
 #include "client/src/systems/game/background.hpp"
 #include "client/src/systems/game/chat/input.hpp"
 #include "client/src/systems/game/chat/messages.hpp"
@@ -19,11 +18,21 @@
 #include "client/src/systems/game/sync.hpp"
 #include "client/src/systems/ui/input_cursor.hpp"
 #include "client/src/ui/input.hpp"
+#include "constants/chat.hpp"
+#include "constants/settings.hpp"
+#include "constants/user.hpp"
+#include "end.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "libs/zygarde/src/physics/2d/systems/systems.hpp"
 #include "menu.hpp"
+#include "physics/2d/systems/systems.hpp"
+#include "src/systems/animations/blink.hpp"
+#include "src/systems/animations/fade.hpp"
+#include "systems/game/chat/input.hpp"
+#include "systems/game/chat/messages.hpp"
+#include "systems/game/chat/trigger.hpp"
 
 using namespace mew::sets::events;
 using namespace mew::sets::drawable;
@@ -40,6 +49,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   auto settings_manager = services_->GetOrThrow<SettingsManager>();
   auto window_manager = services_->GetOrThrow<WindowManager>();
   auto server_connection_service = services_->GetOrThrow<ServerConnectionService>();
+  auto scene_manager = services_->GetOrThrow<ScenesManager>();
 
   serverConnectionService_ = server_connection_service;
 
@@ -48,14 +58,14 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->RegisterComponent<physics::components::Rigidbody2D>();
   registry_->RegisterComponent<drawable::Rectangle>();
 
-  registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
+  registry_->AddSystem<GameSyncSystem>(serverConnectionService_, settings_manager);
   registry_->AddSystem<BackgroundSystem>();
   registry_->AddSystem<PlayerSystem>(settings_manager, window_manager, server_connection_service);
 
   registry_->AddSystem<physics::systems::MovementSystem>(deltaTime_);
   registry_->AddSystem<physics::systems::PositionSystem>();
 
-  const auto username = settings_manager->Get<std::string>(SETTING_PLAYER_USERNAME);
+  const auto username = settings_manager->Get<std::string>(PLAYER_USERNAME);
   registry_->AddSystem<systems::ui::CursorSystem>();
   ui::Input::Create(registry_, "chat",
                     Vector3f{CHAT_PIXELS_LEFT, managers_.window->GetHeight() - 50},
@@ -65,10 +75,12 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
                                            registry_);
   registry_->AddSystem<ChatTriggerSystem>(window_manager, settings_manager);
   registry_->AddSystem<BlinkSystem>();
+  registry_->AddSystem<FadeSystem>([scene_manager] { scene_manager->GoToScene<SceneEnd>(); });
 }
 
 void SceneGame::OnCreate() {
   LoadResources();
+  InitFade();
 }
 
 void SceneGame::Update(DeltaTime delta_time) {
@@ -119,4 +131,27 @@ void SceneGame::CreatePlayerEntity() {
   registry_->AddComponent<Tags>(player, Tags({"player"}));
   registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
   registry_->AddComponent<Position>(player, {Vector3f{100, 100, 0}});
+}
+
+void SceneGame::InitFade() {
+  auto rectangle = registry_->SpawnEntity();
+  auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+  auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2);
+
+  registry_->AddComponent<Position>(rectangle, {point, aligns});
+
+  auto color = sf::Color::Black;
+  color.a = 0;
+  registry_->AddComponent<Drawable>(
+      rectangle, {drawable::Rectangle{
+                      color,
+                      sf::Color::Transparent,
+                      0,
+                      {managers_.window->GetWidth() * 100, managers_.window->GetHeight() * 100}},
+                  WindowManager::View::HUD,
+                  {0, 0, 0, 0},
+                  true,
+                  100000});
+
+  registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
 }

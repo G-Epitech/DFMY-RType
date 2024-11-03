@@ -16,7 +16,6 @@ MouseEventTarget MouseStrategyUtils::GetCurrentTarget(
     const sparse_array<drawable::Drawable>::ptr &drawables, std::size_t entityId) {
   auto empty_drawable = std::optional<drawable::Drawable>();
   auto &drawable = drawables->size() > entityId ? (*drawables)[entityId] : empty_drawable;
-  auto is_inside = drawable->bounds.contains(mouse);
 
   if (!drawable && component.strategy == MouseEventTarget::kAnyTarget) {
     return kAnyTarget;
@@ -26,7 +25,9 @@ MouseEventTarget MouseStrategyUtils::GetCurrentTarget(
     return kNoTarget;
   } else if (!drawable->visible) {
     return kNoTarget;
-  } else if ((component.strategy & kLocalTarget) == kLocalTarget && is_inside) {
+  }
+  auto is_inside = drawable->bounds.contains(mouse);
+  if ((component.strategy & kLocalTarget) == kLocalTarget && is_inside) {
     return MouseEventTarget::kLocalTarget;
   } else if ((component.strategy & kOtherTarget) == kOtherTarget && !is_inside) {
     return MouseEventTarget::kOtherTarget;
