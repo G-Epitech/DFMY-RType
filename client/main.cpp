@@ -10,6 +10,11 @@
 #include "./src/builder/services.hpp"
 #include "./src/builder/settings.hpp"
 #include "./src/constants/window.hpp"
+#include "./src/scenes/game.hpp"
+#include "./src/scenes/leaderboard.hpp"
+#include "./src/scenes/lobby.hpp"
+#include "./src/scenes/menu.hpp"
+#include "./src/scenes/settings.hpp"
 #include "libs/mew/src/game/builder.hpp"
 
 using namespace mew::game;

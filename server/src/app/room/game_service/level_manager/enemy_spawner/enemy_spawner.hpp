@@ -35,7 +35,7 @@ class EnemySpawner final {
   /**
    * @param enemy_archetype_name The name of the enemy archetype
    */
-  void SpawnEnemy(const std::string& enemy_archetype_name);
+  Entity SpawnEnemy(const std::string& enemy_archetype_name);
 
   /**
    * @brief Set the difficulty data that the enemy spawner should use

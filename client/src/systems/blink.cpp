@@ -21,6 +21,10 @@ void rtype::client::systems::BlinkSystem::Run(std::shared_ptr<Registry> r,
     const auto [tags, drawable] = component;
 
     if (tags & "blink") {
+      if (tags & "disabled") {
+        drawable.visible = false;
+        continue;
+      }
       if (tags & "not_blink") {
         if (!entitiesNotBlink_.contains(entity)) {
           entitiesNotBlink_[entity] = clock_.getElapsedTime();

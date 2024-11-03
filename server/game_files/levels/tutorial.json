@@ -1,0 +1,15 @@
+{
+  "name": "Tutorial",
+  "description": "Tutorial level",
+  "waves": [
+    {
+      "maxTime": 10.0,
+      "enemies": [
+        {
+          "name": "enemy_pata_normal",
+          "count": 15
+        }
+      ]
+    }
+  ]
+}

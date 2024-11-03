@@ -48,7 +48,8 @@
             "upperLimitOffset": 30.0,
             "lowerLimitOffset": 30.0,
             "fireRate": 0.8,
-            "bulletsType": 0
+            "bulletsType": 0,
+            "scoreIncrease": 200
           }
         }
       ]
