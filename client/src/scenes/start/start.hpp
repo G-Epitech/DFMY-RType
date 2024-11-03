@@ -139,5 +139,8 @@ class SceneStart final : public SceneBase {
 
   /// @Selected node
   std::optional<services::RoomsService::NodeIdType> selectedNode_;
+
+  /// @Last selected node
+  std::optional<std::string> lastSelectedNodeStrId_;
 };
 }  // namespace rtype::client::scenes

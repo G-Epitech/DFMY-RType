@@ -237,13 +237,14 @@ void SceneStart::CreateBackButton() {
 }
 
 void SceneStart::UpdateSelects() {
-  if (roomsService_->GetLastRefreshTime() <= lastRefreshTime_) {
+  auto last_node_id = selectedNode_;
+  UpdateSelectedNode();
+  if (roomsService_->GetLastRefreshTime() <= lastRefreshTime_ && last_node_id == selectedNode_) {
     return;
   }
   lastRefreshTime_ = roomsService_->GetLastRefreshTime();
   auto rooms = roomsService_->GetRooms();
   Select::Update(registry_, GetNodeSelectProps(rooms));
-  UpdateSelectedNode();
   Select::Update(registry_, GetRoomsSelectProps(rooms, selectedNode_));
 }
 

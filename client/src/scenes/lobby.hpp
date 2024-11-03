@@ -32,6 +32,8 @@ class SceneLobby final : public SceneBase {
 
   void OnActivate() override;
 
+  void OnDeactivate() override;
+
  private:
   /**
    * @brief Create the title

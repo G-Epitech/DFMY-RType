@@ -38,9 +38,6 @@ void SceneLobby::OnCreate() {
 }
 
 void SceneLobby::OnActivate() {
-  if (status_ == LobbyStatus::kIn) {
-    return managers_.scenes->GoToScene<SceneGame>();
-  }
   WaitAsync();
 }
 
@@ -137,4 +134,13 @@ void SceneLobby::UpdateStatusText() {
   } catch (const std::bad_variant_access &e) {
     return;
   }
+}
+void SceneLobby::OnDeactivate() {
+    if (joiningThread_ && joiningThread_->joinable()) {
+        joiningThread_->join();
+    }
+    joiningThread_.reset();
+    status_ = LobbyStatus::kNone;
+    mainMessage_ = "";
+    secondaryMessage_ = "";
 }
