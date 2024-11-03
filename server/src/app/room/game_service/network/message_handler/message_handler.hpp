@@ -9,6 +9,7 @@
 
 #include "libs/game/includes/api.hpp"
 #include "registry.hpp"
+#include "types/player_props.hpp"
 
 namespace rtype::server::game::network {
 class MessageHandler {
@@ -24,7 +25,7 @@ class MessageHandler {
    */
   void Run(const std::shared_ptr<zygarde::Registry>& registry,
            const std::shared_ptr<rtype::sdk::game::api::Room>& api,
-           const std::map<std::uint64_t, zygarde::Entity>& players);
+           const std::map<std::uint64_t, PlayerProps>& players);
 
  private:
   /**
@@ -33,7 +34,7 @@ class MessageHandler {
    * @param data Message data
    * @param registry Registry instance
    */
-  void HandlePlayerMessage(const std::pair<std::uint64_t, zygarde::Entity>& player,
+  void HandlePlayerMessage(const std::pair<std::uint64_t, PlayerProps>& player,
                            const abra::server::ClientUDPMessage& data,
                            const std::shared_ptr<zygarde::Registry>& registry);
 
@@ -43,7 +44,7 @@ class MessageHandler {
    * @param data Message data
    * @param registry Registry instance
    */
-  void HandlePlayerMoveMessage(const std::pair<std::uint64_t, zygarde::Entity>& player,
+  void HandlePlayerMoveMessage(const std::pair<std::uint64_t, PlayerProps>& player,
                                const abra::server::ClientUDPMessage& data,
                                const std::shared_ptr<zygarde::Registry>& registry);
 
@@ -53,7 +54,7 @@ class MessageHandler {
    * @param data Message data
    * @param registry Registry instance
    */
-  void HandlePlayerShootMessage(const std::pair<std::uint64_t, zygarde::Entity>& player,
+  void HandlePlayerShootMessage(const std::pair<std::uint64_t, PlayerProps>& player,
                                 const abra::server::ClientUDPMessage& data,
                                 const std::shared_ptr<zygarde::Registry>& registry);
 

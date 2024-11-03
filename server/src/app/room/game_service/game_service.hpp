@@ -16,6 +16,7 @@
 #include "network/message_handler/message_handler.hpp"
 #include "player_spawner/player_spawner.hpp"
 #include "ticks/ticks_manager.hpp"
+#include "types/player_props.hpp"
 #include "zygarde/src/core/archetypes/archetype_manager.hpp"
 #include "zygarde/src/registry.hpp"
 #include "zygarde/src/utils/helper/helper.hpp"
@@ -83,6 +84,37 @@ class GameService {
    */
   void LevelAndDifficultySetup();
 
+  /**
+   * @brief Update the player scores
+   */
+  void UpdatePlayerScores();
+
+  /**
+   * @brief Handle the game end
+   */
+  void HandleGameEnd();
+
+  /**
+   * @brief Check if the game has ended
+   */
+  void CheckGameEnd();
+
+  /**
+   * @brief Update the total time of the game
+   */
+  void UpdateTotalGameTime();
+
+  /**
+   * @brief Compute the total score of the game
+   * @return The total score
+   */
+  [[nodiscard]] unsigned int ComputeTotalScore() const;
+
+  /**
+   * @brief Check if entities are too far and kill them if they are
+   */
+  void CheckTooFarEntities();
+
  private:
   /// @brief Game running flag
   bool gameRunning_{true};
@@ -97,7 +129,10 @@ class GameService {
   std::shared_ptr<rtype::sdk::game::api::Room> api_;
 
   /// @brief Player list
-  std::map<std::uint64_t, zygarde::Entity> players_;
+  std::map<std::uint64_t, PlayerProps> players_;
+
+  /// @brief Dead player list
+  std::list<std::pair<std::uint64_t, PlayerProps>> deadPlayers_;
 
   /// @brief Packet builder
   abra::tools::PacketBuilder packetBuilder_;
@@ -125,5 +160,14 @@ class GameService {
 
   /// @brief Player counter
   std::size_t playerCounter_;
+
+  /// @brief Win flag
+  bool win_{false};
+
+  /// @brief Total time of the game
+  time_t totalGameTime_{0};
+
+  /// @brief Total score of the game
+  int scorePenalty_{0};
 };
 }  // namespace rtype::server::game

@@ -7,11 +7,11 @@
 
 #include "input_cursor.hpp"
 
-using namespace rtype::client::systems::utils::input;
+using namespace rtype::client::systems::ui;
 
 CursorSystem::CursorSystem(Alignment alignment) : alignment_(alignment) {}
 
-void CursorSystem::Run(const std::shared_ptr<Registry> r, ComponentsPtr components) {
+void CursorSystem::Run(const std::shared_ptr<Registry> r, ZippedComponents components) {
   for (auto&& [tags, drawable, position] : components) {
     if (!(tags & "input_updated")) {
       continue;

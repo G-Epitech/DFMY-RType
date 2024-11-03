@@ -10,7 +10,7 @@
 #include "./game/keymap.hpp"
 
 #define SETTING_APP_VOLUME "app:volume"
-#define SETTING_GAME_ANIMATIONS "app:fullscreen"
+#define SETTING_GAME_ANIMATIONS "app:animations"
 #define SETTING_GAME_KEYMAP "game:keymap"
 #define SETTING_APP_BLINDNESS_MODE "app:blindness_mode"
 

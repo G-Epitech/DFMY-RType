@@ -15,7 +15,7 @@
 
 using namespace mew::managers;
 
-namespace rtype::client::scenes::utils {
+namespace rtype::client::ui {
 
 class Input {
  public:
@@ -27,10 +27,13 @@ class Input {
    * @param position Position
    * @param alignment Alignment
    * @param character_size Character size
+   * @param disabled Disabled
    */
-  static void Create(const Registry::Ptr& registry, const std::string& tag,
-                     core::types::Vector3f position, core::components::Alignment alignment,
-                     unsigned int character_size = 20);
+  static void Create(
+      const Registry::Ptr& registry, const std::string& tag, core::types::Vector3f position,
+      core::components::Alignment alignment = {core::components::HorizontalAlign::kCenter,
+                                               core::components::VerticalAlign::kCenter},
+      unsigned int character_size = 20, bool disabled = false);
 
  private:
   /**
@@ -40,10 +43,12 @@ class Input {
    * @param position Position
    * @param alignment Alignment
    * @param character_size Character size
+   * @param disabled Disabled
    */
   static void CreateInputField(const Registry::Ptr& registry, const std::string& tag,
-                               core::types::Vector3f position,
-                               core::components::Alignment alignment, unsigned int character_size);
+                               const core::types::Vector3f& position,
+                               core::components::Alignment alignment, unsigned int character_size,
+                               bool disabled);
 
   /**
    * @brief Create a blinking cursor
@@ -52,11 +57,12 @@ class Input {
    * @param position Position
    * @param alignment Alignment
    * @param character_size Character size
+   * @param disabled Disabled
    */
   static void CreateBlinkingCursor(const Registry::Ptr& registry, const std::string& tag,
-                                   core::types::Vector3f position,
+                                   const core::types::Vector3f& position,
                                    core::components::Alignment alignment,
-                                   unsigned int character_size);
+                                   unsigned int character_size, bool disabled);
 };
 
-}  // namespace rtype::client::scenes::utils
+}  // namespace rtype::client::ui

@@ -107,10 +107,23 @@ class EXPORT_MEW_API WindowManager final : public ManagerBase {
    */
   std::shared_ptr<sf::Shader> GetShader() const;
 
-  /// @brief Get the width of the window
-  float width_;
-  /// @brief Get the height of the window
-  float height_;
+  /**
+   * @brief Get the width of the window
+   * @return Window width
+   */
+  constexpr float GetWidth() const { return static_cast<float>(props_.videoMode.width); }
+
+  /**
+   * @brief Get the height of the window
+   * @return Window height
+   */
+  constexpr float GetHeight() const { return static_cast<float>(props_.videoMode.height); }
+
+  /**
+   * @brief Get the center of the window
+   * @return Center of the window
+   */
+  inline sf::Vector2f GetCenter() const { return {GetWidth() / 2, GetHeight() / 2}; }
 
  private:
   /// @brief Average length of the events list

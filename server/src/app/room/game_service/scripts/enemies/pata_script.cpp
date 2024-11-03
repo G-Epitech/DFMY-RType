@@ -9,6 +9,7 @@
 
 #include "app/room/game_service/archetype_keys.hpp"
 #include "constants/tags.hpp"
+#include "scripting/components/pool/script_pool.hpp"
 #include "scripts/helpers/damage_helper.hpp"
 #include "scripts/helpers/shoot_helper.hpp"
 #include "zygarde/src/core/components/tags/tags.hpp"
@@ -63,7 +64,7 @@ void PataScript::OnCollisionEnter(
   }
 
   if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerBulletTag) {
-    DamageHelper::HandleDamageTake(&health_, context, entity);
+    HandleDamageTake(context, entity);
   }
 }
 
@@ -73,6 +74,7 @@ void PataScript::OnEnable(const scripting::types::ValuesMap& customScriptValues)
   verticalSpeed_ = std::any_cast<float>(customScriptValues.at("verticalSpeed"));
   upperLimitOffset_ = std::any_cast<float>(customScriptValues.at("upperLimitOffset"));
   lowerLimitOffset_ = std::any_cast<float>(customScriptValues.at("lowerLimitOffset"));
+  scoreIncrease_ = std::any_cast<int>(customScriptValues.at("scoreIncrease"));
   auto fireRate = std::any_cast<float>(customScriptValues.at("fireRate"));
 
   if (fireRate > 0) {

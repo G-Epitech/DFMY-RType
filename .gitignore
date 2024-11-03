@@ -41,7 +41,7 @@ abra_tests
 # Clion
 .idea
 
-build
+build/*
 bin
 cmake-build-*
 .vs

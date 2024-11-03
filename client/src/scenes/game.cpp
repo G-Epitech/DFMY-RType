@@ -8,15 +8,23 @@
 #include "game.hpp"
 
 #include "client/src/components/server_entity_id.hpp"
+#include "client/src/constants/chat.hpp"
+#include "client/src/constants/settings.hpp"
 #include "client/src/systems/game/background.hpp"
+#include "client/src/systems/game/chat/input.hpp"
+#include "client/src/systems/game/chat/messages.hpp"
+#include "client/src/systems/game/chat/trigger.hpp"
 #include "client/src/systems/game/player.hpp"
 #include "client/src/systems/game/sync.hpp"
+#include "client/src/systems/ui/input_cursor.hpp"
+#include "client/src/ui/input.hpp"
 #include "constants/chat.hpp"
 #include "constants/settings.hpp"
 #include "constants/user.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
+#include "libs/zygarde/src/physics/2d/systems/systems.hpp"
 #include "menu.hpp"
 #include "physics/2d/systems/systems.hpp"
 #include "src/systems/animations/blink.hpp"
@@ -24,8 +32,6 @@
 #include "systems/game/chat/input.hpp"
 #include "systems/game/chat/messages.hpp"
 #include "systems/game/chat/trigger.hpp"
-#include "systems/utils/input_cursor.hpp"
-#include "utils/input.hpp"
 
 using namespace mew::sets::events;
 using namespace mew::sets::drawable;
@@ -58,10 +64,10 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->AddSystem<physics::systems::PositionSystem>();
 
   const auto username = settings_manager->Get<std::string>(PLAYER_USERNAME);
-  registry_->AddSystem<systems::utils::input::CursorSystem>();
-  utils::Input::Create(registry_, "chat",
-                       Vector3f{CHAT_PIXELS_LEFT, managers_.window->height_ - 50},
-                       {HorizontalAlign::kLeft, VerticalAlign::kCenter}, CHAT_CHAR_SIZE);
+  registry_->AddSystem<systems::ui::CursorSystem>();
+  ui::Input::Create(registry_, "chat",
+                    Vector3f{CHAT_PIXELS_LEFT, managers_.window->GetHeight() - 50},
+                    {HorizontalAlign::kLeft, VerticalAlign::kCenter}, CHAT_CHAR_SIZE, true);
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
   registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service, username,
                                            registry_);
@@ -128,7 +134,7 @@ void SceneGame::CreatePlayerEntity() {
 void SceneGame::InitFade() {
   auto rectangle = registry_->SpawnEntity();
   auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2);
+  auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2);
 
   registry_->AddComponent<Position>(rectangle, {point, aligns});
 
@@ -136,7 +142,10 @@ void SceneGame::InitFade() {
   color.a = 0;
   registry_->AddComponent<Drawable>(
       rectangle,
-      {Rectangle{color, {managers_.window->width_ * 100, managers_.window->height_ * 100}},
+      {Rectangle{color,
+                 sf::Color::Transparent,
+                 0,
+                 {managers_.window->GetWidth() * 100, managers_.window->GetHeight() * 100}},
        WindowManager::View::HUD});
   registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
 }

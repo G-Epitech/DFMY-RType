@@ -19,6 +19,7 @@
 #include "./entity.hpp"
 #include "./system_interface.hpp"
 #include "./tools/spare_array.hpp"
+#include "./tools/zipper.hpp"
 
 namespace zygarde {
 
@@ -118,6 +119,14 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
   [[nodiscard]] std::vector<std::optional<Entity>> &GetEntities();
 
   /**
+   * @brief Get the entities matching the components
+   * @tparam Components Components to match
+   * @return Zipped components
+   */
+  template <typename... Components>
+  [[nodiscard]] zipper<Components...> GetMatchingEntities();
+
+  /**
    * @brief Check if an entity has a component
    * @tparam Component Component(s) to check
    * @param e Entity to check
@@ -139,6 +148,16 @@ class EXPORT_ZYGARDE_API Registry : public std::enable_shared_from_this<Registry
    */
   template <typename Component>
   typename sparse_array<Component>::reference_type AddComponent(Entity const &to, Component &&c);
+
+  /**
+   * @brief Add a component to an entity
+   * @tparam Component Component to add
+   * @param to Entity to add the component to
+   * @param c Component to add
+   */
+  template <typename Component>
+  typename sparse_array<Component>::reference_type AddComponent(Entity const &to,
+                                                                const Component &c);
 
   /**
    * @brief Emplace a component to an entity

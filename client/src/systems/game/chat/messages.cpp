@@ -25,7 +25,7 @@ ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
       windowManager_(std::move(window_manager)),
       serverConnectionService_{std::move(server_connection_service)} {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 50, 0};
+  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->GetHeight() - 50, 0};
   constexpr Alignment rightAligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
   const std::string final = username + " - ";
 
@@ -34,14 +34,15 @@ ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
                             {Text{final, "main", CHAT_CHAR_SIZE}, WindowManager::View::HUD});
 
   const auto entity2 = r->SpawnEntity();
-  const Vector3f point2{CHAT_PIXELS_LEFT,
-                        windowManager_->height_ - 50 + (static_cast<float>(CHAT_CHAR_SIZE) / 2) + 5,
-                        0};
+  const Vector3f point2{
+      CHAT_PIXELS_LEFT,
+      windowManager_->GetHeight() - 50 + (static_cast<float>(CHAT_CHAR_SIZE) / 2) + 5, 0};
   constexpr Alignment leftAligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
   r->AddComponent<Position>(entity2, Position{point2, leftAligns});
-  r->AddComponent<Drawable>(
-      entity2, {drawable::Rectangle{sf::Color::White, {300, 1}}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(entity2,
+                            {drawable::Rectangle{.fillColor = sf::Color::White, .size = {300, 1}},
+                             WindowManager::View::HUD});
 }
 
 void ChatMessagesSystem::Run(Registry::Ptr r) {
@@ -68,7 +69,7 @@ void ChatMessagesSystem::MoveAllPositions(const Registry::Ptr& r) {
 void ChatMessagesSystem::AddMessage(const Registry::Ptr& r,
                                     const api::payload::ChatMessage& message) {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 80, 0};
+  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->GetHeight() - 80, 0};
   constexpr Alignment aligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
   r->AddComponent<Position>(entity, Position{point, aligns});
@@ -80,7 +81,7 @@ void ChatMessagesSystem::AddMessage(const Registry::Ptr& r,
 void ChatMessagesSystem::AddUsername(const Registry::Ptr& r,
                                      const api::payload::ChatMessage& message) {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 80, 0};
+  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->GetHeight() - 80, 0};
   constexpr Alignment aligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
   const std::string name = message.username;
   const std::string finalMessage = name + " - ";

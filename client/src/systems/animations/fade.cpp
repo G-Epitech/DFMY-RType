@@ -12,7 +12,7 @@ rtype::client::systems::FadeSystem::FadeSystem() {
 }
 
 void rtype::client::systems::FadeSystem::Run(std::shared_ptr<Registry> r,
-                                             ComponentsPtr components) {
+                                             ZippedComponents components) {
   const auto begin = components.begin();
   const auto end = components.end();
 
@@ -33,9 +33,9 @@ void rtype::client::systems::FadeSystem::Run(std::shared_ptr<Registry> r,
       entities_[entity] = deltaClock_.getElapsedTime();
 
       auto &rectangle = std::get<mew::sets::drawable::Rectangle>(drawable.drawable);
-      rectangle.color.a += 1;
+      rectangle.fillColor.a += 1;
 
-      if (rectangle.color.a >= 255) {
+      if (rectangle.fillColor.a >= 255) {
         tags.RemoveTag("fade");
         entities_.erase(entity);
       }

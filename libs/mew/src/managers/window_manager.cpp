@@ -30,9 +30,8 @@ WindowManager::WindowManager(DependenciesHandler::Ptr services,
       std::cerr << "[ERROR]: Failed to load icon: " << *props.iconPath << std::endl;
     }
   }
-  width_ = static_cast<float>(props.videoMode.width);
-  height_ = static_cast<float>(props.videoMode.height);
-  const sf::Vector2f center = {width_ / 2, height_ / 2};
+
+  const sf::Vector2f center = {GetWidth() / 2, GetHeight() / 2};
   hudView_.setCenter(center);
   gameView_.setCenter(center);
 }
@@ -63,15 +62,15 @@ void WindowManager::HandleResize(const sf::Event& event) {
   const auto width = static_cast<float>(event.size.width);
   const auto height = static_cast<float>(event.size.height);
   const sf::Vector2f size = {width, height};
-  const auto widthRatio = width / width_;
-  const auto heightRatio = height / height_;
+  const auto widthRatio = width / GetWidth();
+  const auto heightRatio = height / GetHeight();
 
   gameView_.setSize(size);
   hudView_.setSize(size);
   if (widthRatio < heightRatio) {
-    hudView_.zoom(width_ / width);
+    hudView_.zoom(GetWidth() / width);
   } else {
-    hudView_.zoom(height_ / height);
+    hudView_.zoom(GetHeight() / height);
   }
 }
 

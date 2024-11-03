@@ -30,7 +30,7 @@ SceneEnd::SceneEnd(DependenciesHandler::Ptr services) : SceneBase(std::move(serv
 }
 
 void SceneEnd::OnCreate() {
-  const Vector3f origin{managers_.window->width_ / 2, managers_.window->height_ / 2};
+  const Vector3f origin{managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2};
   constexpr Alignment textAligns{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   CreateWin(origin, textAligns);
@@ -59,7 +59,7 @@ void SceneEnd::CreateMainEntity() const {
 void SceneEnd::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ - 50);
+  const auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() - 50);
 
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,
