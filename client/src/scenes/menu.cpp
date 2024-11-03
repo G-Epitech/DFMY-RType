@@ -38,9 +38,7 @@ void SceneMenu::OnCreate() {
   CreateServerConnectionLabel();
 }
 
-void SceneMenu::OnActivate() {
-  serverConnectionService_->ConnectAsync();
-}
+void SceneMenu::OnActivate() {}
 
 void SceneMenu::Update(DeltaTime delta_time) {
   UpdateConnectionLabel();

@@ -8,12 +8,13 @@
 #include "./src/constants/settings.hpp"
 #include "./src/constants/window.hpp"
 #include "./src/scenes/game.hpp"
-#include "./src/scenes/lobby.hpp"
 #include "./src/scenes/leaderboard.hpp"
+#include "./src/scenes/lobby.hpp"
 #include "./src/scenes/menu.hpp"
 #include "./src/scenes/settings.hpp"
 #include "libs/mew/src/game/builder.hpp"
 #include "libs/mew/src/game/game.hpp"
+#include "scenes/register.hpp"
 
 using namespace mew::game;
 using namespace rtype::client::scenes;
@@ -60,13 +61,13 @@ int MAIN {
 
   game.managers.sound->LoadSoundBuffer("assets/sounds/button_click.ogg", "buttons:click");
 
+  game.managers.scenes->RegisterScene<SceneRegister>();
   game.managers.scenes->RegisterScene<SceneMenu>();
   game.managers.scenes->RegisterScene<SceneLeaderboard>();
   game.managers.scenes->RegisterScene<SceneSettings>();
   game.managers.scenes->RegisterScene<SceneLobby>();
   game.managers.scenes->RegisterScene<SceneGame>();
-  game.managers.scenes->GoToScene<SceneMenu>();
-
+  game.managers.scenes->GoToScene<SceneRegister>();
 
   return game.Run();
 }
