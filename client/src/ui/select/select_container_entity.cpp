@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "client/src/components/ui/select.hpp"
+#include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 
@@ -18,6 +19,7 @@ using namespace rtype::client::components;
 using namespace zygarde::core::components;
 using namespace mew::sets::drawable;
 using namespace mew::sets::events;
+using namespace mew::managers;
 
 SelectContainerEntity::SelectContainerEntity(std::size_t idx, std::shared_ptr<Registry> registry)
     : Entity(idx, std::move(registry)) {}
@@ -43,7 +45,7 @@ void SelectContainerEntity::OnSpawn(const Select::Properties& props) {
                                                       .disabledColor = props.disabledColor,
                                                       .hoveredColor = props.hoveredColor,
                                                   });
-  registry_->AddComponent<Drawable>(*this, {drawable});
+  registry_->AddComponent<Drawable>(*this, {drawable, WindowManager::HUD});
   registry_->AddComponent<Position>(*this, {props.position, aligns});
   registry_->AddComponent<OnMouseMoved>(
       *this, {.strategy = MouseEventTarget::kAnyTarget,

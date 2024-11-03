@@ -77,12 +77,12 @@ class Button {
    */
   static void Create(const Registry::Ptr& registry, const Properties& props);
 
- private:
   /**
-   * @brief Create the button rectangle
-   * @param registry Registry to create the button rectangle
-   * @param props Properties of the button
+   * @brief Set the disabled state of the button
+   * @param registry Registry to set the state
+   * @param id Id of the button
+   * @param enabled Enabled state of the button
    */
-  static void CreateButtonRectangle(const Registry::Ptr& registry, const Properties& props);
+  static void SetEnabled(const Registry::Ptr& registry, const std::string& id, bool enabled);
 };
 }  // namespace rtype::client::ui

@@ -26,36 +26,26 @@ using namespace porygon;
 using namespace mew::managers;
 
 SceneStart::SceneStart(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
-  serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
+  roomsService_ = services_->GetOrThrow<RoomsService>();
   Select::RegisterDependencies(registry_);
 }
 
 void SceneStart::OnCreate() {
+  roomsService_->Refresh();
   CreateStaticLabels();
   CreateControls();
   CreateBackButton();
-  CreateNodeSelect();
-  CreateRoomSelect();
   CreateNodeSelectLabel();
   CreateRoomSelectLabel();
+  CreateSelects();
+  CreateMainEntity();
 }
 
 void SceneStart::Update(DeltaTime delta_time) {
-  /*  auto center = managers_.window->GetCenter();
-
-    counter_ += 1;
-    if (counter_ == 500) {
-      static const Select::Properties props = {
-          .id = "node",
-          .position = Vector3f(center.x - 470, center.y - 200),
-          .size = Vector2f(370, 25),
-          .placeholder = "No node available",
-          .options = {{"1", "Node 12"}, {"2", "Node 25"}, {"3", "Node 13"}, {"4", "Node 14"}},
-          .selectedOption = Select::GetValue(registry_, "node"),
-      };
-      Select::Update(registry_, props);
-    }*/
+  roomsService_->PollUpdate();
   registry_->RunSystems();
+  UpdateSelects();
+  UpdateControls();
 }
 
 void SceneStart::CreateStaticLabels() {
@@ -79,17 +69,23 @@ void SceneStart::CreateStaticLabels() {
   });
 }
 
-void SceneStart::CreateNodeSelect() {
+Select::Properties SceneStart::GetNodeSelectProps(const RoomsService::RoomsMap &rooms) {
   auto center = managers_.window->GetCenter();
-  static const Select::Properties props = {
+  auto options = std::map<std::string, std::string>();
+
+  for (const auto &[node, _] : rooms) {
+    std::string string_id = std::to_string(node);
+    options[string_id] = "Node " + string_id;
+  }
+
+  return {
       .id = "node",
       .position = Vector3f(center.x - 440, center.y - 180),
       .size = Vector2f(370, 25),
       .placeholder = "No node available",
-      .options = {{"1", "Node 1"}, {"2", "Node 2"}, {"3", "Node 3"}, {"4", "Node 4"}},
+      .options = options,
+      .selectedOption = Select::GetValue(registry_, "node"),
   };
-
-  Select::Create(registry_, props);
 }
 
 void SceneStart::CreateNodeSelectLabel() {
@@ -104,17 +100,26 @@ void SceneStart::CreateNodeSelectLabel() {
   });
 }
 
-void SceneStart::CreateRoomSelect() {
+Select::Properties SceneStart::GetRoomsSelectProps(
+    const RoomsService::RoomsMap &rooms, std::optional<RoomsService::NodeIdType> node_id) {
   auto center = managers_.window->GetCenter();
-  static const Select::Properties props = {
-      .id = "room",
+  auto options = std::map<std::string, std::string>();
+
+  if (node_id && rooms.contains(*node_id)) {
+    auto &node = rooms.at(*node_id);
+    for (const auto &[room_id, room] : node) {
+      std::string string_id = std::to_string(room_id);
+      options[string_id] = room.name;
+    }
+  }
+
+  return {
+      .id = "rooms",
       .position = Vector3f(center.x + 70, center.y - 180),
       .size = Vector2f(370, 25),
       .placeholder = "No room available",
-      .options = {},
+      .options = options,
   };
-
-  Select::Create(registry_, props);
 }
 
 void SceneStart::CreateRoomSelectLabel() {
@@ -144,19 +149,17 @@ void SceneStart::CreateControls() {
                                       std::cout << "New room button clicked" << std::endl;
                                     },
                             });
-  Button::Create(registry_, Button::Properties{
-                                .id = "refresh",
-                                .label = "Refresh",
-                                .fontName = "main",
-                                .position = Vector3f(center.x - 210, center.y - 280),
-                                .size = Vector2f(100, 20),
-                                .disabled = false,
-                                .action =
-                                    [](const sf::Mouse::Button &button, const sf::Vector2f pos,
-                                       const MouseEventTarget &target) {
-                                      std::cout << "Refresh button clicked" << std::endl;
-                                    },
-                            });
+  Button::Create(registry_,
+                 Button::Properties{
+                     .id = "refresh",
+                     .label = "Refresh",
+                     .fontName = "main",
+                     .position = Vector3f(center.x - 210, center.y - 280),
+                     .size = Vector2f(100, 20),
+                     .disabled = false,
+                     .action = [this](const sf::Mouse::Button &button, const sf::Vector2f pos,
+                                      const MouseEventTarget &target) { roomsService_->Refresh(); },
+                 });
   Button::Create(registry_, Button::Properties{
                                 .id = "play",
                                 .label = "Join room",
@@ -164,7 +167,7 @@ void SceneStart::CreateControls() {
                                 .position = Vector3f(center.x + 60, center.y - 280),
                                 .size = Vector2f(150, 20),
                                 .disabled = false,
-                                .color = sf::Color::Green,
+                                .color = sf::Color(17, 21, 138),
                                 .action =
                                     [](const sf::Mouse::Button &button, const sf::Vector2f pos,
                                        const MouseEventTarget &target) {
@@ -173,13 +176,27 @@ void SceneStart::CreateControls() {
                             });
 }
 
+void SceneStart::CreateMainEntity() {
+  const auto main = registry_->SpawnEntity();
+
+  registry_->AddComponent<OnMousePressed>(
+      main,
+      OnMousePressed{.strategy = MouseEventTarget::kAnyTarget,
+                     .handler = [this](const sf::Mouse::Button &button, const sf::Vector2f &pos,
+                                       const MouseEventTarget &target) {
+                       if (button == sf::Mouse::Button::Left) {
+                         managers_.sound->PlaySound("buttons:click");
+                       }
+                     }});
+}
+
 void SceneStart::CreateBackButton() {
   const auto exit_button = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   const auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() - 50);
 
   registry_->AddComponent<Position>(exit_button, {point, aligns});
-  registry_->AddComponent<Drawable>(exit_button, {Text{"Back", "main", 20}});
+  registry_->AddComponent<Drawable>(exit_button, {Text{"Back", "main", 20}, WindowManager::HUD});
   registry_->AddComponent<OnMousePressed>(
       exit_button,
       OnMousePressed{.strategy = MouseEventTarget::kLocalTarget,
@@ -211,4 +228,41 @@ void SceneStart::CreateBackButton() {
                                     }
                                   }
                                 }});
+}
+
+void SceneStart::UpdateSelects() {
+  if (roomsService_->GetLastRefreshTime() <= lastRefreshTime_) {
+    return;
+  }
+  lastRefreshTime_ = roomsService_->GetLastRefreshTime();
+  auto rooms = roomsService_->GetRooms();
+  Select::Update(registry_, GetNodeSelectProps(rooms));
+  UpdateSelectedNode();
+  Select::Update(registry_, GetRoomsSelectProps(rooms, selectedNode_));
+}
+
+void SceneStart::CreateSelects() {
+  auto rooms = roomsService_->GetRooms();
+
+  Select::Create(registry_, GetNodeSelectProps(rooms));
+  UpdateSelectedNode();
+  Select::Create(registry_, GetRoomsSelectProps(rooms, selectedNode_));
+}
+
+void SceneStart::UpdateSelectedNode() {
+  auto str_id = Select::GetValue(registry_, "node");
+  if (str_id) {
+    try {
+      selectedNode_ = std::stoul(*str_id);
+    } catch (const std::exception &e) {
+      std::cerr << "Invalid node id: " << *str_id << std::endl;
+    }
+  }
+}
+
+void SceneStart::UpdateControls() {
+  auto selected_room = Select::GetValue(registry_, "rooms");
+
+  Button::SetEnabled(registry_, "play", selected_room.has_value());
+  Button::SetEnabled(registry_, "new-room", roomsService_->CanCreateRoom());
 }

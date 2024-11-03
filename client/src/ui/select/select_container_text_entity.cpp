@@ -19,6 +19,7 @@ using namespace rtype::client::components;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 using namespace mew::sets::drawable;
+using namespace mew::managers;
 
 SelectContainerTextEntity::SelectContainerTextEntity(std::size_t idx,
                                                      std::shared_ptr<Registry> registry)
@@ -38,7 +39,7 @@ void SelectContainerTextEntity::OnSpawn(const Select::Properties& props) {
            .style = props.options.empty() ? sf::Text::Style::Italic : sf::Text::Style::Regular,
            .color = sf::Color::White};
 
-  registry_->AddComponent<Drawable>(*this, {drawable});
+  registry_->AddComponent<Drawable>(*this, {drawable, WindowManager::HUD});
   registry_->AddComponent<Position>(*this, {position, aligns});
   registry_->AddComponent<Tags>(
       *this, Tags({Select::ContainerTextIdTagOf(props.id), Select::IdTagOf(props.id)}));

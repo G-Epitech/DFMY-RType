@@ -32,10 +32,10 @@ struct Texture {
 
 /// @brief Rectangle Component use in an ECS
 struct Rectangle {
-  sf::Color fillColor = sf::Color::Transparent;  ///< Color of the rectangle
-  sf::Color outlineColor = sf::Color::Transparent;                        ///< Color of the outline
-  float outlineThickness = 0;                    ///< Thickness of the outline
-  sf::Vector2f size;                             ///< Size of the rectangle
+  sf::Color fillColor = sf::Color::Transparent;     ///< Color of the rectangle
+  sf::Color outlineColor = sf::Color::Transparent;  ///< Color of the outline
+  float outlineThickness = 0;                       ///< Thickness of the outline
+  sf::Vector2f size;                                ///< Size of the rectangle
 };
 
 /// @brief Drawable Component use in an ECS

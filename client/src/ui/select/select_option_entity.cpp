@@ -21,6 +21,7 @@ using namespace mew::sets::drawable;
 using namespace mew::sets::events;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
+using namespace mew::managers;
 
 SelectOptionEntity::SelectOptionEntity(std::size_t idx, std::shared_ptr<Registry> registry)
     : Entity(idx, std::move(registry)) {}
@@ -53,6 +54,7 @@ void SelectOptionEntity::OnSpawn(std::size_t index, const Select::Properties& pr
   registry_->AddComponent<SelectOption>(*this, option);
   registry_->AddComponent<Drawable>(*this, {
                                                .drawable = rectangle,
+                                               .view = WindowManager::HUD,
                                                .visible = props.expanded,
                                                .layer = 30,
                                            });

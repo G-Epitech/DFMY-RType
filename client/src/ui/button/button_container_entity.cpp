@@ -34,7 +34,7 @@ void ButtonContainerEntity::OnSpawn(const Button::Properties& props) {
       .size = {props.size.x, props.size.y},
   };
 
-  registry_->AddComponent<Drawable>(*this, {drawable});
+  registry_->AddComponent<Drawable>(*this, {drawable, WindowManager::HUD});
   registry_->AddComponent<Position>(*this, {props.position, aligns});
   registry_->AddComponent<OnMouseMoved>(
       *this, {.strategy = MouseEventTarget::kAnyTarget,
@@ -50,7 +50,7 @@ void ButtonContainerEntity::OnSpawn(const Button::Properties& props) {
                              const MouseEventTarget& target) mutable {
                 return OnClick(props, entity, button, pos, target);
               }});
-  auto tags = Tags({});
+  auto tags = Tags({Button::IdTagOf(props.id)});
 
   if (props.disabled) {
     tags.AddTag(Button::DisabledTagOf(props.id));

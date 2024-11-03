@@ -19,6 +19,7 @@ using namespace rtype::client::components;
 using namespace mew::sets::drawable;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
+using namespace mew::managers;
 
 SelectOptionTextEntity::SelectOptionTextEntity(std::size_t idx, std::shared_ptr<Registry> registry)
     : Entity(idx, std::move(registry)) {}
@@ -38,6 +39,7 @@ void SelectOptionTextEntity::OnSpawn(std::size_t index, const Select::Properties
 
   registry_->AddComponent<Drawable>(*this, {
                                                .drawable = drawable,
+                                               .view = WindowManager::HUD,
                                                .visible = props.expanded,
                                                .layer = 45,
                                            });

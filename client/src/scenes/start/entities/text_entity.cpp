@@ -17,6 +17,7 @@ using namespace zygarde;
 using namespace zygarde::core::types;
 using namespace zygarde::core::components;
 using namespace mew::sets::drawable;
+using namespace mew::managers;
 
 TextEntity::TextEntity(const Entity &other) : Entity(other) {}
 
@@ -29,7 +30,7 @@ void TextEntity::OnSpawn(const TextEntity::Properties &props) {
                        .characterSize = props.characterSize,
                        .color = props.color};
 
-  registry_->AddComponent<Drawable>(*this, {.drawable = drawable});
+  registry_->AddComponent<Drawable>(*this, {drawable, WindowManager::HUD});
   registry_->AddComponent<Position>(*this, {
                                                props.position,
                                                props.alignment,

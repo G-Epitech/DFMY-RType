@@ -9,7 +9,6 @@
 
 #include <utility>
 
-#include "button_container_entity.hpp"
 #include "client/src/components/ui/select.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/mew/src/sets/drawable/components/components.hpp"
@@ -36,6 +35,6 @@ void ButtonContainerTextEntity::OnSpawn(const Button::Properties& props) {
                        .characterSize = static_cast<unsigned int>(props.size.y * 0.5f),
                        .color = sf::Color::White};
 
-  registry_->AddComponent<Drawable>(*this, {drawable});
+  registry_->AddComponent<Drawable>(*this, {drawable, WindowManager::HUD});
   registry_->AddComponent<Position>(*this, {position, aligns});
 }
