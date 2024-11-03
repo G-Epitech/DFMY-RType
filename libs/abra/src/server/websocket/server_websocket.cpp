@@ -12,8 +12,9 @@
 using namespace abra::server;
 using namespace boost::asio;
 
-ServerWebsocket::ServerWebsocket(const int &port,
-                                 const std::function<void(const boost::json::object &)> &handler)
+ServerWebsocket::ServerWebsocket(
+    const int &port,
+    const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler)
     : acceptor_(ioc_, ip::tcp::endpoint(ip::tcp::v4(), port)),
       lastClientId_(0),
       handler_(handler),
@@ -70,4 +71,14 @@ void ServerWebsocket::Close() {
   ioc_.stop();
 
   this->logger_.Info("Session closed");
+}
+
+void ServerWebsocket::SendToClient(const std::uint64_t &clientId,
+                                   const boost::json::object &message) {
+  if (clients_.find(clientId) == clients_.end() || !clients_[clientId]) {
+    logger_.Error("Client not found");
+    return;
+  }
+
+  clients_[clientId]->Send(message);
 }

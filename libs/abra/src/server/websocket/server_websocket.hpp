@@ -28,7 +28,9 @@ class abra::server::ServerWebsocket {
    * @param port The TCP port
    * @param middleware The middleware to catch messages from listeners
    */
-  ServerWebsocket(const int &port, const std::function<void(const boost::json::object &)> &handler);
+  ServerWebsocket(
+      const int &port,
+      const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler);
 
   ~ServerWebsocket();
 
@@ -36,6 +38,13 @@ class abra::server::ServerWebsocket {
    * @brief Start the server
    */
   void Start();
+
+  /**
+   * @brief Send a message to a client
+   * @param clientId The client id
+   * @param message The message to send
+   */
+  void SendToClient(const std::uint64_t &clientId, const boost::json::object &message);
 
   /**
    * @brief Close the server
@@ -67,7 +76,7 @@ class abra::server::ServerWebsocket {
   std::uint64_t lastClientId_;
 
   /// @brief Handler of websocket messages
-  std::function<void(const boost::json::object &)> handler_;
+  std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> handler_;
 
   /// @brief Logger
   tools::Logger logger_;

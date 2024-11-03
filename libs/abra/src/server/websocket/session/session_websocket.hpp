@@ -31,8 +31,9 @@ class abra::server::SessionWebsocket : public std::enable_shared_from_this<Sessi
    * @brief Construct a new SessionTCP. This session will handle incoming data
    * @param socket Client socket
    */
-  SessionWebsocket(boost::asio::ip::tcp::socket socket, std::uint64_t clientId,
-                   const std::function<void(const boost::json::object &)> &handler_);
+  SessionWebsocket(
+      boost::asio::ip::tcp::socket socket, std::uint64_t clientId,
+      const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler_);
 
   /**
    * @brief Destroy the SessionTCP object
@@ -48,6 +49,12 @@ class abra::server::SessionWebsocket : public std::enable_shared_from_this<Sessi
    * @brief Close the connection
    */
   void Close();
+
+  /**
+   * @brief Send a message to the client
+   * @param message The message to send
+   */
+  void Send(const boost::json::object &message);
 
  private:
   /**
@@ -71,7 +78,7 @@ class abra::server::SessionWebsocket : public std::enable_shared_from_this<Sessi
   std::uint64_t clientId_;
 
   /// @brief Handler
-  std::function<void(const boost::json::object &)> handler_;
+  std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> handler_;
 
   /// @brief Logger
   tools::Logger logger_;

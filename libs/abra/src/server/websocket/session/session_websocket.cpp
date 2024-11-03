@@ -14,8 +14,9 @@
 using namespace abra::server;
 using namespace boost;
 
-SessionWebsocket::SessionWebsocket(boost::asio::ip::tcp::socket socket, std::uint64_t clientId,
-                                   const std::function<void(const boost::json::object &)> &handler_)
+SessionWebsocket::SessionWebsocket(
+    boost::asio::ip::tcp::socket socket, std::uint64_t clientId,
+    const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler_)
     : ws_(std::move(socket)),
       buffer_(),
       clientId_(clientId),
@@ -51,7 +52,7 @@ void SessionWebsocket::HandleRequest(const std::string &message) {
   logger_.Info("Received message: " + std::to_string(message.size()));
 
   auto json = boost::json::parse(message);
-  handler_(json.as_object());
+  handler_(std::make_pair(this->clientId_, json.as_object()));
 }
 
 void SessionWebsocket::Close() {
@@ -62,4 +63,15 @@ void SessionWebsocket::Close() {
   this->logger_.Info("Closing session");
   this->ws_.close(beast::websocket::close_code::normal);
   this->logger_.Info("Session closed");
+}
+
+void SessionWebsocket::Send(const boost::json::object &message) {
+  auto json = boost::json::serialize(message);
+  auto self(shared_from_this());
+
+  ws_.async_write(boost::asio::buffer(json), [self](beast::error_code ec, std::size_t) {
+    if (ec) {
+      self->logger_.Error("Failed to send message: " + ec.message());
+    }
+  });
 }
