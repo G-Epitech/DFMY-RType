@@ -5,6 +5,8 @@
     "boost-system",
     "boost-asio",
     "boost-mysql",
+    "boost-json",
+    "boost-beast",
     "boost-program-options",
     "boost-process",
     "gtest",
