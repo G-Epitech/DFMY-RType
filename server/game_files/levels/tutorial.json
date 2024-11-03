@@ -7,7 +7,27 @@
       "enemies": [
         {
           "name": "enemy_pata_normal",
-          "count": 15
+          "count": 1
+        },
+        {
+          "name": "enemy_pata_big",
+          "count": 1
+        },
+        {
+          "name": "grappler",
+          "count": 1
+        },
+        {
+          "name": "enforcer",
+          "count": 1
+        },
+        {
+          "name": "void_eater",
+          "count": 1
+        },
+        {
+          "name": "electric_shark",
+          "count": 1
         }
       ]
     }

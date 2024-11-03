@@ -26,7 +26,7 @@ Texture TextureMapper::MapBulletType(const sdk::game::types::ProjectileType type
       return Texture{.name = "enemy_pack", .scale = 2, .rect = {531, 225, 32, 32}};
     }
     default: {
-      return Texture{.name = "player", .scale = 1.5, .rect = {300, 121, 32, 10}};
+      return Texture{.name = "player", .scale = 2, .rect = {227, 278, 10, 8}};
     }
   }
 }

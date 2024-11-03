@@ -13,7 +13,7 @@
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game::scripts {
-static constexpr zygarde::core::types::Vector3f kPataProjectileOffsetPosition{-40, 30, 0};
+static constexpr zygarde::core::types::Vector3f kPataProjectileOffsetPosition{-30, 30, 0};
 }
 
 namespace rtype::server::game::scripts {

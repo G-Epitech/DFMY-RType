@@ -6,15 +6,6 @@
       "maxTime": 15.0,
       "enemies": [
         {
-          "name": "void_eater",
-          "count": 5
-        }
-      ]
-    },
-    {
-      "maxTime": 30.0,
-      "enemies": [
-        {
           "name": "enemy_pata_normal",
           "count": 10
         },
@@ -25,19 +16,61 @@
       ]
     },
     {
-      "maxTime": 90.0,
+      "maxTime": 40.0,
       "enemies": [
         {
           "name": "enemy_pata_normal",
-          "count": 15
-        },
-        {
-          "name": "enemy_pata_big",
-          "count": 15
+          "count": 20
         },
         {
           "name": "grappler",
           "count": 5
+        },
+        {
+          "name": "enforcer",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "maxTime": 90.0,
+      "enemies": [
+        {
+          "name": "enemy_pata_normal",
+          "count": 20
+        },
+        {
+          "name": "enemy_pata_big",
+          "count": 7
+        },
+        {
+          "name": "grappler",
+          "count": 10
+        },
+        {
+          "name": "electric_shark",
+          "count": 10
+        },
+        {
+          "name": "enforcer",
+          "count": 10
+        }
+      ]
+    },
+    {
+      "maxTime": 20.0,
+      "enemies": [
+        {
+          "name": "void_eater",
+          "count": 1
+        },
+        {
+          "name": "electric_shark",
+          "count": 5
+        },
+        {
+          "name": "grappler",
+          "count": 20
         }
       ]
     }

@@ -52,7 +52,7 @@
           "scriptName": "zigzagMovementScript",
           "customValues": {
             "verticalSpeed": 100.0,
-            "horizontalSpeed": 80.0,
+            "horizontalSpeed": 150.0,
             "upperLimitOffset": 100.0,
             "lowerLimitOffset": 100.0
           }
