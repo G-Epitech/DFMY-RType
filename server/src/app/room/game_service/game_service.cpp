@@ -137,6 +137,7 @@ void GameService::HandleGameEnd() {
   if (totalScore == 0) {
     win_ = false;
   }
+  logger_.Info("Score penalty: " + std::to_string(scorePenalty_), "🔻");
   logger_.Info("Total score: " + std::to_string(totalScore), "🏆");
   this->api_->EndGame(totalScore, totalGameTime_, win_);
 }

@@ -67,6 +67,7 @@ void SceneGame::OnKeyPress(const sf::Keyboard::Key &key) {
 void SceneGame::LoadResources() {
   managers_.resources->LoadTexture("assets/sheets/player.png", "player");
   managers_.resources->LoadTexture("assets/sheets/enemy.png", "enemy");
+  managers_.resources->LoadTexture("assets/sheets/enemy_pack.png", "enemy_pack");
 }
 
 void SceneGame::CreatePlayerEntity() {
