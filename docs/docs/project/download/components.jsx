@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "@docusaurus/Link";
 
-export const version = '0.0.3';
+export const version = '1.0.0';
 export const downloadPage = 'https://github.com/G-Epitech/DFMY-RType/releases/download';
 export const archivePage = 'https://github.com/G-Epitech/DFMY-RType/archive';
+
 export function ArtefactName({name, platform}) {
     const extensions = {
         windows: 'exe',
