@@ -26,12 +26,13 @@ ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
       windowManager_(std::move(window_manager)),
       serverConnectionService_{std::move(server_connection_service)} {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{170, windowManager_->height_ - 50, 0};
+  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 50, 0};
   constexpr Alignment aligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
-  const std::string final = "[" + username + "]";
+  const std::string final = username + " - ";
 
   r->AddComponent<Position>(entity, Position{point, aligns});
-  r->AddComponent<Drawable>(entity, {Text{final, "main"}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(entity,
+                            {Text{final, "main", CHAT_CHAR_SIZE}, WindowManager::View::HUD});
 }
 
 void ChatMessagesSystem::Run(Registry::Ptr r) {
@@ -58,24 +59,26 @@ void ChatMessagesSystem::MoveAllPositions(Registry::Ptr r) {
 void ChatMessagesSystem::AddMessage(const Registry::Ptr& r,
                                     const api::payload::ChatMessage& message) {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{CHAT_MESSAGE_PIXELS_LEFT, windowManager_->height_ - 80, 0};
+  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 80, 0};
   constexpr Alignment aligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
   r->AddComponent<Position>(entity, Position{point, aligns});
-  r->AddComponent<Drawable>(entity, {Text{message.message, "main"}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(
+      entity, {Text{message.message, "main", CHAT_CHAR_SIZE}, WindowManager::View::HUD});
   oldMessages_[entity] = std::chrono::system_clock::now();
 }
 
 void ChatMessagesSystem::AddUsername(const Registry::Ptr& r,
                                      const api::payload::ChatMessage& message) {
   const auto entity = r->SpawnEntity();
-  const Vector3f point{CHAT_NAME_PIXELS_LEFT, windowManager_->height_ - 80, 0};
+  const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 80, 0};
   constexpr Alignment aligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
   const std::string name = message.username;
-  const std::string finalMessage = "[" + name + "]";
+  const std::string finalMessage = name + " - ";
 
   r->AddComponent<Position>(entity, Position{point, aligns});
-  r->AddComponent<Drawable>(entity, {Text{finalMessage, "main"}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(entity,
+                            {Text{finalMessage, "main", CHAT_CHAR_SIZE}, WindowManager::View::HUD});
   oldMessages_[entity] = std::chrono::system_clock::now();
 }
 

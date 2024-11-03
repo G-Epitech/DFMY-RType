@@ -26,10 +26,11 @@ class Input {
    * @param tag Tag Name of the input text
    * @param position Position
    * @param alignment Alignment
+   * @param character_size Character size
    */
   static void Create(const Registry::Ptr& registry, const std::string& tag,
                      core::types::Vector3f position, core::components::Alignment alignment,
-                     SettingsManager::Ptr settings_manager);
+                     unsigned int character_size = 20);
 
  private:
   /**
@@ -38,12 +39,11 @@ class Input {
    * @param tag Tag Name of the input field
    * @param position Position
    * @param alignment Alignment
-   * @param settings_manager Settings Manager
+   * @param character_size Character size
    */
   static void CreateInputField(const Registry::Ptr& registry, const std::string& tag,
                                core::types::Vector3f position,
-                               core::components::Alignment alignment,
-                               SettingsManager::Ptr settings_manager);
+                               core::components::Alignment alignment, unsigned int character_size);
 
   /**
    * @brief Create a blinking cursor
@@ -51,10 +51,12 @@ class Input {
    * @param tag Tag Name of the blinking cursor
    * @param position Position
    * @param alignment Alignment
+   * @param character_size Character size
    */
   static void CreateBlinkingCursor(const Registry::Ptr& registry, const std::string& tag,
                                    core::types::Vector3f position,
-                                   core::components::Alignment alignment);
+                                   core::components::Alignment alignment,
+                                   unsigned int character_size);
 };
 
 }  // namespace rtype::client::scenes::utils

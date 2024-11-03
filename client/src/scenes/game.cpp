@@ -11,6 +11,7 @@
 #include "client/src/systems/game/background.hpp"
 #include "client/src/systems/game/player.hpp"
 #include "client/src/systems/game/sync.hpp"
+#include "constants/chat.hpp"
 #include "constants/settings.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
@@ -54,8 +55,9 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
 
   const auto username = settings_manager->Get<std::string>(SETTING_PLAYER_USERNAME);
   registry_->AddSystem<systems::utils::input::CursorSystem>();
-  utils::Input::Create(registry_, "chat", Vector3f{180, managers_.window->height_ - 50},
-                       {HorizontalAlign::kLeft, VerticalAlign::kCenter}, settings_manager);
+  utils::Input::Create(registry_, "chat",
+                       Vector3f{CHAT_PIXELS_LEFT, managers_.window->height_ - 50},
+                       {HorizontalAlign::kLeft, VerticalAlign::kCenter}, CHAT_CHAR_SIZE);
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
   registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service, username,
                                            registry_);
