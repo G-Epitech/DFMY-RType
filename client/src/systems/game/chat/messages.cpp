@@ -27,12 +27,22 @@ ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
       serverConnectionService_{std::move(server_connection_service)} {
   const auto entity = r->SpawnEntity();
   const Vector3f point{CHAT_PIXELS_LEFT, windowManager_->height_ - 50, 0};
-  constexpr Alignment aligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
+  constexpr Alignment rightAligns{HorizontalAlign::kRight, VerticalAlign::kCenter};
   const std::string final = username + " - ";
 
-  r->AddComponent<Position>(entity, Position{point, aligns});
+  r->AddComponent<Position>(entity, Position{point, rightAligns});
   r->AddComponent<Drawable>(entity,
                             {Text{final, "main", CHAT_CHAR_SIZE}, WindowManager::View::HUD});
+
+  const auto entity2 = r->SpawnEntity();
+  const Vector3f point2{CHAT_PIXELS_LEFT,
+                        windowManager_->height_ - 50 + (static_cast<float>(CHAT_CHAR_SIZE) / 2) + 5,
+                        0};
+  constexpr Alignment leftAligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
+
+  r->AddComponent<Position>(entity2, Position{point2, leftAligns});
+  r->AddComponent<Drawable>(entity2,
+                            {Rectangle{sf::Color::White, {300, 1}}, WindowManager::View::HUD});
 }
 
 void ChatMessagesSystem::Run(Registry::Ptr r) {

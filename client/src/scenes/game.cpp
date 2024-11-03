@@ -45,6 +45,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<ServerEntityId>();
   registry_->RegisterComponent<physics::components::Rigidbody2D>();
+  registry_->RegisterComponent<Rectangle>();
 
   registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
   registry_->AddSystem<BackgroundSystem>();
