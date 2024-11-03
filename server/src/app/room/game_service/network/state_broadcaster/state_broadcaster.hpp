@@ -135,7 +135,8 @@ class StateBroadcaster final {
   /// @brief Map of bullet type strings to their respective types
   static inline std::map<std::string, sdk::game::types::ProjectileType> kProjectileTypeMap_ = {
       {"player_bullet", sdk::game::types::ProjectileType::kPlayerCommon},
-      {"enemy_bullet", sdk::game::types::ProjectileType::kEnemyCommon},
+      {"pata_bullet", sdk::game::types::ProjectileType::kPata},
+      {"grappler_bullet", sdk::game::types::ProjectileType::kGrappler},
   };
 };
 }  // namespace rtype::server::game::network

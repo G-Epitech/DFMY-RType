@@ -10,7 +10,7 @@
           "count": 5
         },
         {
-          "name": "enemy_pata_big",
+          "name": "grappler",
           "count": 5
         }
       ]
@@ -25,6 +25,10 @@
         {
           "name": "enemy_pata_big",
           "count": 10
+        },
+        {
+          "name": "grappler",
+          "count": 5
         }
       ]
     },
@@ -38,6 +42,10 @@
         {
           "name": "enemy_pata_big",
           "count": 15
+        },
+        {
+          "name": "grappler",
+          "count": 5
         }
       ]
     }

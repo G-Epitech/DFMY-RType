@@ -45,7 +45,7 @@
             "health": 150.0,
             "fireRate": 0.8,
             "scoreIncrease": 200,
-            "bulletArchetype": "default_enemy_bullet"
+            "bulletArchetype": "pata_bullet"
           }
         },
         {

@@ -1,12 +1,12 @@
 {
-  "archetype_name": "default_player_bullet",
+  "archetype_name": "grappler_bullet",
   "components": [
     {
       "name": "rigidbody2d",
       "data": {
         "isKinematic": true,
         "velocity": {
-          "x": 1500,
+          "x": -1000,
           "y": 0
         },
         "drag": 0
@@ -19,15 +19,15 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 48,
-          "y": 12
+          "x": 103,
+          "y": 14
         },
         "collisionLayers": [
-          8
+          4
         ],
         "includeLayers": [
-          2,
-          4
+          1,
+          8
         ]
       }
     },
@@ -35,8 +35,9 @@
       "name": "tags",
       "data": {
         "tags": [
-          "player_bullet",
-          "bullet"
+          "bullet",
+          "enemy_bullet",
+          "grappler_bullet"
         ]
       }
     },
@@ -46,7 +47,7 @@
         {
           "scriptName": "baseProjectileScript",
           "customValues": {
-            "damage": 10.0
+            "damage": 30.0
           }
         }
       ]
