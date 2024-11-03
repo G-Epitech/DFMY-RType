@@ -34,6 +34,7 @@ using namespace rtype::client::components;
 using namespace rtype::client::systems;
 using namespace zygarde::core::types;
 using namespace zygarde::core::components;
+using namespace mew::sets;
 
 SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   auto settings_manager = services_->GetOrThrow<SettingsManager>();
@@ -45,7 +46,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->RegisterComponent<Tags>();
   registry_->RegisterComponent<ServerEntityId>();
   registry_->RegisterComponent<physics::components::Rigidbody2D>();
-  registry_->RegisterComponent<Rectangle>();
+  registry_->RegisterComponent<drawable::Rectangle>();
 
   registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
   registry_->AddSystem<BackgroundSystem>();

@@ -36,12 +36,18 @@ class ChatTriggerSystem final : public ASystem<Tags> {
   /// @brief Settings manager
   SettingsManager::Ptr settingsManager_;
 
+  /**
+   * @brief Check if the chat open key is pressed
+   * @param event The event
+   * @return true if the chat open key is pressed, false otherwise
+   */
   static bool IsChatOpenKey(const sf::Event& event);
 
+  /**
+   * @brief Check if the chat close key is pressed
+   * @param event The event
+   * @return true if the chat close key is pressed, false otherwise
+   */
   static bool IsChatCloseKey(const sf::Event& event);
-
-  static void OpenChat(Tags& tags);
-
-  static void CloseChat(Tags& tags);
 };
 }  // namespace rtype::client::systems

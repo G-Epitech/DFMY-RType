@@ -7,6 +7,8 @@
 
 #include "server_connection_service.hpp"
 
+#include "constants/settings.hpp"
+
 using namespace rtype::client::services;
 
 ServerConnectionService::ServerConnectionService(const std::string& ip, std::uint32_t port)
@@ -42,7 +44,7 @@ void ServerConnectionService::Connect() {
       clientMutex_.unlock();
 
       auto res = client->Register({
-          .username = "0123456789012345678",
+          .username = SETTING_DEFAULT_PLAYER_USERNAME,
       });
       if (!res) {
         throw std::runtime_error("Failed to register to server");

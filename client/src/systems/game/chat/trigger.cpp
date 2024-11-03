@@ -33,11 +33,11 @@ void ChatTriggerSystem::Run(Registry::Ptr r, zipper<Tags> components) {
       for (const auto& event : events) {
         if (event.type == sf::Event::KeyPressed) {
           if (!prevChatOpen && IsChatOpenKey(event)) {
-            OpenChat(tags);
+            tags.RemoveTag("disabled");
             updated = true;
             chatOpen = true;
           } else if (prevChatOpen && IsChatCloseKey(event)) {
-            CloseChat(tags);
+            tags.AddTag("disabled");
             updated = true;
             chatOpen = false;
           }
@@ -56,12 +56,4 @@ bool ChatTriggerSystem::IsChatOpenKey(const sf::Event& event) {
 
 bool ChatTriggerSystem::IsChatCloseKey(const sf::Event& event) {
   return event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Enter;
-}
-
-void ChatTriggerSystem::OpenChat(Tags& tags) {
-  tags.RemoveTag("disabled");
-}
-
-void ChatTriggerSystem::CloseChat(Tags& tags) {
-  tags.AddTag("disabled");
 }

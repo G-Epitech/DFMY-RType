@@ -7,21 +7,20 @@
 
 #include "messages.hpp"
 
-#include <iostream>
 #include <utility>
 
 #include "client/src/constants/settings.hpp"
 #include "constants/chat.hpp"
-#include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
 using namespace rtype::client::services;
 using namespace mew::sets::drawable;
+using namespace mew::sets;
 using namespace core::components;
 
 ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
                                        ServerConnectionService::Ptr server_connection_service,
-                                       const std::string& username, Registry::Ptr r)
+                                       const std::string& username, const Registry::Ptr& r)
     : ASystem(),
       windowManager_(std::move(window_manager)),
       serverConnectionService_{std::move(server_connection_service)} {
@@ -41,8 +40,8 @@ ChatMessagesSystem::ChatMessagesSystem(WindowManager::Ptr window_manager,
   constexpr Alignment leftAligns{HorizontalAlign::kLeft, VerticalAlign::kCenter};
 
   r->AddComponent<Position>(entity2, Position{point2, leftAligns});
-  r->AddComponent<Drawable>(entity2,
-                            {Rectangle{sf::Color::White, {300, 1}}, WindowManager::View::HUD});
+  r->AddComponent<Drawable>(
+      entity2, {drawable::Rectangle{sf::Color::White, {300, 1}}, WindowManager::View::HUD});
 }
 
 void ChatMessagesSystem::Run(Registry::Ptr r) {
@@ -56,7 +55,7 @@ void ChatMessagesSystem::Run(Registry::Ptr r) {
   CleanupOldMessages(r);
 }
 
-void ChatMessagesSystem::MoveAllPositions(Registry::Ptr r) {
+void ChatMessagesSystem::MoveAllPositions(const Registry::Ptr& r) {
   for (auto&& entity : oldMessages_) {
     auto&& position = r->GetComponent<Position>(entity.first);
     if (position) {
@@ -92,7 +91,7 @@ void ChatMessagesSystem::AddUsername(const Registry::Ptr& r,
   oldMessages_[entity] = std::chrono::system_clock::now();
 }
 
-void ChatMessagesSystem::CleanupOldMessages(Registry::Ptr r) {
+void ChatMessagesSystem::CleanupOldMessages(const Registry::Ptr& r) {
   auto it = oldMessages_.begin();
   while (it != oldMessages_.end()) {
     std::chrono::time_point<std::chrono::system_clock> time = it->second;

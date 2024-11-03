@@ -27,7 +27,7 @@ class ChatMessagesSystem final : public ASystem<> {
    */
   ChatMessagesSystem(WindowManager::Ptr window_manager,
                      services::ServerConnectionService::Ptr server_connection_service,
-                     const std::string &username, Registry::Ptr r);
+                     const std::string &username, const Registry::Ptr &r);
 
   void Run(Registry::Ptr r) override;
 
@@ -45,7 +45,7 @@ class ChatMessagesSystem final : public ASystem<> {
    * @brief Move all positions of the messages
    * @param r The registry
    */
-  void MoveAllPositions(Registry::Ptr r);
+  void MoveAllPositions(const Registry::Ptr &r);
 
   /**
    * @brief Add a message to the chat
@@ -65,6 +65,6 @@ class ChatMessagesSystem final : public ASystem<> {
    * @brief Cleanup old messages
    * @param r The registry
    */
-  void CleanupOldMessages(Registry::Ptr r);
+  void CleanupOldMessages(const Registry::Ptr &r);
 };
 }  // namespace rtype::client::systems
