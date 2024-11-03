@@ -277,7 +277,7 @@ void SceneStart::CreateRoomInfoArea() {
   const auto center = managers_.window->GetCenter();
   const auto entity = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kTop};
-  const auto rectangle = Rectangle{
+  const auto rectangle = mew::sets::drawable::Rectangle{
       .fillColor = sf::Color::Transparent,
       .outlineColor = sf::Color::White,
       .outlineThickness = 2.0,
