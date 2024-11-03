@@ -14,6 +14,6 @@ using namespace rtype::client::builder;
 using namespace rtype::client::services;
 
 void Services::RegisterServices(mew::game::GameBuilder *builder) {
-  builder->WithService<ServerConnectionService>("127.0.0.1", 4848);
+  builder->WithService<ServerConnectionService>("rtype.thismath.com", 4848);
   builder->WithService<RoomsService>();
 }
