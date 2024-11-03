@@ -83,6 +83,10 @@ void SceneGame::OnCreate() {
   InitFade();
 }
 
+void SceneGame::OnActivate() {
+  ResetFade();
+}
+
 void SceneGame::Update(DeltaTime delta_time) {
   deltaTime_ = delta_time;
   registry_->RunSystems();
@@ -156,4 +160,27 @@ void SceneGame::InitFade() {
                   100000});
 
   registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
+}
+
+void SceneGame::ResetFade() {
+  auto drawables = registry_->GetComponents<Drawable>();
+  auto tags = registry_->GetComponents<Tags>();
+  std::size_t fade_id = 0;
+  std::size_t i = 0;
+
+  for (auto &tag : *tags) {
+    if (!tag) {
+      i += 1;
+      continue;
+    } else if ((*tag) & "end_fade") {
+      fade_id = i;
+    }
+    i += 1;
+  }
+  auto &fade = (*drawables)[fade_id];
+  if (!fade) {
+    return;
+  }
+  auto &rectangle = std::get<drawable::Rectangle>((*fade).drawable);
+  rectangle.fillColor.a = 0;
 }

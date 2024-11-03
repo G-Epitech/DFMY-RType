@@ -28,11 +28,24 @@ void TextEntity::OnSpawn(const TextEntity::Properties &props) {
   auto drawable = Text{.text = props.text,
                        .fontName = props.fontName,
                        .characterSize = props.characterSize,
+                       .style = props.style,
                        .color = props.color};
 
-  registry_->AddComponent<Drawable>(*this, {drawable, WindowManager::HUD});
+  registry_->AddComponent<Drawable>(
+      *this, {.drawable = drawable, .view = WindowManager::HUD, .visible = props.visible});
   registry_->AddComponent<Position>(*this, {
                                                props.position,
                                                props.alignment,
                                            });
+  auto tags = Tags({});
+  for (const auto &tag : props.tags) {
+    tags.AddTag(tag);
+  }
+  registry_->AddComponent<Tags>(*this, tags);
+}
+
+void TextEntity::RegisterDependencies(const Registry::Ptr &registry) {
+  registry->RegisterComponent<Drawable>();
+  registry->RegisterComponent<Position>();
+  registry->RegisterComponent<Tags>();
 }

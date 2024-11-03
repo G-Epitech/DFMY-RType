@@ -40,8 +40,9 @@ class SceneStart final : public SceneBase {
 
   /**
    * @brief Update the controls
+   * @param room_id Room id to be updated
    */
-  void UpdateControls();
+  void UpdateControls(const std::optional<std::string> &room_id);
 
   /**
    * @brief Create main entity
@@ -97,6 +98,38 @@ class SceneStart final : public SceneBase {
    * @brief Update the selected node id
    */
   void UpdateSelectedNode();
+
+  /**
+   * @brief Create the room info rectangle with its label
+   */
+  void CreateRoomInfoArea();
+
+  /**
+   * @brief Update room infos
+   * @param room_id Room id to be updated
+   */
+  void UpdateRoomInfos(const std::optional<std::string> &room_id);
+
+  /**
+   * @brief Make room visible
+   * @param room Room to display
+   */
+  void SetRoomInfo(const services::RoomsService::RoomStatusType &room);
+
+  /**
+   * @brief Hide room info
+   */
+  void HideRoomInfo();
+
+  /**
+   * @brief Update room infos
+   */
+  void CreateRoomInfosContent();
+
+  /**
+   * @brief Try to join the room
+   */
+  void OnJoinRoom();
 
   /// @brief Server connection service
   services::RoomsService::Ptr roomsService_;

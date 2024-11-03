@@ -33,7 +33,19 @@ class TextEntity : public Entity {
     sf::Color color;
     /// @brief Layer of the text
     zygarde::core::components::Alignment alignment;
+    /// @brief Style of the text*
+    sf::Text::Style style = sf::Text::Style::Regular;
+    /// @brief Tags list
+    std::vector<std::string> tags;
+    /// @brief View of the text
+    bool visible = true;
   };
+
+  /**
+   * @brief Register the dependencies
+   * @param registry Registry to register the dependencies
+   */
+  static void RegisterDependencies(const zygarde::Registry::Ptr &registry);
 
   explicit TextEntity(const Entity &other);
 

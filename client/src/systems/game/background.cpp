@@ -63,7 +63,7 @@ void BackgroundSystem::SpawnStar(const std::shared_ptr<Registry>& r) {
 
   r->AddComponent<Position>(entity, {Vector3f{randomX, randomY, 0}});
   r->AddComponent<Tags>(entity, Tags({"background"}));
-  r->AddComponent<Drawable>(entity, {Rectangle{
+  r->AddComponent<Drawable>(entity, {mew::sets::drawable::Rectangle{
                                         .fillColor = sf::Color::White,
                                         .size = {randomSize, randomSize},
                                     }});

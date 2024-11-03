@@ -48,6 +48,13 @@ void Client::ListenTCP() {
 }
 
 void Client::InitUDP(std::string ip, unsigned int port, unsigned int localPort) {
+  if (this->clientUDP_.has_value()) {
+    this->clientUDP_->Close();
+    this->threadUDP_.join();
+
+    this->clientUDP_.reset();
+  }
+
   this->clientUDP_.emplace(ip, port, localPort);
 
   this->threadUDP_ = std::thread(&Client::ListenUDP, this);
@@ -59,6 +66,13 @@ void Client::ListenUDP() {
 }
 
 void Client::InitChatTCP(std::string ip, unsigned int port) {
+  if (this->chatTCP_.has_value()) {
+    this->chatTCP_->Close();
+    this->threadChatTCP_.join();
+
+    this->chatTCP_.reset();
+  }
+
   this->chatTCP_.emplace(ip, port, nullptr);
 
   this->threadChatTCP_ = std::thread(&Client::ListenChatTCP, this);
@@ -94,6 +108,8 @@ bool Client::JoinRoom(const payload::JoinRoom &payload) {
   auto sendSuccess = SendPayloadTCP(ClientToMasterMsgType::kMsgTypeCTMJoinRoom, payload);
   if (!sendSuccess)
     return false;
+
+  this->isLobbyConnected_ = false;
 
   auto waitSuccess =
       WaitForMessage(MasterToClientMsgType::kMsgTypeMTCInfoRoom, &Client::HandleJoinLobbyInfos);
