@@ -109,6 +109,8 @@ bool Client::JoinRoom(const payload::JoinRoom &payload) {
   if (!sendSuccess)
     return false;
 
+  this->isLobbyConnected_ = false;
+
   auto waitSuccess =
       WaitForMessage(MasterToClientMsgType::kMsgTypeMTCInfoRoom, &Client::HandleJoinLobbyInfos);
 
