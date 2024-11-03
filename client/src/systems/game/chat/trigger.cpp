@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "client/src/constants/settings.hpp"
+#include "constants/chat.hpp"
 #include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
@@ -25,7 +26,7 @@ ChatTriggerSystem::ChatTriggerSystem(WindowManager::Ptr window_manager,
 void ChatTriggerSystem::Run(Registry::Ptr r, zipper<Tags> components) {
   const auto events = windowManager_->GetDeferredEvents();
   bool updated = false;
-  const bool prevChatOpen = settingsManager_->Get<bool>(SETTING_GAME_CHAT_OPEN);
+  const bool prevChatOpen = settingsManager_->Get<bool>(CHAT_IS_OPEN);
   bool chatOpen = prevChatOpen;
 
   for (auto&& [tags] : components) {
@@ -46,7 +47,7 @@ void ChatTriggerSystem::Run(Registry::Ptr r, zipper<Tags> components) {
     }
   }
   if (updated) {
-    settingsManager_->Set(SETTING_GAME_CHAT_OPEN, chatOpen);
+    settingsManager_->Set(CHAT_IS_OPEN, chatOpen);
   }
 }
 

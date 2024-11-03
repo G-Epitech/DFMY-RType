@@ -13,6 +13,7 @@ rtype::server::Master::Master(const BaseContext &ctx)
     : ctx_(),
       api_(static_cast<int>(ctx.port),
            static_cast<int>(std::get<MasterCtxProps>(ctx.props).nodePort),
+           std::get<MasterCtxProps>(ctx.props).token,
            {
                .host = std::get<MasterCtxProps>(ctx.props).dbHost,
                .port = std::get<MasterCtxProps>(ctx.props).dbPort,

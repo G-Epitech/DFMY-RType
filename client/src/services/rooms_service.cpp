@@ -17,11 +17,6 @@ void RoomsService::Refresh() {
   if (!serverConnectionService_->Connected()) {
     return;
   }
-  auto res = serverConnectionService_->client()->CreateRoom({
-      .name = "test",
-      .nbPlayers = 4,
-      .difficulty = 0,
-  });
   serverConnectionService_->client()->RefreshInfos(false, true);
 }
 
