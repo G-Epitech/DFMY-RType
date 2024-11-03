@@ -28,6 +28,7 @@ using namespace mew::managers;
 SceneStart::SceneStart(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   roomsService_ = services_->GetOrThrow<RoomsService>();
   Select::RegisterDependencies(registry_);
+  TextEntity::RegisterDependencies(registry_);
 }
 
 void SceneStart::OnCreate() {
@@ -38,6 +39,7 @@ void SceneStart::OnCreate() {
   CreateNodeSelectLabel();
   CreateRoomSelectLabel();
   CreateSelects();
+  CreateRoomInfoArea();
   CreateMainEntity();
 }
 
@@ -265,4 +267,65 @@ void SceneStart::UpdateControls() {
 
   Button::SetEnabled(registry_, "play", selected_room.has_value());
   Button::SetEnabled(registry_, "new-room", roomsService_->CanCreateRoom());
+}
+void SceneStart::CreateRoomInfoArea() {
+  const auto center = managers_.window->GetCenter();
+  const auto entity = registry_->SpawnEntity();
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kTop};
+  const auto rectangle = Rectangle{
+      .fillColor = sf::Color::Transparent,
+      .outlineColor = sf::Color::White,
+      .outlineThickness = 2.0,
+      .size = {880, 200},
+  };
+  registry_->AddComponent<Position>(entity, {Vector3f(center.x - 440, center.y - 100), aligns});
+  registry_->AddComponent<Drawable>(entity, {rectangle, WindowManager::View::HUD});
+  registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
+      "Room infos",
+      Vector3f(center.x - 440, center.y - 110),
+      "main",
+      13,
+      sf::Color::White,
+      {HorizontalAlign::kLeft, VerticalAlign::kBottom},
+  });
+  CreateRoomInfosContent();
+}
+
+void SceneStart::CreateRoomInfosContent() {
+  static const std::map<std::string, std::string> infos = {
+      {"name", "Name"},
+      {"difficulty", "Difficulty"},
+      {"nb-players", "Number of players"},
+      {"nb-players-max", "Max number of players"},
+  };
+  const auto center = managers_.window->GetCenter();
+  const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kBottom};
+  auto point = Vector3f(center.x - 410, center.y - 70);
+  const auto step = 30;
+
+  for (const auto &[key, label] : infos) {
+    point.y += step;
+    registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
+        .text = label + ":",
+        .position = point,
+        .fontName = "main",
+        .characterSize = 13,
+        .color = sf::Color::White,
+        .alignment = aligns,
+        .tags = {"room-info-" + key},
+        .visible = false,
+    });
+  }
+
+  registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
+      .text = "No room selected",
+      .position = Vector3f(center.x, center.y),
+      .fontName = "main",
+      .characterSize = 13,
+      .color = sf::Color::White,
+      .alignment = {HorizontalAlign::kCenter, VerticalAlign::kCenter},
+      .style = sf::Text::Style::Italic,
+      .tags = {"room-info-no-room"},
+      .visible = true,
+  });
 }

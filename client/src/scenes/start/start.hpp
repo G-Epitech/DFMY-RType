@@ -98,6 +98,21 @@ class SceneStart final : public SceneBase {
    */
   void UpdateSelectedNode();
 
+  /**
+   * @brief Create the room info rectangle with its label
+   */
+  void CreateRoomInfoArea();
+
+  /**
+   * @brief Update room infos
+   */
+  void UpdateRoomInfos();
+
+  /**
+   * @brief Update room infos
+   */
+  void CreateRoomInfosContent();
+
   /// @brief Server connection service
   services::RoomsService::Ptr roomsService_;
 
