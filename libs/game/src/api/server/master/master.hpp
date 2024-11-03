@@ -208,6 +208,12 @@ class rtype::sdk::game::api::Master {
   void HandleNewMonitorClient(std::uint64_t clientId);
 
   /**
+   * @brief Handle when a monitor receive an event
+   * @param clientId The id of the context
+   */
+  void HandleEventMonitor(const std::string &eventType, std::uint64_t ctxId);
+
+  /**
    * @brief Get a client by its id
    * @param clientId The client id
    * @return The client

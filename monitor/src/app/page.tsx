@@ -45,7 +45,7 @@ export default function MonitorPage() {
 
     const handleKickPlayer = (playerId: number) => {
         sendMessage({
-            type: 'kickPlayer',
+            type: 'kick',
             token: token,
             id: playerId,
         });

@@ -26,7 +26,8 @@ class rtype::sdk::game::api::Monitor {
   /**
    * @brief Construct a new Monitor websocket object
    */
-  Monitor(std::string token, const std::function<void(std::uint64_t)> &onConnect);
+  Monitor(std::string token, const std::function<void(std::uint64_t)> &onConnect,
+          const std::function<void(const std::string &, std::uint64_t)> &onEvent);
 
   /**
    * @brief Destroy the Monitor object
@@ -94,6 +95,9 @@ class rtype::sdk::game::api::Monitor {
   /// @brief The on connect callback
   std::function<void(std::uint64_t)> onConnect_;
 
+  /// @brief The on event callback
+  std::function<void(const std::string &, std::uint64_t)> onEvent_;
+
   /**
    * @brief Handle the auth message
    * @param clientId The client id
@@ -101,9 +105,17 @@ class rtype::sdk::game::api::Monitor {
    */
   void AuthHandler(std::uint64_t clientId, const boost::json::object &message);
 
+  /**
+   * @brief Handle the kick message
+   * @param clientId The client id
+   * @param message The message
+   */
+  void KickHandler(std::uint64_t clientId, const boost::json::object &message);
+
   /// @brief Messages handlers
   std::map<std::string, void (Monitor::*)(std::uint64_t clientId, const boost::json::object &)>
       handlers_ = {
           {"auth", &Monitor::AuthHandler},
+          {"kick", &Monitor::KickHandler},
   };
 };

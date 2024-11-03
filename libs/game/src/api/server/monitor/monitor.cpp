@@ -9,10 +9,12 @@
 
 using namespace rtype::sdk::game::api;
 
-Monitor::Monitor(std::string token, const std::function<void(std::uint64_t)> &onConnect)
+Monitor::Monitor(std::string token, const std::function<void(std::uint64_t)> &onConnect,
+                 const std::function<void(const std::string &, std::uint64_t)> &onEvent)
     : logger_("Monitor"),
       token_(std::move(token)),
       onConnect_(onConnect),
+      onEvent_(onEvent),
       ws_(kWebsocketPort,
           [this](const std::pair<std::uint64_t, const boost::json::object &> &message) {
             MessageHandler(message);
@@ -146,4 +148,17 @@ void Monitor::SendRoomsToClients(const std::map<std::uint64_t, RoomProps> &rooms
   for (const auto &client : clients_) {
     SendRoomsToClient(client, rooms);
   }
+}
+
+void Monitor::KickHandler(std::uint64_t clientId, const boost::json::object &message) {
+  auto token = message.at("token").as_string().c_str();
+  if (token != token_) {
+    logger_.Warning("Client " + std::to_string(clientId) + " try to kick without perms", "🔒");
+    return;
+  }
+
+  this->onEvent_("kick", message.at("id").as_int64());
+  logger_.Info("Client " + std::to_string(clientId) + " kicked " +
+                   std::to_string(message.at("id").as_int64()),
+               "👢");
 }

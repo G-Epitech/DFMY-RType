@@ -14,15 +14,22 @@ Master::Master(int clientsPort, int nodesPort, std::string token,
     : logger_("masterAPI"),
       database_(databaseProps),
       token_(token),
-      monitor_(token, [this](auto id) { HandleNewMonitorClient(id); }),
+      monitor_(
+          token, [this](auto id) { HandleNewMonitorClient(id); },
+          [this](auto &type, auto id) { HandleEventMonitor(type, id); }),
       clientsSocket_(
           clientsPort, [this](auto &msg) { return ClientMessageMiddleware(msg); },
           [this](auto id) { HandleClosedClientSession(id); }),
       nodesSocket_(
           nodesPort, [this](auto &msg) { return NodeMessageMiddleware(msg); },
           [this](auto id) { HandleClosedNodeSession(id); }) {
-  this->InitClientsThread();
-  this->InitNodesThread();
+  this->
+
+      InitClientsThread();
+
+  this->
+
+      InitNodesThread();
 }
 
 Master::~Master() {
@@ -421,4 +428,26 @@ ClientProps &Master::GetClientById(const std::uint64_t &clientId) {
 void Master::HandleNewMonitorClient(std::uint64_t clientId) {
   this->monitor_.SendPlayersToClient(clientId, this->clients_);
   this->monitor_.SendNodesToClient(clientId, this->nodes_);
+}
+
+void Master::HandleEventMonitor(const std::string &eventType, std::uint64_t ctxId) {
+  if (eventType == "kick") {
+    auto client = std::find_if(this->clients_.begin(), this->clients_.end(),
+                               [ctxId](const ClientProps &c) { return c.id == ctxId; });
+
+    if (client == this->clients_.end()) {
+      return;
+    }
+
+    payload::GameEnd end = {
+        .score = 0,
+        .time = 0,
+        .win = false,
+    };
+    SendToClient(MasterToClientMsgType::kMsgTypeMTCGameEnded, end, client->id);
+
+    this->clients_.erase(client);
+
+    this->monitor_.SendPlayersToClients(this->clients_);
+  }
 }
