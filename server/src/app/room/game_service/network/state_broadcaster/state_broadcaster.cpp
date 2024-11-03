@@ -61,15 +61,18 @@ void StateBroadcaster::ProcessEntity(const std::unique_ptr<EntityStates>& states
 
 void StateBroadcaster::SendStates(const std::shared_ptr<Room>& api,
                                   const std::unique_ptr<EntityStates>& states) {
-  if (!states->playerStates.empty()) {
-    api->SendPlayersState(states->playerStates);
+  if (states->playerStates.empty()) {
+    AddDummyPlayerState(states);
   }
-  if (!states->enemyStates.empty()) {
-    api->SendEnemiesState(states->enemyStates);
+  if (states->enemyStates.empty()) {
+    AddDummyEnemyState(states);
   }
-  if (!states->bulletStates.empty()) {
-    api->SendBulletsState(states->bulletStates);
+  if (states->bulletStates.empty()) {
+    AddDummyBulletState(states);
   }
+  api->SendBulletsState(states->bulletStates);
+  api->SendEnemiesState(states->enemyStates);
+  api->SendPlayersState(states->playerStates);
 }
 void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& states,
                                         const Entity& entity, const Vector3f& position,
@@ -99,4 +102,35 @@ void StateBroadcaster::GatherProjectileState(const std::unique_ptr<EntityStates>
                                         sdk::game::types::ProjectileType::kEnemyCommon};
     states->bulletStates.push_back(state);
   }
+}
+
+void StateBroadcaster::AddDummyBulletState(const std::unique_ptr<EntityStates>& states) noexcept {
+  static constexpr api::payload::BulletState dummyBullet = {
+      .entityId = 10000,
+      .position = Vector3f{10000, 10000, 10000},
+      .velocity = {0, 0},
+      .bulletType = sdk::game::types::ProjectileType::kPlayerCommon,
+  };
+  states->bulletStates.push_back(dummyBullet);
+}
+void StateBroadcaster::AddDummyPlayerState(const std::unique_ptr<EntityStates>& states) noexcept {
+  static constexpr api::payload::PlayerState dummyPlayer = {
+      .entityId = 10000,
+      .position = Vector3f{10000, 10000, 10000},
+      .health = 100,
+      .velocity = {0, 0},
+  };
+  states->playerStates.push_back(dummyPlayer);
+}
+
+void StateBroadcaster::AddDummyEnemyState(const std::unique_ptr<EntityStates>& states) noexcept {
+  static constexpr api::payload::EnemyState dummyEnemy = {
+      .entityId = 10000,
+      .position = Vector3f{10000, 10000, 10000},
+      .velocity = {0, 0},
+      .enemyType = sdk::game::types::EnemyType::kPata,
+      .health = 100,
+  };
+
+  states->enemyStates.push_back(dummyEnemy);
 }

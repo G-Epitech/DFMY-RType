@@ -74,14 +74,17 @@ zygarde::utils::Timer::Nanoseconds LevelManager::ComputeEnemySpawnCooldown(float
 
 void LevelManager::UpdateSpawnCooldowns(const utils::Timer::Nanoseconds& deltaTime) {
   for (auto& spawnCooldowns : ongoingSpawnCooldowns_) {
+    stillSpawning_ = false;
     for (auto& [enemyName, spawnProps] : spawnCooldowns) {
       if (spawnProps.count >= currentWave_.enemies[enemyName]) {
         continue;
       }
+      stillSpawning_ = true;
       spawnProps.currentSpawnTime += deltaTime;
       if (CanSpawnEnemy(enemyName, spawnCooldowns)) {
         spawnProps.count++;
-        enemySpawner_.SpawnEnemy(enemyName);
+        const auto ent = enemySpawner_.SpawnEnemy(enemyName);
+        spawnedEnemies_.push_back(ent);
         spawnProps.currentSpawnTime = zygarde::utils::Timer::Nanoseconds{0};
       }
     }
@@ -92,4 +95,15 @@ bool LevelManager::CanSpawnEnemy(const std::string& enemy_name,
                                  const LevelManager::SpawnCooldowns& waveCooldowns) {
   const auto& spawnProps = waveCooldowns.at(enemy_name);
   return spawnProps.currentSpawnTime >= spawnProps.spawnTime;
+}
+
+void LevelManager::CheckDeadEnemies(const std::list<Entity>& entities_to_kill) {
+  for (auto it = spawnedEnemies_.begin(); it != spawnedEnemies_.end();) {
+    if (std::find(entities_to_kill.begin(), entities_to_kill.end(), *it) !=
+        entities_to_kill.end()) {
+      it = spawnedEnemies_.erase(it);
+    } else {
+      ++it;
+    }
+  }
 }

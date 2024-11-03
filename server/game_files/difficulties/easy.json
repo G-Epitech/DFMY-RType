@@ -3,7 +3,7 @@
   "description": "You can't go wrong with this one",
   "multipliers": {
     "player": {
-      "health": 2.0,
+      "health": 0.5,
       "damage": 1.2,
       "speed": 1.0,
       "fireRate": 1.2
