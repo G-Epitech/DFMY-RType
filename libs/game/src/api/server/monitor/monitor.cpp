@@ -134,6 +134,7 @@ void Monitor::SendRoomsToClient(std::uint64_t clientId, const std::vector<RoomPr
         {"name", room.name},
         {"players", room.nbPlayers},
         {"maxPlayers", room.maxPlayers},
+        {"difficulty", room.difficulty},
     };
 
     roomsArray.push_back(roomObject);
