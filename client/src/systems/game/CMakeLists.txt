@@ -8,3 +8,4 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
 )
 
 add_subdirectory(texture_mapper)
+add_subdirectory(chat)

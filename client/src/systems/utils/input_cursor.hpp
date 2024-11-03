@@ -23,11 +23,14 @@ using namespace mew::sets::drawable;
 namespace rtype::client::systems::utils::input {
 class CursorSystem final : public ASystem<Tags, Drawable, Position> {
  public:
-  CursorSystem();
+  CursorSystem(Alignment alignment = {HorizontalAlign::kLeft, VerticalAlign::kCenter});
 
   void Run(std::shared_ptr<Registry> r, ComponentsPtr components) override;
 
  private:
+  /// @brief Alignment of the cursor
+  const Alignment alignment_;
+
   /// @brief Map of attempts to update the cursor
   std::map<std::string, std::size_t> attempts_;
 
@@ -38,8 +41,8 @@ class CursorSystem final : public ASystem<Tags, Drawable, Position> {
    * @param drawable Drawable
    * @param position Position
    */
-  static void HandleCursor(const std::shared_ptr<Registry>& r, const std::string& tag,
-                           const Drawable& drawable, const Position& position);
+  void HandleCursor(const std::shared_ptr<Registry>& r, const std::string& tag,
+                    const Drawable& drawable, const Position& position) const;
 
   /**
    * @brief Clean the attempts

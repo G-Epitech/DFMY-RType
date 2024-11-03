@@ -29,3 +29,7 @@ bool Entity::operator==(const Entity& other) const {
 }
 
 void Entity::OnSpawn() {}
+
+bool Entity::operator<(const Entity& other) const {
+  return id_ < other.id_;
+}

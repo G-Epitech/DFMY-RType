@@ -54,6 +54,13 @@ class EXPORT_ZYGARDE_API Entity {
   bool operator==(const Entity& other) const;
 
   /**
+   * @brief Operator < for sorting
+   * @param other Entity to compare
+   * @return Match result
+   */
+  bool operator<(const Entity& other) const;
+
+  /**
    * @brief Get the component
    * @tparam Component Component to get
    * @return Component*
