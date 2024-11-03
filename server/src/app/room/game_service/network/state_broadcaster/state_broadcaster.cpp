@@ -77,31 +77,41 @@ void StateBroadcaster::SendStates(const std::shared_ptr<Room>& api,
 void StateBroadcaster::GatherEnemyState(const std::unique_ptr<EntityStates>& states,
                                         const Entity& entity, const Vector3f& position,
                                         const Vector2f& velocity, const Tags* tags) noexcept {
-  if (*tags == sdk::game::constants::kPataTag) {
-    const payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
-                                       sdk::game::types::EnemyType::kPata, 100};
-    states->enemyStates.push_back(state);
+  auto enemyType = GetEnemyType(tags);
+  const payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
+                                     enemyType, 100};
+
+  states->enemyStates.push_back(state);
+}
+
+rtype::sdk::game::types::EnemyType StateBroadcaster::GetEnemyType(
+    const Tags* entity_tags) noexcept {
+  for (const auto& [enemyName, type] : kEnemyTypeMap_) {
+    if (*entity_tags & enemyName) {
+      return type;
+    }
   }
-  if (*tags == sdk::game::constants::kPataBigTag) {
-    payload::EnemyState state = {static_cast<std::size_t>(entity), position, velocity,
-                                 sdk::game::types::EnemyType::kPataBig, 100};
-    states->enemyStates.push_back(state);
-  }
+  return sdk::game::types::EnemyType::kPata;
 }
 
 void StateBroadcaster::GatherProjectileState(const std::unique_ptr<EntityStates>& states,
                                              const Entity& entity, const Vector3f& position,
                                              const Vector2f& velocity, const Tags* tags) noexcept {
-  if (*tags == sdk::game::constants::kPlayerBulletTag) {
-    const payload::BulletState state = {static_cast<std::size_t>(entity), position, velocity,
-                                        sdk::game::types::ProjectileType::kPlayerCommon};
-    states->bulletStates.push_back(state);
+  auto projectileType = GetProjectileType(tags);
+
+  const payload::BulletState state = {static_cast<std::size_t>(entity), position, velocity,
+                                      projectileType};
+  states->bulletStates.push_back(state);
+}
+
+rtype::sdk::game::types::ProjectileType StateBroadcaster::GetProjectileType(
+    const Tags* entity_tags) noexcept {
+  for (const auto& [bulletName, type] : kProjectileTypeMap_) {
+    if (*entity_tags & bulletName) {
+      return type;
+    }
   }
-  if (*tags == sdk::game::constants::kEnemyBulletTag) {
-    const payload::BulletState state = {static_cast<std::size_t>(entity), position, velocity,
-                                        sdk::game::types::ProjectileType::kEnemyCommon};
-    states->bulletStates.push_back(state);
-  }
+  return sdk::game::types::ProjectileType::kPlayerCommon;
 }
 
 void StateBroadcaster::AddDummyBulletState(const std::unique_ptr<EntityStates>& states) noexcept {
