@@ -1,6 +1,12 @@
 target_sources(${CLIENT_CORE_LIB} PRIVATE
         input.hpp
         input.cpp
+        button/button.cpp
+        button/button.hpp
+        button/button_container_entity.cpp
+        button/button_container_entity.hpp
+        button/button_container_text_entity.cpp
+        button/button_container_text_entity.hpp
         select/select.cpp
         select/select.hpp
         select/select_container_entity.hpp

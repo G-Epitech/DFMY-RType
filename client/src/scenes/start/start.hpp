@@ -57,6 +57,16 @@ class SceneStart final : public SceneBase {
    */
   void CreateRoomSelectLabel();
 
+  /**
+   * @brief Create the controls
+   */
+  void CreateControls();
+
+  /**
+   * @brief Back button
+   */
+  void CreateBackButton();
+
   std::size_t counter_ = 0;
 
   /// @brief Server connection service
