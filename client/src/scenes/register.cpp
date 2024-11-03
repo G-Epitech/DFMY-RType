@@ -7,14 +7,13 @@
 
 #include "register.hpp"
 
-#include "client/src/constants/settings.hpp"
-#include "client/src/systems/blink.hpp"
 #include "client/src/systems/register/connection.hpp"
 #include "client/src/systems/ui/input_cursor.hpp"
 #include "client/src/ui/input.hpp"
+#include "constants/user.hpp"
 #include "leaderboard.hpp"
-#include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
+#include "systems/animations/blink.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::services;
@@ -27,7 +26,7 @@ using namespace zygarde::core::types;
 
 SceneRegister::SceneRegister(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   registry_->RegisterComponent<Tags>();
-  registry_->AddSystem<systems::BlinkSystem>();
+  registry_->AddSystem<BlinkSystem>();
   constexpr Alignment alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   registry_->AddSystem<systems::ui::CursorSystem>(alignment);
   const Vector3f pos{managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 - 50, 0};
@@ -91,7 +90,7 @@ void SceneRegister::CreateConnectButton() const {
                              std::cout << "Connecting to server with username: " << text.text
                                        << std::endl;
                              serverConnectionService_->ConnectAsync(text.text);
-                             settingsManager_->Set(SETTING_PLAYER_USERNAME, text.text);
+                             settingsManager_->Set(PLAYER_USERNAME, text.text);
                              (*all_tags)[i]->AddTag("disabled");
                            }
                          }

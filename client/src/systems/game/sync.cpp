@@ -12,6 +12,8 @@
 
 #include "client/src/services/server_connection_service.hpp"
 #include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
+#include "constants/game.hpp"
+#include "constants/settings.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
@@ -23,8 +25,11 @@ using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 using namespace mew::sets::drawable;
 
-GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service)
-    : ASystem(), serverConnectionService_{std::move(server_connection_service)} {}
+GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service,
+                               mew::managers::SettingsManager::Ptr settingsManager)
+    : ASystem(),
+      serverConnectionService_{std::move(server_connection_service)},
+      settingsManager_{std::move(settingsManager)} {}
 
 void GameSyncSystem::Run(Registry::Ptr r) {
   auto queue = serverConnectionService_->client()->ExtractQueue();
@@ -146,6 +151,8 @@ void GameSyncSystem::HandleMessage(const Registry::Ptr& registry,
       return HandleBullets(registry, message);
     case api::RoomToClientMsgType::kMsgTypeRTCEnemiesState:
       return HandleEnemies(registry, message);
+    case api::MasterToClientMsgType::kMsgTypeMTCGameEnded:
+      return HandleGameEnded(registry, message);
   }
 }
 
@@ -227,4 +234,31 @@ void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
       ++it;
     }
   }
+}
+
+void GameSyncSystem::HandleGameEnded(const Registry::Ptr& registry,
+                                     const api::Client::ServerMessage& message) {
+  const auto tags = registry->GetComponents<Tags>();
+
+  std::size_t entityIndex = 0;
+
+  for (const auto& tag : *tags) {
+    if (tag && *tag & "end_fade") {
+      break;
+    }
+    entityIndex++;
+  }
+
+  const auto entity = registry->EntityFromIndex(entityIndex);
+  const auto tagsComponent = registry->GetComponent<Tags>(entity);
+  if (!tagsComponent.has_value()) {
+    return;
+  }
+
+  tagsComponent.value()->AddTag("fade");
+
+  const auto end = serverConnectionService_->client()->ResolveRoomGameEnd(message);
+  settingsManager_->Set(GAME_END_SCORE, end.score);
+  settingsManager_->Set(GAME_END_WIN, end.win);
+  settingsManager_->Set(GAME_END_TIME, end.time);
 }
