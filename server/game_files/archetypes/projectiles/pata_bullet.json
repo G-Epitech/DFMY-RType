@@ -1,5 +1,5 @@
 {
-  "archetype_name": "default_enemy_bullet",
+  "archetype_name": "pata_bullet",
   "components": [
     {
       "name": "rigidbody2d",
@@ -19,8 +19,8 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 48,
-          "y": 15
+          "x": 20,
+          "y": 16
         },
         "collisionLayers": [
           4
@@ -36,6 +36,7 @@
       "data": {
         "tags": [
           "enemy_bullet",
+          "pata_bullet",
           "bullet"
         ]
       }
@@ -44,7 +45,10 @@
       "name": "script_pool",
       "data": [
         {
-          "scriptName": "baseProjectileScript"
+          "scriptName": "baseProjectileScript",
+          "customValues": {
+            "damage": 10.0
+          }
         }
       ]
     }

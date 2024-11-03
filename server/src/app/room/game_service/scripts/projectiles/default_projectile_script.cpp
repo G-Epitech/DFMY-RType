@@ -18,4 +18,6 @@ void DefaultProjectileScript::OnCollisionEnter(
   context->registry->DestroyEntity(context->me);
 }
 
-void DefaultProjectileScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {}
+void DefaultProjectileScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
+  damage_ = std::any_cast<float>(customScriptValues.at("damage"));
+}

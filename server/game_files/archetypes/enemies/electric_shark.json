@@ -1,5 +1,5 @@
 {
-  "archetype_name": "enemy_pata_big",
+  "archetype_name": "electric_shark",
   "components": [
     {
       "name": "rigidbody2d",
@@ -15,8 +15,8 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 73.5,
-          "y": 84
+          "x": 96,
+          "y": 33
         },
         "collisionLayers": [
           2
@@ -32,7 +32,7 @@
       "data": {
         "tags": [
           "enemy",
-          "pata_big"
+          "electric_shark"
         ]
       }
     },
@@ -42,19 +42,21 @@
         {
           "scriptName": "enemyDefaultScript",
           "customValues": {
-            "health": 150.0,
-            "fireRate": 0.8,
-            "scoreIncrease": 200,
-            "bulletArchetype": "pata_bullet"
+            "health": 50.0,
+            "scoreIncrease": 500,
+            "fireRate": 0.0,
+            "bulletArchetype": "enforcer_bullet"
           }
         },
         {
-          "scriptName": "zigzagMovementScript",
+          "scriptName": "sharkMovementScript",
           "customValues": {
-            "verticalSpeed": 20.0,
-            "horizontalSpeed": 80.0,
-            "upperLimitOffset": 30.0,
-            "lowerLimitOffset": 30.0
+            "speed": 150.0,
+            "jumpSpeed": 750.0,
+            "jumpThreshold": 600.0,
+            "bottomThreshold": 1000.0,
+            "jumpChance": 0.2,
+            "stopChance": 0.03
           }
         }
       ]

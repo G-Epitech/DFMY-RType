@@ -18,6 +18,8 @@ class EnemyBaseScript : public zygarde::scripting::components::MonoBehaviour {
   void HandleDamageTake(const std::shared_ptr<scripting::types::ScriptingContext> &context,
                         const Entity &other_entity);
 
+  [[nodiscard]] float GetHealth() const { return health_; }
+
  protected:
   float speed_;
   float health_;

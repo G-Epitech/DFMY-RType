@@ -31,12 +31,9 @@ void ScriptExecutionSystem::ProcessScriptPool(Registry::Const_Ptr registry,
                                               scripting::components::ScriptPool* script_pool) {
   std::shared_ptr<types::ScriptingContext> context =
       std::make_shared<types::ScriptingContext>(CreateContext(registry));
-  auto scripts = script_pool->GetScripts();
 
-  for (auto& script : scripts) {
-    script->FixedUpdate(context);
-    HandleCollisionCallback(registry, script, context);
-  }
+  HandleFixedUpdateCallback(script_pool, context);
+  HandleCollisionCallback(registry, script_pool, context);
 }
 
 scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
@@ -45,16 +42,29 @@ scripting::types::ScriptingContext ScriptExecutionSystem::CreateContext(
 }
 
 void ScriptExecutionSystem::HandleCollisionCallback(
-    Registry::Const_Ptr registry,
-    const std::shared_ptr<scripting::components::MonoBehaviour>& script,
+    Registry::Const_Ptr registry, scripting::components::ScriptPool* script_pool,
     types::ScriptingContext::ConstPtr context) const {
   zygarde::Entity entity = registry->EntityFromIndex(currentScriptIndex_);
   auto collider = registry->GetComponent<physics::components::BoxCollider2D>(entity);
   if (!collider.has_value() || !collider.value()) {
     return;
   }
+  auto scripts = script_pool->GetScripts();
+
   while ((*collider)->HasCollision()) {
     auto collision = (*collider)->GetNextCollision();
-    script->OnCollisionEnter(context, collision);
+    for (auto& script : scripts) {
+      script->OnCollisionEnter(context, collision);
+    }
+  }
+}
+
+void ScriptExecutionSystem::HandleFixedUpdateCallback(
+    scripting::components::ScriptPool* script_pool,
+    const std::shared_ptr<types::ScriptingContext>& context) {
+  auto scripts = script_pool->GetScripts();
+
+  for (auto& script : scripts) {
+    script->FixedUpdate(context);
   }
 }

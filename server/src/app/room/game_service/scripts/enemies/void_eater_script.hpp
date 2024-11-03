@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** r-type
 ** File description:
-** PataScript.hpp
+** void_eater_script.hpp
 */
 
 #pragma once
@@ -13,14 +13,18 @@
 #include "zygarde/src/utils/timer/timer.hpp"
 
 namespace rtype::server::game::scripts {
-static constexpr zygarde::core::types::Vector3f kPataProjectileOffsetPosition{-40, 30, 0};
+static inline const std::vector<core::types::Vector3f> kVoidEaterShootOffset = {
+    core::types::Vector3f{-50, 0, 0},   core::types::Vector3f{0, 80, 0},
+    core::types::Vector3f{50, 160, 0},  core::types::Vector3f{100, 240, 0},
+    core::types::Vector3f{200, 320, 0}, core::types::Vector3f{300, 400, 0},
+};
 }
 
 namespace rtype::server::game::scripts {
-class PataScript : public EnemyBaseScript {
+class VoidEaterScript : public EnemyBaseScript {
  public:
-  PataScript();
-  ~PataScript() override = default;
+  VoidEaterScript();
+  ~VoidEaterScript() override = default;
 
   void OnEnable(const scripting::types::ValuesMap& customScriptValues) override;
 
@@ -29,17 +33,8 @@ class PataScript : public EnemyBaseScript {
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
                         const physics::types::Collision2D::ptr& collision) override;
 
-  void SetBasePosition(const zygarde::core::types::Vector3f& basePosition);
-
  private:
-  bool goingUp_;
-  float verticalSpeed_;
-  float horizontalSpeed_;
-  zygarde::core::types::Vector3f basePosition_;
-  float upperLimit_;
-  float lowerLimit_;
-  float upperLimitOffset_;
-  float lowerLimitOffset_;
-  zygarde::utils::Timer::Nanoseconds lastShootTime_;
+  std::vector<zygarde::utils::Timer::Nanoseconds> lastShootTimes_;
+  std::string bulletArchetype_;
 };
 }  // namespace rtype::server::game::scripts

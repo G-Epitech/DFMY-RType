@@ -49,13 +49,21 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
   void ProcessScriptPool(Registry::Const_Ptr registry, scripting::components::ScriptPool *script);
 
   /**
+   * @brief Handle a fixed update callback
+   * @param script Script pool to process
+   * @param context Scripting context
+   */
+  static void HandleFixedUpdateCallback(scripting::components::ScriptPool *script_pool,
+                                        types::ScriptingContext::ConstPtr context);
+
+  /**
    * @brief Process a script collision callbacks
    * @param registry Registry
-   * @param script Script to process
+   * @param script_pool Script pool to process
    * @param context Scripting context
    */
   void HandleCollisionCallback(Registry::Const_Ptr registry,
-                               const std::shared_ptr<scripting::components::MonoBehaviour> &script,
+                               scripting::components::ScriptPool *script_pool,
                                types::ScriptingContext::ConstPtr context) const;
 
   /**

@@ -12,5 +12,12 @@ namespace rtype::sdk::game::types {
 enum EnemyType {
   kPata = 0,
   kPataBig,
+  kGrappler,
+  kEnforcer,
+  kVoidEater,
+  kKiller,
+  kSuperNova,
+  kVirus,
+  kElectricShark
 };
 }  // namespace rtype::sdk::game::types
