@@ -100,11 +100,6 @@ class GameService {
   void CheckGameEnd();
 
   /**
-   * @brief Update the total time of the game
-   */
-  void UpdateTotalGameTime();
-
-  /**
    * @brief Compute the total score of the game
    * @return The total score
    */
@@ -114,6 +109,16 @@ class GameService {
    * @brief Check if entities are too far and kill them if they are
    */
   void CheckTooFarEntities();
+
+  /**
+   * @brief Start game clock
+   */
+  inline void StartGameClock() { startTime_ = std::chrono::steady_clock::now(); }
+
+  /**
+   * @brief Update total game time
+   */
+  void GetTotalGameTime();
 
  private:
   /// @brief Game running flag
@@ -169,5 +174,8 @@ class GameService {
 
   /// @brief Total score of the game
   int scorePenalty_{0};
+
+  /// @brief Start time of the game
+  std::chrono::steady_clock::time_point startTime_;
 };
 }  // namespace rtype::server::game

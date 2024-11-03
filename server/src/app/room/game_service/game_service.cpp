@@ -70,13 +70,13 @@ int GameService::Run(std::shared_ptr<Room> api) {
   this->api_ = std::move(api);
 
   ticksManager_.Initialize();
+  StartGameClock();
   while (gameRunning_) {
     ticksManager_.Update();
     messageHandler_.Run(registry_, api_, players_);
     ExecuteGameLogic();
     network::StateBroadcaster::Run(registry_, api_);
     ticksManager_.WaitUntilNextTick();
-    UpdateTotalGameTime();
   }
   HandleGameEnd();
   return EXIT_SUCCESS;
@@ -136,6 +136,7 @@ void GameService::UpdatePlayerScores() {
 }
 
 void GameService::HandleGameEnd() {
+  GetTotalGameTime();
   if (win_) {
     logger_.Info("Game ended, players won", "🎉");
   } else {
@@ -145,6 +146,8 @@ void GameService::HandleGameEnd() {
   if (totalScore == 0) {
     win_ = false;
   }
+  logger_.Info("Total game time: " + std::to_string(totalGameTime_) + "s", "⏱️");
+  logger_.Info("Score penalty: " + std::to_string(scorePenalty_), "🔻");
   logger_.Info("Total score: " + std::to_string(totalScore), "🏆");
   this->api_->EndGame(totalScore, totalGameTime_, win_);
 }
@@ -157,11 +160,6 @@ void GameService::CheckGameEnd() {
     win_ = true;
     gameRunning_ = false;
   }
-}
-
-void GameService::UpdateTotalGameTime() {
-  totalGameTime_ +=
-      std::chrono::duration_cast<std::chrono::seconds>(ticksManager_.DeltaTime()).count();
 }
 
 unsigned int GameService::ComputeTotalScore() const {
@@ -204,4 +202,10 @@ void GameService::CheckTooFarEntities() {
       }
     }
   }
+}
+
+void GameService::GetTotalGameTime() {
+  const auto currentTime = std::chrono::steady_clock::now();
+  totalGameTime_ =
+      std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime_).count();
 }

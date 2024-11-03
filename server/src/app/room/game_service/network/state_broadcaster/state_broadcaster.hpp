@@ -92,10 +92,56 @@ class StateBroadcaster final {
   static void SendStates(const std::shared_ptr<Room> &api,
                          const std::unique_ptr<EntityStates> &states);
 
+  /**
+   * @brief Add a dummy bullet state to the EntityStates object
+   * @param states EntityStates object to store the states
+   */
   static void AddDummyBulletState(const std::unique_ptr<EntityStates> &states) noexcept;
 
+  /**
+   * @brief Add a dummy player state to the EntityStates object
+   * @param states EntityStates object to store the states
+   */
   static void AddDummyPlayerState(const std::unique_ptr<EntityStates> &states) noexcept;
 
+  /**
+   * @brief Add a dummy enemy state to the EntityStates object
+   * @param states EntityStates object to store the states
+   */
   static void AddDummyEnemyState(const std::unique_ptr<EntityStates> &states) noexcept;
+
+  /**
+   * @brief Get the enemy type from the tags
+   * @param entity_tags Tags of the entity
+   * @return The enemy type
+   */
+  static sdk::game::types::EnemyType GetEnemyType(const Tags *entity_tags) noexcept;
+
+  /**
+   * @brief Get the projectile type from the tags
+   * @param entity_tags Tags of the entity
+   * @return The projectile type
+   */
+  static sdk::game::types::ProjectileType GetProjectileType(const Tags *entity_tags) noexcept;
+
+ private:
+  /// @brief Map of enemy type strings to their respective types
+  static inline std::map<std::string, sdk::game::types::EnemyType> kEnemyTypeMap_ = {
+      {"pata", sdk::game::types::EnemyType::kPata},
+      {"pata_big", sdk::game::types::EnemyType::kPataBig},
+      {"grappler", sdk::game::types::EnemyType::kGrappler},
+      {"enforcer", sdk::game::types::EnemyType::kEnforcer},
+      {"electric_shark", sdk::game::types::EnemyType::kElectricShark},
+      {"void_eater", sdk::game::types::EnemyType::kVoidEater},
+  };
+
+  /// @brief Map of bullet type strings to their respective types
+  static inline std::map<std::string, sdk::game::types::ProjectileType> kProjectileTypeMap_ = {
+      {"player_bullet", sdk::game::types::ProjectileType::kPlayerCommon},
+      {"pata_bullet", sdk::game::types::ProjectileType::kPata},
+      {"grappler_bullet", sdk::game::types::ProjectileType::kGrappler},
+      {"enforcer_bullet", sdk::game::types::ProjectileType::kEnforcer},
+      {"void_eater_bullet", sdk::game::types::ProjectileType::kVoidEater},
+  };
 };
 }  // namespace rtype::server::game::network

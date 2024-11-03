@@ -96,5 +96,5 @@ DifficultyData DifficultyLoader::GetDifficultyByType(
       return difficulty;
     }
   }
-  throw std::runtime_error("DifficultyData not found");
+  return difficulties_[0];
 }
