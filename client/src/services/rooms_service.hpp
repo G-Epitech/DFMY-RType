@@ -45,6 +45,13 @@ class RoomsService final {
   void Refresh();
 
   /**
+   * @brief Create a room
+   * @param node_id Node id
+   * @param room_id Room id
+   */
+  bool JoinRoom(NodeIdType node_id, RoomIdType room_id);
+
+  /**
    * @brief Get the rooms
    * @return Last rooms
    */

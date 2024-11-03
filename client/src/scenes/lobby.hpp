@@ -32,18 +32,16 @@ class SceneLobby final : public SceneBase {
 
   void OnActivate() override;
 
+  void OnDeactivate() override;
+
  private:
   /**
    * @brief Create the title
    */
   enum class LobbyStatus {
-    kNone,                    ///< No status
-    kFailed,                  ///< Failed to join the lobby
-    kRegistrationInProgress,  ///< Registration in progress
-    kRegistered,              ///< Registered in on the server
-    kJoining,                 ///< Joining the lobby
-    kWaitingPlayers,          ///< Waiting for players
-    kIn,                      ///< In the lobby
+    kNone,     ///< No status
+    kWaiting,  ///< Waiting for the lobby
+    kIn,       ///< In the lobby
   };
 
   /**
@@ -59,22 +57,17 @@ class SceneLobby final : public SceneBase {
   /**
    * @brief Join the lobby
    */
-  void JoinLobby();
+  void Wait();
 
   /**
    * @brief Join the lobby asynchronously
    */
-  void JoinLobbyAsync();
+  void WaitAsync();
 
   /**
    * @brief Update the status text
    */
   void UpdateStatusText();
-
-  /**
-   * @brief Wait for the game to start
-   */
-  void WaitGameStart();
 
   /// @brief The current lobby status
   LobbyStatus status_ = LobbyStatus::kNone;

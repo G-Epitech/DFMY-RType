@@ -26,10 +26,19 @@ type Room = {
     name: string;
     players: number;
     maxPlayers: number;
+    difficulty: number;
 };
 
+const difficultyMap: Record<number, string> = {
+    0: "Easy",
+    1: "Normal",
+    2: "Hard",
+    3: "Insane",
+    4: "Impossible",
+}
+
 export default function MonitorPage() {
-    const {messages, sendMessage, clearMessages} = useWebSocket('ws://localhost:8060');
+    const {messages, sendMessage, clearMessages} = useWebSocket('ws://10.84.109.15:8060');
     const [token, setToken] = useState('');
     const [connected, setConnected] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
@@ -152,7 +161,7 @@ export default function MonitorPage() {
                                 <li key={index} className="flex justify-between items-center">
                                     <span>{room.name || "New room"}</span>
                                     <span className="text-sm text-gray-600">
-                    Players: {room.players}/{room.maxPlayers}
+                    Players: {room.players}/{room.maxPlayers} | Difficulty: {difficultyMap[room.difficulty]}
                   </span>
                                 </li>
                             ))}

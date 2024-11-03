@@ -106,7 +106,7 @@ void SceneCreateRoom::CreateCreateButton() const {
                                return;
                              }
                              api::payload::CreateRoom payload{};
-                             payload.difficulty = difficulty_ - 1;
+                             payload.difficulty = difficulty_ - 2;
                              payload.nbPlayers = nbPlayers_ - 1;
                              char usernameChar[20] = {0};
                              strncpy(usernameChar, text.text.c_str(), sizeof(usernameChar) - 1);

@@ -30,6 +30,8 @@ class SceneGame final : public SceneBase {
 
   void Update(DeltaTime delta_time) override;
 
+  void OnActivate() override;
+
  protected:
   void OnCreate() override;
 
@@ -59,6 +61,11 @@ class SceneGame final : public SceneBase {
    * @brief Init fade
    */
   void InitFade();
+
+  /**
+   * @brief Reset fade
+   */
+  void ResetFade();
 
   /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
