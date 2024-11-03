@@ -14,6 +14,7 @@
 #include "components/server_entity_id.hpp"
 #include "core/types/vector/vector_2f.hpp"
 #include "libs/zygarde/src/system_abstract.hpp"
+#include "managers/settings_manager.hpp"
 
 #define PLAYER_KINEMATIC false
 #define PLAYER_DRAG 5.0f
@@ -28,16 +29,19 @@ class GameSyncSystem final : public ASystem<> {
   /**
    * @brief Construct a new Game Sync System object
    * @param server_connection_service Pointer to the server connection service
+   * @param settingsManager Pointer to the settings manager
    */
-  explicit GameSyncSystem(services::ServerConnectionService::Ptr server_connection_service);
+  explicit GameSyncSystem(services::ServerConnectionService::Ptr server_connection_service,
+                          mew::managers::SettingsManager::Ptr settingsManager);
 
   void Run(Registry::Ptr r) override;
 
  private:
-  /**
-   * @brief Pointer to the server connection manager
-   */
+  /// @brief Server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
+
+  /// @brief Settings manager
+  mew::managers::SettingsManager::Ptr settingsManager_;
 
   /**
    * @brief Players list

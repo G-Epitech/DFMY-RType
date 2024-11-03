@@ -12,6 +12,7 @@
 
 #include "client/src/services/server_connection_service.hpp"
 #include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
+#include "constants/settings.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "physics/2d/components/rigidbody/rigidbody_2d.hpp"
@@ -23,8 +24,11 @@ using namespace zygarde::core::components;
 using namespace zygarde::core::types;
 using namespace mew::sets::drawable;
 
-GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service)
-    : ASystem(), serverConnectionService_{std::move(server_connection_service)} {}
+GameSyncSystem::GameSyncSystem(ServerConnectionService::Ptr server_connection_service,
+                               mew::managers::SettingsManager::Ptr settingsManager)
+    : ASystem(),
+      serverConnectionService_{std::move(server_connection_service)},
+      settingsManager_{std::move(settingsManager)} {}
 
 void GameSyncSystem::Run(Registry::Ptr r) {
   auto queue = serverConnectionService_->client()->ExtractQueue();
@@ -251,4 +255,9 @@ void GameSyncSystem::HandleGameEnded(const Registry::Ptr& registry,
   }
 
   tagsComponent.value()->AddTag("fade");
+
+  const auto end = serverConnectionService_->client()->ResolveRoomGameEnd(message);
+  settingsManager_->Set(SETTING_GAME_END_SCORE, end.score);
+  settingsManager_->Set(SETTING_GAME_END_WIN, end.win);
+  settingsManager_->Set(SETTING_GAME_END_TIME, end.time);
 }

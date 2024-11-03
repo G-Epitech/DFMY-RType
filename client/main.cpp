@@ -8,12 +8,13 @@
 #include "./src/constants/settings.hpp"
 #include "./src/constants/window.hpp"
 #include "./src/scenes/game.hpp"
-#include "./src/scenes/lobby.hpp"
 #include "./src/scenes/leaderboard.hpp"
+#include "./src/scenes/lobby.hpp"
 #include "./src/scenes/menu.hpp"
 #include "./src/scenes/settings.hpp"
 #include "libs/mew/src/game/builder.hpp"
 #include "libs/mew/src/game/game.hpp"
+#include "scenes/end.hpp"
 
 using namespace mew::game;
 using namespace rtype::client::scenes;
@@ -47,6 +48,11 @@ int MAIN {
   game.managers.settings->Set(SETTING_GAME_CHAT_OPEN, SETTING_DEFAULT_GAME_CHAT_OPEN);
   game.managers.settings->Set(SETTING_PLAYER_USERNAME,
                               std::string(SETTING_DEFAULT_PLAYER_USERNAME));
+  std::size_t score = 8540;
+  game.managers.settings->Set(SETTING_GAME_END_SCORE, score);
+  game.managers.settings->Set(SETTING_GAME_END_WIN, SETTING_DEFAULT_GAME_END_WIN);
+  time_t twominutes = 136;
+  game.managers.settings->Set(SETTING_GAME_END_TIME, twominutes);
 
   game.managers.resources->LoadFont("assets/fonts/main.ttf", "main");
   game.managers.resources->LoadTexture("assets/icons/R-Type.png", "g-epitech-logo");
@@ -65,8 +71,8 @@ int MAIN {
   game.managers.scenes->RegisterScene<SceneSettings>();
   game.managers.scenes->RegisterScene<SceneLobby>();
   game.managers.scenes->RegisterScene<SceneGame>();
-  game.managers.scenes->GoToScene<SceneMenu>();
-
+  game.managers.scenes->RegisterScene<SceneEnd>();
+  game.managers.scenes->GoToScene<SceneEnd>();
 
   return game.Run();
 }

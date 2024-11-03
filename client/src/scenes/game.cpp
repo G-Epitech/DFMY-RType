@@ -49,7 +49,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->RegisterComponent<physics::components::Rigidbody2D>();
   registry_->RegisterComponent<drawable::Rectangle>();
 
-  registry_->AddSystem<GameSyncSystem>(serverConnectionService_);
+  registry_->AddSystem<GameSyncSystem>(serverConnectionService_, settings_manager);
   registry_->AddSystem<BackgroundSystem>();
   registry_->AddSystem<PlayerSystem>(settings_manager, window_manager, server_connection_service);
 
