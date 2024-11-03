@@ -7,6 +7,7 @@
 
 #include "register.hpp"
 
+#include "constants/settings.hpp"
 #include "leaderboard.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
@@ -32,6 +33,7 @@ SceneRegister::SceneRegister(DependenciesHandler::Ptr services) : SceneBase(std:
 
   utils::Input::Create(registry_, "connection", pos, alignment, 30);
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
+  settingsManager_ = services_->GetOrThrow<SettingsManager>();
   registry_->AddSystem<systems::ConnectionSystem>(serverConnectionService_, managers_.scenes);
 }
 
@@ -86,6 +88,7 @@ void SceneRegister::CreateConnectButton() const {
                              std::cout << "Connecting to server with username: " << text.text
                                        << std::endl;
                              serverConnectionService_->ConnectAsync(text.text);
+                             settingsManager_->Set(SETTING_PLAYER_USERNAME, text.text);
                              (*all_tags)[i]->AddTag("disabled");
                            }
                          }

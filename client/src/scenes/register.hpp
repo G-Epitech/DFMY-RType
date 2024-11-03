@@ -73,5 +73,8 @@ class SceneRegister final : public SceneBase {
 
   /// @brief Store reference to the server connection service
   services::ServerConnectionService::Ptr serverConnectionService_;
+
+  /// @brief Store reference to the settings manager
+  mew::managers::SettingsManager::Ptr settingsManager_;
 };
 }  // namespace rtype::client::scenes
