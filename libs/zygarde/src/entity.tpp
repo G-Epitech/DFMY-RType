@@ -10,6 +10,7 @@
 using namespace zygarde;
 
 template <typename Component>
-Component* Entity::GetComponent() {
-  return (*registry_->GetComponent<Component>(*this));
+Component* Entity::GetComponent() const {
+  auto component = registry_->GetComponent<Component>(*this);
+  return component.has_value() ? component.value() : nullptr;
 }

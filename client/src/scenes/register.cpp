@@ -7,17 +7,18 @@
 
 #include "register.hpp"
 
-#include "constants/settings.hpp"
+#include "client/src/constants/settings.hpp"
+#include "client/src/systems/blink.hpp"
+#include "client/src/systems/register/connection.hpp"
+#include "client/src/systems/ui/input_cursor.hpp"
+#include "client/src/ui/input.hpp"
 #include "leaderboard.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
-#include "systems/blink.hpp"
-#include "systems/register/connection.hpp"
-#include "systems/utils/input_cursor.hpp"
-#include "utils/input.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::services;
+using namespace rtype::client::systems;
 using namespace mew::sets::drawable;
 using namespace mew::sets::events;
 using namespace mew::managers;
@@ -28,10 +29,10 @@ SceneRegister::SceneRegister(DependenciesHandler::Ptr services) : SceneBase(std:
   registry_->RegisterComponent<Tags>();
   registry_->AddSystem<systems::BlinkSystem>();
   constexpr Alignment alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  registry_->AddSystem<systems::utils::input::CursorSystem>(alignment);
-  const Vector3f pos{managers_.window->width_ / 2, managers_.window->height_ / 2 - 50, 0};
+  registry_->AddSystem<systems::ui::CursorSystem>(alignment);
+  const Vector3f pos{managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 - 50, 0};
 
-  utils::Input::Create(registry_, "connection", pos, alignment, 30);
+  ui::Input::Create(registry_, "connection", pos, alignment, 30);
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
   settingsManager_ = services_->GetOrThrow<SettingsManager>();
   registry_->AddSystem<systems::ConnectionSystem>(serverConnectionService_, managers_.scenes);
@@ -54,7 +55,8 @@ void SceneRegister::Update(DeltaTime delta_time) {
 void SceneRegister::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 - 250);
+  const auto point =
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 - 250);
 
   registry_->AddComponent<Position>(title, {point, aligns});
   registry_->AddComponent<Drawable>(title,
@@ -63,7 +65,8 @@ void SceneRegister::CreateTitle() const {
 
 void SceneRegister::CreateConnectButton() const {
   const auto connect_button = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 50);
+  const auto point =
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 50);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(connect_button, {point, aligns});
@@ -121,7 +124,8 @@ void SceneRegister::CreateConnectButton() const {
 
 void SceneRegister::CreateExitButton() const {
   const auto exit_button = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2 + 145);
+  const auto point =
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 145);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,
@@ -162,7 +166,8 @@ void SceneRegister::CreateExitButton() const {
 void SceneRegister::CreateServerConnectionLabel() const {
   const auto label = registry_->SpawnEntity();
   constexpr auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ - 100);
+  const auto point =
+      Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() - 100);
 
   registry_->AddComponent<Position>(label, {point, aligns});
   registry_->AddComponent<Tags>(label, Tags({"connection_label"}));

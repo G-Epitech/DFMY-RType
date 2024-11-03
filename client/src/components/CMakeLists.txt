@@ -1,5 +1,6 @@
 target_sources(${CLIENT_CORE_LIB} PRIVATE
-        radio.hpp
-        radio.cpp
+        ui/radio.hpp
+        ui/radio.cpp
+        ui/select.hpp
         server_entity_id.hpp
 )

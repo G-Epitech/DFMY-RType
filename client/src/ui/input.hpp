@@ -15,7 +15,7 @@
 
 using namespace mew::managers;
 
-namespace rtype::client::scenes::utils {
+namespace rtype::client::ui {
 
 class Input {
  public:
@@ -65,4 +65,4 @@ class Input {
                                    unsigned int character_size, bool disabled);
 };
 
-}  // namespace rtype::client::scenes::utils
+}  // namespace rtype::client::ui

@@ -69,6 +69,18 @@ typename sparse_array<Component>::reference_type Registry::AddComponent(Entity c
   return components->emplaceAt(static_cast<size_t>(to), std::forward<Component>(c));
 }
 
+template <typename Component>
+typename sparse_array<Component>::reference_type Registry::AddComponent(Entity const &to,
+                                                                        const Component &c) {
+  auto components = GetComponents<Component>();
+  const auto size = components->size();
+
+  if (size <= to.id_) {
+    components->resize(static_cast<size_t>(to) + 1);
+  }
+  return components->emplaceAt(static_cast<size_t>(to), c);
+}
+
 template <typename Component, typename... Params>
 typename sparse_array<Component>::reference_type Registry::EmplaceComponent(Entity const &to,
                                                                             Params &&...p) {
@@ -107,8 +119,13 @@ Entity Registry::SpawnEntity(Args &&...args) {
   if (newId >= entities_.size()) {
     entities_.resize(newId + 1);
   }
-  T e(newId, GetShared(), std::forward<Args>(args)...);
-  entities_.at(newId) = e;
-  e.OnSpawn();
+  T e(newId, GetShared());
+  entities_.at(newId) = static_cast<Entity>(e);
+  e.OnSpawn(std::forward<Args>(args)...);
   return e;
+}
+
+template <typename... Components>
+[[nodiscard]] zipper<Components...> Registry::GetMatchingEntities() {
+  return zipper<Components...>(GetComponents<Components>()...);
 }

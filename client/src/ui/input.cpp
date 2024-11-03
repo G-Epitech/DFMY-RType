@@ -13,9 +13,9 @@
 #include "core/components/tags/tags.hpp"
 #include "sets/drawable/components/components.hpp"
 #include "sets/events/components/components.hpp"
-#include "systems/utils/input_cursor.hpp"
+#include "systems/ui/input_cursor.hpp"
 
-using namespace rtype::client::scenes::utils;
+using namespace rtype::client::ui;
 using namespace zygarde::core::components;
 using namespace mew::sets::drawable;
 using namespace mew::sets::events;

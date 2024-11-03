@@ -1,6 +1,8 @@
+add_subdirectory(builder)
 add_subdirectory(game)
 add_subdirectory(systems)
 add_subdirectory(services)
 add_subdirectory(components)
 add_subdirectory(scenes)
 add_subdirectory(constants)
+add_subdirectory(ui)
