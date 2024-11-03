@@ -10,6 +10,7 @@
 #include "app/room/game_service/archetype_keys.hpp"
 #include "helpers/shoot_helper.hpp"
 #include "scripting/components/pool/script_pool.hpp"
+#include "scripts/enemies/enemy_default_script.hpp"
 #include "scripts/helpers/damage_helper.hpp"
 #include "zygarde/src/core/components/tags/tags.hpp"
 
@@ -52,6 +53,15 @@ void PlayerScript::OnCollisionEnter(
   }
   if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kEnemyBulletTag) {
     DamageHelper::HandleDamageTake(&health_, context, entity);
+  }
+  if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kEnemyTag) {
+    auto enemyScript = context->registry->GetComponent<scripting::components::ScriptPool>(entity);
+    if (enemyScript) {
+      auto enemyDefaultScript = (*enemyScript)->GetScript<EnemyDefaultScript>();
+      if (enemyDefaultScript) {
+        health_ -= enemyDefaultScript->GetHealth();
+      }
+    }
   }
 }
 

@@ -41,6 +41,9 @@ mew::sets::drawable::Texture TextureMapper::MapEnemyType(game::types::EnemyType 
     case game::types::EnemyType::kEnforcer: {
       return Texture{.name = "enemy_pack", .scale = 2.5, .rect = {387, 821, 71, 61}};
     }
+    case game::types::EnemyType::kElectricShark: {
+      return Texture{.name = "enemy_pack", .scale = 1.5, .rect = {674, 260, 64, 22}};
+    }
     default: {
       return Texture{.name = "enemy", .scale = 2.5, .rect = {5, 6, 21, 24}};
     }

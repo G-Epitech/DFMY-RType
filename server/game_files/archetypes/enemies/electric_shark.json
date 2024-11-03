@@ -1,0 +1,65 @@
+{
+  "archetype_name": "electric_shark",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": false,
+        "drag": 0
+      }
+    },
+    {
+      "name": "position"
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 96,
+          "y": 33
+        },
+        "collisionLayers": [
+          2
+        ],
+        "includeLayers": [
+          1,
+          8
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "enemy",
+          "electric_shark"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "enemyDefaultScript",
+          "customValues": {
+            "health": 50.0,
+            "scoreIncrease": 500,
+            "fireRate": 0.0,
+            "bulletArchetype": "enforcer_bullet"
+          }
+        },
+        {
+          "scriptName": "sharkMovementScript",
+          "customValues": {
+            "speed": 150.0,
+            "jumpSpeed": 750.0,
+            "jumpThreshold": 600.0,
+            "bottomThreshold": 1000.0,
+            "jumpChance": 0.2,
+            "stopChance": 0.03
+          }
+        }
+      ]
+    }
+  ]
+}

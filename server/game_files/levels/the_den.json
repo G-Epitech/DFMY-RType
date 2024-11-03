@@ -6,11 +6,7 @@
       "maxTime": 15.0,
       "enemies": [
         {
-          "name": "enforcer",
-          "count": 1
-        },
-        {
-          "name": "grappler",
+          "name": "electric_shark",
           "count": 5
         }
       ]

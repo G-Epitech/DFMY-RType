@@ -5,9 +5,10 @@
 ** EnemyDefaultScript.cpp
 */
 
+#include "enemy_default_script.hpp"
+
 #include "app/room/game_service/archetype_keys.hpp"
 #include "constants/tags.hpp"
-#include "enemy_default_script.hpp"
 #include "scripts/helpers/damage_helper.hpp"
 #include "scripts/helpers/shoot_helper.hpp"
 #include "zygarde/src/core/components/tags/tags.hpp"
@@ -16,7 +17,8 @@ using namespace rtype::server::game::scripts;
 
 EnemyDefaultScript::EnemyDefaultScript() : lastShootTime_(utils::Timer::Nanoseconds::zero()) {}
 
-void EnemyDefaultScript::FixedUpdate(const std::shared_ptr<scripting::types::ScriptingContext>& context) {
+void EnemyDefaultScript::FixedUpdate(
+    const std::shared_ptr<scripting::types::ScriptingContext>& context) {
   lastShootTime_ += context->deltaTime;
   if (lastShootTime_ >= shootCooldown_) {
     lastShootTime_ = utils::Timer::Nanoseconds::zero();
@@ -36,6 +38,9 @@ void EnemyDefaultScript::OnCollisionEnter(
 
   if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerBulletTag) {
     HandleDamageTake(context, entity);
+  }
+  if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerTag) {
+    context->registry->DestroyEntity(context->me);
   }
 }
 

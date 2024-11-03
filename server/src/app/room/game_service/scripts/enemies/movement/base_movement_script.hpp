@@ -16,7 +16,7 @@ class BaseMovementScript : public zygarde::scripting::components::MonoBehaviour 
    * @brief Set the base position for the movement
    * @param basePosition The base position
    */
-  inline void SetBasePosition(const zygarde::core::types::Vector3f& basePosition) {
+  virtual inline void SetBasePosition(const zygarde::core::types::Vector3f& basePosition) {
     basePosition_ = basePosition;
   }
 

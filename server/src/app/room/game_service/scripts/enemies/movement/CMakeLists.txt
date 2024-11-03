@@ -4,4 +4,6 @@ target_sources(${SERVER_CORE_LIB} PRIVATE
         straight_movement_script.cpp
         straight_movement_script.hpp
         base_movement_script.hpp
+        shark_movement_script.cpp
+        shark_movement_script.hpp
 )

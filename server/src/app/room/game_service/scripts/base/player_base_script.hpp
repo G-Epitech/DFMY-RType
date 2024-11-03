@@ -15,6 +15,8 @@ class PlayerBaseScript : public zygarde::scripting::components::MonoBehaviour {
  public:
   void SetDifficultyData(DifficultyPlayerMultipliers multipliers);
 
+  inline void GiveDamage(float damage) { health_ -= damage; }
+
  protected:
   void ComputeShootCooldown();
 

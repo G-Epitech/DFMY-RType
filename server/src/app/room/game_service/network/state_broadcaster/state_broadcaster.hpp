@@ -131,6 +131,7 @@ class StateBroadcaster final {
       {"pata_big", sdk::game::types::EnemyType::kPataBig},
       {"grappler", sdk::game::types::EnemyType::kGrappler},
       {"enforcer", sdk::game::types::EnemyType::kEnforcer},
+      {"electric_shark", sdk::game::types::EnemyType::kElectricShark},
   };
 
   /// @brief Map of bullet type strings to their respective types
