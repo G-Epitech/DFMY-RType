@@ -14,8 +14,6 @@
 #include "lobby.hpp"
 #include "settings.hpp"
 #include "systems/blink.hpp"
-#include "systems/ui/input_cursor.hpp"
-#include "ui/input.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::services;
@@ -24,12 +22,10 @@ using namespace mew::sets::events;
 using namespace mew::managers;
 using namespace zygarde::core::components;
 using namespace zygarde::core::types;
-using namespace rtype::client::ui;
 
 SceneMenu::SceneMenu(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   registry_->RegisterComponent<Tags>();
   registry_->AddSystem<systems::BlinkSystem>();
-  registry_->AddSystem<systems::ui::CursorSystem>();
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
 }
 
@@ -40,14 +36,9 @@ void SceneMenu::OnCreate() {
   CreateSettingsButton();
   CreateExitButton();
   CreateServerConnectionLabel();
-  Input::Create(registry_, "username",
-                Vector3f{managers_.window->GetWidth() / 2, managers_.window->GetHeight() / 2 + 150},
-                {HorizontalAlign::kCenter, VerticalAlign::kCenter});
 }
 
-void SceneMenu::OnActivate() {
-  serverConnectionService_->ConnectAsync();
-}
+void SceneMenu::OnActivate() {}
 
 void SceneMenu::Update(DeltaTime delta_time) {
   UpdateConnectionLabel();
@@ -77,8 +68,7 @@ void SceneMenu::CreatePlayButton() const {
       OnMousePressed{.strategy = MouseEventTarget::kLocalTarget,
                      .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                        const MouseEventTarget& target) {
-                       if (button == sf::Mouse::Button::Left &&
-                           serverConnectionService_->Connected()) {
+                       if (button == sf::Mouse::Button::Left) {
                          managers_.scenes->GoToScene<SceneStart>();
                        }
                      }});
@@ -259,7 +249,7 @@ std::string SceneMenu::GetConnectionLabelText() const {
   if (serverConnectionService_->Connected()) {
     return "Connected to server";
   } else {
-    return "Connecting to server. Please wait.";
+    return "An error occurred while connecting to the server";
   }
 }
 

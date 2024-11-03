@@ -59,7 +59,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->AddSystem<systems::ui::CursorSystem>();
   ui::Input::Create(registry_, "chat",
                     Vector3f{CHAT_PIXELS_LEFT, managers_.window->GetHeight() - 50},
-                    {HorizontalAlign::kLeft, VerticalAlign::kCenter}, CHAT_CHAR_SIZE);
+                    {HorizontalAlign::kLeft, VerticalAlign::kCenter}, CHAT_CHAR_SIZE, true);
   registry_->AddSystem<ChatInputSystem>(window_manager, server_connection_service);
   registry_->AddSystem<ChatMessagesSystem>(window_manager, server_connection_service, username,
                                            registry_);

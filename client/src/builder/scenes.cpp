@@ -11,6 +11,7 @@
 #include "client/src/scenes/leaderboard.hpp"
 #include "client/src/scenes/lobby.hpp"
 #include "client/src/scenes/menu.hpp"
+#include "client/src/scenes/register.hpp"
 #include "client/src/scenes/settings.hpp"
 #include "client/src/scenes/start/start.hpp"
 
@@ -18,6 +19,7 @@ using namespace rtype::client::builder;
 using namespace rtype::client::scenes;
 
 void Scenes::LoadScenes(mew::game::Game *game) {
+  game->managers.scenes->RegisterScene<SceneRegister>();
   game->managers.scenes->RegisterScene<SceneMenu>();
   game->managers.scenes->RegisterScene<SceneSettings>();
   game->managers.scenes->RegisterScene<SceneLobby>();
@@ -25,6 +27,7 @@ void Scenes::LoadScenes(mew::game::Game *game) {
   game->managers.scenes->RegisterScene<SceneStart>();
   game->managers.scenes->RegisterScene<SceneLeaderboard>();
 }
+
 void Scenes::SetEntryScene(mew::game::Game *game) {
-  game->managers.scenes->GoToScene<SceneMenu>();
+  game->managers.scenes->GoToScene<SceneRegister>();
 }
