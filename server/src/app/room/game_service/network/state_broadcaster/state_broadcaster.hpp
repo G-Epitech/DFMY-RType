@@ -130,6 +130,7 @@ class StateBroadcaster final {
       {"pata", sdk::game::types::EnemyType::kPata},
       {"pata_big", sdk::game::types::EnemyType::kPataBig},
       {"grappler", sdk::game::types::EnemyType::kGrappler},
+      {"enforcer", sdk::game::types::EnemyType::kEnforcer},
   };
 
   /// @brief Map of bullet type strings to their respective types
@@ -137,6 +138,7 @@ class StateBroadcaster final {
       {"player_bullet", sdk::game::types::ProjectileType::kPlayerCommon},
       {"pata_bullet", sdk::game::types::ProjectileType::kPata},
       {"grappler_bullet", sdk::game::types::ProjectileType::kGrappler},
+      {"enforcer_bullet", sdk::game::types::ProjectileType::kEnforcer},
   };
 };
 }  // namespace rtype::server::game::network

@@ -43,7 +43,7 @@
           "scriptName": "enemyDefaultScript",
           "customValues": {
             "health": 30.0,
-            "scoreIncrease": 100,
+            "scoreIncrease": 200,
             "fireRate": 1.2,
             "bulletArchetype": "grappler_bullet"
           }

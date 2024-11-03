@@ -9,5 +9,14 @@
 
 namespace rtype::sdk::game::types {
 /// @brief Enum of the different types of enemies
-enum EnemyType { kPata = 0, kPataBig, kGrappler };
+enum EnemyType {
+  kPata = 0,
+  kPataBig,
+  kGrappler,
+  kEnforcer,
+  kKiller,
+  kSuperNova,
+  kVirus,
+  kElectricShark
+};
 }  // namespace rtype::sdk::game::types

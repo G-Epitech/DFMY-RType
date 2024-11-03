@@ -12,6 +12,7 @@ namespace rtype::sdk::game::types {
 enum class ProjectileType {
   kPlayerCommon,
   kPata,
-  kGrappler
+  kGrappler,
+  kEnforcer
 };  // namespace rtype::sdk::game_core::types
 }  // namespace rtype::sdk::game::types

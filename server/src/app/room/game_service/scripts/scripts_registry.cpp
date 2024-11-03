@@ -10,6 +10,7 @@
 #include "enemies/enemy_default_script.hpp"
 #include "player_script.hpp"
 #include "projectiles/default_projectile_script.hpp"
+#include "scripts/enemies/movement/straight_movement_script.hpp"
 #include "scripts/enemies/movement/zigzag_movement_script.hpp"
 
 using namespace rtype::server::game::scripts;
@@ -26,6 +27,9 @@ ScriptsRegistry::ScriptsRegistry() : scripts_() {
   };
   scripts_["zigzagMovementScript"] = []() -> scripting::components::MonoBehaviour::Instance {
     return std::make_shared<ZigZagMovementScript>();
+  };
+  scripts_["straightMovementScript"] = []() -> scripting::components::MonoBehaviour::Instance {
+    return std::make_shared<StraightMovementScript>();
   };
 }
 

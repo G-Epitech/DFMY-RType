@@ -1,14 +1,10 @@
 {
-  "archetype_name": "grappler_bullet",
+  "archetype_name": "enforcer",
   "components": [
     {
       "name": "rigidbody2d",
       "data": {
-        "isKinematic": true,
-        "velocity": {
-          "x": -1300,
-          "y": 0
-        },
+        "isKinematic": false,
         "drag": 0
       }
     },
@@ -19,11 +15,11 @@
       "name": "box_collider2d",
       "data": {
         "size": {
-          "x": 103,
-          "y": 14
+          "x": 177.5,
+          "y": 152.5
         },
         "collisionLayers": [
-          4
+          2
         ],
         "includeLayers": [
           1,
@@ -35,9 +31,8 @@
       "name": "tags",
       "data": {
         "tags": [
-          "bullet",
-          "enemy_bullet",
-          "grappler_bullet"
+          "enemy",
+          "enforcer"
         ]
       }
     },
@@ -45,9 +40,18 @@
       "name": "script_pool",
       "data": [
         {
-          "scriptName": "baseProjectileScript",
+          "scriptName": "enemyDefaultScript",
           "customValues": {
-            "damage": 50.0
+            "health": 300.0,
+            "scoreIncrease": 500,
+            "fireRate": 1.5,
+            "bulletArchetype": "enforcer_bullet"
+          }
+        },
+        {
+          "scriptName": "straightMovementScript",
+          "customValues": {
+            "speed": 300.0
           }
         }
       ]
