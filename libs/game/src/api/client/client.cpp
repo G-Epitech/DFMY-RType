@@ -10,6 +10,7 @@
 using namespace rtype::sdk::game::api;
 using namespace abra::client;
 using namespace abra::tools;
+
 Client::Client(const std::string &ip, const uint32_t &port)
     : clientTCP_(ip, port, nullptr),
       isConnected_(false),

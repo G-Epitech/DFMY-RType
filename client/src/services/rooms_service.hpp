@@ -14,17 +14,18 @@ namespace rtype::client::services {
 
 using namespace porygon;
 using namespace rtype::sdk::game::api;
+using namespace rtype::sdk::game::api::payload;
 
 class RoomsService final {
  public:
   /// @brief Pointer to the room service
   using Ptr = std::shared_ptr<RoomsService>;
   /// @brief NodeId type
-  using NodeIdType = typeof(payload::RoomStatus::nodeId);
+  using NodeIdType = std::uint64_t;
   /// @brief RoomId type
-  using RoomIdType = typeof(payload::RoomStatus::roomId);
+  using RoomIdType = std::uint64_t;
   /// @brief RoomStatus type
-  using RoomStatusType = typeof(payload::RoomStatus);
+  using RoomStatusType = RoomStatus;
   /// @brief Rooms map
   using RoomsMap = std::map<NodeIdType, std::map<RoomIdType, RoomStatusType>>;
 
