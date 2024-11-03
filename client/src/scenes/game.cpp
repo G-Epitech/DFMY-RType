@@ -133,7 +133,9 @@ void SceneGame::InitFade() {
 
   auto color = sf::Color::Black;
   color.a = 0;
-  registry_->AddComponent<Drawable>(rectangle, {Rectangle{color, {managers_.window->width_ * 100,
-                                                                 managers_.window->height_ * 100}}, WindowManager::View::HUD});
+  registry_->AddComponent<Drawable>(
+      rectangle,
+      {Rectangle{color, {managers_.window->width_ * 100, managers_.window->height_ * 100}},
+       WindowManager::View::HUD});
   registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
 }

@@ -12,7 +12,7 @@ rtype::client::systems::FadeSystem::FadeSystem() {
 }
 
 void rtype::client::systems::FadeSystem::Run(std::shared_ptr<Registry> r,
-                                              ComponentsPtr components) {
+                                             ComponentsPtr components) {
   const auto begin = components.begin();
   const auto end = components.end();
 

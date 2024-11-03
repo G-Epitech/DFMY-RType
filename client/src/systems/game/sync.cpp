@@ -231,12 +231,13 @@ void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
   }
 }
 
-void GameSyncSystem::HandleGameEnded(const Registry::Ptr &registry, const api::Client::ServerMessage &message) {
+void GameSyncSystem::HandleGameEnded(const Registry::Ptr& registry,
+                                     const api::Client::ServerMessage& message) {
   const auto tags = registry->GetComponents<Tags>();
 
   std::size_t entityIndex = 0;
 
-  for (const auto &tag : *tags) {
+  for (const auto& tag : *tags) {
     if (tag && *tag & "end_fade") {
       break;
     }
