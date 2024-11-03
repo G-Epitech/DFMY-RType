@@ -21,6 +21,7 @@
 #include "constants/chat.hpp"
 #include "constants/settings.hpp"
 #include "constants/user.hpp"
+#include "end.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
@@ -48,6 +49,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   auto settings_manager = services_->GetOrThrow<SettingsManager>();
   auto window_manager = services_->GetOrThrow<WindowManager>();
   auto server_connection_service = services_->GetOrThrow<ServerConnectionService>();
+  auto scene_manager = services_->GetOrThrow<ScenesManager>();
 
   serverConnectionService_ = server_connection_service;
 
@@ -73,7 +75,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
                                            registry_);
   registry_->AddSystem<ChatTriggerSystem>(window_manager, settings_manager);
   registry_->AddSystem<BlinkSystem>();
-  registry_->AddSystem<FadeSystem>();
+  registry_->AddSystem<FadeSystem>([scene_manager] { scene_manager->GoToScene<SceneEnd>(); });
 }
 
 void SceneGame::OnCreate() {
@@ -141,11 +143,11 @@ void SceneGame::InitFade() {
   auto color = sf::Color::Black;
   color.a = 0;
   registry_->AddComponent<Drawable>(
-      rectangle,
-      {Rectangle{color,
-                 sf::Color::Transparent,
-                 0,
-                 {managers_.window->GetWidth() * 100, managers_.window->GetHeight() * 100}},
-       WindowManager::View::HUD});
+      rectangle, {drawable::Rectangle{
+                      color,
+                      sf::Color::Transparent,
+                      0,
+                      {managers_.window->GetWidth() * 100, managers_.window->GetHeight() * 100}},
+                  WindowManager::View::HUD});
   registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
 }

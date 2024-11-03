@@ -16,7 +16,7 @@ namespace rtype::client::systems {
 class FadeSystem final
     : public ASystem<zygarde::core::components::Tags, mew::sets::drawable::Drawable> {
  public:
-  FadeSystem();
+  explicit FadeSystem(std::function<void()> middleware = []() {});
 
   void Run(std::shared_ptr<Registry> r, ZippedComponents components) override;
 
@@ -26,5 +26,8 @@ class FadeSystem final
 
   /// @brief Map of entities to fade
   std::map<std::size_t, sf::Time> entities_;
+
+  /// @brief Function to call after fade
+  std::function<void()> middleware_;
 };
 }  // namespace rtype::client::systems

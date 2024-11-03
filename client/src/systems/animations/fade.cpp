@@ -7,7 +7,10 @@
 
 #include "fade.hpp"
 
-rtype::client::systems::FadeSystem::FadeSystem() {
+#include <utility>
+
+rtype::client::systems::FadeSystem::FadeSystem(std::function<void()> middleware)
+    : ASystem(), middleware_{std::move(middleware)} {
   deltaClock_.restart();
 }
 
@@ -38,6 +41,7 @@ void rtype::client::systems::FadeSystem::Run(std::shared_ptr<Registry> r,
       if (rectangle.fillColor.a >= 255) {
         tags.RemoveTag("fade");
         entities_.erase(entity);
+        middleware_();
       }
     }
   }
