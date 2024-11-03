@@ -13,6 +13,7 @@
 #include "client/src/scenes/menu.hpp"
 #include "client/src/ui/button/button.hpp"
 #include "client/src/ui/select/select.hpp"
+#include "create_room.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/zygarde/src/core/components/position/position.hpp"
 #include "scenes/lobby.hpp"
@@ -151,9 +152,9 @@ void SceneStart::CreateControls() {
                                 .size = Vector2f(115, 25),
                                 .disabled = false,
                                 .action =
-                                    [](const sf::Mouse::Button &button, const sf::Vector2f pos,
-                                       const MouseEventTarget &target) {
-                                      std::cout << "New room button clicked" << std::endl;
+                                    [this](const sf::Mouse::Button &button, const sf::Vector2f pos,
+                                           const MouseEventTarget &target) {
+                                      managers_.scenes->GoToScene<SceneCreateRoom>();
                                     },
                             });
   Button::Create(registry_,

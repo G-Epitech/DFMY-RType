@@ -88,7 +88,7 @@ void SceneLobby::WaitAsync() {
 }
 
 void SceneLobby::Wait() {
-  mainMessage_ = "Success";
+  mainMessage_ = "Starting...";
   secondaryMessage_ = "You are now in the lobby. Waiting for other players";
   status_ = LobbyStatus::kWaiting;
 
