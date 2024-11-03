@@ -8,6 +8,7 @@
 #include "end.hpp"
 
 #include "client/src/systems/leaderboard/sync.hpp"
+#include "constants/game.hpp"
 #include "constants/settings.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "menu.hpp"
@@ -100,7 +101,7 @@ void SceneEnd::CreateWin(const zygarde::core::types::Vector3f &origin,
                          const Alignment &aligns) const {
   const auto win_entity = registry_->SpawnEntity();
   const auto point = Vector3f(origin.x, origin.y - 150);
-  const bool win = settingsManager_->Get<bool>(SETTING_GAME_END_WIN);
+  const bool win = settingsManager_->Get<bool>(GAME_END_WIN);
   const auto text = win ? "Win" : "Lose";
   const auto color = win ? sf::Color::Green : sf::Color::Red;
 
@@ -113,7 +114,7 @@ void SceneEnd::CreateScore(const zygarde::core::types::Vector3f &origin,
                            const Alignment &aligns) const {
   const auto title = registry_->SpawnEntity();
   const auto point = Vector3f(origin.x, origin.y);
-  const auto score = settingsManager_->Get<std::size_t>(SETTING_GAME_END_SCORE);
+  const auto score = settingsManager_->Get<std::size_t>(GAME_END_SCORE);
   const auto text = "Score: " + std::to_string(score);
 
   registry_->AddComponent<Position>(title, {point, aligns});
@@ -124,7 +125,7 @@ void SceneEnd::CreateTime(const zygarde::core::types::Vector3f &origin,
                           const Alignment &aligns) const {
   const auto info = registry_->SpawnEntity();
   const auto point = Vector3f(origin.x, origin.y + 30);
-  const auto time = settingsManager_->Get<time_t>(SETTING_GAME_END_TIME);
+  const auto time = settingsManager_->Get<time_t>(GAME_END_TIME);
 
   const auto *localTime = std::localtime(&time);
 

@@ -48,11 +48,9 @@ int MAIN {
   game.managers.settings->Set(SETTING_GAME_CHAT_OPEN, SETTING_DEFAULT_GAME_CHAT_OPEN);
   game.managers.settings->Set(SETTING_PLAYER_USERNAME,
                               std::string(SETTING_DEFAULT_PLAYER_USERNAME));
-  std::size_t score = 8540;
-  game.managers.settings->Set(SETTING_GAME_END_SCORE, score);
+  game.managers.settings->Set(SETTING_GAME_END_SCORE, SETTING_DEFAULT_GAME_END_SCORE);
   game.managers.settings->Set(SETTING_GAME_END_WIN, SETTING_DEFAULT_GAME_END_WIN);
-  time_t twominutes = 136;
-  game.managers.settings->Set(SETTING_GAME_END_TIME, twominutes);
+  game.managers.settings->Set(SETTING_GAME_END_TIME, SETTING_DEFAULT_GAME_END_TIME);
 
   game.managers.resources->LoadFont("assets/fonts/main.ttf", "main");
   game.managers.resources->LoadTexture("assets/icons/R-Type.png", "g-epitech-logo");

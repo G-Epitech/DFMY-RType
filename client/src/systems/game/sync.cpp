@@ -12,6 +12,7 @@
 
 #include "client/src/services/server_connection_service.hpp"
 #include "client/src/systems/game/texture_mapper/texture_mapper.hpp"
+#include "constants/game.hpp"
 #include "constants/settings.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
@@ -257,7 +258,7 @@ void GameSyncSystem::HandleGameEnded(const Registry::Ptr& registry,
   tagsComponent.value()->AddTag("fade");
 
   const auto end = serverConnectionService_->client()->ResolveRoomGameEnd(message);
-  settingsManager_->Set(SETTING_GAME_END_SCORE, end.score);
-  settingsManager_->Set(SETTING_GAME_END_WIN, end.win);
-  settingsManager_->Set(SETTING_GAME_END_TIME, end.time);
+  settingsManager_->Set(GAME_END_SCORE, end.score);
+  settingsManager_->Set(GAME_END_WIN, end.win);
+  settingsManager_->Set(GAME_END_TIME, end.time);
 }

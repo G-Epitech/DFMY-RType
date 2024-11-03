@@ -8,6 +8,7 @@
 #include "server_connection_service.hpp"
 
 #include "constants/settings.hpp"
+#include "constants/user.hpp"
 
 using namespace rtype::client::services;
 

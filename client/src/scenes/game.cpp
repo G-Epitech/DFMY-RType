@@ -13,6 +13,7 @@
 #include "client/src/systems/game/sync.hpp"
 #include "constants/chat.hpp"
 #include "constants/settings.hpp"
+#include "constants/user.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 #include "libs/mew/src/sets/events/events.hpp"
 #include "libs/zygarde/src/core/components/components.hpp"
@@ -56,7 +57,7 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
   registry_->AddSystem<physics::systems::MovementSystem>(deltaTime_);
   registry_->AddSystem<physics::systems::PositionSystem>();
 
-  const auto username = settings_manager->Get<std::string>(SETTING_PLAYER_USERNAME);
+  const auto username = settings_manager->Get<std::string>(PLAYER_USERNAME);
   registry_->AddSystem<systems::utils::input::CursorSystem>();
   utils::Input::Create(registry_, "chat",
                        Vector3f{CHAT_PIXELS_LEFT, managers_.window->height_ - 50},
