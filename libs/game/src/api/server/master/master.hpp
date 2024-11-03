@@ -17,6 +17,7 @@
 #include "libs/game/src/api/props/network.hpp"
 #include "libs/game/src/api/props/payload/payload.hpp"
 #include "libs/game/src/api/server/database/database.hpp"
+#include "libs/game/src/api/server/monitor/monitor.hpp"
 #include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
@@ -255,6 +256,9 @@ class rtype::sdk::game::api::Master {
 
   /// @brief Database
   Database database_;
+
+  /// @brief Monitor
+  Monitor monitor_;
 
   /// @brief Map of handlers for the TCP messages
   static inline std::map<unsigned int, void (Master::*)(const abra::server::ClientTCPMessage &)>

@@ -28,7 +28,15 @@ SessionWebsocket::~SessionWebsocket() {
 }
 
 void SessionWebsocket::Start() {
-  ListenNewRequest();
+  auto self(shared_from_this());
+
+  ws_.async_accept([self](beast::error_code ec) {
+    if (!ec) {
+      self->ListenNewRequest();
+    } else {
+      return;
+    }
+  });
 }
 
 void SessionWebsocket::ListenNewRequest() {
