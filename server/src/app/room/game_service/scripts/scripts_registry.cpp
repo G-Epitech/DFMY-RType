@@ -7,7 +7,7 @@
 
 #include "scripts_registry.hpp"
 
-#include "enemies/pata_script.hpp"
+#include "enemies/enemy_default_script.hpp"
 #include "player_script.hpp"
 #include "projectiles/default_projectile_script.hpp"
 #include "scripts/enemies/movement/zigzag_movement_script.hpp"
@@ -21,8 +21,8 @@ ScriptsRegistry::ScriptsRegistry() : scripts_() {
   scripts_["baseProjectileScript"] = []() -> scripting::components::MonoBehaviour::Instance {
     return std::make_shared<DefaultProjectileScript>();
   };
-  scripts_["pataScript"] = []() -> scripting::components::MonoBehaviour::Instance {
-    return std::make_shared<PataScript>();
+  scripts_["enemyDefaultScript"] = []() -> scripting::components::MonoBehaviour::Instance {
+    return std::make_shared<EnemyDefaultScript>();
   };
   scripts_["zigzagMovementScript"] = []() -> scripting::components::MonoBehaviour::Instance {
     return std::make_shared<ZigZagMovementScript>();

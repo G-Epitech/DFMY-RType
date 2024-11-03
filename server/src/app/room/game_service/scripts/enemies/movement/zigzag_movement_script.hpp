@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "zygarde/src/scripting/components/mono_behaviour/mono_behaviour.hpp"
+#include "base_movement_script.hpp"
 
 namespace rtype::server::game::scripts {
-class ZigZagMovementScript : public zygarde::scripting::components::MonoBehaviour {
+class ZigZagMovementScript : public BaseMovementScript {
  public:
   ZigZagMovementScript();
   ~ZigZagMovementScript() override = default;
@@ -22,13 +22,10 @@ class ZigZagMovementScript : public zygarde::scripting::components::MonoBehaviou
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
                         const physics::types::Collision2D::ptr& collision) override;
 
-  void SetBasePosition(const zygarde::core::types::Vector3f& basePosition);
-
  private:
   bool goingUp_;
   float verticalSpeed_;
   float horizontalSpeed_;
-  zygarde::core::types::Vector3f basePosition_;
   float upperLimit_;
   float lowerLimit_;
   float upperLimitOffset_;

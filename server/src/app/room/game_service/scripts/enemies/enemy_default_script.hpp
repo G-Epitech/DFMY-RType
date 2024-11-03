@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** r-type
 ** File description:
-** PataScript.hpp
+** EnemyDefaultScript.hpp
 */
 
 #pragma once
@@ -17,10 +17,10 @@ static constexpr zygarde::core::types::Vector3f kPataProjectileOffsetPosition{-4
 }
 
 namespace rtype::server::game::scripts {
-class PataScript : public EnemyBaseScript {
+class EnemyDefaultScript : public EnemyBaseScript {
  public:
-  PataScript();
-  ~PataScript() override = default;
+  EnemyDefaultScript();
+  ~EnemyDefaultScript() override = default;
 
   void OnEnable(const scripting::types::ValuesMap& customScriptValues) override;
 
@@ -31,5 +31,6 @@ class PataScript : public EnemyBaseScript {
 
  private:
   zygarde::utils::Timer::Nanoseconds lastShootTime_;
+  std::string bulletArchetype_;
 };
 }  // namespace rtype::server::game::scripts

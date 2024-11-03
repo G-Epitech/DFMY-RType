@@ -13,7 +13,6 @@ ZigZagMovementScript::ZigZagMovementScript()
     : goingUp_{true},
       horizontalSpeed_{0},
       verticalSpeed_{0},
-      basePosition_(0, 0, 0),
       upperLimit_(),
       lowerLimit_(),
       upperLimitOffset_{30.0f},
@@ -24,12 +23,6 @@ void ZigZagMovementScript::OnEnable(const scripting::types::ValuesMap& customScr
   verticalSpeed_ = std::any_cast<float>(customScriptValues.at("verticalSpeed"));
   upperLimitOffset_ = std::any_cast<float>(customScriptValues.at("upperLimitOffset"));
   lowerLimitOffset_ = std::any_cast<float>(customScriptValues.at("lowerLimitOffset"));
-}
-
-void ZigZagMovementScript::SetBasePosition(const core::types::Vector3f& basePosition) {
-  basePosition_ = basePosition;
-  upperLimit_ = basePosition_.y + upperLimitOffset_;
-  lowerLimit_ = basePosition_.y - lowerLimitOffset_;
 }
 
 void ZigZagMovementScript::OnCollisionEnter(
@@ -47,9 +40,9 @@ void ZigZagMovementScript::FixedUpdate(
   if (!position || !rb) {
     return;
   }
-  if ((*position)->point.y >= upperLimit_) {
+  if ((*position)->point.y >= basePosition_.y + upperLimitOffset_) {
     goingUp_ = false;
-  } else if ((*position)->point.y <= lowerLimit_) {
+  } else if ((*position)->point.y <= basePosition_.y - lowerLimitOffset_) {
     goingUp_ = true;
   }
   if (goingUp_) {

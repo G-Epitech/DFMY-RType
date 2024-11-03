@@ -40,12 +40,12 @@
       "name": "script_pool",
       "data": [
         {
-          "scriptName": "pataScript",
+          "scriptName": "enemyDefaultScript",
           "customValues": {
             "health": 30.0,
             "scoreIncrease": 100,
             "fireRate": 0.8,
-            "bulletsType": 0
+            "bulletArchetype": "default_enemy_bullet"
           }
         },
         {
