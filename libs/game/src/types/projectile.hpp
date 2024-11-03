@@ -13,6 +13,7 @@ enum class ProjectileType {
   kPlayerCommon,
   kPata,
   kGrappler,
-  kEnforcer
+  kEnforcer,
+  kVoidEater
 };  // namespace rtype::sdk::game_core::types
 }  // namespace rtype::sdk::game::types

@@ -1,0 +1,60 @@
+{
+  "archetype_name": "void_eater",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": false,
+        "drag": 0
+      }
+    },
+    {
+      "name": "position"
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 200,
+          "y": 465
+        },
+        "collisionLayers": [
+          2
+        ],
+        "includeLayers": [
+          1,
+          8
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "enemy",
+          "void_eater"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "voidEaterScript",
+          "customValues": {
+            "health": 1500.0,
+            "scoreIncrease": 2000,
+            "fireRate": 0.6,
+            "bulletArchetype": "void_eater_bullet"
+          }
+        },
+        {
+          "scriptName": "straightMovementScript",
+          "customValues": {
+            "speed": 100.0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -13,6 +13,7 @@
 #include "scripts/enemies/movement/shark_movement_script.hpp"
 #include "scripts/enemies/movement/straight_movement_script.hpp"
 #include "scripts/enemies/movement/zigzag_movement_script.hpp"
+#include "scripts/enemies/void_eater_script.hpp"
 
 using namespace rtype::server::game::scripts;
 
@@ -34,6 +35,9 @@ ScriptsRegistry::ScriptsRegistry() : scripts_() {
   };
   scripts_["sharkMovementScript"] = []() -> scripting::components::MonoBehaviour::Instance {
     return std::make_shared<SharkMovementScript>();
+  };
+  scripts_["voidEaterScript"] = []() -> scripting::components::MonoBehaviour::Instance {
+    return std::make_shared<VoidEaterScript>();
   };
 }
 

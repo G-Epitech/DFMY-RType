@@ -14,6 +14,7 @@ enum EnemyType {
   kPataBig,
   kGrappler,
   kEnforcer,
+  kVoidEater,
   kKiller,
   kSuperNova,
   kVirus,

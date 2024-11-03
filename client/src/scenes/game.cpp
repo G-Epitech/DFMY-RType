@@ -68,6 +68,7 @@ void SceneGame::LoadResources() {
   managers_.resources->LoadTexture("assets/sheets/player.png", "player");
   managers_.resources->LoadTexture("assets/sheets/enemy.png", "enemy");
   managers_.resources->LoadTexture("assets/sheets/enemy_pack.png", "enemy_pack");
+  managers_.resources->LoadTexture("assets/sheets/void_eater.png", "void_eater");
 }
 
 void SceneGame::CreatePlayerEntity() {

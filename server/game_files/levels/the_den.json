@@ -6,7 +6,7 @@
       "maxTime": 15.0,
       "enemies": [
         {
-          "name": "electric_shark",
+          "name": "void_eater",
           "count": 5
         }
       ]

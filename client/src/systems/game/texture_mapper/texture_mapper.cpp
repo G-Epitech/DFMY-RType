@@ -22,6 +22,9 @@ Texture TextureMapper::MapBulletType(const sdk::game::types::ProjectileType type
     case ::game::types::ProjectileType::kEnforcer: {
       return Texture{.name = "enemy_pack", .scale = 2, .rect = {412, 725, 32, 6}};
     }
+    case ::game::types::ProjectileType::kVoidEater: {
+      return Texture{.name = "enemy_pack", .scale = 2, .rect = {531, 225, 32, 32}};
+    }
     default: {
       return Texture{.name = "player", .scale = 1.5, .rect = {300, 121, 32, 10}};
     }
@@ -43,6 +46,9 @@ mew::sets::drawable::Texture TextureMapper::MapEnemyType(game::types::EnemyType 
     }
     case game::types::EnemyType::kElectricShark: {
       return Texture{.name = "enemy_pack", .scale = 1.5, .rect = {674, 260, 64, 22}};
+    }
+    case game::types::EnemyType::kVoidEater: {
+      return Texture{.name = "void_eater", .scale = 2.5, .rect = {22, 24, 156, 186}};
     }
     default: {
       return Texture{.name = "enemy", .scale = 2.5, .rect = {5, 6, 21, 24}};

@@ -2,32 +2,34 @@
 ** EPITECH PROJECT, 2024
 ** r-type
 ** File description:
-** EnemyDefaultScript.cpp
+** void_eater_script.cpp
 */
 
-#include "enemy_default_script.hpp"
+#include "void_eater_script.hpp"
 
-#include "app/room/game_service/archetype_keys.hpp"
 #include "constants/tags.hpp"
-#include "scripts/helpers/damage_helper.hpp"
+#include "core/components/tags/tags.hpp"
 #include "scripts/helpers/shoot_helper.hpp"
-#include "zygarde/src/core/components/tags/tags.hpp"
 
 using namespace rtype::server::game::scripts;
 
-EnemyDefaultScript::EnemyDefaultScript() : lastShootTime_(utils::Timer::Nanoseconds::zero()) {}
+VoidEaterScript::VoidEaterScript()
+    : lastShootTimes_{std::vector<zygarde::utils::Timer::Nanoseconds>(
+          kVoidEaterShootOffset.size(), utils::Timer::Nanoseconds::zero())} {}
 
-void EnemyDefaultScript::FixedUpdate(
+void VoidEaterScript::FixedUpdate(
     const std::shared_ptr<scripting::types::ScriptingContext>& context) {
-  lastShootTime_ += context->deltaTime;
-  if (lastShootTime_ >= shootCooldown_) {
-    lastShootTime_ = utils::Timer::Nanoseconds::zero();
-    ShootHelper::SpawnBullet(context, kPataProjectileOffsetPosition, damageMultiplier_,
-                             bulletArchetype_);
+  for (size_t i = 0; i < kVoidEaterShootOffset.size(); i++) {
+    lastShootTimes_[i] += context->deltaTime;
+    if (lastShootTimes_[i] >= shootCooldown_) {
+      lastShootTimes_[i] = utils::Timer::Nanoseconds::zero();
+      ShootHelper::SpawnBullet(context, kVoidEaterShootOffset[i], damageMultiplier_,
+                               bulletArchetype_);
+    }
   }
 }
 
-void EnemyDefaultScript::OnCollisionEnter(
+void VoidEaterScript::OnCollisionEnter(
     const std::shared_ptr<scripting::types::ScriptingContext>& context,
     const physics::types::Collision2D::ptr& collision) {
   auto entity = collision->otherEntity;
@@ -39,12 +41,9 @@ void EnemyDefaultScript::OnCollisionEnter(
   if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerBulletTag) {
     HandleDamageTake(context, entity);
   }
-  if ((*otherEntityTag.value()) & rtype::sdk::game::constants::kPlayerTag) {
-    context->registry->DestroyEntity(context->me);
-  }
 }
 
-void EnemyDefaultScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
+void VoidEaterScript::OnEnable(const scripting::types::ValuesMap& customScriptValues) {
   float fireRate = 0;
   try {
     health_ = std::any_cast<float>(customScriptValues.at("health"));

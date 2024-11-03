@@ -1,0 +1,56 @@
+{
+  "archetype_name": "void_eater_bullet",
+  "components": [
+    {
+      "name": "rigidbody2d",
+      "data": {
+        "isKinematic": true,
+        "velocity": {
+          "x": -400,
+          "y": 0
+        },
+        "drag": 0
+      }
+    },
+    {
+      "name": "position"
+    },
+    {
+      "name": "box_collider2d",
+      "data": {
+        "size": {
+          "x": 64,
+          "y": 64
+        },
+        "collisionLayers": [
+          4
+        ],
+        "includeLayers": [
+          1,
+          8
+        ]
+      }
+    },
+    {
+      "name": "tags",
+      "data": {
+        "tags": [
+          "bullet",
+          "enemy_bullet",
+          "void_eater_bullet"
+        ]
+      }
+    },
+    {
+      "name": "script_pool",
+      "data": [
+        {
+          "scriptName": "baseProjectileScript",
+          "customValues": {
+            "damage": 70.0
+          }
+        }
+      ]
+    }
+  ]
+}
