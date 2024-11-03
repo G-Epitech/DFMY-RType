@@ -16,7 +16,7 @@ MessageHandler::MessageHandler() : packetBuilder_(), logger_("server-message-han
 
 void MessageHandler::Run(const std::shared_ptr<zygarde::Registry>& registry,
                          const std::shared_ptr<rtype::sdk::game::api::Room>& api,
-                         const std::map<std::uint64_t, zygarde::Entity>& players) {
+                         const std::map<std::uint64_t, PlayerProps>& players) {
   auto messages = api->ExtractQueue();
 
   while (!messages.empty()) {
@@ -28,7 +28,7 @@ void MessageHandler::Run(const std::shared_ptr<zygarde::Registry>& registry,
   }
 }
 
-void MessageHandler::HandlePlayerMessage(const std::pair<std::uint64_t, zygarde::Entity>& player,
+void MessageHandler::HandlePlayerMessage(const std::pair<std::uint64_t, PlayerProps>& player,
                                          const abra::server::ClientUDPMessage& data,
                                          const std::shared_ptr<zygarde::Registry>& registry) {
   if (data.messageType == ClientToRoomMsgType::kMsgTypeCTRPlayerMove) {
@@ -38,17 +38,16 @@ void MessageHandler::HandlePlayerMessage(const std::pair<std::uint64_t, zygarde:
     HandlePlayerShootMessage(player, data, registry);
   }
 }
-void MessageHandler::HandlePlayerMoveMessage(
-    const std::pair<std::uint64_t, zygarde::Entity>& player,
-    const abra::server::ClientUDPMessage& data,
-    const std::shared_ptr<zygarde::Registry>& registry) {
+void MessageHandler::HandlePlayerMoveMessage(const std::pair<std::uint64_t, PlayerProps>& player,
+                                             const abra::server::ClientUDPMessage& data,
+                                             const std::shared_ptr<zygarde::Registry>& registry) {
   auto playerId = player.first;
 
   try {
     const auto packet = packetBuilder_.Build<payload::Movement>(data.bitset);
     auto& [entityId, direction] = packet->GetPayload();
 
-    const auto& playerEntity = player.second;
+    const auto& playerEntity = player.second.entity;
     auto scriptPool = registry->GetComponent<scripting::components::ScriptPool>(playerEntity);
     if (!scriptPool) {
       return;
@@ -63,12 +62,11 @@ void MessageHandler::HandlePlayerMoveMessage(
   }
 }
 
-void MessageHandler::HandlePlayerShootMessage(
-    const std::pair<std::uint64_t, zygarde::Entity>& player,
-    const abra::server::ClientUDPMessage& data,
-    const std::shared_ptr<zygarde::Registry>& registry) {
-  const auto& playerEntity = player.second;
-  if (!registry->HasEntityAtIndex(playerEntity.operator std::size_t())) {
+void MessageHandler::HandlePlayerShootMessage(const std::pair<std::uint64_t, PlayerProps>& player,
+                                              const abra::server::ClientUDPMessage& data,
+                                              const std::shared_ptr<zygarde::Registry>& registry) {
+  const auto& playerEntity = player.second.entity;
+  if (!registry->HasEntityAtIndex(static_cast<std::size_t>(playerEntity))) {
     return;
   }
   auto scriptPool = registry->GetComponent<scripting::components::ScriptPool>(playerEntity);

@@ -10,16 +10,7 @@
 using namespace rtype::server::game::scripts;
 
 void rtype::server::game::scripts::DefaultProjectileScript::FixedUpdate(
-    const std::shared_ptr<scripting::types::ScriptingContext>& context) {
-  const auto posComponent =
-      context->registry->GetComponent<core::components::Position>(context->me);
-  if (!posComponent.has_value() || !posComponent.value()) {
-    return;
-  }
-  if ((*posComponent)->point.x > 2000 || (*posComponent)->point.x < -200) {
-    context->registry->DestroyEntity(context->me);
-  }
-}
+    const std::shared_ptr<scripting::types::ScriptingContext>& context) {}
 
 void DefaultProjectileScript::OnCollisionEnter(
     const std::shared_ptr<scripting::types::ScriptingContext>& context,

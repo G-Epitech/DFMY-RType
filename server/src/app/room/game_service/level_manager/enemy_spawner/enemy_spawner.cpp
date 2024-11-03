@@ -23,7 +23,7 @@ void EnemySpawner::Initialize(
   registry_ = registry;
 }
 
-void EnemySpawner::SpawnEnemy(const std::string& enemy_archetype_name) {
+Entity EnemySpawner::SpawnEnemy(const std::string& enemy_archetype_name) {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution dist(kEnemySpawnMinPositionY, kEnemySpawnMaxPositionY);
@@ -41,4 +41,5 @@ void EnemySpawner::SpawnEnemy(const std::string& enemy_archetype_name) {
   if (positionComponent.has_value() && positionComponent.value()) {
     positionComponent.value()->point = position;
   }
+  return entity;
 }
