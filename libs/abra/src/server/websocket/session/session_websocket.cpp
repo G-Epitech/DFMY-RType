@@ -16,12 +16,12 @@ using namespace boost;
 
 SessionWebsocket::SessionWebsocket(
     boost::asio::ip::tcp::socket socket, std::uint64_t clientId,
-    const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler_,
+    const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler,
     const std::function<void(std::uint64_t)> &onClose)
     : ws_(std::move(socket)),
       buffer_(),
       clientId_(clientId),
-      handler_(handler_),
+      handler_(handler),
       onClose_(onClose),
       logger_("session_websocket_" + std::to_string(clientId)) {}
 
