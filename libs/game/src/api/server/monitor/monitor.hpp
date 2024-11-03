@@ -69,12 +69,12 @@ class rtype::sdk::game::api::Monitor {
    * @param clientId The client id
    * @param rooms The rooms
    */
-  void SendRoomsToClient(std::uint64_t clientId, const std::map<std::uint64_t, RoomProps> &room);
+  void SendRoomsToClient(std::uint64_t clientId, const std::vector<RoomProps> &room);
 
   /**
    * @brief Send rooms to the monitor
    */
-  void SendRoomsToClients(const std::map<std::uint64_t, RoomProps> &room);
+  void SendRoomsToClients(const std::vector<RoomProps> &room);
 
  private:
   /// @brief The websocket server

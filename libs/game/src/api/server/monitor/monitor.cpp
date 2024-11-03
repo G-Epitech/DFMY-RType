@@ -109,9 +109,14 @@ void Monitor::SendNodesToClient(std::uint64_t clientId,
 
   this->ws_.SendToClient(clientId, response);
 
+  std::vector<RoomProps> rooms;
   for (const auto &node : nodes) {
-    SendRoomsToClient(clientId, node.second.rooms_);
+    for (const auto &room : node.second.rooms_) {
+      rooms.push_back(room.second);
+    }
   }
+
+  SendRoomsToClient(clientId, rooms);
 }
 
 void Monitor::SendNodesToClients(const std::map<std::uint64_t, NodeProps> &nodes) {
@@ -120,16 +125,15 @@ void Monitor::SendNodesToClients(const std::map<std::uint64_t, NodeProps> &nodes
   }
 }
 
-void Monitor::SendRoomsToClient(std::uint64_t clientId,
-                                const std::map<std::uint64_t, RoomProps> &rooms) {
+void Monitor::SendRoomsToClient(std::uint64_t clientId, const std::vector<RoomProps> &rooms) {
   boost::json::array roomsArray;
 
   for (const auto &room : rooms) {
     boost::json::object roomObject = {
-        {"id", room.second.id},
-        {"name", room.second.name},
-        {"players", room.second.nbPlayers},
-        {"maxPlayers", room.second.maxPlayers},
+        {"id", room.id},
+        {"name", room.name},
+        {"players", room.nbPlayers},
+        {"maxPlayers", room.maxPlayers},
     };
 
     roomsArray.push_back(roomObject);
@@ -144,7 +148,7 @@ void Monitor::SendRoomsToClient(std::uint64_t clientId,
   this->ws_.SendToClient(clientId, response);
 }
 
-void Monitor::SendRoomsToClients(const std::map<std::uint64_t, RoomProps> &rooms) {
+void Monitor::SendRoomsToClients(const std::vector<RoomProps> &rooms) {
   for (const auto &client : clients_) {
     SendRoomsToClient(client, rooms);
   }

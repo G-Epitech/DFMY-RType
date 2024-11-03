@@ -150,7 +150,7 @@ export default function MonitorPage() {
                         <ul className="space-y-2">
                             {rooms.map((room, index) => (
                                 <li key={index} className="flex justify-between items-center">
-                                    <span>{room.name}</span>
+                                    <span>{room.name || "New room"}</span>
                                     <span className="text-sm text-gray-600">
                     Players: {room.players}/{room.maxPlayers}
                   </span>
