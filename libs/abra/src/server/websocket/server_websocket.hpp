@@ -63,6 +63,12 @@ class abra::server::ServerWebsocket {
    */
   void RegisterNewClient(std::shared_ptr<SessionWebsocket> client, const std::uint64_t &clientId);
 
+  /**
+   * @brief Handle the session close
+   * @param clientId The client id
+   */
+  void OnSessionClose(const std::uint64_t &clientId);
+
   /// @brief Input Output Context
   boost::asio::io_context ioc_;
 

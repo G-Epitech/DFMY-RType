@@ -38,8 +38,9 @@ void ServerWebsocket::AcceptNewConnection() {
       lastClientId_++;
 
       logger_.Info("New connection accepted");
-      auto clientSession =
-          std::make_shared<SessionWebsocket>(std::move(socket), clientId, handler_);
+      auto clientSession = std::make_shared<SessionWebsocket>(
+          std::move(socket), clientId, handler_,
+          [this](std::uint64_t clientId) { this->OnSessionClose(clientId); });
 
       clientSession->Start();
       logger_.Info("Session started with clientID " + std::to_string(clientId));
@@ -81,4 +82,14 @@ void ServerWebsocket::SendToClient(const std::uint64_t &clientId,
   }
 
   clients_[clientId]->Send(message);
+}
+
+void ServerWebsocket::OnSessionClose(const std::uint64_t &clientId) {
+  if (clients_.find(clientId) == clients_.end()) {
+    logger_.Error("Client not found");
+    return;
+  }
+
+  clients_.erase(clientId);
+  logger_.Info("Client " + std::to_string(clientId) + " disconnected");
 }

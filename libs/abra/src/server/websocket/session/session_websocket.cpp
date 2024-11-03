@@ -16,11 +16,13 @@ using namespace boost;
 
 SessionWebsocket::SessionWebsocket(
     boost::asio::ip::tcp::socket socket, std::uint64_t clientId,
-    const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler_)
+    const std::function<void(std::pair<std::uint64_t, const boost::json::object &>)> &handler_,
+    const std::function<void(std::uint64_t)> &onClose)
     : ws_(std::move(socket)),
       buffer_(),
       clientId_(clientId),
       handler_(handler_),
+      onClose_(onClose),
       logger_("session_websocket_" + std::to_string(clientId)) {}
 
 SessionWebsocket::~SessionWebsocket() {
@@ -51,6 +53,7 @@ void SessionWebsocket::ListenNewRequest() {
       self->buffer_.consume(self->buffer_.size());
       self->ListenNewRequest();
     } else {
+      self->onClose_(self->clientId_);
       return;
     }
   });
@@ -75,11 +78,6 @@ void SessionWebsocket::Close() {
 
 void SessionWebsocket::Send(const boost::json::object &message) {
   auto json = boost::json::serialize(message);
-  auto self(shared_from_this());
 
-  ws_.async_write(boost::asio::buffer(json), [self](beast::error_code ec, std::size_t) {
-    if (ec) {
-      self->logger_.Error("Failed to send message: " + ec.message());
-    }
-  });
+  ws_.write(boost::asio::buffer(json));
 }

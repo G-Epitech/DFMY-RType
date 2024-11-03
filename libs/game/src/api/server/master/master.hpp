@@ -18,6 +18,7 @@
 #include "libs/game/src/api/props/payload/payload.hpp"
 #include "libs/game/src/api/server/database/database.hpp"
 #include "libs/game/src/api/server/monitor/monitor.hpp"
+#include "libs/game/src/api/server/props/client.hpp"
 #include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
@@ -32,21 +33,13 @@ class rtype::sdk::game::api::Master {
    * @param nodesPort The port of the nodes socket
    * @param databaseProps The properties of the database
    */
-  explicit Master(int clientsPort, int nodesPort,
+  explicit Master(int clientsPort, int nodesPort, std::string token,
                   const abra::database::MySQL::ConnectionProps &databaseProps);
 
   /**
    * @brief Delete the Server API instance
    */
   ~Master();
-
-  struct Client {
-    std::uint64_t id;
-    std::string username;
-    bool inRoom;
-    std::uint64_t nodeId;
-    std::uint64_t roomId;
-  };
 
   struct Room {
     std::uint64_t id;
@@ -209,7 +202,7 @@ class rtype::sdk::game::api::Master {
    * @param nodeId The node id
    * @param client The client
    */
-  void SendPlayerJoinToNode(const std::uint64_t &nodeId, const Client &client);
+  void SendPlayerJoinToNode(const std::uint64_t &nodeId, const ClientProps &client);
 
   /**
    * @brief Handle when a client close the session
@@ -224,11 +217,17 @@ class rtype::sdk::game::api::Master {
   void HandleClosedNodeSession(std::uint64_t nodeId);
 
   /**
+   * @brief Handle when a new monitor client is connected
+   * @param clientId The client id
+   */
+  void HandleNewMonitorClient(std::uint64_t clientId);
+
+  /**
    * @brief Get a client by its id
    * @param clientId The client id
    * @return The client
    */
-  Client &GetClientById(const std::uint64_t &clientId);
+  ClientProps &GetClientById(const std::uint64_t &clientId);
 
   /// @brief Server socket to communicate with clients (TCP)
   abra::server::ServerTCP clientsSocket_;
@@ -249,10 +248,13 @@ class rtype::sdk::game::api::Master {
   abra::tools::Logger logger_;
 
   /// @brief Vector of clients
-  std::vector<Client> clients_;
+  std::vector<ClientProps> clients_;
 
   /// @brief Vector of nodes
   std::map<std::uint64_t, Node> nodes_;
+
+  /// @brief Master token
+  std::string token_;
 
   /// @brief Database
   Database database_;
