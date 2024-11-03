@@ -380,7 +380,7 @@ void SceneStart::SetRoomInfo(const RoomsService::RoomStatusType &room) {
     if (tags & "room-info-label") {
       drawable.visible = true;
     } else if (tags & "room-info-name") {
-      text.text = std::to_string(room.roomId);
+      text.text = room.name;
       drawable.visible = true;
     } else if (tags & "room-info-difficulty") {
       text.text = std::to_string(room.difficulty);
