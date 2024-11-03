@@ -4,4 +4,5 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
 )
 add_subdirectory(game)
 add_subdirectory(leaderboard)
-add_subdirectory(utils)
+add_subdirectory(register)
+add_subdirectory(ui)

@@ -7,6 +7,8 @@
 
 #include "server_connection_service.hpp"
 
+#include "constants/settings.hpp"
+
 using namespace rtype::client::services;
 
 ServerConnectionService::ServerConnectionService(const std::string& ip, std::uint32_t port)
@@ -23,16 +25,19 @@ bool ServerConnectionService::Connected() const {
   return client_ != nullptr && connectionStatus_ == ConnectionStatus::kConnected;
 }
 
-void ServerConnectionService::ConnectAsync() {
+void ServerConnectionService::ConnectAsync(const std::string& username) {
   if (connectionThread_)
     return;
   connectionStatus_ = ConnectionStatus::kConnecting;
-  nextRetry_ = std::chrono::system_clock::now();
-  connectionThread_ = std::thread(&ServerConnectionService::Connect, this);
+  nextRetry_ = std::chrono::system_clock::now() + std::chrono::seconds(1);
+  connectionThread_ = std::thread(&ServerConnectionService::Connect, this, username);
 }
 
-void ServerConnectionService::Connect() {
-  while (connectionStatus_ == ConnectionStatus::kConnecting) {
+void ServerConnectionService::Connect(const std::string& username) {
+  char usernameChar[20] = {0};
+  strncpy(usernameChar, username.c_str(), sizeof(usernameChar) - 1);
+
+  while (connectionStatus_ != ConnectionStatus::kConnected) {
     if (std::chrono::system_clock::now() < nextRetry_)
       continue;
     try {
@@ -41,16 +46,22 @@ void ServerConnectionService::Connect() {
       client_ = client;
       clientMutex_.unlock();
 
-      auto res = client->Register({
-          .username = "ptit'plouf",
-      });
+      api::payload::PlayerConnect playerConnect{};
+      std::memcpy(playerConnect.username, usernameChar, sizeof(playerConnect.username));
+
+      auto res = client->Register(playerConnect);
       if (!res) {
         throw std::runtime_error("Failed to register to server");
       }
       connectionStatus_ = ConnectionStatus::kConnected;
     } catch (const std::exception& e) {
+      connectionStatus_ = ConnectionStatus::kFailed;
       std::cerr << "[ERROR]: Failed to connect to server: " << e.what() << std::endl;
       nextRetry_ = std::chrono::system_clock::now() + std::chrono::seconds(3);
     }
   }
+}
+
+ServerConnectionService::ConnectionStatus ServerConnectionService::connectionStatus() const {
+  return connectionStatus_;
 }

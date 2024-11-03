@@ -7,7 +7,7 @@
 
 #include "./drawable_system.hpp"
 
-#include <iostream>
+#include <map>
 #include <utility>
 
 using namespace mew::sets::drawable;
@@ -23,14 +23,32 @@ DrawableSystem::DrawableSystem(WindowManager::Ptr window_manager,
 void DrawableSystem::Run(Registry::Ptr r,
                          zipper<drawable::Drawable, zyc::components::Position> components) {
   const auto window = windowManager_->window();
+  std::set<unsigned int, std::less<>> layers = {0};
+  unsigned int current_layer = 0;
+  bool indexed = false;
+
   window->clear();
-  for (auto&& [drawable, position] : components) {
-    if (!drawable.visible) {
-      continue;
+
+  do {
+    {
+      auto next = layers.begin();
+      if (!layers.empty()) {
+        current_layer = *next;
+        layers.erase(next);
+      }
     }
-    windowManager_->SetView(drawable.view);
-    DrawEntity(&drawable, position);
-  }
+    for (auto&& [drawable, position] : components) {
+      if (!drawable.visible) {
+        continue;
+      } else if (drawable.layer == current_layer) {
+        DrawEntity(&drawable, position);
+      } else if (!indexed) {
+        layers.insert(drawable.layer);
+      }
+    }
+    indexed = true;
+  } while (!layers.empty());
+
   window->display();
 }
 
@@ -67,6 +85,7 @@ std::tuple<float, float> DrawableSystem::GetOrigin(const zyc::components::Positi
 }
 
 void DrawableSystem::DrawEntity(Drawable* drawable, const zyc::components::Position& position) {
+  windowManager_->SetView(drawable->view);
   std::visit(
       [this, position, drawable](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
@@ -127,7 +146,6 @@ void DrawableSystem::DrawEntityText(const Text& text, const zyc::components::Pos
   text_.setCharacterSize(text.characterSize);
   text_.setFillColor(text.color);
   text_.setPosition(position.point.x, position.point.y);
-
   text_.setOutlineColor(text.color);
   text_.setOutlineThickness(text.style == sf::Text::Style::Underlined ? 1 : 0);
 
@@ -143,15 +161,15 @@ void DrawableSystem::DrawEntityRectangle(const Rectangle& rectangle,
   const auto render_states = shader ? shader.get() : sf::RenderStates::Default;
 
   if (shader) {
-    shader->setUniform("objectColor", sf::Glsl::Vec4(rectangle.color));
+    shader->setUniform("objectColor", sf::Glsl::Vec4(rectangle.fillColor));
     shader->setUniform("hasTexture", false);
   }
 
-  shape_.setFillColor(rectangle.color);
+  shape_.setFillColor(rectangle.fillColor);
   shape_.setSize(rectangle.size);
   shape_.setPosition(position.point.x, position.point.y);
-  shape_.setOutlineColor(rectangle.outlineColor);
   shape_.setOutlineThickness(rectangle.outlineThickness);
+  shape_.setOutlineColor(rectangle.outlineColor);
 
   const auto origin = GetOrigin(position, shape_.getGlobalBounds());
   shape_.setOrigin(std::get<0>(origin), std::get<1>(origin));
