@@ -7,10 +7,14 @@
 
 #pragma once
 
+#include <map>
+
 #include "libs/abra/includes/network.hpp"
 #include "libs/abra/src/tools/logger/logger.hpp"
 #include "libs/game/src/api/props/network.hpp"
 #include "libs/game/src/api/server/props/client.hpp"
+#include "libs/game/src/api/server/props/node.hpp"
+#include "libs/game/src/api/server/props/room.hpp"
 #include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
@@ -46,6 +50,30 @@ class rtype::sdk::game::api::Monitor {
    * @brief Send players to the monitor
    */
   void SendPlayersToClients(const std::vector<ClientProps> &clients);
+
+  /**
+   * @brief Send rooms to the monitor
+   * @param clientId The client id
+   * @param rooms The rooms
+   */
+  void SendNodesToClient(std::uint64_t clientId, const std::map<std::uint64_t, NodeProps> &node);
+
+  /**
+   * @brief Send rooms to the monitor
+   */
+  void SendNodesToClients(const std::map<std::uint64_t, NodeProps> &node);
+
+  /**
+   * @brief Send rooms to the monitor
+   * @param clientId The client id
+   * @param rooms The rooms
+   */
+  void SendRoomsToClient(std::uint64_t clientId, const std::map<std::uint64_t, RoomProps> &room);
+
+  /**
+   * @brief Send rooms to the monitor
+   */
+  void SendRoomsToClients(const std::map<std::uint64_t, RoomProps> &room);
 
  private:
   /// @brief The websocket server

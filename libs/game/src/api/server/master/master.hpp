@@ -19,6 +19,8 @@
 #include "libs/game/src/api/server/database/database.hpp"
 #include "libs/game/src/api/server/monitor/monitor.hpp"
 #include "libs/game/src/api/server/props/client.hpp"
+#include "libs/game/src/api/server/props/node.hpp"
+#include "libs/game/src/api/server/props/room.hpp"
 #include "libs/game/src/core.hpp"
 
 namespace rtype::sdk::game::api {
@@ -40,23 +42,6 @@ class rtype::sdk::game::api::Master {
    * @brief Delete the Server API instance
    */
   ~Master();
-
-  struct Room {
-    std::uint64_t id;
-    std::string name;
-    unsigned int maxPlayers;
-    unsigned int nbPlayers;
-    unsigned int difficulty;
-    unsigned int gamePort;
-    unsigned int chatPort;
-  };
-
-  struct Node {
-    std::uint64_t id;
-    std::string name;
-    std::size_t maxRooms;
-    std::map<std::uint64_t, Room> rooms_;
-  };
 
   /**
    * @brief Extract queue of messages
@@ -195,7 +180,7 @@ class rtype::sdk::game::api::Master {
    * @param room The room
    * @param node The node
    */
-  void SendInfoRoom(std::uint64_t clientId, const Room &room, const Master::Node &node);
+  void SendInfoRoom(std::uint64_t clientId, const RoomProps &room, const NodeProps &node);
 
   /**
    * @brief Send a player join to a node
@@ -251,7 +236,7 @@ class rtype::sdk::game::api::Master {
   std::vector<ClientProps> clients_;
 
   /// @brief Vector of nodes
-  std::map<std::uint64_t, Node> nodes_;
+  std::map<std::uint64_t, NodeProps> nodes_;
 
   /// @brief Master token
   std::string token_;

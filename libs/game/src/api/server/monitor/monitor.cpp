@@ -79,3 +79,71 @@ void Monitor::SendPlayersToClients(const std::vector<ClientProps> &clients) {
     SendPlayersToClient(client, clients);
   }
 }
+
+void Monitor::SendNodesToClient(std::uint64_t clientId,
+                                const std::map<std::uint64_t, NodeProps> &nodes) {
+  boost::json::array nodesArray;
+
+  for (const auto &node : nodes) {
+    auto status = "partial";
+    if (node.second.maxRooms <= node.second.rooms_.size())
+      status = "unavailable";
+    if (node.second.rooms_.empty())
+      status = "free";
+
+    boost::json::object nodeObject = {{"id", node.second.id},
+                                      {"name", node.second.name},
+                                      {"maxRooms", node.second.maxRooms},
+                                      {"currentRooms", node.second.rooms_.size()},
+                                      {"status", status}};
+
+    nodesArray.push_back(nodeObject);
+  }
+
+  boost::json::object response = {
+      {"type", "nodes"},
+      {"nodes", nodesArray},
+  };
+
+  this->ws_.SendToClient(clientId, response);
+
+  for (const auto &node : nodes) {
+    SendRoomsToClient(clientId, node.second.rooms_);
+  }
+}
+
+void Monitor::SendNodesToClients(const std::map<std::uint64_t, NodeProps> &nodes) {
+  for (const auto &client : clients_) {
+    SendNodesToClient(client, nodes);
+  }
+}
+
+void Monitor::SendRoomsToClient(std::uint64_t clientId,
+                                const std::map<std::uint64_t, RoomProps> &rooms) {
+  boost::json::array roomsArray;
+
+  for (const auto &room : rooms) {
+    boost::json::object roomObject = {
+        {"id", room.second.id},
+        {"name", room.second.name},
+        {"players", room.second.nbPlayers},
+        {"maxPlayers", room.second.maxPlayers},
+    };
+
+    roomsArray.push_back(roomObject);
+  }
+
+  boost::json::object response = {
+      {"type", "rooms"},
+      {"rooms", roomsArray},
+  };
+
+  std::cout << response << std::endl;
+  this->ws_.SendToClient(clientId, response);
+}
+
+void Monitor::SendRoomsToClients(const std::map<std::uint64_t, RoomProps> &rooms) {
+  for (const auto &client : clients_) {
+    SendRoomsToClient(client, rooms);
+  }
+}

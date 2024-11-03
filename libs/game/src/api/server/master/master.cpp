@@ -221,6 +221,7 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
     SendPlayerJoinToNode(node.id, client);
 
     this->monitor_.SendPlayersToClients(this->clients_);
+    this->monitor_.SendNodesToClients(this->nodes_);
 
     logger_.Info("Client joined room: " + room.name, "🏠");
   } catch (const std::exception &e) {
@@ -228,8 +229,7 @@ void Master::HandleJoinRoom(const abra::server::ClientTCPMessage &message) {
   }
 }
 
-void Master::SendInfoRoom(std::uint64_t clientId, const Master::Room &room,
-                          const Master::Node &node) {
+void Master::SendInfoRoom(std::uint64_t clientId, const RoomProps &room, const NodeProps &node) {
   payload::InfoRoom infoPayload = {
       .gamePort = room.gamePort,
       .chatPort = room.chatPort,
@@ -257,13 +257,15 @@ void Master::HandleRegisterNode(const abra::server::ClientTCPMessage &message) {
     auto packet = this->packetBuilder_.Build<payload::RegisterNode>(message.bitset);
     auto payload = packet->GetPayload();
 
-    Node node = {
+    NodeProps node = {
         .id = message.clientId,
         .name = payload.name,
         .maxRooms = payload.maxRooms,
     };
 
     this->nodes_[node.id] = std::move(node);
+
+    this->monitor_.SendNodesToClients(this->nodes_);
     logger_.Info("New node registered: " + this->nodes_[node.id].name, "🌐");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling register node: " + std::string(e.what()), "❌");
@@ -281,7 +283,7 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
     }
 
     auto &node = this->nodes_[message.clientId];
-    Room room = {
+    RoomProps room = {
         .id = payload.id,
         .name = payload.name,
         .maxPlayers = payload.nbPlayers,
@@ -292,6 +294,8 @@ void Master::HandleRegisterRoom(const abra::server::ClientTCPMessage &message) {
     };
 
     node.rooms_[room.id] = std::move(room);
+
+    this->monitor_.SendNodesToClients(this->nodes_);
     logger_.Info("New room registered: " + std::string(node.rooms_[room.id].name), "🏠");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling register room: " + std::string(e.what()), "❌");
@@ -341,6 +345,7 @@ void Master::HandleRoomGameEnded(const abra::server::ClientTCPMessage &message) 
 
     node.rooms_.erase(payload.id);
 
+    this->monitor_.SendNodesToClients(this->nodes_);
     logger_.Info("Room game ended", "🎮");
   } catch (const std::exception &e) {
     logger_.Error("Error while handling room game ended: " + std::string(e.what()), "❌");
@@ -396,6 +401,9 @@ void Master::HandleClosedNodeSession(std::uint64_t nodeId) {
   }
 
   this->nodes_.erase(nodeIt);
+
+  this->monitor_.SendPlayersToClients(this->clients_);
+  this->monitor_.SendNodesToClients(this->nodes_);
   logger_.Info("Node disconnected", "🌐");
 }
 
@@ -412,4 +420,5 @@ ClientProps &Master::GetClientById(const std::uint64_t &clientId) {
 
 void Master::HandleNewMonitorClient(std::uint64_t clientId) {
   this->monitor_.SendPlayersToClient(clientId, this->clients_);
+  this->monitor_.SendNodesToClient(clientId, this->nodes_);
 }

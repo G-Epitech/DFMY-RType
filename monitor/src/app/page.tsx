@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
-import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import {useEffect, useState} from "react";
+import {Button} from "@nextui-org/button";
+import {Input} from "@nextui-org/input";
+import {Card, CardBody, CardHeader} from "@nextui-org/card";
 import useWebSocket from "./websocket";
 
 type Player = {
@@ -13,6 +13,7 @@ type Player = {
 };
 
 type Node = {
+    id: number,
     name: string;
     ping: number;
     maxRooms: number;
@@ -21,13 +22,14 @@ type Node = {
 };
 
 type Room = {
+    id: number,
     name: string;
     players: number;
-    time: string;
+    maxPlayers: number;
 };
 
 export default function MonitorPage() {
-    const { messages, sendMessage, clearMessages } = useWebSocket('ws://localhost:8060');
+    const {messages, sendMessage, clearMessages} = useWebSocket('ws://localhost:8060');
     const [token, setToken] = useState('');
     const [connected, setConnected] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
@@ -101,7 +103,8 @@ export default function MonitorPage() {
                                 <li key={index} className="flex justify-between items-center">
                                     <span>{player.name}</span>
                                     <div className="flex items-center gap-2">
-                                        <span className={`w-3 h-3 rounded-full ${player.inGame ? 'bg-success' : 'bg-danger'}`}></span>
+                                        <span
+                                            className={`w-3 h-3 rounded-full ${player.inGame ? 'bg-success' : 'bg-danger'}`}></span>
 
                                         <Button
                                             size="sm"
@@ -133,7 +136,7 @@ export default function MonitorPage() {
                                         }`}></span>
                                     </div>
                                     <div className="text-sm text-gray-600">
-                                        Ping: {node.ping}ms | Rooms: {node.currentRooms}/{node.maxRooms}
+                                        Ping: {node.ping || 10}ms | Rooms: {node.currentRooms}/{node.maxRooms}
                                     </div>
                                 </li>
                             ))}
@@ -149,7 +152,7 @@ export default function MonitorPage() {
                                 <li key={index} className="flex justify-between items-center">
                                     <span>{room.name}</span>
                                     <span className="text-sm text-gray-600">
-                    Players: {room.players} | Time: {room.time}
+                    Players: {room.players}/{room.maxPlayers}
                   </span>
                                 </li>
                             ))}
