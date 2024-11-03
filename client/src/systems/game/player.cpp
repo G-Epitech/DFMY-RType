@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "client/src/constants/settings.hpp"
+#include "constants/chat.hpp"
 #include "libs/game/src/types/projectile.hpp"
 
 using namespace rtype::client::systems;
@@ -26,6 +27,10 @@ PlayerSystem::PlayerSystem(SettingsManager::Ptr settings_manager, WindowManager:
 void PlayerSystem::Run(Registry::Ptr r) {
   const auto events = windowManager_->GetDeferredEvents();
   const auto key_map = settingsManager_->Get<KeyMap>(SETTING_GAME_KEYMAP);
+
+  if (settingsManager_->Get<bool>(CHAT_IS_OPEN)) {
+    return;
+  }
 
   // If a key is pressed, we send a message to the server
   for (const auto &event : events) {

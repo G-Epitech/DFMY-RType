@@ -29,7 +29,7 @@ class ServerConnectionService {
    * @param ip IP of the server
    * @param port Port of the server
    */
-  ServerConnectionService(const std::string &ip, std::uint32_t port);
+  ServerConnectionService(const std::string& ip, std::uint32_t port);
 
   /**
    * @brief Destruct a Server Connection Service object
@@ -43,9 +43,9 @@ class ServerConnectionService {
 
   /**
    * @brief Try to connect to the server
-   * @return True if the connection is successful, false otherwise
+   * @param username Username to connect with*
    */
-  void ConnectAsync();
+  void ConnectAsync(const std::string& username);
 
   /**
    * @brief Check if the client is connected
@@ -53,17 +53,25 @@ class ServerConnectionService {
    */
   [[nodiscard]] bool Connected() const;
 
- private:
   enum class ConnectionStatus {
     kDisconnected,  ///< Disconnected
     kConnecting,    ///< Connecting
     kConnected,     ///< Connected
+    kFailed,        ///< Failed to connect
   };
 
   /**
-   * @brief Connect to the server
+   * @brief Get the connection status
+   * @return ConnectionStatus The connection status
    */
-  void Connect();
+  [[nodiscard]] ConnectionStatus connectionStatus() const;
+
+ private:
+  /**
+   * @brief Connect to the server
+   * @param username Username to connect with
+   */
+  void Connect(const std::string& username);
 
   /// @brief To protect the client
   std::mutex clientMutex_;

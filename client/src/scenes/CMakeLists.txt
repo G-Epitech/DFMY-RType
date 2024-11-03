@@ -9,6 +9,9 @@ target_sources(${CLIENT_CORE_LIB} PRIVATE
         lobby.hpp
         leaderboard.cpp
         leaderboard.hpp
+        register.cpp
+        register.hpp
+        end.cpp
+        end.hpp
 )
-
-add_subdirectory(utils)
+add_subdirectory(start)

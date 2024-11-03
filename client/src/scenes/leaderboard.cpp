@@ -14,6 +14,7 @@
 using namespace rtype::client;
 using namespace rtype::client::scenes;
 using namespace mew::sets::events;
+using namespace mew::sets;
 using namespace mew::sets::drawable;
 using namespace mew::managers;
 using namespace zygarde::core::components;
@@ -60,7 +61,7 @@ void SceneLeaderboard::CreateMainEntity() const {
 
 void SceneLeaderboard::CreateTitle() const {
   const auto title = registry_->SpawnEntity();
-  const auto point = Vector3f(managers_.window->width_ / 2, 150);
+  const auto point = Vector3f(managers_.window->GetWidth() / 2, 150);
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
 
   registry_->AddComponent<Position>(title, {point, aligns});
@@ -71,7 +72,7 @@ void SceneLeaderboard::CreateTitle() const {
 void SceneLeaderboard::CreateBackButton() const {
   const auto exit_button = registry_->SpawnEntity();
   const auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
-  const auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ - 50);
+  const auto point = Vector3f(managers_.window->GetWidth() / 2, managers_.window->GetHeight() - 50);
 
   registry_->AddComponent<Position>(exit_button, {point, aligns});
   registry_->AddComponent<Drawable>(exit_button,
@@ -113,9 +114,9 @@ void SceneLeaderboard::CreateLeaderboard() const {
   const auto rectangleSize = sf::Vector2f(600, 115);
 
   for (std::size_t i = 0; i < 5; i++) {
-    const auto origin = Vector3f(
-        managers_.window->width_ / 2,
-        ((managers_.window->height_ / 2) - (rectangleSize.y * 2)) + ((rectangleSize.y + 20) * i));
+    const auto origin = Vector3f(managers_.window->GetWidth() / 2,
+                                 ((managers_.window->GetHeight() / 2) - (rectangleSize.y * 2)) +
+                                     ((rectangleSize.y + 20) * i));
     const auto textOrigin =
         Vector3f(origin.x - rectangleSize.x / 2, origin.y - rectangleSize.y / 2);
 
@@ -147,9 +148,11 @@ void SceneLeaderboard::CreateScoreRectangle(const std::size_t &index, const sf::
   const auto point = origin;
 
   registry_->AddComponent<Position>(entry, {point, aligns});
-  registry_->AddComponent<Drawable>(
-      entry,
-      {Rectangle{sf::Color::Transparent, size, sf::Color::White, 3.0}, WindowManager::View::HUD});
+  registry_->AddComponent<Drawable>(entry, {drawable::Rectangle{.fillColor = sf::Color::Transparent,
+                                                                .outlineColor = sf::Color::White,
+                                                                .outlineThickness = 3.0,
+                                                                .size = size},
+                                            WindowManager::View::HUD});
 }
 
 void SceneLeaderboard::CreateScoreTitle(const std::size_t &index,

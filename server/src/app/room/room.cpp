@@ -19,6 +19,19 @@ rtype::server::Room::Room(const BaseContext &ctx)
 int rtype::server::Room::Run() {
   api_->RegisterNewRoom();
 
+  auto result = gameService_.Initialize();
+  if (result == EXIT_FAILURE) {
+    return EXIT_FAILURE;
+  }
+
+  while (true) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    if (gameService_.GetNbPlayers() >= ctx_.props.maxPlayers) {
+      api_->StartGame();
+      break;
+    }
+  }
+
   gameService_.Run(api_);
   return EXIT_SUCCESS;
 }

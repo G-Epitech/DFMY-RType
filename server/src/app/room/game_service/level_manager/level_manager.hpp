@@ -67,8 +67,15 @@ class LevelManager final {
    * @return True if the level is finished, false otherwise
    */
   [[nodiscard]] inline bool LevelIsFinished() const noexcept {
-    return currentWaveIndex_ >= selectedLevel_.waves.size();
+    return currentWaveIndex_ >= selectedLevel_.waves.size() && AllEnemiesAreDead() &&
+           !stillSpawning_;
   }
+
+  /**
+   * @brief Check if enemies are dead.
+   * @param entities_to_kill Reference to the list of entities to kill in the registry
+   */
+  void CheckDeadEnemies(const std::list<Entity>& entities_to_kill);
 
  private:
   /// @brief Level spawn properties
@@ -119,6 +126,12 @@ class LevelManager final {
    */
   void NextWave();
 
+  /**
+   * @brief Check if all enemies are dead
+   * @return True if all enemies are dead, false otherwise
+   */
+  [[nodiscard]] inline bool AllEnemiesAreDead() const noexcept { return spawnedEnemies_.empty(); }
+
  private:
   /// @brief Selected level
   Level selectedLevel_;
@@ -136,5 +149,9 @@ class LevelManager final {
   std::vector<SpawnCooldowns> ongoingSpawnCooldowns_;
   /// @brief Enemy spawner
   EnemySpawner enemySpawner_;
+  /// @brief Entities of spawned enemies
+  std::vector<Entity> spawnedEnemies_;
+  /// @brief Still spawning flag
+  bool stillSpawning_ = true;
 };
 }  // namespace rtype::server::game

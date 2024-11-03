@@ -18,7 +18,7 @@ class BlinkSystem final
  public:
   BlinkSystem();
 
-  void Run(std::shared_ptr<Registry> r, ComponentsPtr components) override;
+  void Run(std::shared_ptr<Registry> r, ZippedComponents components) override;
 
  private:
   /// @brief The clock to correctly blink the entities

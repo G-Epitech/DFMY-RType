@@ -42,6 +42,7 @@ class SceneLobby final : public SceneBase {
     kRegistrationInProgress,  ///< Registration in progress
     kRegistered,              ///< Registered in on the server
     kJoining,                 ///< Joining the lobby
+    kWaitingPlayers,          ///< Waiting for players
     kIn,                      ///< In the lobby
   };
 
@@ -69,6 +70,11 @@ class SceneLobby final : public SceneBase {
    * @brief Update the status text
    */
   void UpdateStatusText();
+
+  /**
+   * @brief Wait for the game to start
+   */
+  void WaitGameStart();
 
   /// @brief The current lobby status
   LobbyStatus status_ = LobbyStatus::kNone;

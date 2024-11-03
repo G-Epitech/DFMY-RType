@@ -21,14 +21,14 @@ class EXPORT_ZYGARDE_API ASystem : public ISystem {
  public:
   void operator()(std::shared_ptr<Registry> r) override;
 
-  typedef zipper<Components...> ComponentsPtr;
+  typedef zipper<Components...> ZippedComponents;
 
   /**
    * @brief Run the system
    * @param r The registry
    * @param components The components
    */
-  virtual void Run(std::shared_ptr<Registry> r, ComponentsPtr components) = 0;
+  virtual void Run(std::shared_ptr<Registry> r, ZippedComponents components) = 0;
 };
 
 /**
