@@ -47,7 +47,8 @@ class Input {
    */
   static void CreateInputField(const Registry::Ptr& registry, const std::string& tag,
                                const core::types::Vector3f& position,
-                               core::components::Alignment alignment, unsigned int character_size, bool disabled);
+                               core::components::Alignment alignment, unsigned int character_size,
+                               bool disabled);
 
   /**
    * @brief Create a blinking cursor
