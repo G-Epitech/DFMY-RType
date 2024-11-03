@@ -38,9 +38,7 @@ void SceneMenu::OnCreate() {
   CreateServerConnectionLabel();
 }
 
-void SceneMenu::OnActivate() {
-  serverConnectionService_->ConnectAsync();
-}
+void SceneMenu::OnActivate() {}
 
 void SceneMenu::Update(DeltaTime delta_time) {
   UpdateConnectionLabel();
@@ -69,8 +67,7 @@ void SceneMenu::CreatePlayButton() const {
       OnMousePressed{.strategy = MouseEventTarget::kLocalTarget,
                      .handler = [this](const sf::Mouse::Button& button, const sf::Vector2f& pos,
                                        const MouseEventTarget& target) {
-                       if (button == sf::Mouse::Button::Left &&
-                           serverConnectionService_->Connected()) {
+                       if (button == sf::Mouse::Button::Left) {
                          managers_.scenes->GoToScene<SceneLobby>();
                        }
                      }});
@@ -247,7 +244,7 @@ std::string SceneMenu::GetConnectionLabelText() const {
   if (serverConnectionService_->Connected()) {
     return "Connected to server";
   } else {
-    return "Connecting to server. Please wait.";
+    return "An error occurred while connecting to the server";
   }
 }
 
