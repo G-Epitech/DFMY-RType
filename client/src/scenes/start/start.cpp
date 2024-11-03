@@ -15,6 +15,7 @@
 #include "client/src/ui/select/select.hpp"
 #include "libs/mew/src/managers/window_manager.hpp"
 #include "libs/zygarde/src/core/components/position/position.hpp"
+#include "scenes/lobby.hpp"
 
 using namespace rtype::client::scenes;
 using namespace rtype::client::ui;
@@ -47,7 +48,11 @@ void SceneStart::Update(DeltaTime delta_time) {
   roomsService_->PollUpdate();
   registry_->RunSystems();
   UpdateSelects();
-  UpdateControls();
+  {
+    auto room_id = Select::GetValue(registry_, "rooms");
+    UpdateControls(room_id);
+    UpdateRoomInfos(room_id);
+  }
 }
 
 void SceneStart::CreateStaticLabels() {
@@ -162,20 +167,18 @@ void SceneStart::CreateControls() {
                      .action = [this](const sf::Mouse::Button &button, const sf::Vector2f pos,
                                       const MouseEventTarget &target) { roomsService_->Refresh(); },
                  });
-  Button::Create(registry_, Button::Properties{
-                                .id = "play",
-                                .label = "Join room",
-                                .fontName = "main",
-                                .position = Vector3f(center.x + 60, center.y - 280),
-                                .size = Vector2f(150, 25),
-                                .disabled = false,
-                                .color = sf::Color(17, 21, 138),
-                                .action =
-                                    [](const sf::Mouse::Button &button, const sf::Vector2f pos,
-                                       const MouseEventTarget &target) {
-                                      std::cout << "Refresh button clicked" << std::endl;
-                                    },
-                            });
+  Button::Create(registry_,
+                 Button::Properties{
+                     .id = "play",
+                     .label = "Join room",
+                     .fontName = "main",
+                     .position = Vector3f(center.x + 60, center.y - 280),
+                     .size = Vector2f(150, 25),
+                     .disabled = false,
+                     .color = sf::Color(17, 21, 138),
+                     .action = [this](const sf::Mouse::Button &button, const sf::Vector2f pos,
+                                      const MouseEventTarget &target) { OnJoinRoom(); },
+                 });
 }
 
 void SceneStart::CreateMainEntity() {
@@ -262,12 +265,13 @@ void SceneStart::UpdateSelectedNode() {
   }
 }
 
-void SceneStart::UpdateControls() {
+void SceneStart::UpdateControls(const std::optional<std::string> &room_id) {
   auto selected_room = Select::GetValue(registry_, "rooms");
 
   Button::SetEnabled(registry_, "play", selected_room.has_value());
   Button::SetEnabled(registry_, "new-room", roomsService_->CanCreateRoom());
 }
+
 void SceneStart::CreateRoomInfoArea() {
   const auto center = managers_.window->GetCenter();
   const auto entity = registry_->SpawnEntity();
@@ -292,28 +296,37 @@ void SceneStart::CreateRoomInfoArea() {
 }
 
 void SceneStart::CreateRoomInfosContent() {
-  static const std::map<std::string, std::string> infos = {
-      {"name", "Name"},
-      {"difficulty", "Difficulty"},
-      {"nb-players", "Number of players"},
+  static const std::unordered_map<std::string, std::string> infos = {
       {"nb-players-max", "Max number of players"},
+      {"nb-players", "Number of players"},
+      {"difficulty", "Difficulty"},
+      {"name", "Name"},
   };
   const auto center = managers_.window->GetCenter();
   const auto aligns = Alignment{HorizontalAlign::kLeft, VerticalAlign::kBottom};
-  auto point = Vector3f(center.x - 410, center.y - 70);
+  auto y = center.y - 70;
   const auto step = 30;
 
   for (const auto &[key, label] : infos) {
-    point.y += step;
+    y += step;
+    registry_->SpawnEntity<TextEntity>(
+        TextEntity::Properties{.text = label + ":",
+                               .position = Vector3f(center.x - 410, y),
+                               .fontName = "main",
+                               .characterSize = 13,
+                               .color = sf::Color::White,
+                               .alignment = aligns,
+                               .tags = {"room-info-label"},
+                               .visible = true});
     registry_->SpawnEntity<TextEntity>(TextEntity::Properties{
         .text = label + ":",
-        .position = point,
+        .position = Vector3f(center.x - 90, y),
         .fontName = "main",
         .characterSize = 13,
         .color = sf::Color::White,
         .alignment = aligns,
         .tags = {"room-info-" + key},
-        .visible = false,
+        .visible = true,
     });
   }
 
@@ -326,6 +339,92 @@ void SceneStart::CreateRoomInfosContent() {
       .alignment = {HorizontalAlign::kCenter, VerticalAlign::kCenter},
       .style = sf::Text::Style::Italic,
       .tags = {"room-info-no-room"},
-      .visible = true,
+      .visible = false,
   });
+}
+
+void SceneStart::UpdateRoomInfos(const std::optional<std::string> &room_id) {
+  auto rooms = roomsService_->GetRooms();
+  auto tags = registry_->GetMatchingEntities<Drawable, Tags>();
+
+  if (!room_id || !selectedNode_ || !rooms.contains(*selectedNode_)) {
+    HideRoomInfo();
+    return;
+  }
+  try {
+    auto room_sub_id = std::stoul(*room_id);
+    auto &node = rooms.at(*selectedNode_);
+
+    if (!node.contains(room_sub_id)) {
+      return HideRoomInfo();
+    }
+    SetRoomInfo(node.at(room_sub_id));
+  } catch (const std::exception &e) {
+    HideRoomInfo();
+    return;
+  }
+}
+
+void SceneStart::SetRoomInfo(const RoomsService::RoomStatusType &room) {
+  auto components = registry_->GetMatchingEntities<Drawable, Tags>();
+
+  for (auto &&[drawable, tags] : components) {
+    if (tags & "room-info-no-room") {
+      drawable.visible = false;
+      continue;
+    } else if (!std::holds_alternative<Text>(drawable.drawable)) {
+      continue;
+    }
+    auto &text = std::get<Text>(drawable.drawable);
+    if (tags & "room-info-label") {
+      drawable.visible = true;
+    } else if (tags & "room-info-name") {
+      text.text = std::to_string(room.roomId);
+      drawable.visible = true;
+    } else if (tags & "room-info-difficulty") {
+      text.text = std::to_string(room.difficulty);
+      drawable.visible = true;
+    } else if (tags & "room-info-nb-players") {
+      text.text = std::to_string(room.nbPlayers);
+      drawable.visible = true;
+    } else if (tags & "room-info-nb-players-max") {
+      text.text = std::to_string(room.nbPlayersMax);
+      drawable.visible = true;
+    }
+  }
+}
+
+void SceneStart::HideRoomInfo() {
+  auto components = registry_->GetMatchingEntities<Drawable, Tags>();
+  static const std::vector<std::string> props = {
+      "label", "name", "difficulty", "nb-players", "nb-players-max",
+  };
+  for (auto &&[drawable, tags] : components) {
+    if (tags & "room-info-no-room") {
+      drawable.visible = true;
+      continue;
+    }
+    for (const auto &prop : props) {
+      if (tags & ("room-info-" + prop)) {
+        drawable.visible = false;
+      }
+    }
+  }
+}
+void SceneStart::OnJoinRoom() {
+  auto room_id_str = Select::GetValue(registry_, "rooms");
+  if (!room_id_str || !selectedNode_) {
+    return;
+  }
+  try {
+    auto room_id = std::stoull(*room_id_str);
+    auto res = roomsService_->JoinRoom(*selectedNode_, room_id);
+    if (res) {
+      managers_.scenes->GoToScene<SceneLobby>();
+    } else {
+      std::cerr << "Unable to join the room" << std::endl;
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Invalid room id: " << *room_id_str << std::endl;
+  }
 }

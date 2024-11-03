@@ -37,12 +37,9 @@ class SceneLobby final : public SceneBase {
    * @brief Create the title
    */
   enum class LobbyStatus {
-    kNone,                    ///< No status
-    kFailed,                  ///< Failed to join the lobby
-    kRegistrationInProgress,  ///< Registration in progress
-    kRegistered,              ///< Registered in on the server
-    kJoining,                 ///< Joining the lobby
-    kIn,                      ///< In the lobby
+    kNone,     ///< No status
+    kWaiting,  ///< Waiting for the lobby
+    kIn,       ///< In the lobby
   };
 
   /**
@@ -58,12 +55,12 @@ class SceneLobby final : public SceneBase {
   /**
    * @brief Join the lobby
    */
-  void JoinLobby();
+  void Wait();
 
   /**
    * @brief Join the lobby asynchronously
    */
-  void JoinLobbyAsync();
+  void WaitAsync();
 
   /**
    * @brief Update the status text

@@ -17,8 +17,14 @@ void RoomsService::Refresh() {
   if (!serverConnectionService_->Connected()) {
     return;
   }
+  auto res = serverConnectionService_->client()->CreateRoom({
+      .name = "test",
+      .nbPlayers = 4,
+      .difficulty = 0,
+  });
   serverConnectionService_->client()->RefreshInfos(false, true);
 }
+
 void RoomsService::PollUpdate() {
   if (!serverConnectionService_->Connected()) {
     return;
@@ -57,4 +63,16 @@ RoomsService::RoomsMap RoomsService::GetRooms() const {
 }
 bool RoomsService::CanCreateRoom() const {
   return canCreateRoom_;
+}
+bool RoomsService::JoinRoom(RoomsService::NodeIdType node_id, RoomsService::RoomIdType room_id) {
+  if (!serverConnectionService_->Connected()) {
+    return false;
+  }
+  if (!rooms_.contains(node_id) || !rooms_[node_id].contains(room_id)) {
+    return false;
+  }
+  return serverConnectionService_->client()->JoinRoom({
+      .nodeId = node_id,
+      .roomId = room_id,
+  });
 }

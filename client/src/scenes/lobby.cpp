@@ -8,6 +8,7 @@
 #include "lobby.hpp"
 
 #include "./game.hpp"
+#include "libs/game/src/api/client/client.hpp"
 #include "libs/mew/src/sets/drawable/drawable.hpp"
 
 using namespace rtype::client::scenes;
@@ -18,6 +19,7 @@ using namespace porygon;
 using namespace mew::sets::drawable;
 using namespace mew::scenes;
 using namespace mew::managers;
+using namespace rtype::sdk::game::api;
 
 SceneLobby::SceneLobby(DependenciesHandler::Ptr services) : SceneBase(std::move(services)) {
   serverConnectionService_ = services_->GetOrThrow<ServerConnectionService>();
@@ -39,7 +41,7 @@ void SceneLobby::OnActivate() {
   if (status_ == LobbyStatus::kIn) {
     return managers_.scenes->GoToScene<SceneGame>();
   }
-  JoinLobbyAsync();
+  WaitAsync();
 }
 
 void SceneLobby::Update(std::chrono::nanoseconds delta_time) {
@@ -79,47 +81,29 @@ void SceneLobby::CreateGEpitechLogo() {
       {Texture{.name = "g-epitech-logo", .scale = 0.35, .rect = rect}, WindowManager::View::HUD});
 }
 
-void SceneLobby::JoinLobbyAsync() {
+void SceneLobby::WaitAsync() {
   if (joiningThread_)
     return;
-  joiningThread_ = std::thread(&SceneLobby::JoinLobby, this);
+  joiningThread_ = std::thread(&SceneLobby::Wait, this);
 }
 
-void SceneLobby::JoinLobby() {
-  if (status_ == LobbyStatus::kJoining) {
-    return;
-  }
-  mainMessage_ = "Creating the room";
-  secondaryMessage_ = "Please wait...";
-  auto res = serverConnectionService_->client()->CreateRoom({
-      .name = "MyPtitRoom",
-      .nbPlayers = 4,
-      .difficulty = 0,
-  });
-  if (!res) {
-    mainMessage_ = "Creating failed";
-    secondaryMessage_ = "Unable to create the lobby";
-    status_ = LobbyStatus::kFailed;
-    return;
-  }
-  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-  status_ = LobbyStatus::kRegistered;
-  mainMessage_ = "Joining the room";
-  secondaryMessage_ = "Please wait...";
-  res = serverConnectionService_->client()->JoinRoom({
-      .nodeId = 0,
-      .roomId = 0,
-  });
-  if (!res) {
-    mainMessage_ = "Joining failed";
-    secondaryMessage_ = "Unable to join the lobby";
-    status_ = LobbyStatus::kFailed;
-    return;
-  }
+void SceneLobby::Wait() {
   mainMessage_ = "Success";
-  secondaryMessage_ = "You are now in the lobby. The game will start soon";
-  std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-  status_ = LobbyStatus::kIn;
+  secondaryMessage_ = "You are now in the lobby. Waiting for other players";
+  status_ = LobbyStatus::kWaiting;
+
+  while (status_ == LobbyStatus::kWaiting) {
+    auto queue = serverConnectionService_->client()->ExtractQueue();
+
+    while (!queue.empty()) {
+      auto message = queue.front();
+      if (message.messageType == kMsgTypeMTCGameStarted) {
+        status_ = LobbyStatus::kIn;
+        break;
+      }
+      queue.pop();
+    }
+  }
 }
 
 void SceneLobby::UpdateStatusText() {
