@@ -148,6 +148,10 @@ void SceneGame::InitFade() {
                       sf::Color::Transparent,
                       0,
                       {managers_.window->GetWidth() * 100, managers_.window->GetHeight() * 100}},
-                  WindowManager::View::HUD});
+                  WindowManager::View::HUD,
+                  {0, 0, 0, 0},
+                  true,
+                  100000});
+
   registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
 }
