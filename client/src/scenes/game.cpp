@@ -18,7 +18,8 @@
 #include "libs/zygarde/src/core/components/components.hpp"
 #include "menu.hpp"
 #include "physics/2d/systems/systems.hpp"
-#include "systems/blink.hpp"
+#include "src/systems/animations/blink.hpp"
+#include "src/systems/animations/fade.hpp"
 #include "systems/game/chat/input.hpp"
 #include "systems/game/chat/messages.hpp"
 #include "systems/game/chat/trigger.hpp"
@@ -65,10 +66,12 @@ SceneGame::SceneGame(DependenciesHandler::Ptr services) : SceneBase(std::move(se
                                            registry_);
   registry_->AddSystem<ChatTriggerSystem>(window_manager, settings_manager);
   registry_->AddSystem<BlinkSystem>();
+  registry_->AddSystem<FadeSystem>();
 }
 
 void SceneGame::OnCreate() {
   LoadResources();
+  InitFade();
 }
 
 void SceneGame::Update(DeltaTime delta_time) {
@@ -119,4 +122,18 @@ void SceneGame::CreatePlayerEntity() {
   registry_->AddComponent<Tags>(player, Tags({"player"}));
   registry_->AddComponent<OnKeyPressed>(player, {.handler = controls_handler});
   registry_->AddComponent<Position>(player, {Vector3f{100, 100, 0}});
+}
+
+void SceneGame::InitFade() {
+  auto rectangle = registry_->SpawnEntity();
+  auto aligns = Alignment{HorizontalAlign::kCenter, VerticalAlign::kCenter};
+  auto point = Vector3f(managers_.window->width_ / 2, managers_.window->height_ / 2);
+
+  registry_->AddComponent<Position>(rectangle, {point, aligns});
+
+  auto color = sf::Color::Black;
+  color.a = 0;
+  registry_->AddComponent<Drawable>(rectangle, {Rectangle{color, {managers_.window->width_ * 100,
+                                                                 managers_.window->height_ * 100}}, WindowManager::View::HUD});
+  registry_->AddComponent<Tags>(rectangle, Tags({"end_fade"}));
 }

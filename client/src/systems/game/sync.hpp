@@ -117,6 +117,13 @@ class GameSyncSystem final : public ASystem<> {
   void HandlePlayers(const Registry::Ptr &registry, const api::Client::ServerMessage &message);
 
   /**
+   * @brief Handle the end gale message
+   * @param registry The registry
+   * @param message Message to handle
+   */
+  void HandleGameEnded(const Registry::Ptr &registry, const api::Client::ServerMessage &message);
+
+  /**
    * @brief Handle the player state
    * @param registry The registry
    * @param state State of the player

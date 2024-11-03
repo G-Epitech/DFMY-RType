@@ -146,6 +146,8 @@ void GameSyncSystem::HandleMessage(const Registry::Ptr& registry,
       return HandleBullets(registry, message);
     case api::RoomToClientMsgType::kMsgTypeRTCEnemiesState:
       return HandleEnemies(registry, message);
+    case api::MasterToClientMsgType::kMsgTypeMTCGameEnded:
+      return HandleGameEnded(registry, message);
   }
 }
 
@@ -227,4 +229,25 @@ void GameSyncSystem::DeleteEntities(const Registry::Ptr& registry,
       ++it;
     }
   }
+}
+
+void GameSyncSystem::HandleGameEnded(const Registry::Ptr &registry, const api::Client::ServerMessage &message) {
+  const auto tags = registry->GetComponents<Tags>();
+
+  std::size_t entityIndex = 0;
+
+  for (const auto &tag : *tags) {
+    if (tag && *tag & "end_fade") {
+      break;
+    }
+    entityIndex++;
+  }
+
+  const auto entity = registry->EntityFromIndex(entityIndex);
+  const auto tagsComponent = registry->GetComponent<Tags>(entity);
+  if (!tagsComponent.has_value()) {
+    return;
+  }
+
+  tagsComponent.value()->AddTag("fade");
 }
