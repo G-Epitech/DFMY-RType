@@ -9,7 +9,7 @@
 
 using namespace rtype::client::systems::utils::input;
 
-CursorSystem::CursorSystem() = default;
+CursorSystem::CursorSystem(Alignment alignment) : alignment_(alignment) {}
 
 void CursorSystem::Run(const std::shared_ptr<Registry> r, ComponentsPtr components) {
   for (auto&& [tags, drawable, position] : components) {
@@ -34,7 +34,7 @@ void CursorSystem::Run(const std::shared_ptr<Registry> r, ComponentsPtr componen
 }
 
 void CursorSystem::HandleCursor(const std::shared_ptr<Registry>& r, const std::string& tag,
-                                const Drawable& drawable, const Position& position) {
+                                const Drawable& drawable, const Position& position) const {
   const auto all_tags = r->GetComponents<Tags>();
   const auto all_positions = r->GetComponents<Position>();
   const auto all_drawables = r->GetComponents<Drawable>();
@@ -67,7 +67,13 @@ void CursorSystem::HandleCursor(const std::shared_ptr<Registry>& r, const std::s
     if (!cursor_drawable || !cursor_position) {
       return;
     }
-    cursor_position->point.x = position.point.x + (drawable.bounds.width / 2) - 2;
+    float width = 0;
+    if (alignment_.horizontal == HorizontalAlign::kCenter) {
+      width = drawable.bounds.width / 2;
+    } else if (alignment_.horizontal == HorizontalAlign::kLeft) {
+      width = drawable.bounds.width;
+    }
+    cursor_position->point.x = position.point.x + width - 2;
     tags->AddTag("not_blink");
     cursor_drawable->visible = true;
     break;
