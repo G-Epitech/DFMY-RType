@@ -54,7 +54,7 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
    * @param context Scripting context
    */
   static void HandleFixedUpdateCallback(scripting::components::ScriptPool *script_pool,
-                                 types::ScriptingContext::ConstPtr context) ;
+                                        types::ScriptingContext::ConstPtr context);
 
   /**
    * @brief Process a script collision callbacks
@@ -63,7 +63,7 @@ class EXPORT_ZYGARDE_API ScriptExecutionSystem final
    * @param context Scripting context
    */
   void HandleCollisionCallback(Registry::Const_Ptr registry,
-                               scripting::components::ScriptPool* script_pool,
+                               scripting::components::ScriptPool *script_pool,
                                types::ScriptingContext::ConstPtr context) const;
 
   /**

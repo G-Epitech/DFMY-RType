@@ -33,7 +33,6 @@ class VoidEaterScript : public EnemyBaseScript {
   void OnCollisionEnter(const std::shared_ptr<scripting::types::ScriptingContext>& context,
                         const physics::types::Collision2D::ptr& collision) override;
 
-
  private:
   std::vector<zygarde::utils::Timer::Nanoseconds> lastShootTimes_;
   std::string bulletArchetype_;
