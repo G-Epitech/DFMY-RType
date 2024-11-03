@@ -50,6 +50,20 @@ void SceneCreateRoom::OnCreate() {
 void SceneCreateRoom::OnActivate() {
   difficulty_ = 0;
   nbPlayers_ = 1;
+  const auto all_tags = registry_->GetComponents<Tags>();
+  const auto all_drawables = registry_->GetComponents<Drawable>();
+  if (!all_tags || !all_drawables)
+    return;
+  for (std::size_t i = 0; i < all_tags->size(); i++) {
+    if (!(*all_tags)[i])
+      continue;
+    if ((*all_tags)[i].value() & "create_room_input") {
+      (*all_tags)[i]->RemoveTag("disabled");
+      if (i < all_drawables->size() && (*all_drawables)[i]) {
+        (*all_drawables)[i]->drawable = Text{"", "main", 20};
+      }
+    }
+  }
 }
 
 void SceneCreateRoom::CreateTitle() const {
@@ -92,8 +106,8 @@ void SceneCreateRoom::CreateCreateButton() const {
                                return;
                              }
                              api::payload::CreateRoom payload{};
-                             payload.difficulty = difficulty_;
-                             payload.nbPlayers = nbPlayers_;
+                             payload.difficulty = difficulty_ - 1;
+                             payload.nbPlayers = nbPlayers_ - 1;
                              char usernameChar[20] = {0};
                              strncpy(usernameChar, text.text.c_str(), sizeof(usernameChar) - 1);
                              std::memcpy(payload.name, usernameChar, sizeof(payload.name));
@@ -111,9 +125,6 @@ void SceneCreateRoom::CreateCreateButton() const {
       OnMouseMoved{.strategy = MouseEventTarget::kAnyTarget,
                    .handler = [this, connect_button](const sf::Vector2f& pos,
                                                      const MouseEventTarget& target) {
-                     if (difficulty_ == 0 || nbPlayers_ == 0) {
-                       return;
-                     }
                      auto drawables = registry_->GetComponents<Drawable>();
 
                      auto& dr = (*drawables)[static_cast<std::size_t>(connect_button)];
@@ -124,6 +135,11 @@ void SceneCreateRoom::CreateCreateButton() const {
 
                        if (std::holds_alternative<Text>(variant)) {
                          auto& text = std::get<Text>(variant);
+                         if (difficulty_ == 0 || nbPlayers_ == 0) {
+                           text.style = sf::Text::Style::Regular;
+                           text.color = sf::Color::White;
+                           return;
+                         }
                          if (target == MouseEventTarget::kLocalTarget) {
                            text.style = sf::Text::Style::Underlined;
                            text.color = sf::Color::Green;
